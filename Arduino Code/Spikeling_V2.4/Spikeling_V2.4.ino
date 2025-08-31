@@ -99,7 +99,7 @@ void loop() {
 
   if (PDGain_Flag == true){
     PD_PotValue = ADC1.readADC(pinPDPot) - bits/2; // Reads Photodiode Gain potentiometer value and scales it to -2048 to 2048
-    PD_Amp = map(PD_PotValue, -bits/2, bits/2, -PD_PotRange, PD_PotRange)+0.5;
+    PD_Amp = map(PD_PotValue, -bits/2, bits/2, -PD_PotRange, PD_PotRange);
   }
 
   if (PD_Amp >= 0){

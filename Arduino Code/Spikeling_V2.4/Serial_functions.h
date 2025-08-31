@@ -91,7 +91,7 @@ void PDGain_on(){
   char *arg;
   arg = SCmd.next();
   if (arg != NULL){
-    PD_Amp = atoi(arg)/10+1;
+    PD_Amp = atoi(arg)/10;
   }
 }
 void PDGain_off(){
