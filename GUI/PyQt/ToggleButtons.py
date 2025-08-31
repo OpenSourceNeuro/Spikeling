@@ -5,7 +5,7 @@
 from PySide6.QtCore import Qt
 from py_toggle import PyToggle
 import Settings
-import Page201,Page202
+import Page_Imaging_ImagingSimulation
 
 
 
@@ -354,10 +354,6 @@ def Buttons(self):
                                                        circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                        active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
                                                        )
-    self.ui.Imaging_Saturation_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                       circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                       active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                       )
 
     self.ui.Imaging_FrameRate_Toggle_layout.addWidget(self.ui.Imaging_FrameRate_toggleButton)
     self.ui.Imaging_FrameRate_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -387,102 +383,5 @@ def Buttons(self):
     self.ui.Imaging_FluoScale_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
     self.ui.Imaging_FluoOffset_Toggle_layout.addWidget(self.ui.Imaging_FluoOffset_toggleButton)
     self.ui.Imaging_FluoOffset_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Imaging_Saturation_Toggle_layout.addWidget(self.ui.Imaging_Saturation_toggleButton)
-    self.ui.Imaging_Saturation_toggleButton.setChecked(True)
-    Page201.Imaging201.ActivateFluoSat(self)
-    self.ui.Imaging_Saturation_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
 
-    # Generate toggle buttons for Multiple Imaging Page
-    self.ui.MultipleImaging_FrameRate_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                              circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                              active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                              )
-    self.ui.MultipleImaging_PMT_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                        circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                        active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                        )
-    self.ui.MultipleImaging_Laser_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                          circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                          active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                          )
-
-    self.ui.MultipleImaging_CalciumDecay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                                 circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                                 active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                                 )
-    self.ui.MultipleImaging_CalciumJump_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                                circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                                active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                                )
-    self.ui.MultipleImaging_CalciumNoise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                                 circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                                 active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                                 )
-    self.ui.MultipleImaging_CalciumBaseline_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                                    circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                                    active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                                    )
-
-    self.ui.MultipleImaging_kd_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                       circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                       active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                       )
-    self.ui.MultipleImaging_Hill_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                         circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                         active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                         )
-    self.ui.MultipleImaging_PhotoShotNoise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                                   circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                                   active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                                   )
-    self.ui.MultipleImaging_FluoNoise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                              circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                              active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                              )
-    self.ui.MultipleImaging_FluoScale_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                              circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                              active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                              )
-    self.ui.MultipleImaging_FluoOffset_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                               circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                               active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                               )
-    self.ui.MultipleImaging_Saturation_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
-                                                               circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
-                                                               active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                               )
-
-    self.ui.MultipleImaging_FrameRate_Toggle_layout.addWidget(self.ui.MultipleImaging_FrameRate_toggleButton)
-    self.ui.MultipleImaging_FrameRate_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_PMT_Toggle_layout.addWidget(self.ui.MultipleImaging_PMT_toggleButton)
-    self.ui.MultipleImaging_PMT_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_Laser_Toggle_layout.addWidget(self.ui.MultipleImaging_Laser_toggleButton)
-    self.ui.MultipleImaging_Laser_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-
-    self.ui.MultipleImaging_CalciumDecay_Toggle_layout.addWidget(self.ui.MultipleImaging_CalciumDecay_toggleButton)
-    self.ui.MultipleImaging_CalciumDecay_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_CalciumJump_Toggle_layout.addWidget(self.ui.MultipleImaging_CalciumJump_toggleButton)
-    self.ui.MultipleImaging_CalciumJump_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_CalciumNoise_Toggle_layout.addWidget(self.ui.MultipleImaging_CalciumNoise_toggleButton)
-    self.ui.MultipleImaging_CalciumNoise_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_CalciumBaseline_Toggle_layout.addWidget(
-        self.ui.MultipleImaging_CalciumBaseline_toggleButton)
-    self.ui.MultipleImaging_CalciumBaseline_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-
-    self.ui.MultipleImaging_kd_Toggle_layout.addWidget(self.ui.MultipleImaging_kd_toggleButton)
-    self.ui.MultipleImaging_kd_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_Hill_Toggle_layout.addWidget(self.ui.MultipleImaging_Hill_toggleButton)
-    self.ui.MultipleImaging_Hill_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_PhotoShotNoise_Toggle_layout.addWidget(self.ui.MultipleImaging_PhotoShotNoise_toggleButton)
-    self.ui.MultipleImaging_PhotoShotNoise_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_FluoNoise_Toggle_layout.addWidget(self.ui.MultipleImaging_FluoNoise_toggleButton)
-    self.ui.MultipleImaging_FluoNoise_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_FluoScale_Toggle_layout.addWidget(self.ui.MultipleImaging_FluoScale_toggleButton)
-    self.ui.MultipleImaging_FluoScale_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_FluoOffset_Toggle_layout.addWidget(self.ui.MultipleImaging_FluoOffset_toggleButton)
-    self.ui.MultipleImaging_FluoOffset_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.MultipleImaging_Saturation_Toggle_layout.addWidget(self.ui.MultipleImaging_Saturation_toggleButton)
-    self.ui.MultipleImaging_Saturation_toggleButton.setChecked(True)
-    Page202.Imaging202.ActivateMultipleFluoSat(self)
-    self.ui.MultipleImaging_Saturation_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)

@@ -3,5 +3,4 @@ numpy==2.3.2
 pandas==2.3.2
 pyinstaller==6.15
 pyqtgraph==0.13.7
-pyserial==3.5
 scipy==1.16.1

@@ -5,19 +5,22 @@ This module provides functionality for plotting and recording data from the Spik
 It handles serial communication, data visualization, and data export.
 """
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QObject, QTimer
 from PySide6.QtGui import QPen
 import pyqtgraph as pg
 
 import collections
 import numpy as np
 import pandas as pd
+from decimal import Decimal
 
 import Settings
 from serial_manager import serial_manager
+# Use the global serial_manager instance
+serial_port = serial_manager
 
 # Constants
-DOWNSAMPLING = 6
+DOWNSAMPLING = 5
 SAMPLE_INTERVAL = 0.1
 TIME_WINDOW = 500
 TIME_WINDOW_DISPLAY = 200
@@ -28,32 +31,24 @@ CURRENT_MIN = -100
 CURRENT_MAX = 100
 
 
-class SpikelingGraph:
+class SpikelingGraph(QObject):
     """
     Class for handling Spikeling device data visualization and recording.
 
     This class manages the connection to the Spikeling device, data acquisition,
     plotting, and recording of the data to CSV files.
     """
-
     def __init__(self, parent):
-        """
-        Initialize the SpikelingGraph instance.
-
-        Args:
-            parent: The parent object (NavigationButtons instance) that contains UI elements
-        """
+        super().__init__(parent)
         self.parent = parent
         self.ui = parent.ui
-        self.timer = None
-        self.data = ['0'] * 8  # Default data array
-        self.serial_flag = False
+
+        # state
+        self.data = ['0'] * 8
+        self.last_valid_data = None
         self.record_flag = False
-        self.i_downsampling = 0
         self.stim_counter = 0
         self.current_plots = None
-        self.buffer = ""  # Buffer for storing partial serial data
-        self.last_valid_data = None  # Store the last valid data line
 
         # Set SerialFlag in parent for use in Page101
         self.parent.SerialFlag = False
@@ -62,60 +57,132 @@ class SpikelingGraph:
         self.df_Stim = None
         self.df_yStim = None
 
-    def _is_valid_number(self, value):
-        """
-        Check if a string can be converted to a float.
+        # Timer for GUI updates
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_plot)
 
-        Args:
-            value (str): The string to check
+        # Serial manager signals
+        serial_manager.data_received.connect(self.on_data_received)
+        serial_manager.connection_changed.connect(self.on_connection_changed)
+        serial_manager.error_occurred.connect(self.on_error)
 
-        Returns:
-            bool: True if the string can be converted to a float, False otherwise
-        """
-        # Check if the string is just a minus sign
-        if value == '-':
-            return False
 
+    # -------------------------------------------------------------------------
+    # Connection Management
+    # -------------------------------------------------------------------------
+    def connect_device(self):
+        """Called when connect button is checked."""
+        port_name = self.ui.Spikeling_SelectPortComboBox.currentText()
+        if not serial_manager.configure_port(port_name):
+            self.ui.Spikeling_ConnectButton.setChecked(False)
+            return
+
+        if not serial_manager.open():
+            self.ui.Spikeling_ConnectButton.setChecked(False)
+            if self.parent.SerialFlag == False:
+                Settings.show_popup(self, Title="Error: Spikeling not connected",
+                                    Text="Spikeling first needs to be connected, then a COM port has to be selected and finally press the - Connect Spikeling Screen - button")
+            return
+
+        self.set_init_parameters()
+        self.set_plot()
+
+        self.parent.SerialFlag = True
+        self.stim_counter = 0
+
+        self.timer.start()  # update every 1ms
+
+    def disconnect_device(self):
+        """Called when connect button is unchecked."""
+        self.cleanup()
+        self.parent.SerialFlag = False
+
+        if serial_port.is_open:
+            serial_port.write('CON' + '\n')
+
+        self.ui.Spikeling_ConnectButton.setText("Connect Spikeling Screen")
+        self.ui.Spikeling_ConnectButton.setStyleSheet(
+            f"color: rgb{tuple(Settings.DarkSolarized[14])};\n"
+            f"background-color: rgb{tuple(Settings.DarkSolarized[2])};\n"
+            f"border: 1px solid rgb{tuple(Settings.DarkSolarized[14])};\n"
+            f"border-radius: 10px;"
+        )
+
+    def on_connection_changed(self, is_connected: bool):
+        """Handle serial manager connection state."""
+        if not is_connected:
+            self.disconnect_device()
+        self.ui.Spikeling_ConnectButton.setChecked(is_connected)
+
+    def on_error(self, message: str):
+        """Handle serial errors."""
+        print("Serial error:", message)
+        self.disconnect_device()
+
+
+
+    # -------------------------------------------------------------------------
+    # Data Handling
+    # -------------------------------------------------------------------------
+    def on_data_received(self, data: list):
+        """Slot for serial_manager.data_received signal."""
+        if data and len(data) == 8:
+            self.data = data
+            self.last_valid_data = data
+
+
+    def update_plot(self):
+        """Main loop: called periodically by QTimer."""
         try:
-            float(value)
-            return True
-        except ValueError:
-            return False
+            self.buff_data()
+            self.save_plot_data()
+            self.plot_curve()
+            self.handle_custom_stimulus()
+            self.handle_noise()
+        except Exception as e:
+            print(f"Error in update_plot: {e}")
 
-    def spikeling_plot(self):
+
+
+    # -------------------------------------------------------------------------
+    # Initialization Methods
+    # -------------------------------------------------------------------------
+    def set_init_parameters(self):
         """
-        Main function to handle Spikeling plotting.
-
-        This function is called when the Connect button is clicked.
-        It sets up the serial connection, initializes parameters, and starts the timer
-        for data acquisition and plotting.
+        Initialize parameters for Spikeling plotting.
         """
-        if self.ui.Spikeling_ConnectButton.isChecked():
-            # Setup when connecting
-            if not self.set_serial():
-                # Failed to open serial port
-                self.ui.Spikeling_ConnectButton.setChecked(False)
-                return
+        self.record_flag = False
+        self.trigger = 0
+        self.last_valid_data = None  # Reset the last valid data
+        self.ui.Spikeling_Oscilloscope_widget.clear()
 
-            self.set_init_parameters()
-            self.set_plot_curve()
-            self.set_plot()
+        # Buffers for Vm, current and stimulus
+        self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
-            self.serial_flag = True
-            self.parent.SerialFlag = True  # Set SerialFlag in parent for use in Page101
+        # Initialize data buffers
+        for i in range(8):
+            setattr(self, f"databuffer{i}", collections.deque([0.0] * self._bufsize, self._bufsize))
 
-            # Initialize stimulus counter
-            self.stim_counter = 0
+        # Numpy arrays for plotting
+        self.x = np.linspace(-TIME_WINDOW, 0.0, self._bufsize)
+        for i in range(7):
+            setattr(self, f"y{i}", np.zeros(self._bufsize, dtype=float))
 
-            # Connect to the data_received signal from the serial manager
-            serial_manager.data_received.connect(self.on_data_received)
+        # Data recording arrays
+        self.spikeling_data = []
+        for _ in range(9):
+            self.spikeling_data.append([])
 
-            # Set up timer for plot updates with explicit interval (1ms for fast updates)
-            self.timer = QTimer()
-            self.timer.timeout.connect(self.update_plot)
-            self.timer.start(0)
+        # Set button appearance
+        if self.ui.Spikeling_ConnectButton.isChecked() and serial_manager.is_open:
+            self.ui.Spikeling_ConnectButton.setText("Connected")
+            self.ui.Spikeling_ConnectButton.setStyleSheet(
+                f"color: rgb{tuple(Settings.DarkSolarized[3])};\n"
+                f"background-color: rgb{tuple(Settings.DarkSolarized[11])};\n"
+                f"border: 1px solid rgb{tuple(Settings.DarkSolarized[14])};\n"
+                f"border-radius: 10px;"
+            )
         else:
-            # Cleanup when disconnecting
             self.ui.Spikeling_ConnectButton.setText("Connect Spikeling Screen")
             self.ui.Spikeling_ConnectButton.setStyleSheet(
                 f"color: rgb{tuple(Settings.DarkSolarized[14])};\n"
@@ -124,117 +191,85 @@ class SpikelingGraph:
                 f"border-radius: 10px;"
             )
 
-            # Clean up resources
-            self.cleanup()
-            self.ui.SpikelingConnectedFlag = False
-            self.parent.SerialFlag = False  # Reset SerialFlag in parent
 
-    def update_plot(self):
-        """
-        Update the plot with new data.
 
-        This function is called by the timer to update the plot with new data
-        from the Spikeling device.
-        """
-        try:
-            # We don't need to call get_data() anymore since we're using the asynchronous approach
-            # and data is updated directly in the on_data_received method
-
-            # Append latest data into buffer deque
-            self.buff_data()
-
-            # Create data array to be exported in .csv if recording is enabled
-            self.save_plot_data()
-
-            # Update the plot - we can remove the downsampling since we're using a fixed timer interval
-            # that's optimized for smooth visualization
-            self.plot_curve()
-
-            # Handle custom stimulus if enabled
-            self.handle_custom_stimulus()
-
-            # Handle noise if enabled
-            self.handle_noise()
-        except Exception as e:
-            # Log the error but don't crash the application
-            print(f"Error in update_plot: {e}")
-
-            # If we're getting frequent errors, slow down the timer to reduce CPU load
-            if hasattr(self, 'timer') and self.timer and self.timer.interval() < 100:
-                new_interval = min(100, self.timer.interval() * 2)
-                print(f"Increasing timer interval to {new_interval}ms to reduce load")
-                self.timer.setInterval(new_interval)
-
-    def on_data_received(self, data):
-        """
-        Handle data received from the serial port.
-
-        This method is called when the data_received signal is emitted by the serial manager.
-        It updates the data attribute with the received data.
-
-        Args:
-            data (list): The data received from the serial port
-        """
-        if data and len(data) == 8:
-            self.data = data
-            self.last_valid_data = data
-
-    def get_data(self):
-        """
-        Get the latest data from the serial manager.
-
-        This method is now simplified to use the get_latest_data method from the serial manager,
-        which returns the latest valid data processed by the asynchronous data handler.
-
-        Returns:
-            list: Processed data array with 8 values, or default values if no data is available.
-        """
-        # Get the latest data from the serial manager
-        latest_data = serial_manager.get_latest_data()
-
-        if latest_data:
-            self.data = latest_data
-            self.last_valid_data = latest_data
-        elif self.last_valid_data is not None:
-            self.data = self.last_valid_data
-
-        return self.data
+# -------------------------------------------------------------------------
+# Buffers + Plotting
+# -------------------------------------------------------------------------
 
     def buff_data(self):
-        """
-        Append latest serial data points into buffer deques.
-
-        This method has been optimized to minimize string-to-float conversions
-        and streamline error handling.
-        """
         try:
-            # Check if all required buffer attributes are initialized
-            for i in range(8):
-                buffer_name = f"databuffer{i}"
-                if not hasattr(self, buffer_name) or getattr(self, buffer_name) is None:
-                    print(f"Warning: {buffer_name} is not initialized")
-                    return
-
-            # The data should already be validated by the serial manager,
-            # but we'll add a safety check just in case
             if not self.data or len(self.data) < 8:
-                # If data is missing or incomplete, use zeros
                 values = [0.0] * 8
             else:
-                # Convert all values to float in one go with list comprehension
-                # This is more efficient than converting them one by one
                 try:
-                    values = [float(val) if val and self._is_valid_number(val) else 0.0 for val in self.data]
+                    values = [float(val) if val else 0.0 for val in self.data]
                 except Exception:
-                    # If any conversion fails, use zeros
                     values = [0.0] * 8
 
-            # Append values to buffers
             for i in range(8):
                 getattr(self, f"databuffer{i}").append(values[i])
         except Exception as e:
-            # Log the error but don't crash the application
             print(f"Error in buff_data: {e}")
+
+
+    def set_plot(self):
+        """
+        Set up the plot widget and curves.
+        """
+        # Main plot setup
+        pw = self.ui.Spikeling_Oscilloscope_widget
+        pw.showGrid(x=True, y=True)
+        pw.setRange(xRange=[-TIME_WINDOW_DISPLAY, 0], yRange=[VM_MIN, VM_MAX])
+
+        # Set axis labels
+        pw.setLabel('left', 'Membrane potential', 'mV')
+        pw.setLabel('bottom', 'time', 'ms')
+        pw.setLabel('right', 'Current Input', 'a.u.')
+        pw.setAntialiasing(True)
+
+
+        # -----------------------------
+        # Setup secondary ViewBox
+        # -----------------------------
+        self.current_plots = pg.ViewBox()
+        pw.scene().addItem(self.current_plots)
+        self.current_plots.setXLink(pw)
+        self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX])
+        pw.getAxis("right").linkToView(self.current_plots)
+
+        # Create plot curves for membrane potentials on the main plot with anti-aliasing
+        self.curve0 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
+        self.curve0.clear()
+        self.curve3 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y3, pen=pg.mkPen(Settings.DarkSolarized[6], width=PEN_WIDTH, cosmetic=True))
+        self.curve3.clear()
+        self.curve5 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y5, pen=pg.mkPen(Settings.DarkSolarized[8], width=PEN_WIDTH, cosmetic=True))
+        self.curve5.clear()
+
+        # Create plot curves for currents and stimulus (secondary plot - right y-axis) with anti-aliasing
+        self.curve1 = pg.PlotCurveItem(self.x, self.y1, pen=pg.mkPen(Settings.DarkSolarized[5], width=PEN_WIDTH, cosmetic=True))
+        self.curve1.clear()
+        self.curve2 = pg.PlotCurveItem(self.x, self.y2, pen=pg.mkPen(Settings.DarkSolarized[4], width=PEN_WIDTH, cosmetic=True))
+        self.curve2.clear()
+        self.curve4 = pg.PlotCurveItem(self.x, self.y4, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
+        self.curve4.clear()
+        self.curve6 = pg.PlotCurveItem(self.x, self.y6, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
+        self.curve6.clear()
+
+        # Add current and stimulus curves to the secondary plot (right y-axis)
+        self.current_plots.addItem(self.curve1)
+        self.current_plots.addItem(self.curve2)
+        self.current_plots.addItem(self.curve4)
+        self.current_plots.addItem(self.curve6)
+
+
+        # Update secondary ViewBox when main plot resizes
+        def update_views():
+            self.current_plots.setGeometry(pw.getViewBox().sceneBoundingRect())
+            self.current_plots.linkedViewChanged(pw.getViewBox(), self.current_plots.XAxis)
+
+        pw.getViewBox().sigResized.connect(update_views)
+
 
     def plot_curve(self):
         """
@@ -242,17 +277,12 @@ class SpikelingGraph:
         """
         try:
             # Check if all required attributes are initialized
-            required_attrs = ['x', 'y0', 'y1', 'y2', 'y3', 'y4', 'y5', 'y6', 
-                             'curve0', 'curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6',
-                             'databuffer0', 'databuffer1', 'databuffer2', 'databuffer3', 
-                             'databuffer4', 'databuffer5', 'databuffer6']
+            required_attrs = ['x', 'y0', 'y1', 'y2', 'y3', 'y4', 'y5', 'y6',
+                              'curve0', 'curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6',
+                             'databuffer0', 'databuffer1', 'databuffer2', 'databuffer3', 'databuffer4', 'databuffer5', 'databuffer6']
 
-            for attr in required_attrs:
-                if not hasattr(self, attr) or getattr(self, attr) is None:
-                    print(f"Warning: {attr} is not initialized")
-                    return
 
-            # Plot membrane potentials on the main plot
+            # Plot on the main plot
             if self.ui.Spikeling_VmCheckbox.isChecked():
                 self.y0[:] = self.databuffer0
                 self.curve0.setData(self.x, self.y0)
@@ -294,9 +324,19 @@ class SpikelingGraph:
                 self.curve6.setData(self.x, self.y6)
             else:
                 self.curve6.clear()
+
+            # Secondary ViewBox auto-syncs y-axis (current/stimulus)
+            self.current_plots.setGeometry(self.ui.Spikeling_Oscilloscope_widget.getViewBox().sceneBoundingRect())
+
+
         except Exception as e:
-            # Log the error but don't crash the application
             print(f"Error in plot_curve: {e}")
+
+
+
+    # -------------------------------------------------------------------------
+    # Saving Data
+    # -------------------------------------------------------------------------
 
     def save_plot_data(self):
         """
@@ -320,6 +360,7 @@ class SpikelingGraph:
                 if hasattr(self, buffer_name) and getattr(self, buffer_name):
                     self.spikeling_data[i + 1].append(getattr(self, buffer_name)[-1])
 
+
     def export_data_to_csv(self):
         """
         Export recorded data to a CSV file.
@@ -328,8 +369,9 @@ class SpikelingGraph:
         dataset = np.empty([9, len(self.spikeling_data[1])], dtype=float)
 
         # Fill the dataset with recorded data
+        _interval = Decimal(str(SAMPLE_INTERVAL))
         for i in range(len(self.spikeling_data[1])):
-            dataset[0][i] = i * SAMPLE_INTERVAL  # Time
+            dataset[0][i] = i * _interval  # Time
             for j in range(1, 9):
                 dataset[j][i] = self.spikeling_data[j][i]
 
@@ -351,171 +393,35 @@ class SpikelingGraph:
         recording_file_name = str(self.ui.Spikeling_SelectedFolderLabel.text())
         df.to_csv(f"{recording_file_name}.csv", index=False)
 
-    def set_init_parameters(self):
-        """
-        Initialize parameters for Spikeling plotting.
-        """
-        self.ui.SpikelingConnectedFlag = True
-        self.i_downsampling = 0
-        self.record_flag = False
-        self.trigger = 0
-        self.buffer = ""  # Reset the buffer
-        self.last_valid_data = None  # Reset the last valid data
-        self.ui.Spikeling_Oscilloscope_widget.clear()
 
-        if self.ui.Spikeling_ConnectButton.isChecked() and serial_manager.is_open:
-            self.ui.Spikeling_ConnectButton.setText("Connected")
-            self.ui.Spikeling_ConnectButton.setStyleSheet(
-                f"color: rgb{tuple(Settings.DarkSolarized[3])};\n"
-                f"background-color: rgb{tuple(Settings.DarkSolarized[11])};\n"
-                f"border: 1px solid rgb{tuple(Settings.DarkSolarized[14])};\n"
-                f"border-radius: 10px;"
-            )
-        else:
-            self.ui.Spikeling_ConnectButton.setText("Connect Spikeling Screen")
-            self.ui.Spikeling_ConnectButton.setStyleSheet(
-                f"color: rgb{tuple(Settings.DarkSolarized[14])};\n"
-                f"background-color: rgb{tuple(Settings.DarkSolarized[2])};\n"
-                f"border: 1px solid rgb{tuple(Settings.DarkSolarized[14])};\n"
-                f"border-radius: 10px;"
-            )
 
-    def set_serial(self):
-        """
-        Set up the serial port connection.
+# -------------------------------------------------------------------------
+# Cleanup
+# -------------------------------------------------------------------------
 
-        Returns:
-            bool: True if the serial port was successfully opened, False otherwise.
-        """
-        try:
-            port_name = self.ui.Spikeling_SelectPortComboBox.currentText()
+    def cleanup(self):
+        """Release resources."""
+        if self.timer.isActive():
+            self.timer.stop()
 
-            # Configure and open the port using the serial manager
-            if not serial_manager.configure_port(port_name):
-                return False
+        self.last_valid_data = None
 
-            if not serial_manager.open():
-                return False
-
-        except Exception as e:
-            print(f"Serial port error: {e}")
-            return False
-
-        return True
-
-    def set_plot_curve(self):
-        """
-        Initialize the plot curves and data buffers.
-        """
-        self._interval = SAMPLE_INTERVAL
-        self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
-
-        # Initialize data buffers
         for i in range(8):
-            setattr(self, f"databuffer{i}", collections.deque([0.0] * self._bufsize, self._bufsize))
+            buf_name = f"databuffer{i}"
+            if hasattr(self, buf_name):
+                getattr(self, buf_name).clear()
 
-        # Create arrays for plotting
-        self.x = np.linspace(-TIME_WINDOW, 0.0, self._bufsize)
-        for i in range(7):
-            setattr(self, f"y{i}", np.zeros(self._bufsize, dtype=float))
+        self.ui.Spikeling_Oscilloscope_widget.clear()
+        if self.current_plots:
+            self.current_plots.clear()
 
-        # Initialize data recording arrays
-        self.spikeling_data = []
-        for _ in range(9):
-            self.spikeling_data.append([])
 
-    def set_plot(self):
-        """
-        Set up the plot widget and curves.
-        """
-        # Configure main plot
-        self.ui.Spikeling_Oscilloscope_widget.showGrid(x=True, y=True)
-        self.ui.Spikeling_Oscilloscope_widget.setRange(xRange=[-TIME_WINDOW_DISPLAY, 0])
-        self.ui.Spikeling_Oscilloscope_widget.setRange(yRange=[VM_MIN, VM_MAX])
-        self.ui.Spikeling_Oscilloscope_widget.plotItem.setMouseEnabled(x=True, y=True)
-        # Allow zooming beyond the default range while still keeping reasonable limits
-        self.ui.Spikeling_Oscilloscope_widget.plotItem.vb.setLimits(xMin=-TIME_WINDOW*2, xMax=TIME_WINDOW/10)
-        self.ui.Spikeling_Oscilloscope_widget.setLabel('left', 'Membrane potential', 'mV')
-        self.ui.Spikeling_Oscilloscope_widget.setLabel('bottom', 'time', 'ms')
-        self.ui.Spikeling_Oscilloscope_widget.setLabel('right', 'Current Input', 'a.u.')
 
-        # Store default ranges for reset functionality
-        self.default_x_range = [-TIME_WINDOW_DISPLAY, 0]
-        self.default_y_range = [VM_MIN, VM_MAX]
 
-        # Connect double-click event to reset view
-        self.ui.Spikeling_Oscilloscope_widget.plotItem.vb.sigStateChanged.connect(self.update_views)
-        self.ui.Spikeling_Oscilloscope_widget.scene().sigMouseClicked.connect(self.on_plot_clicked)
 
-        # Enable anti-aliasing for smoother curves
-        self.ui.Spikeling_Oscilloscope_widget.setAntialiasing(True)
-
-        # Connect the resize signal to update views
-        self.ui.Spikeling_Oscilloscope_widget.getViewBox().sigResized.connect(self.update_views)
-
-        # Set up secondary plot for current inputs
-        self.current_plots = pg.ViewBox()
-        self.ui.Spikeling_Oscilloscope_widget.scene().addItem(self.current_plots)
-        self.current_plots.setXLink(self.ui.Spikeling_Oscilloscope_widget)
-        self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX])
-        self.ui.Spikeling_Oscilloscope_widget.getAxis("right").linkToView(self.current_plots)
-
-        # Create plot curves for membrane potentials on the main plot with anti-aliasing
-        self.curve0 = self.ui.Spikeling_Oscilloscope_widget.plot(
-            self.x, self.y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
-        self.curve0.clear()
-        self.curve3 = self.ui.Spikeling_Oscilloscope_widget.plot(
-            self.x, self.y3, pen=pg.mkPen(Settings.DarkSolarized[6], width=PEN_WIDTH, cosmetic=True))
-        self.curve3.clear()
-        self.curve5 = self.ui.Spikeling_Oscilloscope_widget.plot(
-            self.x, self.y5, pen=pg.mkPen(Settings.DarkSolarized[8], width=PEN_WIDTH, cosmetic=True))
-        self.curve5.clear()
-
-        # Create plot curves for currents and stimulus (secondary plot - right y-axis) with anti-aliasing
-        self.curve1 = pg.PlotCurveItem(
-            self.x, self.y1, pen=pg.mkPen(Settings.DarkSolarized[5], width=PEN_WIDTH, cosmetic=True))
-        self.curve1.clear()
-        self.curve2 = pg.PlotCurveItem(
-            self.x, self.y2, pen=pg.mkPen(Settings.DarkSolarized[4], width=PEN_WIDTH, cosmetic=True))
-        self.curve2.clear()
-        self.curve4 = pg.PlotCurveItem(
-            self.x, self.y4, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
-        self.curve4.clear()
-        self.curve6 = pg.PlotCurveItem(
-            self.x, self.y6, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
-        self.curve6.clear()
-
-        # Add current and stimulus curves to the secondary plot (right y-axis)
-        self.current_plots.addItem(self.curve1)
-        self.current_plots.addItem(self.curve2)
-        self.current_plots.addItem(self.curve4)
-        self.current_plots.addItem(self.curve6)
-
-    def update_views(self):
-        """
-        Update the views when the plot is resized or zoomed.
-        """
-        # Set the geometry of the current_plots ViewBox to match the main plot's ViewBox
-        self.current_plots.setGeometry(self.ui.Spikeling_Oscilloscope_widget.getViewBox().sceneBoundingRect())
-
-        # Link the views for synchronized panning/zooming
-        self.current_plots.linkedViewChanged(self.ui.Spikeling_Oscilloscope_widget.getViewBox(), self.current_plots.XAxis)
-
-    def on_plot_clicked(self, event):
-        """
-        Handle mouse clicks on the plot.
-
-        Double-click resets the view to the default range.
-
-        Args:
-            event: The mouse event
-        """
-        # Check if it's a double-click (click count is 2)
-        if event.double():
-            # Reset the view to the default range
-            self.ui.Spikeling_Oscilloscope_widget.setRange(xRange=self.default_x_range, yRange=self.default_y_range)
-            # Also reset the current_plots view
-            self.current_plots.setRange(xRange=self.default_x_range, yRange=[CURRENT_MIN, CURRENT_MAX])
+# -------------------------------------------------------------------------
+# Handlers
+# -------------------------------------------------------------------------
 
     def handle_custom_stimulus(self):
         """
@@ -556,6 +462,7 @@ class SpikelingGraph:
             # Log the error but don't crash the application
             print(f"Error in handle_custom_stimulus: {e}")
 
+
     def handle_noise(self):
         """
         Generate and send a new noise value if noise is enabled.
@@ -590,36 +497,3 @@ class SpikelingGraph:
         except Exception as e:
             # Log the error but don't crash the application
             print(f"Error in handle_noise: {e}")
-
-    def cleanup(self):
-        """
-        Clean up resources when disconnecting.
-        """
-        # Stop the timer
-        if hasattr(self, 'timer') and self.timer:
-            self.timer.stop()
-
-        # Disconnect the data_received signal to prevent memory leaks
-        try:
-            serial_manager.data_received.disconnect(self.on_data_received)
-        except (TypeError, RuntimeError):
-            # Signal might not be connected or already disconnected
-            pass
-
-        # Close the serial port using the serial manager
-        serial_manager.close()
-
-        # Reset buffer and last valid data
-        self.buffer = ""
-        self.last_valid_data = None
-
-        # Clear data buffers to free memory
-        for i in range(8):
-            buffer_name = f"databuffer{i}"
-            if hasattr(self, buffer_name):
-                getattr(self, buffer_name).clear()
-
-        # Clear UI elements
-        self.ui.Spikeling_Oscilloscope_widget.clear()
-        if hasattr(self, 'current_plots') and self.current_plots:
-            self.current_plots.clear()

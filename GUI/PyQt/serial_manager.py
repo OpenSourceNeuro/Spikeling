@@ -165,74 +165,24 @@ class SerialPortManager(QObject):
         except ValueError:
             return False
 
+
     def _handle_ready_read(self):
-        """
-        Handle the readyRead signal from the serial port.
-
-        This method is called automatically when data is available on the serial port.
-        It reads the data, processes it, and emits the data_received signal if valid data is found.
-        """
-        if not self._serial_port.isOpen():
-            return
-
         try:
-            # Read all available data
+            # Read all available raw bytes
             rx = self._serial_port.readAll().data()
-            if not rx:
-                return
 
-            # Convert bytes to string and append to buffer
-            rx_serial = str(rx, 'utf8')
+            # Decode safely (ignore junk bytes like 0xC0)
+            rx_serial = rx.decode('utf-8', errors='ignore')
+
+            # Append to buffer
             self._buffer += rx_serial
 
-            # Process complete lines from the buffer
-            if '\n' in self._buffer:
-                lines = self._buffer.split('\n')
-
-                # The last element might be an incomplete line
-                self._buffer = lines[-1]
-
-                # Process all complete lines
-                complete_lines = lines[:-1]
-
-                # Look for a valid line with values
-                for line in reversed(complete_lines):  # Process newest lines first
-                    line = line.strip()
-                    if not line:  # Skip empty lines
-                        continue
-
-                    # Split the line into values and clean them
-                    values = []
-                    for val in line.split(','):
-                        # Clean the value (remove \r and other whitespace)
-                        clean_val = val.strip().rstrip('\r')
-                        # Only add valid numeric values
-                        if clean_val and self._is_valid_number(clean_val):
-                            values.append(clean_val)
-
-                    # Try to use lines with any number of values
-                    if len(values) > 0:
-                        # If we have exactly 8 values, use them directly
-                        if len(values) == 8:
-                            processed_values = values
-                        # If we have fewer than 8 values, pad with zeros
-                        elif len(values) < 8:
-                            processed_values = values + ['0.0'] * (8 - len(values))
-                        # If we have more than 8 values, use the first 8
-                        else:
-                            processed_values = values[:8]
-
-                        # Store the processed data
-                        with QMutexLocker(self._mutex):
-                            self._data_buffer.append(processed_values)
-                            self._last_valid_data = processed_values
-
-                        # Emit the data_received signal
-                        self.data_received.emit(processed_values)
-                        return
+            # Process lines in buffer
+            self.read_and_process_data()
 
         except Exception as e:
             self.error_occurred.emit(f"Error processing serial data: {str(e)}")
+
 
     def get_latest_data(self):
         """
@@ -255,85 +205,37 @@ class SerialPortManager(QObject):
 
     def read_and_process_data(self):
         """
-        Read data directly from the serial port and process it.
-
-        This method provides an alternative to the signal-based approach.
-
-        Returns:
-            list: The processed data, or None if no valid data is available
+        Process the buffered serial data.
+        Keeps incomplete lines until the next chunk arrives.
+        Emits only valid numeric packets (8 floats).
         """
-        if not self._serial_port.isOpen():
-            return None
-
         try:
-            # Check if there's data available - non-blocking approach
-            bytes_available = self._serial_port.bytesAvailable()
+            # Split buffer into lines
+            lines = self._buffer.split("\n")
+            # Keep the last line (might be incomplete)
+            self._buffer = lines[-1]
 
-            # If no data is available, return None immediately
-            # This avoids blocking the UI thread
-            if bytes_available <= 0:
-                return None
-
-            # Read data (we know bytes_available > 0 at this point)
-            raw_data = self._serial_port.readAll().data()
-            if not raw_data:
-                return None
-
-            # Convert bytes to string
-            data_str = str(raw_data, 'utf8')
-
-            # Process the data
-            lines = data_str.split('\n')
-
-            # Process all complete lines
-            for line in reversed(lines):
+            for line in lines[:-1]:
                 line = line.strip()
-                if not line:  # Skip empty lines
+                if not line:
                     continue
 
-                # Split the line into values
-                values = []
+                # Split by comma
+                values = line.split(",")
 
-                # Try different delimiters (comma, space, tab)
-                for delimiter in [',', ' ', '\t']:
-                    parts = line.split(delimiter)
-                    if len(parts) > 1:  # If we found multiple parts
-                        for val in parts:
-                            clean_val = val.strip().rstrip('\r')
-                            if clean_val and self._is_valid_number(clean_val):
-                                values.append(clean_val)
-
-                        if values:  # If we found valid values, stop trying delimiters
-                            break
-
-                # If no delimiter worked, try the whole line as a single value
-                if not values:
-                    clean_val = line.strip().rstrip('\r')
-                    if clean_val and self._is_valid_number(clean_val):
-                        values.append(clean_val)
-
-                # If we have values, process them
-                if values:
-                    # Ensure we have exactly 8 values
-                    if len(values) < 8:
-                        values.extend(['0.0'] * (8 - len(values)))
-                    elif len(values) > 8:
-                        values = values[:8]
-
-                    # Store the processed data
-                    with QMutexLocker(self._mutex):
-                        self._data_buffer.append(values)
-                        self._last_valid_data = values
-
-                    # Emit the data_received signal
-                    self.data_received.emit(values)
-
-                    return values
+                # Expect exactly 8 values from Spikeling
+                if len(values) == 8:
+                    try:
+                        # Convert to floats
+                        floats = [float(v) for v in values]
+                        # Emit as list
+                        self.data_received.emit(floats)
+                    except ValueError:
+                        # Skip bad numeric conversion
+                        continue
 
         except Exception as e:
-            self.error_occurred.emit(f"Error in direct read: {str(e)}")
-
-        return None
+            self.error_occurred.emit(f"Error processing buffered data: {str(e)}")
 
     def get_data_buffer(self):
         """

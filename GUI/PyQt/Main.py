@@ -175,7 +175,6 @@ class MainWindow(QMainWindow):
 
         self.SerialFlag = False
         self.ui.NeuronRecordFolderFlag = False
-        self.ui.SpikelingConnectedFlag = False
 
         self.EmulatorConnectionFlag = False
         self.ui.EmulatorRecordFolderFlag = False
@@ -198,7 +197,6 @@ class MainWindow(QMainWindow):
 
     # Display
         self.show()
-
     ## GUI events
     def mousePressEvent(self, event):
         self.dragPos = event.globalPosition().toPoint()

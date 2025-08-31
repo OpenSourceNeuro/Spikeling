@@ -14,7 +14,7 @@ import Settings
 from Izhikevich_parameters import IzhikevichNeurons
 
 
-Emulator_downsampling = 6
+Emulator_downsampling = 10
 Emulator_sampleinterval = 0.1
 Emulator_timewindow = 500
 Emulator_timewindowdisplay = 500
