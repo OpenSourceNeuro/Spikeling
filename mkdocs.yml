@@ -1,0 +1,90 @@
+site_name: Spikeling v2.2
+site_description: A hardware implementation of spiking neurons for neuroscience teaching and outreach
+site_url: https://<your-org>.github.io/spikeling
+repo_url: https://github.com/<your-org>/spikeling
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: blue
+      accent: teal
+markdown_extensions:
+  - admonition
+  - deflist
+  - attr_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_signature: true
+  - mkdocs-jupyter
+  - mermaid2
+  - glightbox
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+
+nav:
+  - Home: index.md
+  - About:
+    - Overview: about/overview.md.md
+    - Changelog: about/changelog.md
+    - Roadmap: about/roadmap.md
+  - Quick start:
+    - Start here: quickstart/index.md
+    - Install GUI: quickstart/install-gui.md
+    - Flash firmware: quickstart/flash-firmware.md
+    - First experiment: quickstart/first-experiment.md
+    - Troubleshooting: quickstart/troubleshooting.md
+  - User guide:
+    - Board tour: user-guide/board.md
+    - GUI overview: user-guide/gui.md
+    - Stimulus generator: user-guide/stimulus-generator.md
+    - Neuron generator: user-guide/neuron-generator.md
+    - Fluorescence simulation: user-guide/fluorescence.md
+  - Tutorials and exercises:
+    - Index: tutorials/index.md
+  - Data analysis:
+    - CSV format: data-analysis/csv-spec.md
+    - Python examples: data-analysis/python-examples.md
+  - Hardware:
+    - BOM & sourcing: hardware/bom.md
+    - Assembly: hardware/assembly.md
+    - Calibration: hardware/calibration.md
+  - Firmware:
+    - Build & flash: firmware/build-flash.md
+    - Modes & parameters: firmware/modes.md
+  - GUI (Python):
+    - Install from source: gui/install.md
+    - Packaging: gui/packaging.md
+  - Extending:
+    - New stimuli: extending/stimuli.md
+    - New neuron models: extending/models.md
+    - Multi-unit networks: extending/multi-unit.md
+  - Support:
+    - FAQ: support/faq.md
+    - Contributing: support/contributing.md
+    - License: support/license.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/<your-org>/spikeling
