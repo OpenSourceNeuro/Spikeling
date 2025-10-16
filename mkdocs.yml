@@ -17,6 +17,11 @@ theme:
     - scheme: default
       primary: blue
       accent: teal
+  extra:
+    version:
+      provider: mike
+      default: latest
+      alias: true
 markdown_extensions:
   - admonition
   - deflist
