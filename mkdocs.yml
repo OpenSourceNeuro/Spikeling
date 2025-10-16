@@ -49,13 +49,13 @@ plugins:
       fallback_to_build_date: true
 
 nav:
-  - Home: index.md
+  - Home: hardware-install.md
   - About:
     - Overview: about/overview.md.md
     - Changelog: about/changelog.md
     - Roadmap: about/roadmap.md
   - Quick start:
-    - Start here: quickstart/index.md
+    - Start here: quickstart/hardware-install.md
     - Install GUI: quickstart/install-gui.md
     - Flash firmware: quickstart/flash-firmware.md
     - First experiment: quickstart/first-experiment.md
@@ -67,7 +67,7 @@ nav:
     - Neuron generator: user-guide/neuron-generator.md
     - Fluorescence simulation: user-guide/fluorescence.md
   - Tutorials and exercises:
-    - Index: tutorials/index.md
+    - Index: tutorials/hardware-install.md
   - Data analysis:
     - CSV format: data-analysis/csv-spec.md
     - Python examples: data-analysis/python-examples.md
