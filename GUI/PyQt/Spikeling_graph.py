@@ -6,12 +6,15 @@ It handles serial communication, data visualization, and data export.
 """
 
 from PySide6.QtCore import QObject, QTimer
+from PySide6.QtWidgets import QMessageBox, QInputDialog
 from PySide6.QtGui import QPen
 import pyqtgraph as pg
+from pathlib import Path
 
 import collections
 import numpy as np
 import pandas as pd
+import struct
 from decimal import Decimal
 
 import Settings
@@ -44,11 +47,13 @@ class SpikelingGraph(QObject):
         self.ui = parent.ui
 
         # state
-        self.data = ['0'] * 8
+        self.data = [0.0] * 8
         self.last_valid_data = None
         self.record_flag = False
         self.stim_counter = 0
         self.current_plots = None
+
+
 
         # Set SerialFlag in parent for use in Page101
         self.parent.SerialFlag = False
@@ -65,6 +70,7 @@ class SpikelingGraph(QObject):
         serial_manager.data_received.connect(self.on_data_received)
         serial_manager.connection_changed.connect(self.on_connection_changed)
         serial_manager.error_occurred.connect(self.on_error)
+
 
 
     # -------------------------------------------------------------------------
@@ -125,10 +131,17 @@ class SpikelingGraph(QObject):
     # Data Handling
     # -------------------------------------------------------------------------
     def on_data_received(self, data: list):
-        """Slot for serial_manager.data_received signal."""
-        if data and len(data) == 8:
-            self.data = data
-            self.last_valid_data = data
+        """Slot for serial_manager.data_received signal.
+
+        Expects a list of 8 floats:
+        [Vm, stim_state, Itot, syn1_vm, Isyn1, syn2_vm, Isyn2, trigger]
+        """
+        if not data or len(data) != 8:
+            return
+
+        self.data = data
+        self.last_valid_data = data
+
 
 
     def update_plot(self):
@@ -202,13 +215,10 @@ class SpikelingGraph(QObject):
             if not self.data or len(self.data) < 8:
                 values = [0.0] * 8
             else:
-                try:
-                    values = [float(val) if val else 0.0 for val in self.data]
-                except Exception:
-                    values = [0.0] * 8
+                values = [float(v) for v in self.data]
 
-            for i in range(8):
-                getattr(self, f"databuffer{i}").append(values[i])
+            for i, v in enumerate(values):
+                getattr(self, f"databuffer{i}").append(v)
         except Exception as e:
             print(f"Error in buff_data: {e}")
 
@@ -334,6 +344,7 @@ class SpikelingGraph(QObject):
 
 
 
+
     # -------------------------------------------------------------------------
     # Saving Data
     # -------------------------------------------------------------------------
@@ -341,30 +352,80 @@ class SpikelingGraph(QObject):
     def save_plot_data(self):
         """
         Save the latest buffer data and export them as CSV when recording is stopped.
+        Handles overwrite/rename/cancel before recording starts.
         """
-        # If recording was on and is now turned off, save the data
-        if not self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
-            self.export_data_to_csv()
-            self.record_flag = False
-            # Clear data arrays
-            for i in range(9):
-                self.spikeling_data[i].clear()
+        # --- If recording is starting ---
+        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and not self.record_flag:
+            FolderName = self.ui.Spikeling_DataRecording_SelectRecordFolder_label.text()
+            FileName = self.ui.Spikeling_DataRecording_RecordFolder_value.text()
+            folder = Path(FolderName)
 
-        # If recording is on, append data to arrays
-        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked():
+            if not FolderName or not FileName:
+                # No folder or filename selected
+                self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
+                Settings.show_popup(self.parent,
+                                    Title="Error: no file selected",
+                                    Text="Select a file where to record your data by clicking on the - browse directory - button")
+                return
+
+            file_path = folder / f"{FileName}.csv"
+
+            # Ask user if file exists
+            if file_path.exists():
+                action, new_path = Settings.confirm_overwrite(self, file_path)
+                if action == "cancel":
+                    self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
+                    self.ui.Spikeling_DataRecording_Record_pushButton.setText("Record")
+                    self.ui.Spikeling_DataRecording_Record_pushButton.setStyleSheet("color: rgb(250, 250, 250);\n"
+                                                                                    "background-color: rgb(220, 50, 47);")
+                    return
+                elif action == "rename":
+                    self.ui.Spikeling_DataRecording_RecordFolder_value.setText(new_path.stem)
+                    save_path = new_path
+                elif action == "overwrite":
+                    save_path = file_path
+            else:
+                save_path = file_path
+
+            # Start recording
             self.record_flag = True
+            if not hasattr(self, "spikeling_data") or not self.spikeling_data:
+                self.spikeling_data = [[] for _ in range(9)]
+            else:
+                for i in range(9):
+                    if not self.spikeling_data[i]:
+                        self.spikeling_data[i] = []
 
-            # Append latest data points to recording arrays
+            # Save path for later use
+            self._current_save_path = save_path
+
+        # --- If recording is on, append latest buffer data ---
+        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked():
             for i in range(8):
                 buffer_name = f"databuffer{i}"
                 if hasattr(self, buffer_name) and getattr(self, buffer_name):
                     self.spikeling_data[i + 1].append(getattr(self, buffer_name)[-1])
 
+        # --- If recording is stopped, export data ---
+        if not self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
+            if hasattr(self, "_current_save_path"):
+                self.export_data_to_csv(self._current_save_path)
+            self.record_flag = False
+            # Clear data arrays
+            for i in range(9):
+                self.spikeling_data[i].clear()
 
-    def export_data_to_csv(self):
+    def export_data_to_csv(self, file_path: Path):
         """
         Export recorded data to a CSV file.
+
+        Args:
+            file_path (Path): Full path of the CSV file to save.
         """
+        if not hasattr(self, "spikeling_data") or not self.spikeling_data:
+            print("No data to save.")
+            return
+
         # Create a numpy array for the dataset
         dataset = np.empty([9, len(self.spikeling_data[1])], dtype=float)
 
@@ -390,10 +451,13 @@ class SpikelingGraph(QObject):
 
         # Create DataFrame and save to CSV
         df = pd.DataFrame(data_dict)
-        recording_file_name = str(self.ui.Spikeling_SelectedFolderLabel.text())
-        df.to_csv(f"{recording_file_name}.csv", index=False)
-
-
+        try:
+            df.to_csv(file_path, index=False)
+        except Exception as e:
+            print(f"Failed to save data: {e}")
+            Settings.show_popup(self.parent,
+                                Title="Error saving file",
+                                Text=f"Could not save recording to {file_path}.\nError: {e}")
 
 # -------------------------------------------------------------------------
 # Cleanup
@@ -435,7 +499,6 @@ class SpikelingGraph(QObject):
                 try:
                     # # Check if df_yStim and df_Stim are initialized
                     if not hasattr(self, 'df_yStim') or self.ui.df_yStim is None or not hasattr(self, 'df_Stim') or self.ui.df_Stim is None:
-                        print("returning early from handle_custom_stimulus: df_yStim or df_Stim not defined")
                         return
 
                     # Check if stim_counter is within bounds

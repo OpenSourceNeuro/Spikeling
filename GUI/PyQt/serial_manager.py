@@ -10,7 +10,16 @@ from PySide6.QtCore import QObject, Signal, QByteArray, QMutex, QMutexLocker
 from collections import deque
 
 import Settings
+import struct
 
+# Binary sample packet from Spikeling firmware
+SPIKELING_HEADER = b'\xAA\x55'
+SPIKELING_HEADER_LEN = len(SPIKELING_HEADER)
+SPIKELING_PACKET_SIZE = 16  # 8 * int16 = 16 bytes
+SPIKELING_FRAME_SIZE = SPIKELING_HEADER_LEN + SPIKELING_PACKET_SIZE
+V_SCALE = 100.0
+I_SCALE = 100.0
+SYN_V_SCALE = 1.0
 
 class SerialPortManager(QObject):
     """
@@ -42,7 +51,7 @@ class SerialPortManager(QObject):
         self._serial_port = QSerialPort()
         self._port_name = ""
         self._baud_rate = Settings.BaudRate
-        self._buffer = ""
+        self._buffer = bytearray()
         self._data_buffer = deque(maxlen=1000)  # Buffer for storing processed data
         self._mutex = QMutex()  # Mutex for thread-safe access to the data buffer
         self._last_valid_data = None
@@ -165,19 +174,19 @@ class SerialPortManager(QObject):
         except ValueError:
             return False
 
-
     def _handle_ready_read(self):
+        """
+        Read raw binary data from the serial port and append to the buffer.
+        """
         try:
-            # Read all available raw bytes
-            rx = self._serial_port.readAll().data()
+            rx = self._serial_port.readAll().data()  # bytes
+            if not rx:
+                return
 
-            # Decode safely (ignore junk bytes like 0xC0)
-            rx_serial = rx.decode('utf-8', errors='ignore')
+            # Accumulate bytes into our binary buffer
+            self._buffer.extend(rx)
 
-            # Append to buffer
-            self._buffer += rx_serial
-
-            # Process lines in buffer
+            # Process as many complete packets as we have
             self.read_and_process_data()
 
         except Exception as e:
@@ -205,37 +214,86 @@ class SerialPortManager(QObject):
 
     def read_and_process_data(self):
         """
-        Process the buffered serial data.
-        Keeps incomplete lines until the next chunk arrives.
-        Emits only valid numeric packets (8 floats).
+        Process the buffered binary serial data.
+
+        Frame format on the wire:
+          [0xAA][0x55][16-byte SamplePacket payload]
+
+        SamplePacket payload (little-endian int16_t):
+          v_q, stim_state, Itot_q, syn1_vm_q, Isyn1_q, syn2_vm_q, Isyn2_q, trigger_q
+
+        Emits data_received(list[float]) in this order:
+          [Vm, Stim, Itot, Syn1Vm, Syn1I, Syn2Vm, Syn2I, Trigger]
         """
         try:
-            # Split buffer into lines
-            lines = self._buffer.split("\n")
-            # Keep the last line (might be incomplete)
-            self._buffer = lines[-1]
+            last_packet = None
 
-            for line in lines[:-1]:
-                line = line.strip()
-                if not line:
-                    continue
+            while True:
+                buf_len = len(self._buffer)
 
-                # Split by comma
-                values = line.split(",")
+                # Not enough for even a header + payload
+                if buf_len < SPIKELING_FRAME_SIZE:
+                    break
 
-                # Expect exactly 8 values from Spikeling
-                if len(values) == 8:
-                    try:
-                        # Convert to floats
-                        floats = [float(v) for v in values]
-                        # Emit as list
-                        self.data_received.emit(floats)
-                    except ValueError:
-                        # Skip bad numeric conversion
-                        continue
+                # Find header
+                idx = self._buffer.find(SPIKELING_HEADER)
+                if idx == -1:
+                    # No header at all: drop everything except maybe last byte
+                    # (in case it's the first byte of header)
+                    if buf_len > SPIKELING_HEADER_LEN:
+                        del self._buffer[:buf_len - SPIKELING_HEADER_LEN]
+                    break
+
+                # We found a potential header at idx, but do we have the full frame?
+                if buf_len < idx + SPIKELING_FRAME_SIZE:
+                    # Wait for more bytes
+                    # Optionally drop junk before header
+                    if idx > 0:
+                        del self._buffer[:idx]
+                    break
+
+                # We have a full frame: drop any junk before header
+                if idx > 0:
+                    del self._buffer[:idx]
+                    buf_len = len(self._buffer)
+
+                # Now buffer starts with header; extract payload
+                # [0:2] = header, [2:18] = payload
+                payload = bytes(self._buffer[SPIKELING_HEADER_LEN:
+                                             SPIKELING_HEADER_LEN + SPIKELING_PACKET_SIZE])
+
+                # Remove the whole frame from the buffer
+                del self._buffer[:SPIKELING_FRAME_SIZE]
+
+                # Unpack payload:
+                v_q, stim_state_q, Itot_q, syn1_vm_q, Isyn1_q, syn2_vm_q, Isyn2_q, trigger_q = \
+                    struct.unpack('<hhhhhhhh', payload)
+
+                # Rescale:
+                v = v_q / V_SCALE
+                stim = float(stim_state_q)
+                Itot = Itot_q / I_SCALE
+                syn1_vm = syn1_vm_q / SYN_V_SCALE
+                Isyn1 = Isyn1_q / I_SCALE
+                syn2_vm = syn2_vm_q / SYN_V_SCALE
+                Isyn2 = Isyn2_q / I_SCALE
+                trigger = float(trigger_q)
+
+                floats = [v, stim, Itot, syn1_vm, Isyn1, syn2_vm, Isyn2, trigger]
+
+                with QMutexLocker(self._mutex):
+                    self._data_buffer.append(floats)
+                    self._last_valid_data = floats
+
+                self.data_received.emit(floats)
+                last_packet = floats
+
+            return last_packet
 
         except Exception as e:
             self.error_occurred.emit(f"Error processing buffered data: {str(e)}")
+            return None
+
 
     def get_data_buffer(self):
         """
@@ -259,7 +317,7 @@ class SerialPortManager(QObject):
         """
         Clear the input buffer.
         """
-        self._buffer = ""
+        self._buffer.clear()
         self.clear_data_buffer()
 
     def read_all(self):

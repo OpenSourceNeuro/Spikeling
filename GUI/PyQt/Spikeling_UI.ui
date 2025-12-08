@@ -29,6 +29,13 @@
 	color: rgb(147,161,161);    
 }
 
+* QComboBox {
+        background-color:  rgb(0, 30, 38);
+    }
+  *  QComboBox QAbstractItemView {
+        background-color: rgb(0, 30, 38);
+        selection-background-color: lightblue;  /* highlight color when item is selected */
+    }
 
 
 
@@ -2098,7 +2105,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="page_000">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -4989,6 +4996,9 @@ background-color: rgb(220, 50, 47);</string>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="invertedAppearance">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="tickPosition">
                                  <enum>QSlider::TicksBelow</enum>
@@ -8704,7 +8714,7 @@ background-color: rgb(220, 50, 47);</string>
                        </size>
                       </property>
                       <property name="currentIndex">
-                       <number>0</number>
+                       <number>1</number>
                       </property>
                       <widget class="QWidget" name="Emulator_StimulusParameter_page">
                        <property name="minimumSize">

@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QInputDialog
+from pathlib import Path
 
 BaudRate = 250000
 
@@ -20,3 +21,37 @@ def show_popup(self, Title, Text):
     x = msg.exec_()
 
 
+def confirm_overwrite(self, file_path: Path):
+    """
+    Ask the user if they want to overwrite, rename, or cancel an existing file.
+
+    Returns:
+        action (str): "overwrite", "rename", or "cancel"
+        path (Path): Path to use for saving (same as input or new if renamed)
+    """
+    msg = QMessageBox()
+    msg.setWindowTitle("File Already Exists")
+    msg.setText(f"The file '{file_path.name}' already exists.\nWhat do you want to do?")
+    msg.setIcon(QMessageBox.Warning)
+
+    overwrite_btn = msg.addButton("Overwrite", QMessageBox.AcceptRole)
+    rename_btn = msg.addButton("Rename", QMessageBox.ActionRole)
+    cancel_btn = msg.addButton("Cancel", QMessageBox.RejectRole)
+
+    msg.setDefaultButton(overwrite_btn)
+    msg.exec()
+
+    clicked = msg.clickedButton()
+    if clicked == overwrite_btn:
+        return "overwrite", file_path
+    elif clicked == rename_btn:
+        # Ask user for a new file name
+        new_name, ok = QInputDialog.getText(None, "Rename File", "Enter new file name:", text=file_path.stem)
+        if ok and new_name.strip():
+            new_path = file_path.parent / f"{new_name.strip()}.csv"
+            return "rename", new_path
+        else:
+            # If user cancels rename dialog, treat as cancel
+            return "cancel", file_path
+    else:
+        return "cancel", file_path

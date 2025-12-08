@@ -640,3 +640,29 @@ def Buttons(self):
         self.ui.GitHubMenu_pushButton.clicked.connect(lambda: Page901.ShowPage(self))
 
         ########################################################################
+
+        self.ui.Spikeling_StimFre_slider.setStyleSheet("""
+    QSlider::groove:horizontal {
+        height: 8px;
+        background: #bbbbbb;       /* unfilled part of groove */
+        border-radius: 4px;
+    }
+
+    QSlider::handle:horizontal {
+        background: #ff0000;       /* handle color */
+        border: 1px solid #5c5c5c;
+        width: 16px;
+        margin: -4px 0;            /* centers handle on groove */
+        border-radius: 8px;
+    }
+
+    QSlider::sub-page:horizontal {
+        background: #ff5555;       /* filled part to the left of handle */
+        border-radius: 4px;
+    }
+
+    QSlider::add-page:horizontal {
+        background: #bbbbbb;       /* unfilled part to the right */
+        border-radius: 4px;
+    }
+""")
