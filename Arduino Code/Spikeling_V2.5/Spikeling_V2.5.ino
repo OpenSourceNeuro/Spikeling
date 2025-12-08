@@ -67,10 +67,10 @@ void loop() {
 
     update_Spike();                                                                           // Handles spike related functions and hardware (LED + Buzzer) and generate Axon Digital and Analog output
 
-    //send_SamplePacket();                                                                      // Quantize the current state data and send it as a compact binary frame.
+    send_SamplePacket();                                                                      // Quantize the current state data and send it as a compact binary frame.
 
-    Serial.println(PD.current);
+    //Serial.println(PD.current);
   }
 }
 
-//PD.current = (PD.average * PD.gain * PD.inv_scaling) * PD.amp;
+
