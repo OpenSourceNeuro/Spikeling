@@ -40,6 +40,22 @@ class Spikeling():
             serial_port.write('CON' + '\n')
         self.ui.Spikeling_ConnectButton.setChecked(False)
 
+    # Modifu microcontroller loop time
+    def ChangeSpeed(self):
+        self.SpeedValue = self.ui.Spikeling_Speed_slider.value()
+        if self.SpeedValue < 6:
+            self.Speed = self.SpeedValue
+        elif self.SpeedValue == 6:
+            self.Speed = 10
+        elif self.SpeedValue == 7:
+            self.Speed = 20
+
+        self.DT_Display = round(0.1 / self.Speed, 3)
+        self.DT_Speed = self.Speed * 1000
+        self.ui.Spikeling_Speed_value.setText("x " + str(self.DT_Display))
+
+        if serial_port.is_open:
+            serial_port.write('DT ' + str(self.DT_Speed) + '\n')
 
     # Control buzzer sound
     def ControlBuzzer(self):

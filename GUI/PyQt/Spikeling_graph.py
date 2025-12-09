@@ -25,11 +25,11 @@ serial_port = serial_manager
 # Constants
 DOWNSAMPLING = 5
 SAMPLE_INTERVAL = 0.1
-TIME_WINDOW = 500
-TIME_WINDOW_DISPLAY = 200
+TIME_WINDOW = 1000
+TIME_WINDOW_DISPLAY = 250
 PEN_WIDTH = 1.5
-VM_MIN = -90
-VM_MAX = 30
+VM_MIN = -100
+VM_MAX = 40
 CURRENT_MIN = -100
 CURRENT_MAX = 100
 
@@ -45,6 +45,11 @@ class SpikelingGraph(QObject):
         super().__init__(parent)
         self.parent = parent
         self.ui = parent.ui
+
+        # --- Data buffers (always exist, pre-filled with zeros) ---
+        self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
+        for i in range(8):
+            setattr(self, f"databuffer{i}", collections.deque([0.0] * self._bufsize, self._bufsize))
 
         # state
         self.data = [0.0] * 8
@@ -78,6 +83,8 @@ class SpikelingGraph(QObject):
     # -------------------------------------------------------------------------
     def connect_device(self):
         """Called when connect button is checked."""
+        self.ui.Spikeling_Speed_slider.setEnabled(True)
+
         port_name = self.ui.Spikeling_SelectPortComboBox.currentText()
         if not serial_manager.configure_port(port_name):
             self.ui.Spikeling_ConnectButton.setChecked(False)
@@ -96,10 +103,12 @@ class SpikelingGraph(QObject):
         self.parent.SerialFlag = True
         self.stim_counter = 0
 
-        self.timer.start()  # update every 1ms
+        self.timer.start(10)  # update every 1ms
 
     def disconnect_device(self):
         """Called when connect button is unchecked."""
+        self.ui.Spikeling_Speed_slider.setEnabled(False)
+
         self.cleanup()
         self.parent.SerialFlag = False
 
@@ -139,15 +148,30 @@ class SpikelingGraph(QObject):
         if not data or len(data) != 8:
             return
 
-        self.data = data
+        #self.data = data
         self.last_valid_data = data
+
+        try:
+            values = [float(v) for v in data]
+        except ValueError:
+            return
+
+        # Push one sample into each buffer PER PACKET
+        for i, v in enumerate(values):
+            getattr(self, f"databuffer{i}").append(v)
+
+        # If recording, also store these values for CSV export
+        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
+            # spikeling_data[0] will be time (added on export)
+            for i, v in enumerate(values):
+                self.spikeling_data[i + 1].append(v)
 
 
 
     def update_plot(self):
         """Main loop: called periodically by QTimer."""
         try:
-            self.buff_data()
+            #self.buff_data() # Data are already pushed into databuffers in on_data_received
             self.save_plot_data()
             self.plot_curve()
             self.handle_custom_stimulus()
@@ -210,7 +234,7 @@ class SpikelingGraph(QObject):
 # Buffers + Plotting
 # -------------------------------------------------------------------------
 
-    def buff_data(self):
+    def buff_data(self): #Legacy; not used anymore. Data is now appended in on_data_received().
         try:
             if not self.data or len(self.data) < 8:
                 values = [0.0] * 8
@@ -229,8 +253,22 @@ class SpikelingGraph(QObject):
         """
         # Main plot setup
         pw = self.ui.Spikeling_Oscilloscope_widget
+
+        # Get the main plot item and its viewbox
+        plot_item = pw.getPlotItem()
+        vb = plot_item.getViewBox()
+
+        # Enable mouse interactions: X only
+        plot_item.setMouseEnabled(x=True, y=False)
+        vb.setMouseEnabled(x=True, y=False)
+
+        # Limit how far you can pan/zoom
+        vb.setLimits(xMin=-TIME_WINDOW, xMax=0)
+
+        # Initial visible range
         pw.showGrid(x=True, y=True)
-        pw.setRange(xRange=[-TIME_WINDOW_DISPLAY, 0], yRange=[VM_MIN, VM_MAX])
+        pw.setRange(xRange=[-TIME_WINDOW_DISPLAY, 0],
+                    yRange=[VM_MIN, VM_MAX])
 
         # Set axis labels
         pw.setLabel('left', 'Membrane potential', 'mV')
@@ -239,14 +277,20 @@ class SpikelingGraph(QObject):
         pw.setAntialiasing(True)
 
 
+
         # -----------------------------
-        # Setup secondary ViewBox
+        # Setup secondary ViewBox (currents on right axis)
         # -----------------------------
         self.current_plots = pg.ViewBox()
+
+        self.current_plots.setMouseEnabled(x=False, y=False)
+        self.current_plots.setMenuEnabled(False)
+
         pw.scene().addItem(self.current_plots)
-        self.current_plots.setXLink(pw)
-        self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX])
-        pw.getAxis("right").linkToView(self.current_plots)
+
+        self.current_plots.setXLink(pw) # Link X of the secondary view to the main viewbox
+        self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX]) # Fix its Y-range to current min/max
+        pw.getAxis("right").linkToView(self.current_plots) # Link the right axis to the secondary viewbox
 
         # Create plot curves for membrane potentials on the main plot with anti-aliasing
         self.curve0 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
@@ -278,6 +322,8 @@ class SpikelingGraph(QObject):
             self.current_plots.setGeometry(pw.getViewBox().sceneBoundingRect())
             self.current_plots.linkedViewChanged(pw.getViewBox(), self.current_plots.XAxis)
 
+        # Run once now and then on every resize
+        update_views()
         pw.getViewBox().sigResized.connect(update_views)
 
 
@@ -399,12 +445,12 @@ class SpikelingGraph(QObject):
             # Save path for later use
             self._current_save_path = save_path
 
-        # --- If recording is on, append latest buffer data ---
-        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked():
-            for i in range(8):
-                buffer_name = f"databuffer{i}"
-                if hasattr(self, buffer_name) and getattr(self, buffer_name):
-                    self.spikeling_data[i + 1].append(getattr(self, buffer_name)[-1])
+        # # --- If recording is on, append latest buffer data ---
+        # if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked():
+        #     for i in range(8):
+        #         buffer_name = f"databuffer{i}"
+        #         if hasattr(self, buffer_name) and getattr(self, buffer_name):
+        #             self.spikeling_data[i + 1].append(getattr(self, buffer_name)[-1])
 
         # --- If recording is stopped, export data ---
         if not self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:

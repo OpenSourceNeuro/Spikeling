@@ -97,6 +97,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = Ui_Spikeling()
         self.ui.setupUi(self)
+
         self.setWindowIcon(QIcon("Spikeling.ico"))
 
         self.aux_window = QtWidgets.QMainWindow()

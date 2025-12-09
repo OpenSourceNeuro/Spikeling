@@ -41,7 +41,9 @@ class NeuronGenerator():
         nstim = np.zeros(ntime)
         self.ui.NeuronGenerator_Oscilloscope_widget.clear()
         NeuronGenerator.NeuronUpdateView(self)
-        self.ui.NeuronGenerator_Oscilloscope_widget.getViewBox().sigResized.connect(NeuronGenerator.NeuronUpdateView(self))
+
+        vb = self.ui.NeuronGenerator_Oscilloscope_widget.getViewBox()
+        vb.sigResized.connect(lambda: NeuronGenerator.NeuronUpdateView(self))
 
         self.a = float(self.ui.a_value.text())
         self.b = float(self.ui.b_value.text())

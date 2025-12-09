@@ -3,9 +3,10 @@
 #                          Libraries import                            #
 
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QPalette, QColor
 from PySide6.QtCore import QSize, QPropertyAnimation
 from PySide6.QtSerialPort import QSerialPortInfo
+from PySide6.QtWidgets import QSlider
 
 from Neuron_Parameters import Ui_AdvancedParameters
 import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_NeuronGenerator, Page_StimulusGenerator, Page_Exercise101, Page_Exercise102, Page_Exercise103, Page_Exercise104, Page_Exercise105, Page_Settings, Page_About, Page_Help, Page_GitHub
@@ -219,6 +220,9 @@ def Buttons(self):
             self.ui.Spikeling_SelectPortComboBox.setItemText(i + 1, str(portList[i]))
         # COM port connections
         self.ui.Spikeling_SelectPortComboBox.currentIndexChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ChangePort(self))
+
+        # Modify the microcontroller loop time
+        self.ui.Spikeling_Speed_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ChangeSpeed(self))
 
         # Create an instance of SpikelingGraph
         self.spikeling_graph = SpikelingGraph(self)
@@ -641,28 +645,26 @@ def Buttons(self):
 
         ########################################################################
 
-        self.ui.Spikeling_StimFre_slider.setStyleSheet("""
-    QSlider::groove:horizontal {
-        height: 8px;
-        background: #bbbbbb;       /* unfilled part of groove */
-        border-radius: 4px;
-    }
+        # Restore default handle + ticks for Stim Frequency slider
+        s = self.ui.Spikeling_StimFre_slider
 
-    QSlider::handle:horizontal {
-        background: #ff0000;       /* handle color */
-        border: 1px solid #5c5c5c;
-        width: 16px;
-        margin: -4px 0;            /* centers handle on groove */
-        border-radius: 8px;
-    }
+        # Remove inherited stylesheet so Qt draws native handle again
+        s.setStyleSheet("")
 
-    QSlider::sub-page:horizontal {
-        background: #ff5555;       /* filled part to the left of handle */
-        border-radius: 4px;
-    }
+        # Enable ticks below
+        s.setTickPosition(QSlider.TicksBelow)
+        s.setTickInterval(10)
 
-    QSlider::add-page:horizontal {
-        background: #bbbbbb;       /* unfilled part to the right */
-        border-radius: 4px;
-    }
-""")
+        # Now apply ONLY groove styling (optional)
+        s.setStyleSheet("""
+        QSlider::groove:horizontal {
+            height: 6px;
+            background: #001E26;
+            border-radius: 3px;
+        }
+        QSlider::sub-page:horizontal {
+            background: #DC322F;
+            border-radius: 3px;
+        }
+        """)
+
