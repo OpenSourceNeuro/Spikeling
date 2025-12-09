@@ -43,8 +43,6 @@ static inline void setIntParam(bool &enableFlag, int &param) {
 inline void SetRefreshRate(){
   int val_us;
   if (readNextInt(val_us)) {
-    if (val_us < 999)  val_us = 1000;   // 1000 µs minimum
-    if (val_us > 1000000) val_us = 1000000; // 1 s max
     timing.step_us  = (uint32_t)(val_us);
   }
 }

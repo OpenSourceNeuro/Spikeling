@@ -1,3 +1,43 @@
+/* ==========================================================================
+   Spikeling V2.5 – Main Firmware
+   --------------------------------------------------------------------------
+   Open-source, Arduino-compatible spiking neuron simulator
+   running an Izhikevich-style model on an ESP32-WROOM-32.
+
+   Project      : Spikeling
+   Repository   : https://github.com/OpenSourceNeuro/Spikeling
+   File         : Spikeling_V2.5.ino
+   Board        : ESP32-WROOM-32 (ESP32 DevKit-style board)
+   Author       : Maxime Zimmermann
+   Contributors : Spikeling / OpenSourceNeuro community
+
+   License      : GPL-3.0-or-later
+                  See the LICENSE file in the repository for details
+                  or https://www.gnu.org/licenses/gpl-3.0.html
+
+   Dependencies :
+     - Arduino core for ESP32
+     - MCP_ADC (MCP3208 driver)
+     - SerialCommand
+     - Gaussian noise library
+     - PySide6 / Qt Serial (for host GUI, not on-device)
+
+   Description  :
+     This sketch configures the Spikeling hardware, runs the Izhikevich
+     neuron model in real time, handles all analog/digital IO (Vm,
+     synapses, photodiode, stimulus, noise), and streams compact binary
+     packets to the host GUI for oscilloscope-style visualization and
+     control.
+
+   --------------------------------------------------------------------------
+   (c) 2025 Maxime Zimmermann and contributors.
+   This is free software; you can redistribute it and/or modify it under the
+   terms of the GNU General Public License as published by the Free Software
+   Foundation; either version 3 of the License, or (at your option) any
+   later version.
+   ========================================================================== */
+   
+
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                        Header import                                                  */ 
                                                             
