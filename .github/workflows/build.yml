@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: write   # allow creating/updating releases
+
 jobs:
   build-macos:
     name: Build on macOS
@@ -50,12 +53,10 @@ jobs:
           rm -rf release
 
       - name: Upload macOS artifact to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: GUI/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Cleanup
         run: rm -rf GUI/PyQt/build GUI/PyQt/dist GUI/PyQt/__pycache__
@@ -105,12 +106,10 @@ jobs:
           rm -rf release
 
       - name: Upload Linux artifact to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: GUI/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Cleanup
         run: rm -rf GUI/PyQt/build GUI/PyQt/dist GUI/PyQt/__pycache__
@@ -162,12 +161,10 @@ jobs:
           Remove-Item -Recurse -Force release
 
       - name: Upload Windows artifact to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: GUI/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
++        uses: softprops/action-gh-release@v2
++        with:
++          tag_name: ${{ github.ref_name }}
++          files: GUI/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
 
       - name: Cleanup
         shell: powershell
