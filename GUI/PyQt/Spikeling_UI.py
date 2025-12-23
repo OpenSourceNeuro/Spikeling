@@ -334,6 +334,9 @@ class Ui_Spikeling(object):
 "	border-radius: 5px;\n"
 "    padding: 0px 5px;\n"
 "}\n"
+"#Imaging_GECI_pushButton_frame QPushButton:hover{\n"
+"	background-color: rgb(0, 30, 38);\n"
+"}\n"
 "\n"
 "#Imaging_DataRecording_box{\n"
 "	border: 2px solid rgb(147,161,161);\n"
@@ -352,14 +355,21 @@ class Ui_Spikeling(object):
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
-"\n"
-"\n"
+"#Imaging_Oscilloscope_widget QPushButton{\n"
+"	padding: 5px 5px;\n"
+"	border-radius:10px;\n"
+"	background-color: rgb(7, 54, 66);\n"
+"}\n"
+"#Imaging_Oscilloscope_widget QPushButton:hover{\n"
+"	background-color: rgb(0, 30, 38);\n"
+"}\n"
 "\n"
 "\n"
 "\n"
 "\n"
 "#NeuronGenerator_subframe1_middle_frame QLineEdit{\n"
-"	background-color: rgb(7, 54, 66);\n"
+"	background-"
+                        "color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "}\n"
 "#NeuronGenerator_subframe2 QLineEdit{\n"
@@ -369,8 +379,7 @@ class Ui_Spikeling(object):
 "#NeuronGenerator_subframe2 QPushButton{\n"
 "	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(147,161,161);\n"
-""
-                        "	border-radius: 10px;\n"
+"	border-radius: 10px;\n"
 "	padding: 5px 5px;\n"
 "}\n"
 "#NeuronGenerator_subframe2 QComboBox{\n"
@@ -398,7 +407,8 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 43, 54);\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "	border-radius: 10px;\n"
-"	padding: 2px;\n"
+"	paddi"
+                        "ng: 2px;\n"
 "}\n"
 "#DataAnalysis_stackedWidget QLineEdit{\n"
 "    border: 2px solid rgb(147,161,161);\n"
@@ -410,8 +420,7 @@ class Ui_Spikeling(object):
 "#DataAnalysis_Display_frame QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
 "	border: 2px solid rgb(147,161,161);\n"
-""
-                        "	border-radius: 10px;\n"
+"	border-radius: 10px;\n"
 "	padding: 2px;\n"
 "}\n"
 "\n"
@@ -443,7 +452,8 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
-"#page_401 QPushButton{\n"
+"#pa"
+                        "ge_401 QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "	border-radius: 10px;\n"
@@ -454,8 +464,7 @@ class Ui_Spikeling(object):
 "	border: 2px solid rgb(147,161,161);\n"
 "	border-radius: 10px;\n"
 "	padding: 5px 5px;\n"
-"	m"
-                        "argin: 5px\n"
+"	margin: 5px\n"
 "}\n"
 "#StimulusGenerator_Container QLineEdit{\n"
 "	background-color: rgb(7, 54, 66);\n"
@@ -483,7 +492,8 @@ class Ui_Spikeling(object):
 "}\n"
 "#page501_01_09 QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
-"	border: 2px solid rgb(147,161,161);\n"
+"	border: 2"
+                        "px solid rgb(147,161,161);\n"
 "	border-radius: 10px;\n"
 "	padding: 2px;\n"
 "}\n"
@@ -496,8 +506,7 @@ class Ui_Spikeling(object):
 "}\n"
 "#page_502 QLineEdit{\n"
 "	border: 2px solid rgb(147,161,161);\n"
-"   "
-                        " background-color: rgb(7, 54, 66);\n"
+"    background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
 "#Exercise103_Button_frame QPushButton{\n"
@@ -524,7 +533,8 @@ class Ui_Spikeling(object):
 "	padding: 2px;\n"
 "}\n"
 "#page_504 QLineEdit{\n"
-"	border: 2px solid rgb(147,161,161);\n"
+"	"
+                        "border: 2px solid rgb(147,161,161);\n"
 "    background-color: rgb(7, 54, 66);\n"
 "}\n"
 "#page504_04 QPushButton{\n"
@@ -536,8 +546,7 @@ class Ui_Spikeling(object):
 "\n"
 "#Exercise105_Button_frame QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
-""
-                        "	border: 2px solid rgb(147,161,161);\n"
+"	border: 2px solid rgb(147,161,161);\n"
 "	border-radius: 10px;\n"
 "	padding: 2px;\n"
 "}\n"
@@ -9565,6 +9574,20 @@ class Ui_Spikeling(object):
         self.horizontalLayout_305.setSpacing(0)
         self.horizontalLayout_305.setObjectName(u"horizontalLayout_305")
         self.horizontalLayout_305.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_AutoRange_frame = QFrame(self.Imaging_Oscilloscope_widget)
+        self.Imaging_AutoRange_frame.setObjectName(u"Imaging_AutoRange_frame")
+        self.Imaging_AutoRange_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_AutoRange_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_109 = QVBoxLayout(self.Imaging_AutoRange_frame)
+        self.verticalLayout_109.setObjectName(u"verticalLayout_109")
+        self.Imaging_AutoRange_pushButton = QPushButton(self.Imaging_AutoRange_frame)
+        self.Imaging_AutoRange_pushButton.setObjectName(u"Imaging_AutoRange_pushButton")
+
+        self.verticalLayout_109.addWidget(self.Imaging_AutoRange_pushButton)
+
+
+        self.horizontalLayout_305.addWidget(self.Imaging_AutoRange_frame, 0, Qt.AlignLeft|Qt.AlignTop)
+
 
         self.verticalLayout_129.addWidget(self.Imaging_Oscilloscope_widget)
 
@@ -24878,6 +24901,7 @@ class Ui_Spikeling(object):
         self.Imaging_Vm2_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Vm Synapse2", None))
         self.Imaging_Stimulus_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Stimulus", None))
         self.Imaging_Df_label.setText(QCoreApplication.translate("Spikeling", u"Display \u0394F/F ", None))
+        self.Imaging_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range Y axis", None))
         self.Imaging_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
         self.Imaging_DataRecording_SelectRecordFolder_label.setText(QCoreApplication.translate("Spikeling", u"Data Logging: Filename", None))
         self.Imaging_DataRecording_RecordFolder_value.setText("")

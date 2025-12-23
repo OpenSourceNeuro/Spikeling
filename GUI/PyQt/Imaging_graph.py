@@ -213,6 +213,10 @@ class ImagingGraph(QObject):
         self.apply_indicator_preset("Generic", update_ui=True)
         self._update_connect_button(True)
 
+        if not hasattr(self, "_fluo_autorange_connected"):
+            self._fluo_autorange_connected = True
+            self.ui.Imaging_AutoRange_pushButton.clicked.connect(self.autorange_fluorescence_y)
+
         self.parent.ImagingConnectionFlag = True
         self.bleach_B = 1.0
 
@@ -401,6 +405,63 @@ class ImagingGraph(QObject):
     # -------------------------------------------------------------------------
     # Imaging Model
     # -------------------------------------------------------------------------
+
+    def autorange_fluorescence_y(self) -> None:
+        if not self._plots_ready or self._mainVB is None:
+            return
+
+        ui = self.ui
+
+        fluo_checks = [
+            ui.Imaging_Fluorescence1_Checkbox,
+            ui.Imaging_Fluorescence2_Checkbox,
+            ui.Imaging_Fluorescence3_Checkbox,
+        ]
+
+        fraction = 1 / 5
+        n_disp_full = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL))
+        n_disp = max(10, int(n_disp_full * fraction))
+
+        ys = []
+        offset = float(self._imaging_params.get("FluoOffset", 0.0)) if self.use_dff else 0.0
+
+        for i, chk in enumerate(fluo_checks):
+            if not chk.isChecked():
+                continue
+
+            # Take last n_disp samples from the rolling buffer
+            y = np.asarray(self.Fluo_buffers[i], dtype=float)[-n_disp:]
+
+            # Apply the same ΔF/F0 transform as _update_plots()
+            if self.use_dff:
+                y_sig = y - offset
+                f0_sig = max(1e-12, float(self.F0[i]) - offset)
+                y = 100.0 * (y_sig - f0_sig) / f0_sig
+
+            # Ignore NaNs if any
+            y = y[np.isfinite(y)]
+            if y.size:
+                ys.append(y)
+
+        if not ys:
+            return
+
+        y_all = np.concatenate(ys)
+        y_min = float(np.min(y_all))
+        y_max = float(np.max(y_all))
+
+        # Avoid zero-span ranges
+        if not np.isfinite(y_min) or not np.isfinite(y_max):
+            return
+        if (y_max - y_min) < 1e-9:
+            y_min -= 1.0
+            y_max += 1.0
+
+        pad = 0.05 * (y_max - y_min)
+
+        # Set ONLY fluorescence (main VB) y-range
+        self._mainVB.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)  # freeze if it was on
+        self._mainVB.setYRange(y_min - pad, y_max + pad, padding=0.0)
 
     def apply_indicator_preset(self, name: str, update_ui: bool = True) -> None:
         """

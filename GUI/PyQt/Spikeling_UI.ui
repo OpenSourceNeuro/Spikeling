@@ -318,6 +318,9 @@ centerMenuSubContainer_menu_stackedwidget{
 	border-radius: 5px;
     padding: 0px 5px;
 }
+#Imaging_GECI_pushButton_frame QPushButton:hover{
+	background-color: rgb(0, 30, 38);
+}
 
 #Imaging_DataRecording_box{
 	border: 2px solid rgb(147,161,161);
@@ -336,8 +339,14 @@ centerMenuSubContainer_menu_stackedwidget{
 	background-color: rgb(7, 54, 66);
 }
 
-
-
+#Imaging_Oscilloscope_widget QPushButton{
+	padding: 5px 5px;
+	border-radius:10px;
+	background-color: rgb(7, 54, 66);
+}
+#Imaging_Oscilloscope_widget QPushButton:hover{
+	background-color: rgb(0, 30, 38);
+}
 
 
 
@@ -21248,6 +21257,25 @@ background-color: rgb(220, 50, 47);</string>
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
+                          <item alignment="Qt::AlignLeft|Qt::AlignTop">
+                           <widget class="QFrame" name="Imaging_AutoRange_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_109">
+                             <item>
+                              <widget class="QPushButton" name="Imaging_AutoRange_pushButton">
+                               <property name="text">
+                                <string>Auto Range Y axis</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
                          </layout>
                         </widget>
                        </item>
