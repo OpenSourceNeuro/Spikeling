@@ -3,7 +3,6 @@
 #                          Libraries import                            #
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QPen
 import pyqtgraph as pg
 
 import collections
@@ -11,12 +10,12 @@ import numpy as np
 import pandas as pd
 
 import Settings
-from Izhikevich_parameters import IzhikevichNeurons
+import Imaging_graph
 
 
 Emulator_downsampling = 10
 Emulator_sampleinterval = 0.1
-Emulator_timewindow = 500
+Emulator_timewindow = 5000
 Emulator_timewindowdisplay = 500
 penwidth = 1
 
@@ -26,11 +25,10 @@ def EmulatorPlot(self):
         SetPlotCurve(self)
         SetPlot(self)
 
-        self.EmulatorConnectionFlag = True
-
+        # QTimer for emulator GUI updates
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: UpdatePlot(self))
-        self.timer.start()
+        self.timer.start(50)
 
     else:
         self.ui.Emulator_Connect_pushButton.setText("Start Spikeling Emulator")
@@ -39,30 +37,62 @@ def EmulatorPlot(self):
                                                           "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
                                                           "border-radius: 10px;"
                                                           )
-        self.timer.stop()
+        if hasattr(self, "timer"):
+            self.timer.stop()
         self.ui.Emulator_Oscilloscope_widget.clear()
-        self.Emulator_CurrentPlots.clear()
+        if hasattr(self, "Emulator_CurrentPlots"):
+            self.Emulator_CurrentPlots.clear()
         self.ui.EmulatorConnectedFlag = False
 
+
+    # -----------------------------------------------------------------
+    # Nested update function: runs at each QTimer tick
+    # -----------------------------------------------------------------
     def UpdatePlot(self):
-        self.ui.Emulator_Oscilloscope_widget.getViewBox().sigResized.connect(lambda: UpdateViews(self))
-        self.ui.Emulator_Data = GetData(self)
-        BuffData(self)                              # Append latest serial data into buffer deque
-        SavePlotData(self)                          # Create data array to be exported in .csv
-        if self.i_downsampling == 0:                # Plot Data once every "downsampling" time
-            PlotCurve(self)
-        self.i_downsampling += 1
-        if self.i_downsampling == Emulator_downsampling - 1:
-            self.i_downsampling = 0
+        """
+        Advance the emulator and update the graph.
 
-        if self.ui.Emulator_SpeedUp_pushButton.isChecked() == False:
-            QTimer.singleShot(1, lambda: PlotCurve(self))
-            self.ui.Emulator_SpeedUp_pushButton.setText("Speed Up")
-        else:
-            self.ui.Emulator_SpeedUp_pushButton.setText("Normal Speed")
+        The Emulator_Speed_slider (0–5) controls how many simulation
+        timesteps (dt = 0.1 ms) we execute for each QTimer tick.
+        """
 
+        # 1) Map slider value -> how many simulation steps per GUI update
+        speed_step = self.ui.Emulator_Speed_slider.value()
 
+        steps_per_update_lookup = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
+        steps_per_update = steps_per_update_lookup[speed_step]
+        DT_Display = round(steps_per_update / 10000, 3)
+        self.ui.Emulator_Speed_value.setText("x " + str(DT_Display))
 
+        # 2) Run several simulation steps before we redraw
+        imaging_batch = []  # list of 9-field packets for imaging
+
+        # Resolve imaging_graph once per tick
+        imaging_graph = getattr(self, "imaging_graph", None)
+        imaging_enabled = (
+                imaging_graph is not None
+                and getattr(self, "ImagingConnectionFlag", False)
+                and imaging_graph.source_mode == "emulator"
+        )
+
+        for _ in range(steps_per_update):
+            vec8 = GetData(self)  # [Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
+            self.ui.Emulator_Data = vec8
+
+            BuffData(self)
+            SavePlotData(self)
+
+            if imaging_enabled:
+                # 9-field: [t_ms, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
+                pkt9 = [self.Emulator_sim_time_ms] + list(vec8)
+                imaging_batch.append(pkt9)
+
+        # 3) Plot only once per GUI update (using the latest buffer contents)
+        PlotCurve(self)
+
+        # 4) Forward the whole batch once per GUI tick
+        if imaging_batch:
+            imaging_graph.on_emulator_data(imaging_batch)
 
     # Read Serial and return data array (7)
     def GetData(self):
@@ -99,29 +129,34 @@ def EmulatorPlot(self):
 
         self.Emulator_Trigger = 0
 
-        if self.ui.EmulatorStimCus_toggleButton.isChecked():
+        use_custom_stim = (
+                self.ui.EmulatorStimCus_toggleButton.isChecked()
+                and hasattr(self.ui, "Emulatordf_yStim")
+                and len(self.ui.Emulatordf_yStim) > 0
+        )
 
-            if self.ui.StimCus_Flag == True:
+        if use_custom_stim:
+            if getattr(self.ui, "StimCus_Flag", False):
                 self.EmulatorCusStimCounter = 0
                 self.Emulator_Trigger = 1
                 self.ui.StimCus_Flag = False
 
-            self.EmulatorStimCusValue = self.ui.Emulatordf_yStim[self.EmulatorCusStimCounter]
-            self.EmulatorCusStimCounter += 1
-
-
-            if self.EmulatorCusStimCounter > len(self.ui.Emulatordf_yStim) - 1:
+            # Safe wrap-around
+            if self.EmulatorCusStimCounter >= len(self.ui.Emulatordf_yStim):
                 self.EmulatorCusStimCounter = 0
                 self.Emulator_Trigger = 1
 
-            self.Emulator_Stimulus_Data = self.EmulatorStimCusValue
+            self.EmulatorStimCusValue = self.ui.Emulatordf_yStim[self.EmulatorCusStimCounter]
+            self.EmulatorCusStimCounter += 1
 
+            self.Emulator_Stimulus_Data = float(self.EmulatorStimCusValue)
 
         else:
+            # Fallback to internal square-pulse generator
             self.Emulator_StimulusStrength_Value = self.ui.Emulator_StimStrSlider.value()
-            self.Emulator_StimulusFrequency_Value = self.ui.Emulator_StimFre_slider.value()*(-1)
+            self.Emulator_StimulusFrequency_Value = self.ui.Emulator_StimFre_slider.value() * (-1)
 
-            if self.Emulator_StimCounter < self.Emulator_StimSteps/2:
+            if self.Emulator_StimCounter < self.Emulator_StimSteps / 2:
                 self.Emulator_Stimulus_Data = self.Emulator_StimulusStrength_Value
             else:
                 self.Emulator_Stimulus_Data = 0.0
@@ -131,8 +166,7 @@ def EmulatorPlot(self):
             if self.Emulator_StimCounter >= self.Emulator_StimSteps:
                 self.Emulator_StimCounter = 0
                 self.Emulator_Trigger = 1
-                self.Emulator_StimSteps = np.around(self.Emulator_Stim_DutyCycle + (self.Emulator_StimulusFrequency_Value * self.Emulator_Stim_DutyCycle / 100))
-
+                self.Emulator_StimSteps = int(np.round(self.Emulator_Stim_DutyCycle * (10 ** ( self.Emulator_StimulusFrequency_Value / 100.0))))
 
 
         #Generate TotalCurrent Input
@@ -154,7 +188,7 @@ def EmulatorPlot(self):
             self.Emulator_Photodiode_Gain = self.ui.Emulator_PR_PhotoGain_slider.value()
             if self.Emulator_Photodiode_Gain >= 0:
                 self.Emulator_Photodiode_Polarity = 1
-            if self.Emulator_Photodiode_Polarity < 0:
+            else:
                 self.Emulator_Photodiode_Polarity = -1
 
             self.Emulator_Photodiode_Value = self.Emulator_I_Photodiode * self.Emulator_Photodiode_Gain/0.5 * self.Photodiode_Recovery
@@ -250,7 +284,7 @@ def EmulatorPlot(self):
                 self.EmulatorSyn1_Photodiode_Gain = self.ui.Emulator_Syn1_PR_PhotoGain_slider.value()
                 if self.EmulatorSyn1_Photodiode_Gain >= 0:
                     self.EmulatorSyn1_Photodiode_Polarity = 1
-                if self.EmulatorSyn1_Photodiode_Polarity < 0:
+                else:
                     self.EmulatorSyn1_Photodiode_Polarity = -1
 
                 self.EmulatorSyn1_Photodiode_Value = self.EmulatorSyn1_I_Photodiode * self.EmulatorSyn1_Photodiode_Gain / 0.5 * self.EmulatorSyn1_Photodiode_Recovery
@@ -351,7 +385,7 @@ def EmulatorPlot(self):
                 self.EmulatorSyn2_Photodiode_Gain = self.ui.Emulator_Syn2_PR_PhotoGain_slider.value()
                 if self.EmulatorSyn2_Photodiode_Gain >= 0:
                     self.EmulatorSyn2_Photodiode_Polarity = 1
-                if self.EmulatorSyn2_Photodiode_Polarity < 0:
+                else:
                     self.EmulatorSyn2_Photodiode_Polarity = -1
 
                 self.EmulatorSyn2_Photodiode_Value = self.EmulatorSyn2_I_Photodiode * self.EmulatorSyn2_Photodiode_Gain / 0.5 * self.EmulatorSyn2_Photodiode_Recovery
@@ -410,7 +444,19 @@ def EmulatorPlot(self):
         self.ui.Emulator_data.append(self.Emulator_Syn2Input_Data)
         self.ui.Emulator_data.append(self.Emulator_Trigger)
 
-        return self.ui.Emulator_data
+        # advance simulation clock by one integration step
+        self.Emulator_sim_time_ms += self.Emulator_timestep_ms  # 0.1 ms
+
+        return [
+            self.Emulator_Vm_Data,
+            self.Emulator_Stimulus_Data,
+            self.Emulator_TotalCurrent_Data,
+            self.Emulator_Vm_Data1,
+            self.Emulator_Syn1Input_Data,
+            self.Emulator_Vm_Data2,
+            self.Emulator_Syn2Input_Data,
+            self.Emulator_Trigger,
+        ]
 
     # Append latest serial data point into buffer deque
     def BuffData(self):
@@ -430,83 +476,96 @@ def EmulatorPlot(self):
         if self.ui.Emulator_VmCheckbox.isChecked():
             self.Emulator_y0[:] = self.Emulator_databuffer0
             self.Emulator_curve0.setData(self.Emulator_x, self.Emulator_y0)
+            self.Emulator_curve0.setVisible(True)
         else:
-            self.Emulator_curve0.clear()
+            self.Emulator_curve0.setVisible(False)
 
         if self.ui.Emulator_StimulusCheckbox.isChecked():
             self.Emulator_y1[:] = self.Emulator_databuffer1
             self.Emulator_curve1.setData(self.Emulator_x, self.Emulator_y1)
+            self.Emulator_curve1.setVisible(True)
         else:
-            self.Emulator_curve1.clear()
+            self.Emulator_curve1.setVisible(False)
 
         if self.ui.Emulator_InputCurrentCheckbox.isChecked():
             self.Emulator_y2[:] = self.Emulator_databuffer2
             self.Emulator_curve2.setData(self.Emulator_x, self.Emulator_y2)
+            self.Emulator_curve2.setVisible(True)
         else:
-            self.Emulator_curve2.clear()
+            self.Emulator_curve2.setVisible(False)
 
         if self.ui.Emulator_Syn1VmCheckbox.isChecked():
             self.Emulator_y3[:] = self.Emulator_databuffer3
             self.Emulator_curve3.setData(self.Emulator_x, self.Emulator_y3)
+            self.Emulator_curve3.setVisible(True)
         else:
-            self.Emulator_curve3.clear()
+            self.Emulator_curve3.setVisible(False)
 
         if self.ui.Emulator_Syn1InputCheckbox.isChecked():
             self.Emulator_y4[:] = self.Emulator_databuffer4
             self.Emulator_curve4.setData(self.Emulator_x, self.Emulator_y4)
+            self.Emulator_curve4.setVisible(True)
         else:
-            self.Emulator_curve4.clear()
+            self.Emulator_curve4.setVisible(False)
 
         if self.ui.Emulator_Syn2VmCheckbox.isChecked():
             self.Emulator_y5[:] = self.Emulator_databuffer5
             self.Emulator_curve5.setData(self.Emulator_x, self.Emulator_y5)
+            self.Emulator_curve5.setVisible(True)
         else:
-            self.Emulator_curve5.clear()
+            self.Emulator_curve5.setVisible(False)
 
         if self.ui.Emulator_Syn2InputCheckbox.isChecked():
             self.Emulator_y6[:] = self.Emulator_databuffer6
             self.Emulator_curve6.setData(self.Emulator_x, self.Emulator_y6)
+            self.Emulator_curve6.setVisible(True)
         else:
-            self.Emulator_curve6.clear()
+            self.Emulator_curve6.setVisible(False)
 
 
 
 
-def SavePlotData(self):                              # Save latest buffer data and export them as csv
-    if self.ui.Emulator_DataRecording_Record_pushButton.isChecked() == False and self.recordflag == True:
-        Dataset = np.empty([9, len(self.EmulatorData[1])], dtype=float)
-        for i in range(len(self.EmulatorData[1])):
-            Dataset[0][i] = i * 0.1
-            Dataset[1][i] = self.EmulatorData[1][i]
-            Dataset[2][i] = self.EmulatorData[2][i]
-            Dataset[3][i] = self.EmulatorData[3][i]
-            Dataset[4][i] = self.EmulatorData[4][i]
-            Dataset[5][i] = self.EmulatorData[5][i]
-            Dataset[6][i] = self.EmulatorData[6][i]
-            Dataset[7][i] = self.EmulatorData[7][i]
-            Dataset[8][i] = self.EmulatorData[8][i]
+def SavePlotData(self):
+    # Stop recording -> write out CSV
+    if (not self.ui.Emulator_DataRecording_Record_pushButton.isChecked()
+            and getattr(self, "recordflag", False)):
 
-        dict = {'Time (ms)': Dataset[0], 'Spikeling Vm (mV)': Dataset[1], 'Stimulus (%)': Dataset[2], 'Total Current Input (a.u.)': Dataset[3],
-                'Synapse 1 Vm (mV)': Dataset[4], 'Synapse 1 Input (a.u.)': Dataset[5],
-                'Synapse 2 Vm (mV)': Dataset[6], 'Synapse 2 Input (a.u.)': Dataset[7],
-                'Trigger': Dataset[8]}
-        df = pd.DataFrame(dict)
+        if len(self.EmulatorData[1]) == 0:
+            self.recordflag = False
+            return
+
+        n = len(self.EmulatorData[1])
+        Dataset = np.empty((9, n), dtype=float)
+
+        # time axis
+        Dataset[0] = np.arange(n, dtype=float) * Emulator_sampleinterval
+
+        for j in range(1, 9):
+            Dataset[j] = np.array(self.EmulatorData[j], dtype=float)
+
+        df = pd.DataFrame({
+            'Time (ms)': Dataset[0],
+            'Spikeling Vm (mV)': Dataset[1],
+            'Stimulus (%)': Dataset[2],
+            'Total Current Input (a.u.)': Dataset[3],
+            'Synapse 1 Vm (mV)': Dataset[4],
+            'Synapse 1 Input (a.u.)': Dataset[5],
+            'Synapse 2 Vm (mV)': Dataset[6],
+            'Synapse 2 Input (a.u.)': Dataset[7],
+            'Trigger': Dataset[8],
+        })
+
         self.Emulator_RecordingFileName = str(self.ui.Emulator_SelectedFolderLabel.text())
-        df.to_csv(self.Emulator_RecordingFileName + '.csv', index=False)
+        df.to_csv(self.Emulator_RecordingFileName + ".csv", index=False)
+
+        # reset state
         self.recordflag = False
-        self.EmulatorData[0].clear()
-        self.EmulatorData[1].clear()
-        self.EmulatorData[2].clear()
-        self.EmulatorData[3].clear()
-        self.EmulatorData[4].clear()
-        self.EmulatorData[5].clear()
-        self.EmulatorData[6].clear()
-        self.EmulatorData[7].clear()
-        self.EmulatorData[8].clear()
+        for row in self.EmulatorData:
+            row.clear()
 
-    if self.ui.Emulator_DataRecording_Record_pushButton.isChecked() == True:
+    # While recording, append latest values
+    if self.ui.Emulator_DataRecording_Record_pushButton.isChecked():
         self.recordflag = True
-
         self.EmulatorData[1].append(self.Emulator_databuffer0[-1])
         self.EmulatorData[2].append(self.Emulator_databuffer1[-1])
         self.EmulatorData[3].append(self.Emulator_databuffer2[-1])
@@ -516,12 +575,12 @@ def SavePlotData(self):                              # Save latest buffer data a
         self.EmulatorData[7].append(self.Emulator_databuffer6[-1])
         self.EmulatorData[8].append(self.Emulator_databuffer7[-1])
 
+
 def SetInitParameters(self):
-    self.ui.Emulator_SpeedUp_pushButton.setChecked(False)
     self.ui.EmulatorConnectedFlag = True
-    self.i_downsampling = 0
     self.recordflag = False
     self.Trigger = 0
+    self.Emulator_sim_time_ms = 0.0
     self.ui.Emulator_Oscilloscope_widget.clear()
     if self.ui.Emulator_Connect_pushButton.isChecked():
         self.ui.Emulator_Connect_pushButton.setText("Stop Spikeling Emulator")
@@ -556,7 +615,7 @@ def SetInitParameters(self):
     self.Emulator_Stimulus_Data = 0.0
     self.Emulator_StimCounter = 0
     self.Emulator_StimSteps = 1000
-    self.Emulator_Stim_DutyCycle = 500
+    self.Emulator_Stim_DutyCycle = 1000
 
     self.Emulator_NoiseSlider = 0.0
     self.Emulator_Noise_Value = 0.0
@@ -648,18 +707,27 @@ def SetPlot(self):
     self.ui.Emulator_Oscilloscope_widget.showGrid(x=True, y=True)
     self.ui.Emulator_Oscilloscope_widget.setRange(xRange=[-Emulator_timewindowdisplay, 0])
     self.ui.Emulator_Oscilloscope_widget.setRange(yRange=[-90, 30])
-    self.ui.Emulator_Oscilloscope_widget.plotItem.setMouseEnabled(y=False)
+    self.ui.Emulator_Oscilloscope_widget.plotItem.setMouseEnabled(x=True, y=False)
     self.ui.Emulator_Oscilloscope_widget.plotItem.vb.setLimits(xMin=-Emulator_timewindow,xMax=0)
     self.ui.Emulator_Oscilloscope_widget.setLabel('left', 'Membrane potential', 'mV')
     self.ui.Emulator_Oscilloscope_widget.setLabel('bottom', 'time', 'ms')
     self.ui.Emulator_Oscilloscope_widget.setLabel('right', 'Current Input', 'a.u.')
 
+    # Secondary ViewBox for currents
     self.Emulator_CurrentPlots = pg.ViewBox()
-    self.ui.Emulator_Oscilloscope_widget.scene().addItem(self.Emulator_CurrentPlots)
-    self.Emulator_CurrentPlots.setXLink(self.ui.Emulator_Oscilloscope_widget)
-    self.Emulator_CurrentPlots.setRange(yRange=[-100, 100])
-    self.ui.Emulator_Oscilloscope_widget.getAxis("right").linkToView(self.Emulator_CurrentPlots)
+    pw = self.ui.Emulator_Oscilloscope_widget
 
+    pw.scene().addItem(self.Emulator_CurrentPlots)
+    self.Emulator_CurrentPlots.setXLink(pw)
+    self.Emulator_CurrentPlots.setRange(yRange=[-100, 100])
+    self.Emulator_CurrentPlots.setMouseEnabled(False, False)
+
+    # Link right axis to the currents ViewBox
+    pw.getAxis("right").linkToView(self.Emulator_CurrentPlots)
+
+    # IMPORTANT: connect sigResized ONLY ONCE here
+    vb = pw.getViewBox()
+    vb.sigResized.connect(lambda: UpdateViews(self))
 
     self.Emulator_curve0 = self.ui.Emulator_Oscilloscope_widget.plot(self.Emulator_x, self.Emulator_y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=penwidth))
     self.Emulator_curve0.clear()

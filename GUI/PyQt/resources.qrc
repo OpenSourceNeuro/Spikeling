@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="resources">
+    <file>resources/Handle.png</file>
     <file>resources/Calcium.png</file>
     <file>resources/SqaureStim.png</file>
     <file>resources/data01.png</file>

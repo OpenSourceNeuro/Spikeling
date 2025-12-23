@@ -3,7 +3,6 @@
 #                          Libraries import                            #
 
 from PySide6.QtWidgets import QFileDialog
-from PySide6.QtGui import QIcon
 from PySide6.QtCore import QSize, QFileInfo
 
 import os
@@ -13,6 +12,8 @@ import pandas as pd
 from Izhikevich_parameters import IzhikevichNeurons
 
 import Settings, NavigationButtons
+
+
 
 
 class Emulator():
@@ -29,13 +30,14 @@ class Emulator():
 
     # Data Recording Functions
     def BrowseRecordFolder(self):
-        FolderName = QFileDialog.getExistingDirectory(caption = 'Hey! Select the folder where your experiment will be saved',
-                                                      dir = ".\Recordings")
+        FolderName = QFileDialog.getExistingDirectory(
+            caption='Hey! Select the folder where your experiment will be saved',
+            dir="./Recordings")
         if FolderName:
-            self.Emulator_DataRecording_SelectRecordFolder_label.setText(FolderName)
-            self.Emulator_DataRecording_RecordFolder_value.setEnabled(True)
-            self.Emulator_DataRecording_RecordFolder_value.setPlaceholderText("Enter a file name")
-            self.EmulatorRecordFolderFlag = True
+            self.ui.Emulator_DataRecording_SelectRecordFolder_label.setText(FolderName)
+            self.ui.Emulator_DataRecording_RecordFolder_value.setEnabled(True)
+            self.ui.Emulator_DataRecording_RecordFolder_value.setPlaceholderText("Enter a file name")
+            self.ui.EmulatorRecordFolderFlag = True
 
 
     def RecordFolderText(self):
@@ -98,20 +100,22 @@ class Emulator():
                     self.EmulatorStim_DutyCycle = 500
                     self.EmulatorStim_MinCycle = 10
                     self.ui.Emulator_StimFre_slider.setEnabled(True)
-                    self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()*(-1)
-                    self.setTextEmulatorStimFre = str(int(np.around(10000/(self.EmulatorStim_DutyCycle + (self.EmulatorStimFreValue*self.EmulatorStim_DutyCycle/100) + self.EmulatorStim_MinCycle))))
+                    self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
+                    Steps = int(np.round(1000 * (10 ** ( -self.EmulatorStimFreValue / 100.0))))
+                    self.setTextEmulatorStimFre = str(int(np.around(10000/ Steps)))
                     self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
                     self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
 
             else:
-                    self.ui.Spikeling_StimFre_slider.setEnabled(False)
-                    self.ui.Spikeling_StimFre_slider.setValue(0)
-                    self.ui.Spikeling_StimFre_readings.setText('')
+                    self.ui.Emulator_StimFre_slider.setEnabled(False)
+                    self.ui.Emulator_StimFre_slider.setValue(0)
+                    self.ui.Emulator_StimFre_readings.setText('')
 
 
     def GetStimFreSliderValue(self):
-            self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()*(-1)
-            self.setTextEmulatorStimFre = str(int(np.around(10000/(self.EmulatorStim_DutyCycle + (self.EmulatorStimFreValue*self.EmulatorStim_DutyCycle/100) + self.EmulatorStim_MinCycle))))
+            self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
+            Steps = int(np.round(1000 * (10 ** (-self.EmulatorStimFreValue / 100.0))))
+            self.setTextEmulatorStimFre = str(int(np.around(10000 / Steps)))
             self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
             self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
 
@@ -163,7 +167,7 @@ class Emulator():
         self.ui.Emulatordf_yStim = self.Emulatordf_Stim
 
         self.ui.Emulator_CustomStimulus_display.clear()
-        self.ui.Emulator_Oscilloscope_widget.showGrid(x=False, y=False)
+        self.ui.Emulator_CustomStimulus_display.showGrid(x=False, y=False)
         self.ui.Emulator_CustomStimulus_display.plot(x=self.Emulatordf_xStim, y=self.ui.Emulatordf_yStim, pen=(Settings.DarkSolarized[5]))
 
 
@@ -368,157 +372,135 @@ class Emulator():
 
 
 
+    # Helper: set Emulator_a/b/c/d from IzhikevichNeurons
+    # Helper: set Emulator_a/b/c/d from IzhikevichNeurons
+    def _set_izhikevich_emulator_from_index(self, idx_zero_based: int) -> None:
+        """idx_zero_based is 0-based index into IzhikevichNeurons."""
+        if 0 <= idx_zero_based < len(IzhikevichNeurons):
+            a, b, c, d = IzhikevichNeurons[idx_zero_based]
+            self.ui.Emulator_a = float(a)
+            self.ui.Emulator_b = float(b)
+            self.ui.Emulator_c = float(c)
+            self.ui.Emulator_d = float(d)
+
+
     def SelectNeuronMode(self):
-        self.Emulatorneuron_mode_index = self.ui.Emulator_NeuronModeComboBox.currentIndex()
+            """
+            Set emulator neuron parameters from the current selection.
 
-        if self.Emulatorneuron_mode_index == 1:
-            self.ui.Emulator_a = IzhikevichNeurons[0][0]
-            self.ui.Emulator_b = IzhikevichNeurons[0][1]
-            self.ui.Emulator_c = IzhikevichNeurons[0][2]
-            self.ui.Emulator_d = IzhikevichNeurons[0][3]
+            Combo box mapping:
+              index 0  -> (usually "Select neuron" / no selection)
+              index 1–20 -> built-in IzhikevichNeurons[0..19]
+              index >= 21 -> imported neurons stored in self.ui.EmulatorImportNeuron
+            """
+            idx = self.ui.Emulator_NeuronModeComboBox.currentIndex()
+            self.Emulatorneuron_mode_index = idx
 
-        if self.Emulatorneuron_mode_index == 2:
-            self.ui.Emulator_a = IzhikevichNeurons[1][0]
-            self.ui.Emulator_b = IzhikevichNeurons[1][1]
-            self.ui.Emulator_c = IzhikevichNeurons[1][2]
-            self.ui.Emulator_d = IzhikevichNeurons[1][3]
+            # Nothing selected (first entry)
+            if idx <= 0:
+                return
 
-        if self.Emulatorneuron_mode_index == 3:
-            self.ui.Emulator_a = IzhikevichNeurons[2][0]
-            self.ui.Emulator_b = IzhikevichNeurons[2][1]
-            self.ui.Emulator_c = IzhikevichNeurons[2][2]
-            self.ui.Emulator_d = IzhikevichNeurons[2][3]
+            # -------------------------------------------------
+            # 1) Built-in neurons (indices 1..12)
+            # -------------------------------------------------
+            if 1 <= idx <= 20:
+                zero_based = idx - 1
+                # Set a, b, c, d from IzhikevichNeurons
+                self._set_izhikevich_emulator_from_index(zero_based)
 
-        if self.Emulatorneuron_mode_index == 4:
-            self.ui.Emulator_a = IzhikevichNeurons[3][0]
-            self.ui.Emulator_b = IzhikevichNeurons[3][1]
-            self.ui.Emulator_c = IzhikevichNeurons[3][2]
-            self.ui.Emulator_d = IzhikevichNeurons[3][3]
+                # Reset PR + synapse sliders to default "off" values
+                # Photodiode
+                self.ui.Emulator_PR_PhotoGain_slider.setEnabled(True)
+                self.ui.Emulator_PR_PhotoGain_slider.setValue(0)
+                self.ui.Emulator_PR_PhotoGain_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 5:
-            self.ui.Emulator_a = IzhikevichNeurons[4][0]
-            self.ui.Emulator_b = IzhikevichNeurons[4][1]
-            self.ui.Emulator_c = IzhikevichNeurons[4][2]
-            self.ui.Emulator_d = IzhikevichNeurons[4][3]
+                self.ui.Emulator_PR_Decay_slider.setEnabled(True)
+                self.ui.Emulator_PR_Decay_slider.setValue(100)
+                self.ui.Emulator_PR_Decay_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 6:
-            self.ui.Emulator_a = IzhikevichNeurons[5][0]
-            self.ui.Emulator_b = IzhikevichNeurons[5][1]
-            self.ui.Emulator_c = IzhikevichNeurons[5][2]
-            self.ui.Emulator_d = IzhikevichNeurons[5][3]
+                self.ui.Emulator_PR_Recovery_slider.setEnabled(True)
+                self.ui.Emulator_PR_Recovery_slider.setValue(25)
+                self.ui.Emulator_PR_Recovery_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 7:
-            self.ui.Emulator_a = IzhikevichNeurons[6][0]
-            self.ui.Emulator_b = IzhikevichNeurons[6][1]
-            self.ui.Emulator_c = IzhikevichNeurons[6][2]
-            self.ui.Emulator_d = IzhikevichNeurons[6][3]
+                # Synapse 1
+                self.ui.Emulator_Synapse1_slider.setEnabled(True)
+                self.ui.Emulator_Synapse1_slider.setValue(0)
+                self.ui.Emulator_Synapse1_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 8:
-            self.ui.Emulator_a = IzhikevichNeurons[7][0]
-            self.ui.Emulator_b = IzhikevichNeurons[7][1]
-            self.ui.Emulator_c = IzhikevichNeurons[7][2]
-            self.ui.Emulator_d = IzhikevichNeurons[7][3]
+                self.ui.Emulator_Synapse1_Decay_slider.setEnabled(True)
+                self.ui.Emulator_Synapse1_Decay_slider.setValue(995)
+                self.ui.Emulator_Synapse1_Decay_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 9:
-            self.ui.Emulator_a = IzhikevichNeurons[8][0]
-            self.ui.Emulator_b = IzhikevichNeurons[8][1]
-            self.ui.Emulator_c = IzhikevichNeurons[8][2]
-            self.ui.Emulator_d = IzhikevichNeurons[8][3]
+                # Synapse 2
+                self.ui.Emulator_Synapse2_slider.setEnabled(True)
+                self.ui.Emulator_Synapse2_slider.setValue(0)
+                self.ui.Emulator_Synapse2_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 10:
-            self.ui.Emulator_a = IzhikevichNeurons[9][0]
-            self.ui.Emulator_b = IzhikevichNeurons[9][1]
-            self.ui.Emulator_c = IzhikevichNeurons[9][2]
-            self.ui.Emulator_d = IzhikevichNeurons[9][3]
+                self.ui.Emulator_Synapse2_Decay_slider.setEnabled(True)
+                self.ui.Emulator_Synapse2_Decay_slider.setValue(995)
+                self.ui.Emulator_Synapse2_Decay_slider.setEnabled(False)
 
-        if self.Emulatorneuron_mode_index == 11:
-            self.ui.Emulator_a = IzhikevichNeurons[10][0]
-            self.ui.Emulator_b = IzhikevichNeurons[10][1]
-            self.ui.Emulator_c = IzhikevichNeurons[10][2]
-            self.ui.Emulator_d = IzhikevichNeurons[10][3]
+                return
 
-        if self.Emulatorneuron_mode_index == 12:
-            self.ui.Emulator_a = IzhikevichNeurons[11][0]
-            self.ui.Emulator_b = IzhikevichNeurons[11][1]
-            self.ui.Emulator_c = IzhikevichNeurons[11][2]
-            self.ui.Emulator_d = IzhikevichNeurons[11][3]
+            # -------------------------------------------------
+            # 2) Imported neurons (indices >= 13)
+            #    self.ui.EmulatorImportNeuron is filled from CSV:
+            #    [a, b, c, d,
+            #     PhotoGain, PhotoDecay, PhotoRecovery,
+            #     Syn1Gain, Syn1Decay,
+            #     Syn2Gain, Syn2Decay]
+            # -------------------------------------------------
+            import_idx = idx - 21  # index in EmulatorImportNeuron list
 
-        if self.Emulatorneuron_mode_index <= 12:
-            self.ui.Emulator_PR_PhotoGain_slider.setEnabled(True)
-            self.ui.Emulator_PR_PhotoGain_slider.setValue(0)
-            self.ui.Emulator_PR_PhotoGain_slider.setEnabled(False)
+            try:
+                neuron_params = self.ui.EmulatorImportNeuron[import_idx]
+            except (AttributeError, IndexError):
+                # No imported neuron data for this index
+                return
 
-            self.ui.Emulator_PR_Decay_slider.setEnabled(True)
-            self.ui.Emulator_PR_Decay_slider.setValue(0.001)
-            self.ui.Emulator_PR_Decay_slider.setEnabled(False)
+            # a, b, c, d
+            self.ui.Emulator_a = neuron_params[0]
+            self.ui.Emulator_b = neuron_params[1]
+            self.ui.Emulator_c = neuron_params[2]
+            self.ui.Emulator_d = neuron_params[3]
 
-            self.ui.Emulator_PR_Recovery_slider.setEnabled(True)
-            self.ui.Emulator_PR_Recovery_slider.setValue(0.025)
-            self.ui.Emulator_PR_Recovery_slider.setEnabled(False)
-
-            self.ui.Emulator_Synapse1_slider.setEnabled(True)
-            self.ui.Emulator_Synapse1_slider.setValue(0)
-            self.ui.Emulator_Synapse1_slider.setEnabled(False)
-
-            self.ui.Emulator_Synapse1_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Synapse1_Decay_slider.setValue(0.995)
-            self.ui.Emulator_Synapse1_Decay_slider.setEnabled(False)
-
-            self.ui.Emulator_Synapse2_slider.setEnabled(True)
-            self.ui.Emulator_Synapse2_slider.setValue(0)
-            self.ui.Emulator_Synapse2_slider.setEnabled(False)
-
-            self.ui.Emulator_Synapse2_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Synapse2_Decay_slider.setValue(0.995)
-            self.ui.Emulator_Synapse2_Decay_slider.setEnabled(False)
-
-
-        if self.Emulatorneuron_mode_index > 12:
-            if self.Emulatorneuron_mode_index > 12:
-                self.ui.Emulator_a = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][0]
-                self.ui.Emulator_b = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][1]
-                self.ui.Emulator_c = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][2]
-                self.ui.Emulator_d = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][3]
-
-
-            self.Emulator_Photodiode_Gain = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][4]
+            # Photodiode gain & kinetics
+            self.Emulator_Photodiode_Gain = neuron_params[4]
             self.ui.Emulator_PR_PhotoGain_slider.setEnabled(True)
             self.ui.Emulator_PR_PhotoGain_slider.setValue(self.Emulator_Photodiode_Gain)
             self.ui.Emulator_PR_PhotoGain_slider.setEnabled(False)
 
-            self.Photodiode_Decay_value = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][5]
+            self.Photodiode_Decay_value = neuron_params[5]
             self.ui.Emulator_PR_Decay_slider.setEnabled(True)
             self.ui.Emulator_PR_Decay_slider.setValue(self.Photodiode_Decay_value)
             self.ui.Emulator_PR_Decay_slider.setEnabled(False)
 
-            self.Photodiode_Recovery_value = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][6]
+            self.Photodiode_Recovery_value = neuron_params[6]
             self.ui.Emulator_PR_Recovery_slider.setEnabled(True)
             self.ui.Emulator_PR_Recovery_slider.setValue(self.Photodiode_Recovery_value)
             self.ui.Emulator_PR_Recovery_slider.setEnabled(False)
 
-
-            self.Emulator_Syn1_Gain = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][7]
+            # Synapse 1 gain & decay
+            self.Emulator_Syn1_Gain = neuron_params[7]
             self.ui.Emulator_Synapse1_slider.setEnabled(True)
             self.ui.Emulator_Synapse1_slider.setValue(self.Emulator_Syn1_Gain)
             self.ui.Emulator_Synapse1_slider.setEnabled(False)
 
-            self.Emulator_Syn1Decay = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][8]
+            self.Emulator_Syn1Decay = neuron_params[8]
             self.ui.Emulator_Synapse1_Decay_slider.setEnabled(True)
             self.ui.Emulator_Synapse1_Decay_slider.setValue(self.Emulator_Syn1Decay)
             self.ui.Emulator_Synapse1_Decay_slider.setEnabled(False)
 
-
-            self.Emulator_Syn2_Gain = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][9]
+            # Synapse 2 gain & decay
+            self.Emulator_Syn2_Gain = neuron_params[9]
             self.ui.Emulator_Synapse2_slider.setEnabled(True)
             self.ui.Emulator_Synapse2_slider.setValue(self.Emulator_Syn2_Gain)
             self.ui.Emulator_Synapse2_slider.setEnabled(False)
 
-            self.Emulator_Syn2Decay = self.ui.EmulatorImportNeuron[self.Emulatorneuron_mode_index - 13][10]
+            self.Emulator_Syn2Decay = neuron_params[10]
             self.ui.Emulator_Synapse2_Decay_slider.setEnabled(True)
             self.ui.Emulator_Synapse2_Decay_slider.setValue(self.Emulator_Syn2Decay)
             self.ui.Emulator_Synapse2_Decay_slider.setEnabled(False)
-
-
 
 
 
@@ -526,6 +508,8 @@ class Emulator():
         FileName, _= QFileDialog.getOpenFileName(caption='Select Neuron',
                                                  dir="./Neurons",
                                                  filter='csv files (*.csv)')
+        if not FileName:
+            return  # user cancelled
 
         Df = pd.read_csv(FileName)
         self.Emulatordf_Neuron_a = Df["a"]
@@ -722,123 +706,90 @@ class EmulatorSyn1 ():
 
 
 
-    def SelectNeuronMode(self):
-        self.EmulatorSyn1_neuron_mode_index = self.ui.Emulator_Syn1_Mode_comboBox.currentIndex()
+    def _set_izhikevich_syn1_from_index(self, idx_zero_based: int) -> None:
+        """
+        Set (a1, b1, c1, d1) and PR sliders for Synapse 1
+        from either a built-in Izhikevich neuron or an imported neuron.
 
-        if self.EmulatorSyn1_neuron_mode_index == 1:
-            self.ui.Emulator_a1 = IzhikevichNeurons[0][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[0][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[0][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[0][3]
+        idx_zero_based:
+            0–20  -> built-in IzhikevichNeurons[0..19]
+            21+   -> imported neurons in self.ui.EmulatorSyn1_ImportNeuron[0..]
+        """
+        if idx_zero_based < 0:
+            return
 
-        if self.EmulatorSyn1_neuron_mode_index == 2:
-            self.ui.Emulator_a1 = IzhikevichNeurons[1][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[1][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[1][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[1][3]
+        # --- Built-in neurons: indices 0..20 (combo indices 1..20) ---
+        if idx_zero_based < 20:
+            try:
+                a, b, c, d = IzhikevichNeurons[idx_zero_based]
+            except IndexError:
+                return
 
-        if self.EmulatorSyn1_neuron_mode_index == 3:
-            self.ui.Emulator_a1 = IzhikevichNeurons[2][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[2][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[2][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[2][3]
+            self.ui.Emulator_a1 = float(a)
+            self.ui.Emulator_b1 = float(b)
+            self.ui.Emulator_c1 = float(c)
+            self.ui.Emulator_d1 = float(d)
 
-        if self.EmulatorSyn1_neuron_mode_index == 4:
-            self.ui.Emulator_a1 = IzhikevichNeurons[3][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[3][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[3][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[3][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 5:
-            self.ui.Emulator_a1 = IzhikevichNeurons[4][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[4][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[4][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[4][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 6:
-            self.ui.Emulator_a1 = IzhikevichNeurons[5][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[5][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[5][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[5][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 7:
-            self.ui.Emulator_a1 = IzhikevichNeurons[6][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[6][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[6][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[6][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 8:
-            self.ui.Emulator_a1 = IzhikevichNeurons[7][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[7][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[7][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[7][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 9:
-            self.ui.Emulator_a1 = IzhikevichNeurons[8][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[8][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[8][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[8][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 10:
-            self.ui.Emulator_a1 = IzhikevichNeurons[9][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[9][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[9][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[9][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 11:
-            self.ui.Emulator_a1 = IzhikevichNeurons[10][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[10][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[10][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[10][3]
-
-        if self.EmulatorSyn1_neuron_mode_index == 12:
-            self.ui.Emulator_a1 = IzhikevichNeurons[11][0]
-            self.ui.Emulator_b1 = IzhikevichNeurons[11][1]
-            self.ui.Emulator_c1 = IzhikevichNeurons[11][2]
-            self.ui.Emulator_d1 = IzhikevichNeurons[11][3]
-
-        if self.EmulatorSyn1_neuron_mode_index <= 12:
+            # Reset Syn1 photodiode to defaults (as in your original code)
             self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(True)
             self.ui.Emulator_Syn1_PR_PhotoGain_slider.setValue(0)
             self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(False)
 
             self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Syn1_PR_Decay_slider.setValue(0.001)
+            self.ui.Emulator_Syn1_PR_Decay_slider.setValue(100)
             self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(False)
 
             self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(True)
-            self.ui.Emulator_Syn1_PR_Recovery_slider.setValue(0.025)
+            self.ui.Emulator_Syn1_PR_Recovery_slider.setValue(25)
             self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(False)
+            return
 
+        # --- Imported neurons: indices 20+ (combo indices 21+) ---
+        imported_index = idx_zero_based - 20
+        imported_list = getattr(self.ui, "EmulatorSyn1_ImportNeuron", None)
+        if not imported_list or imported_index >= len(imported_list):
+            return
 
+        (a, b, c, d,
+         pr_gain, pr_decay, pr_recovery,
+         syn1_gain, syn1_decay,
+         syn2_gain, syn2_decay) = imported_list[imported_index]
 
-        if self.EmulatorSyn1_neuron_mode_index > 12:
-            if self.EmulatorSyn1_neuron_mode_index > 12:
-                self.ui.Emulator_a1 = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][0]
-                self.ui.Emulator_b1 = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][1]
-                self.ui.Emulator_c1 = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][2]
-                self.ui.Emulator_d1 = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][3]
+        self.ui.Emulator_a1 = float(a)
+        self.ui.Emulator_b1 = float(b)
+        self.ui.Emulator_c1 = float(c)
+        self.ui.Emulator_d1 = float(d)
 
+        # Apply imported photo parameters to the sliders
+        self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(True)
+        self.ui.Emulator_Syn1_PR_PhotoGain_slider.setValue(pr_gain)
+        self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(False)
 
-            self.EmulatorSyn1_Photodiode_Gain = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][4]
-            self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(True)
-            self.ui.Emulator_Syn1_PR_PhotoGain_slider.setValue(self.EmulatorSyn1_Photodiode_Gain)
-            print(self.EmulatorSyn1_Photodiode_Gain)
-            self.ui.Emulator_Syn1_PR_PhotoGain_slider.setEnabled(False)
+        self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(True)
+        self.ui.Emulator_Syn1_PR_Decay_slider.setValue(pr_decay)
+        self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(False)
 
-            self.Syn1_Photodiode_Decay_value = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][5]
-            self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Syn1_PR_Decay_slider.setValue(self.Syn1_Photodiode_Decay_value)
-            print(self.Syn1_Photodiode_Decay_value)
-            self.ui.Emulator_Syn1_PR_Decay_slider.setEnabled(False)
+        self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(True)
+        self.ui.Emulator_Syn1_PR_Recovery_slider.setValue(pr_recovery)
+        self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(False)
 
-            self.Syn1_Photodiode_Recovery_value = self.ui.EmulatorSyn1_ImportNeuron[self.EmulatorSyn1_neuron_mode_index - 13][6]
-            self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(True)
-            self.ui.Emulator_Syn1_PR_Recovery_slider.setValue(self.Syn1_Photodiode_Recovery_value)
-            self.ui.Emulator_Syn1_PR_Recovery_slider.setEnabled(False)
+    def SelectNeuronMode(self):
+        """
+        Called when Emulator_Syn1_Mode_comboBox changes.
 
+        Combo index mapping:
+            0   -> placeholder / '---'
+            1–20 -> built-in IzhikevichNeurons[0..20]
+            21+  -> imported neurons in self.ui.EmulatorSyn1_ImportNeuron
+        """
+        self.EmulatorSyn1_neuron_mode_index = self.ui.Emulator_Syn1_Mode_comboBox.currentIndex()
 
+        # Index 0 is usually a 'blank' / default entry: keep current parameters
+        if self.EmulatorSyn1_neuron_mode_index <= 0:
+            return
 
+        idx_zero_based = self.EmulatorSyn1_neuron_mode_index - 1
+        self._set_izhikevich_syn1_from_index(idx_zero_based)
 
 
 
@@ -846,6 +797,9 @@ class EmulatorSyn1 ():
         FileName, _= QFileDialog.getOpenFileName(caption='Select Neuron',
                                                  dir="./Neurons",
                                                  filter='csv files (*.csv)')
+
+        if not FileName:
+            return  # user cancelled
 
         Df = pd.read_csv(FileName)
         self.Emulatordf_Neuron_a = Df["a"]
@@ -971,7 +925,7 @@ class EmulatorSyn2 ():
 
     def GetPRDecay(self):
             self.EmulatorSyn2PhotoDecay = self.ui.Emulator_Syn2_PR_Decay_slider.value()
-            self.ui.Emulator_Syn2_PR_Decay_readings.setText(str(self.EmulatorSyn1PhotoDecay/100000))
+            self.ui.Emulator_Syn2_PR_Decay_readings.setText(str(self.EmulatorSyn2PhotoDecay/100000))
             self.ui.Emulator_Syn2_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
 
 
@@ -1030,7 +984,7 @@ class EmulatorSyn2 ():
 
             else:
                     self.ui.Emulator_Syn2_Noise_slider.setEnabled(False)
-                    self.EmulatorSyn1_Noise = 0
+                    self.EmulatorSyn2_Noise = 0
                     self.ui.Emulator_Syn2_Noise_slider.setValue(0)
                     self.ui.Emulator_Syn2_Noise_readings.setText("")
 
@@ -1042,121 +996,90 @@ class EmulatorSyn2 ():
 
 
 
-    def SelectNeuronMode(self):
-        self.EmulatorSyn2_neuron_mode_index = self.ui.Emulator_Syn2_Mode_comboBox.currentIndex()
+    def _set_izhikevich_syn2_from_index(self, idx_zero_based: int) -> None:
+        """
+        Set (a2, b2, c2, d2) and PR sliders for Synapse 2
+        from either a built-in Izhikevich neuron or an imported neuron.
 
-        if self.EmulatorSyn2_neuron_mode_index == 1:
-            self.ui.Emulator_a2 = IzhikevichNeurons[0][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[0][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[0][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[0][3]
+        idx_zero_based:
+            0–19  -> built-in IzhikevichNeurons[0..19]
+            20+   -> imported neurons in self.ui.EmulatorSyn2_ImportNeuron[0..]
+        """
+        if idx_zero_based < 0:
+            return
 
-        if self.EmulatorSyn2_neuron_mode_index == 2:
-            self.ui.Emulator_a2 = IzhikevichNeurons[1][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[1][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[1][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[1][3]
+        # --- Built-in neurons: indices 0..19 (combo indices 1..20) ---
+        if idx_zero_based < 20:
+            try:
+                a, b, c, d = IzhikevichNeurons[idx_zero_based]
+            except IndexError:
+                return
 
-        if self.EmulatorSyn2_neuron_mode_index == 3:
-            self.ui.Emulator_a2 = IzhikevichNeurons[2][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[2][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[2][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[2][3]
+            self.ui.Emulator_a2 = float(a)
+            self.ui.Emulator_b2 = float(b)
+            self.ui.Emulator_c2 = float(c)
+            self.ui.Emulator_d2 = float(d)
 
-        if self.EmulatorSyn2_neuron_mode_index == 4:
-            self.ui.Emulator_a2 = IzhikevichNeurons[3][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[3][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[3][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[3][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 5:
-            self.ui.Emulator_a2 = IzhikevichNeurons[4][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[4][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[4][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[4][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 6:
-            self.ui.Emulator_a2 = IzhikevichNeurons[5][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[5][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[5][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[5][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 7:
-            self.ui.Emulator_a2 = IzhikevichNeurons[6][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[6][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[6][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[6][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 8:
-            self.ui.Emulator_a2 = IzhikevichNeurons[7][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[7][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[7][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[7][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 9:
-            self.ui.Emulator_a2 = IzhikevichNeurons[8][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[8][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[8][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[8][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 10:
-            self.ui.Emulator_a2 = IzhikevichNeurons[9][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[9][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[9][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[9][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 11:
-            self.ui.Emulator_a2 = IzhikevichNeurons[10][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[10][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[10][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[10][3]
-
-        if self.EmulatorSyn2_neuron_mode_index == 12:
-            self.ui.Emulator_a2 = IzhikevichNeurons[11][0]
-            self.ui.Emulator_b2 = IzhikevichNeurons[11][1]
-            self.ui.Emulator_c2 = IzhikevichNeurons[11][2]
-            self.ui.Emulator_d2 = IzhikevichNeurons[11][3]
-
-        if self.EmulatorSyn2_neuron_mode_index <= 12:
+            # Reset Syn2 photodiode to defaults (as in your original code)
             self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(True)
             self.ui.Emulator_Syn2_PR_PhotoGain_slider.setValue(0)
             self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(False)
 
             self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Syn2_PR_Decay_slider.setValue(0.001)
+            self.ui.Emulator_Syn2_PR_Decay_slider.setValue(100)
             self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(False)
 
             self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(True)
-            self.ui.Emulator_Syn2_PR_Recovery_slider.setValue(0.025)
+            self.ui.Emulator_Syn2_PR_Recovery_slider.setValue(25)
             self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(False)
+            return
 
+        # --- Imported neurons: indices 20+ (combo indices 21+) ---
+        imported_index = idx_zero_based - 20
+        imported_list = getattr(self.ui, "EmulatorSyn2_ImportNeuron", None)
+        if not imported_list or imported_index >= len(imported_list):
+            return
 
+        (a, b, c, d,
+         pr_gain, pr_decay, pr_recovery,
+         syn1_gain, syn1_decay,
+         syn2_gain, syn2_decay) = imported_list[imported_index]
 
-        if self.EmulatorSyn2_neuron_mode_index > 12:
-            if self.EmulatorSyn2_neuron_mode_index > 12:
-                self.ui.Emulator_a2 = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][0]
-                self.ui.Emulator_b2 = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][1]
-                self.ui.Emulator_c2 = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][2]
-                self.ui.Emulator_d2 = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][3]
+        self.ui.Emulator_a2 = float(a)
+        self.ui.Emulator_b2 = float(b)
+        self.ui.Emulator_c2 = float(c)
+        self.ui.Emulator_d2 = float(d)
 
+        # Apply imported photo parameters
+        self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(True)
+        self.ui.Emulator_Syn2_PR_PhotoGain_slider.setValue(pr_gain)
+        self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(False)
 
-            self.EmulatorSyn2_Photodiode_Gain = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][4]
-            self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(True)
-            self.ui.Emulator_Syn2_PR_PhotoGain_slider.setValue(self.EmulatorSyn2_Photodiode_Gain)
-            self.ui.Emulator_Syn2_PR_PhotoGain_slider.setEnabled(False)
+        self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(True)
+        self.ui.Emulator_Syn2_PR_Decay_slider.setValue(pr_decay)
+        self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(False)
 
-            self.Syn2_Photodiode_Decay_value = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][5]
-            self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(True)
-            self.ui.Emulator_Syn2_PR_Decay_slider.setValue(self.Syn2_Photodiode_Decay_value)
-            self.ui.Emulator_Syn2_PR_Decay_slider.setEnabled(False)
+        self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(True)
+        self.ui.Emulator_Syn2_PR_Recovery_slider.setValue(pr_recovery)
+        self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(False)
 
-            self.Photodiode_Recovery_value = self.ui.EmulatorSyn2_ImportNeuron[self.EmulatorSyn2_neuron_mode_index - 13][6]
-            self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(True)
-            self.ui.Emulator_Syn2_PR_Recovery_slider.setValue(self.Photodiode_Recovery_value)
-            self.ui.Emulator_Syn2_PR_Recovery_slider.setEnabled(False)
+    def SelectNeuronMode(self):
+        """
+        Called when Emulator_Syn2_Mode_comboBox changes.
 
+        Combo index mapping:
+            0     -> placeholder / '---'
+            1–20  -> built-in IzhikevichNeurons[0..19]
+            21+   -> imported neurons in self.ui.EmulatorSyn2_ImportNeuron
+        """
+        self.EmulatorSyn2_neuron_mode_index = self.ui.Emulator_Syn2_Mode_comboBox.currentIndex()
 
+        # Index 0 is usually a 'blank' / default entry: keep current parameters
+        if self.EmulatorSyn2_neuron_mode_index <= 0:
+            return
 
+        idx_zero_based = self.EmulatorSyn2_neuron_mode_index - 1
+        self._set_izhikevich_syn2_from_index(idx_zero_based)
 
 
 
@@ -1164,6 +1087,9 @@ class EmulatorSyn2 ():
         FileName, _= QFileDialog.getOpenFileName(caption='Select Neuron',
                                                  dir="./Neurons",
                                                  filter='csv files (*.csv)')
+
+        if not FileName:
+            return  # user cancelled
 
         Df = pd.read_csv(FileName)
         self.Emulatordf_Neuron_a = Df["a"]
@@ -1193,12 +1119,12 @@ class EmulatorSyn2 ():
                                          self.Emulatordf_Neuron_Syn2Gain[0],
                                          self.Emulatordf_Neuron_Syn2Decay[0]
                                          ]
-        self.ui.EmulatorSyn1_ImportNeuron.append(self.EmulatorParametersNeuron)
+        self.ui.EmulatorSyn2_ImportNeuron.append(self.EmulatorParametersNeuron)
 
 
-        self.ui.Emulator_Syn1_Mode_comboBox.addItem('')
-        self.Emulatorneuron_count = self.ui.Emulator_Syn1_Mode_comboBox.count()
+        self.ui.Emulator_Syn2_Mode_comboBox.addItem('')
+        self.Emulatorneuron_count = self.ui.Emulator_Syn2_Mode_comboBox.count()
         self.Emulatorfilename = os.path.splitext(os.path.basename(QFileInfo(FileName).fileName()))[0]
-        self.ui.Emulator_Syn1_Mode_comboBox.setItemText(self.Emulatorneuron_count-1, self.Emulatorfilename)
-        self.ui.Emulator_Syn1_Mode_comboBox.setCurrentIndex(self.Emulatorneuron_count-1)
+        self.ui.Emulator_Syn2_Mode_comboBox.setItemText(self.Emulatorneuron_count-1, self.Emulatorfilename)
+        self.ui.Emulator_Syn2_Mode_comboBox.setCurrentIndex(self.Emulatorneuron_count-1)
 

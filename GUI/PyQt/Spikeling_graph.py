@@ -25,7 +25,7 @@ serial_port = serial_manager
 # Constants
 DOWNSAMPLING = 5
 SAMPLE_INTERVAL = 0.1
-TIME_WINDOW = 1000
+TIME_WINDOW = 2000
 TIME_WINDOW_DISPLAY = 250
 PEN_WIDTH = 1.5
 VM_MIN = -100
@@ -259,7 +259,7 @@ class SpikelingGraph(QObject):
         vb = plot_item.getViewBox()
 
         # Enable mouse interactions: X only
-        plot_item.setMouseEnabled(x=True, y=False)
+        vb.setMouseEnabled(x=True, y=False)
         vb.setMouseEnabled(x=True, y=False)
 
         # Limit how far you can pan/zoom
@@ -342,44 +342,51 @@ class SpikelingGraph(QObject):
             if self.ui.Spikeling_VmCheckbox.isChecked():
                 self.y0[:] = self.databuffer0
                 self.curve0.setData(self.x, self.y0)
+                self.curve0.setVisible(True)
             else:
-                self.curve0.clear()
+                self.curve0.setVisible(False)
 
             if self.ui.Spikeling_StimulusCheckbox.isChecked():
                 self.y1[:] = self.databuffer1
                 self.curve1.setData(self.x, self.y1)
+                self.curve1.setVisible(True)
             else:
-                self.curve1.clear()
+                self.curve1.setVisible(False)
 
             if self.ui.Spikeling_InputCurrentCheckbox.isChecked():
                 self.y2[:] = self.databuffer2
                 self.curve2.setData(self.x, self.y2)
+                self.curve2.setVisible(True)
             else:
-                self.curve2.clear()
+                self.curve2.setVisible(False)
 
             if self.ui.Spikeling_Syn1VmCheckbox.isChecked():
                 self.y3[:] = self.databuffer3
                 self.curve3.setData(self.x, self.y3)
+                self.curve3.setVisible(True)
             else:
-                self.curve3.clear()
+                self.curve3.setVisible(False)
 
             if self.ui.Spikeling_Syn1InputCheckbox.isChecked():
                 self.y4[:] = self.databuffer4
                 self.curve4.setData(self.x, self.y4)
+                self.curve4.setVisible(True)
             else:
-                self.curve4.clear()
+                self.curve4.setVisible(False)
 
             if self.ui.Spikeling_Syn2VmCheckbox.isChecked():
                 self.y5[:] = self.databuffer5
                 self.curve5.setData(self.x, self.y5)
+                self.curve5.setVisible(True)
             else:
-                self.curve5.clear()
+                self.curve5.setVisible(False)
 
             if self.ui.Spikeling_Syn2InputCheckbox.isChecked():
                 self.y6[:] = self.databuffer6
                 self.curve6.setData(self.x, self.y6)
+                self.curve6.setVisible(True)
             else:
-                self.curve6.clear()
+                self.curve6.setVisible(False)
 
             # Secondary ViewBox auto-syncs y-axis (current/stimulus)
             self.current_plots.setGeometry(self.ui.Spikeling_Oscilloscope_widget.getViewBox().sceneBoundingRect())

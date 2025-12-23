@@ -16,7 +16,7 @@ IzhikevichNeurons = [[0.02,   0.20,   -65.0,    6.0,    -70.0,   0],   # Tonic S
                      [0.03,   0.25,   -52.0,    0.0,    -64.0,  13],   # Rebound Burst
                      [0.03,   0.25,   -60.0,    4.0,    -64.0,  14],   # Threshold Variability
                      [0.10,   0.26,   -60.0,    0.0,    -61.0,  15],   # Bistability
-                     [1.00,   0.20,   -60.0,  -21.0,    -70.0,  16],   # DAP
+                     [1.00,   0.20,   -60.0,  -21.0,    -70.0,  16],   # Depolarizing after potential
                      [0.02,   1.00,   -55.0,    4.0,    -65.0,  17],   # Accommodation
                      [0.02,   1.00,   -60.0,    8.0,    -63.8,  18],   # Inhibition Induced Spiking
                      [0.026, -1.00,   -45.0,   -2.0,    -63.8,  19]    # Inhibition Induced Bursting

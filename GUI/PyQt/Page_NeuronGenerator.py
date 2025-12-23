@@ -178,7 +178,48 @@ class NeuronGenerator():
             self.b = IzhikevichNeurons[11][1]
             self.c = IzhikevichNeurons[11][2]
             self.d = IzhikevichNeurons[11][3]
-        if self.load_neuron_index <= 12:
+        if self.load_neuron_index == 13:
+            self.a = IzhikevichNeurons[12][0]
+            self.b = IzhikevichNeurons[12][1]
+            self.c = IzhikevichNeurons[12][2]
+            self.d = IzhikevichNeurons[12][3]
+        if self.load_neuron_index == 14:
+            self.a = IzhikevichNeurons[13][0]
+            self.b = IzhikevichNeurons[13][1]
+            self.c = IzhikevichNeurons[13][2]
+            self.d = IzhikevichNeurons[13][3]
+        if self.load_neuron_index == 15:
+            self.a = IzhikevichNeurons[14][0]
+            self.b = IzhikevichNeurons[14][1]
+            self.c = IzhikevichNeurons[14][2]
+            self.d = IzhikevichNeurons[14][3]
+        if self.load_neuron_index == 16:
+            self.a = IzhikevichNeurons[15][0]
+            self.b = IzhikevichNeurons[15][1]
+            self.c = IzhikevichNeurons[15][2]
+            self.d = IzhikevichNeurons[15][3]
+        if self.load_neuron_index == 17:
+            self.a = IzhikevichNeurons[16][0]
+            self.b = IzhikevichNeurons[16][1]
+            self.c = IzhikevichNeurons[16][2]
+            self.d = IzhikevichNeurons[16][3]
+        if self.load_neuron_index == 18:
+            self.a = IzhikevichNeurons[17][0]
+            self.b = IzhikevichNeurons[17][1]
+            self.c = IzhikevichNeurons[17][2]
+            self.d = IzhikevichNeurons[17][3]
+        if self.load_neuron_index == 19:
+            self.a = IzhikevichNeurons[18][0]
+            self.b = IzhikevichNeurons[18][1]
+            self.c = IzhikevichNeurons[18][2]
+            self.d = IzhikevichNeurons[18][3]
+        if self.load_neuron_index == 20:
+            self.a = IzhikevichNeurons[19][0]
+            self.b = IzhikevichNeurons[19][1]
+            self.c = IzhikevichNeurons[19][2]
+            self.d = IzhikevichNeurons[19][3]
+
+        if self.load_neuron_index <= 20:
             self.ui.NeuronParameter_PRGain = 0
             self.ui.NeuronParameter_PRDecay = 0.001
             self.ui.NeuronParameter_PRRecovery = 0.025

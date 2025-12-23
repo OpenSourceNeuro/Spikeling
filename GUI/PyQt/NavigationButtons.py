@@ -260,7 +260,7 @@ def Buttons(self):
         self.ui.StimFre_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateStimFre(self))
         self.ui.Spikeling_StimFre_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetStimFreSliderValue(self))
         self.ui.StimStr_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateStimStr(self))
-        self.ui.Spikeling_StimStrSlider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetStimStrSliderValue(self))
+        self.ui.Spikeling_StimStr_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetStimStrSliderValue(self))
         self.ui.StimCus_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateCustomStimulus(self))
 
         self.ui.Spikeling_CustomStimulus_Load_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.LoadStimulus(self))
@@ -297,7 +297,6 @@ def Buttons(self):
 
         # Start the Emulator
         self.ui.Emulator_Connect_pushButton.clicked.connect(lambda: Emulator_graph.EmulatorPlot(self))
-
 
         # Load previously conceived neurons
         self.ui.Emulator_NeuronBrowse_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronEmulator.Emulator.BrowseNeuron(self))
@@ -467,11 +466,13 @@ def Buttons(self):
 
         # Create an instance of ImagingGraph
         self.imaging_graph = ImagingGraph(self)
+        self.imaging_page = Page_Imaging_ImagingSimulation.Imaging(self)
 
         # Connect the button to the instance method
-        self.ui.Imaging_ConnectButton.clicked.connect(lambda: self.imaging_graph.connect()
-                                                      if self.ui.Imaging_ConnectButton.isChecked()
-                                                      else self.imaging_graph.disconnect())
+        self.ui.Imaging_ConnectButton.clicked.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.UpdateSource(self))
+
+        # Update the Vm source for imaging
+        self.ui.Imaging_Source_comboBox.currentIndexChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.UpdateSource(self))
 
         # Data Recording
         self.ui.Imaging_DataRecording_RecordFolder_value.textChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.RecordFolderText(self))
@@ -481,6 +482,12 @@ def Buttons(self):
 
         # Imaging Parameters
         self.ui.Imaging_ImagingParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_ImagingParameter_page))
+        self.ui.Imaging_Df_toggleButton.toggled.connect(self.imaging_graph.ActivateDf)
+        self.ui.Imaging_Linear_toggleButton.toggled.connect(self.imaging_page.Linear_toggleButton)
+        self.ui.Imaging_Equilibrium_toggleButton.toggled.connect(self.imaging_page.Equilibrium_toggleButton)
+        self.ui.Imaging_Logistic_toggleButton.toggled.connect(self.imaging_page.Logistic_toggleButton)
+        self.ui.Imaging_GECI_comboBox.currentIndexChanged.connect(lambda: Imaging_graph.ImagingGraph.SelectGECI(self))
+        self.ui.Imaging_GECI_pushButton.clicked.connect(self.imaging_graph._apply_GECI)
         self.ui.Imaging_FrameRate_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFrameRate(self))
         self.ui.Imaging_FrameRate_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFrameRate(self))
         self.ui.Imaging_PMT_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePMT(self))
@@ -490,6 +497,8 @@ def Buttons(self):
 
         # Calcium parameters
         self.ui.Imaging_CalciumParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_CalciumParameter_page))
+        self.ui.Imaging_CalciumRise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumRise(self))
+        self.ui.Imaging_CalciumRise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumRise(self))
         self.ui.Imaging_CalciumDecay_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumDecay(self))
         self.ui.Imaging_CalciumDecay_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumDecay(self))
         self.ui.Imaging_CalciumJump_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumJump(self))
@@ -501,13 +510,16 @@ def Buttons(self):
 
         # Fluorescence Parameters
         self.ui.Imaging_FluoParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_FluoParameter_page))
-        self.ui.Imaging_kd_toggleButton.setEnabled(False)
         self.ui.Imaging_kd_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.Activatekd(self))
         self.ui.Imaging_kd_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.Getkd(self))
-        self.ui.Imaging_Hill_toggleButton.setEnabled(False)
         self.ui.Imaging_Hill_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateHill(self))
         self.ui.Imaging_Hill_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetHill(self))
-        self.ui.Imaging_PhotoShotNoise_toggleButton.setEnabled(False)
+        self.ui.Imaging_IndRise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateIndRise(self))
+        self.ui.Imaging_IndRise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetIndRise(self))
+        self.ui.Imaging_IndDecay_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateIndDecay(self))
+        self.ui.Imaging_IndDecay_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetIndDecay(self))
+        self.ui.Imaging_DFF_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateDFF(self))
+        self.ui.Imaging_DFF_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetDFF(self))
         self.ui.Imaging_PhotoShotNoise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePhotoShotNoise(self))
         self.ui.Imaging_PhotoShotNoise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetPhotoShotNoise(self))
         self.ui.Imaging_FluoNoise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFluoNoise(self))
@@ -645,26 +657,4 @@ def Buttons(self):
 
         ########################################################################
 
-        # Restore default handle + ticks for Stim Frequency slider
-        s = self.ui.Spikeling_StimFre_slider
-
-        # Remove inherited stylesheet so Qt draws native handle again
-        s.setStyleSheet("")
-
-        # Enable ticks below
-        s.setTickPosition(QSlider.TicksBelow)
-        s.setTickInterval(10)
-
-        # Now apply ONLY groove styling (optional)
-        s.setStyleSheet("""
-        QSlider::groove:horizontal {
-            height: 6px;
-            background: #001E26;
-            border-radius: 3px;
-        }
-        QSlider::sub-page:horizontal {
-            background: #DC322F;
-            border-radius: 3px;
-        }
-        """)
 

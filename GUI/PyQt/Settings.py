@@ -1,13 +1,13 @@
 from PySide6.QtWidgets import QMessageBox, QInputDialog
 from pathlib import Path
 
-BaudRate = 250000
+BaudRate = 500000
 
 
 DarkSolarized = [[0, 30, 38], [0, 43, 54], [7, 54, 66],                                            # 0:DarkBase01 #001E26, 1:DarkBase02, 2:DarkBase03
                  [220, 50, 47], [133, 153, 0], [38, 139, 210],                                     # 3:Red #DC322F, 4:Green #859900, 5:Blue #268BD2
-                 [203, 75, 22], [42, 161, 152], [181, 137, 0], [108, 113, 196], [211, 54, 130],    # 6:Orange, 7:Cyan, 8:Yellow, 9:Violet, 10:Magenta
-                 [88, 110, 117], [101, 123, 131], [131, 148, 150], [147, 161, 161],                # 11:Content01, 12:Content02, 13:Content03, 14:Content04 #93A1A1
+                 [203, 75, 22], [42, 161, 152], [181, 137, 0], [108, 113, 196], [211, 54, 130],    # 6:Orange #CB4B16, 7:Cyan #2AA198, 8:Yellow #B58900, 9:Violet #6C71C4, 10:Magenta #D33682
+                 [88, 110, 117], [101, 123, 131], [131, 148, 150], [147, 161, 161],                # 11:Content01 #586E75, 12:Content02, 13:Content03, 14:Content04 #93A1A1
                  [238, 232, 213],[253, 246, 227],                                                  # 15:LightBase01, 16:LightBase02
                  [0,153,176],                                                                      # 17:OSH-Logo
                  [80, 110, 117]]

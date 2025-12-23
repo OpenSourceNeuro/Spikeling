@@ -19,7 +19,7 @@ from Spikeling_SplashScreen import Ui_SplashScreen
 from Neuron_Parameters import Ui_AdvancedParameters
 
 # Import Functions and navigation buttons
-import ToggleButtons, NavigationButtons
+import ToggleButtons, NavigationButtons, Sliders
 
 GlobalState = 0
 
@@ -168,11 +168,16 @@ class MainWindow(QMainWindow):
         # Custom Navigation bar movement
         self.ui.header_widget.mouseMoveEvent = moveWindow
 
+        # Replace sliders with TickSliders
+        Sliders.configure_sliders(self)
+
         # Generate toggle buttons
         ToggleButtons.Buttons(self)
 
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
+
+
 
         self.SerialFlag = False
         self.ui.NeuronRecordFolderFlag = False
@@ -193,6 +198,7 @@ class MainWindow(QMainWindow):
         self.ui.Exercise3_OpeningFlag = True
         self.ui.Exercise4_OpeningFlag = True
         self.ui.Exercise5_OpeningFlag = True
+
 
 
 

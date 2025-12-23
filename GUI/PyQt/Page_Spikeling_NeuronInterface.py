@@ -42,16 +42,24 @@ class Spikeling():
 
     # Modifu microcontroller loop time
     def ChangeSpeed(self):
-        self.SpeedValue = self.ui.Spikeling_Speed_slider.value()
-        if self.SpeedValue < 6:
-            self.Speed = self.SpeedValue
-        elif self.SpeedValue == 6:
-            self.Speed = 10
-        elif self.SpeedValue == 7:
-            self.Speed = 20
+        self.Speed_SliderValue = self.ui.Spikeling_Speed_slider.value()
+        if self.Speed_SliderValue == 0:
+            self.Speed = 20000
+        elif self.Speed_SliderValue == 1:
+            self.Speed = 10000
+        elif self.Speed_SliderValue == 2:
+            self.Speed = 4000
+        elif self.Speed_SliderValue == 3:
+            self.Speed = 2000
+        elif self.Speed_SliderValue == 4:
+            self.Speed = 1000
+        elif self.Speed_SliderValue == 5:
+            self.Speed = 400
+        elif self.Speed_SliderValue == 6:
+            self.Speed = 200
 
-        self.DT_Display = round(0.1 / self.Speed, 3)
-        self.DT_Speed = self.Speed * 1000
+        self.DT_Display = round(0.1 / self.Speed * 1000, 3)
+        self.DT_Speed = self.Speed
         self.ui.Spikeling_Speed_value.setText("x " + str(self.DT_Display))
 
         if serial_port.is_open:
@@ -174,12 +182,14 @@ class Spikeling():
                     self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
                     if serial_port.is_open:
                         serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
+
             else:
                     self.ui.Spikeling_StimFre_slider.setEnabled(False)
                     self.ui.Spikeling_StimFre_slider.setValue(0)
                     self.ui.Spikeling_StimFre_readings.setText('')
                     if serial_port.is_open:
                             serial_port.write('FR0' + '\n')
+
 
     def GetStimFreSliderValue(self):
             global serial_port
@@ -188,6 +198,8 @@ class Spikeling():
             self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
             self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
             if serial_port.is_open:
+                print(self.StimFreValue)
+                print(self.setTextStimFre)
                 serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
 
 
@@ -195,22 +207,22 @@ class Spikeling():
     def ActivateStimStr(self):
             global serial_port
             if self.ui.StimStr_toggleButton.isChecked():
-                    self.ui.Spikeling_StimStrSlider.setEnabled(True)
-                    self.StimStrValue = self.ui.Spikeling_StimStrSlider.value()
+                    self.ui.Spikeling_StimStr_slider.setEnabled(True)
+                    self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
                     self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
                     self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
                     if serial_port.is_open:
                         serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
             else:
-                    self.ui.Spikeling_StimStrSlider.setEnabled(False)
-                    self.ui.Spikeling_StimStrSlider.setValue(0)
+                    self.ui.Spikeling_StimStr_slider.setEnabled(False)
+                    self.ui.Spikeling_StimStr_slider.setValue(0)
                     self.ui.Spikeling_StimStr_readings.setText('')
                     if serial_port.is_open:
                             serial_port.write('ST0' + '\n')
 
     def GetStimStrSliderValue(self):
             global serial_port
-            self.StimStrValue = self.ui.Spikeling_StimStrSlider.value()
+            self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
             self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
             self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
             if serial_port.is_open:
