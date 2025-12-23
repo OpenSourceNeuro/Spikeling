@@ -405,6 +405,8 @@ inline void send_SamplePacket() {
   Serial.write(header, 2);
 
   Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));                                // Send raw bytes (16 bytes per packet)
+
+  wifiSendSamplePacket(pkt);
 }
 
 

@@ -25,7 +25,7 @@ struct Timing {
 inline Timing timing{
  .current_us  =  0,
  .lastStep_us =  0,
- .step_us     = 3000
+ .step_us     = 2000
 };
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -53,7 +53,7 @@ static_assert(sizeof(SamplePacket) == 16,"SamplePacket must remain 16 bytes (pro
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                       Hardware parameters                         */
 
-constexpr unsigned long BaudRate   = 250000;
+constexpr unsigned long BaudRate   = 500000;
 
 constexpr int bits8      = 255;
 constexpr int bits10     = 1023;
