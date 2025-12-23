@@ -40,7 +40,8 @@
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                        Header import                                                  */ 
-                                                            
+
+  #include "WiFi_functions.h"                                                          
   #include "Core_functions.h"
 
 
@@ -53,6 +54,7 @@ void setup() {
   NeuronOpening();                                                                            // Set neuron default parameters
   SerialFunctions();                                                                          // Initialise Serial commands
   Mode_opening();
+  setupWifiAP();
 }
 
 
@@ -61,6 +63,8 @@ void setup() {
 /*                                          Main Loop                                                    */ 
 
 void loop() {
+
+  wifiLoop();                                                                                 // Keep websocket responsive
 
   timing.current_us = micros();
 
@@ -108,9 +112,6 @@ void loop() {
     update_Spike();                                                                           // Handles spike related functions and hardware (LED + Buzzer) and generate Axon Digital and Analog output
 
     send_SamplePacket();                                                                      // Quantize the current state data and send it as a compact binary frame.
-
-    //Serial.println(PD.current);
   }
 }
-
 
