@@ -398,14 +398,15 @@ void loop() {
   dacWrite(pinAxon_A,Axon_AnalogOutput);                                  //
 
 
-  Serial.print(v);            Serial.print(',');
-  Serial.print(Stim_State);   Serial.print(',');
-  Serial.print(I_Total);      Serial.print(',');
-  Serial.print(Syn1_Vm);      Serial.print(',');
-  Serial.print(I_Synapse1);   Serial.print(',');
-  Serial.print(Syn2_Vm);      Serial.print(',');
-  Serial.print(I_Synapse2);   Serial.print(',');
-  Serial.println(Trigger);
+  // Serial.print(v);            Serial.print(',');
+  // Serial.print(Stim_State);   Serial.print(',');
+  // Serial.print(I_Total);      Serial.print(',');
+  // Serial.print(Syn1_Vm);      Serial.print(',');
+  // Serial.print(I_Synapse1);   Serial.print(',');
+  // Serial.print(Syn2_Vm);      Serial.print(',');
+  // Serial.print(I_Synapse2);   Serial.print(',');
+  // Serial.println(Trigger);
 
-  delay(3);
+  Serial.println(Axon_AnalogOutput);
+  delay(10);
 }
