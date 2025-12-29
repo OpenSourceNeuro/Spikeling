@@ -1,0 +1,5 @@
+summary: A hardware implementation of the Izhikevich model of a spiking neuron
+site: https://open-labware.net/projects/spikeling/
+color: green
+bom: 1-click_BOM.tsv
+gerbers: PCB/gerbers

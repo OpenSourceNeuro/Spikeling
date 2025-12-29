@@ -1,0 +1,13 @@
+G04 Gerber job file.*
+%TF.FileFunction,JobInfo*%
+%TF.GenerationSoftware,Autodesk,EAGLE,9.0.1*%
+%TF.CreationDate,2018-07-03T15:16:02Z*%
+%TF.Part,Single*%
+%MOMM*%
+%TJ.B_Owner,Andre Maia Chagas <am2106@sussex.ac.uk>*%
+%TJ.B_ID,Spikeling PCB*%
+%TJ.B_LayerNum,2*%
+%TJ.B_Thickness,1.570000*%
+%TJ.B_Size_X,96.190000*%
+%TJ.B_Size_Y,78.730000*%
+M02*
