@@ -418,9 +418,7 @@ class ImagingGraph(QObject):
             ui.Imaging_Fluorescence3_Checkbox,
         ]
 
-        fraction = 1 / 5
-        n_disp_full = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL))
-        n_disp = max(10, int(n_disp_full * fraction))
+        n_disp = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL))
 
         ys = []
         offset = float(self._imaging_params.get("FluoOffset", 0.0)) if self.use_dff else 0.0

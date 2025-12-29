@@ -259,7 +259,7 @@ class SpikelingGraph(QObject):
         vb = plot_item.getViewBox()
 
         # Enable mouse interactions: X only
-        vb.setMouseEnabled(x=True, y=False)
+        plot_item.setMouseEnabled(x=True, y=False)
         vb.setMouseEnabled(x=True, y=False)
 
         # Limit how far you can pan/zoom

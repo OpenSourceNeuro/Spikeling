@@ -100,61 +100,61 @@ def Buttons(self):
     self.ui.EmulatorNoise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                   circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                  )
+                                          )
     self.ui.EmulatorPhotoGain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                       circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                       active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                      )
+                                              )
     self.ui.EmulatorPhotoDecay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                        circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                        active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                       )
+                                               )
     self.ui.EmulatorPhotoRecovery_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                           circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                           active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                          )
+                                                  )
     self.ui.EmulatorStimChoiceCurrent_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                               circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                               active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[5])
-                                                              )
+                                                          )
     self.ui.EmulatorStimChoiceLight_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                               circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                               active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                              )
+                                                                )
     self.ui.EmulatorStimFre_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                     circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                     active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[5])
-                                                    )
+                                            )
     self.ui.EmulatorStimStr_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                     circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                     active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[5])
-                                                    )
+                                            )
     self.ui.EmulatorStimCus_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                     circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                     active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[5])
-                                                    )
+                                            )
 
 
     self.ui.EmulatorSynapse1_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                      circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                      active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[7])
-                                                     )
+                                             )
     self.ui.EmulatorSynapse1Decay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                           circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                           active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[7])
-                                                          )
+                                                  )
     self.ui.EmulatorSyn1_Synapse_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                          circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                          active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[6])
-                                                         )
+                                                          )
     self.ui.EmulatorSyn1_PatchClamp_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                             circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                             active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                            )
+                                                         )
     self.ui.EmulatorSyn1_Noise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                        circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                        active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                       )
+                                                         )
     self.ui.EmulatorSyn1_StimDC_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                         circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                         active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[5])
@@ -162,7 +162,7 @@ def Buttons(self):
     self.ui.EmulatorSyn1_StimLight_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                            circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                            active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                           )
+                                                        )
     self.ui.EmulatorSyn1_PhotoGain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                            circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                            active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
@@ -200,11 +200,11 @@ def Buttons(self):
     self.ui.EmulatorSynapse2_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                      circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                      active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                     )
+                                             )
     self.ui.EmulatorSynapse2Decay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                           circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                           active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
-                                                          )
+                                                  )
     self.ui.EmulatorSyn2_PhotoGain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                            circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                            active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
@@ -216,7 +216,7 @@ def Buttons(self):
     self.ui.EmulatorSyn2_PhotoRecovery_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                                circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                                active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
-                                                               )
+                                                                )
 
     self.ui.Emulator_PatchClamp_toggle_layout.addWidget(self.ui.EmulatorPatchClamp_toggleButton)
     self.ui.Emulator_PatchClamp_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)

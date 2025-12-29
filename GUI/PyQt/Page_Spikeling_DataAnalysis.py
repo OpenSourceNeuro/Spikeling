@@ -30,7 +30,7 @@ class Spikeling103():
 
     def LoadData(self):
         FileName = QFileDialog.getOpenFileName(caption='Select recording file to load',
-                                               dir=".\Recordings",
+                                               dir="./Recordings",
                                                filter='csv files (*.csv)'
                                                )
         self.DataAnalysis_LoadData_label.setText(FileName[0])

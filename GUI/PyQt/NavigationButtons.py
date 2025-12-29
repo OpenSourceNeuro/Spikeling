@@ -9,7 +9,7 @@ from PySide6.QtSerialPort import QSerialPortInfo
 from PySide6.QtWidgets import QSlider
 
 from Neuron_Parameters import Ui_AdvancedParameters
-import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_NeuronGenerator, Page_StimulusGenerator, Page_Exercise101, Page_Exercise102, Page_Exercise103, Page_Exercise104, Page_Exercise105, Page_Settings, Page_About, Page_Help, Page_GitHub
+import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_NeuronGenerator, Page_StimulusGenerator, Page_Settings, Page_About, Page_Help, Page_GitHub
 import Emulator_graph, Imaging_graph
 from Spikeling_graph import SpikelingGraph
 from Imaging_graph import ImagingGraph
@@ -31,7 +31,7 @@ for port in ports:
 #                       Toggle Button Animations                       #
 ########################################################################
 
-animation_speed = 500
+animation_speed = 250
 leftMenu_min = 40
 leftMenu_max = 180
 centerMenu_min = 0
@@ -584,46 +584,24 @@ def Buttons(self):
     ########################################################################
     # Exercise-101 - page501
         # Display page501
-        self.ui.Exercice101_pushButton.clicked.connect(lambda: Page_Exercise101.ShowPage(self))
-        self.ui.Exercise101_PreviousButton_pushButton.clicked.connect(lambda: Page_Exercise101.Previous(self))
-        self.ui.Exercise101_AfterButton_pushButton.clicked.connect(lambda: Page_Exercise101.After(self))
-
-        self.ui.FI_Curve_pushButton.clicked.connect(lambda: Page_Exercise101.FI.Plot_FI(self))
-        self.ui.FI_Curve_pushButton_2.clicked.connect(lambda: Page_Exercise101.FI.Plot_FI2(self))
 
 
     ########################################################################
     # Exercise-102 - page502
         # Display page502
-        self.ui.Exercice102_pushButton.clicked.connect(lambda: Page_Exercise102.ShowPage(self))
-        self.ui.Exercise102_PreviousButton_pushButton.clicked.connect(lambda: Page_Exercise102.Previous(self))
-        self.ui.Exercise102_AfterButton_pushButton.clicked.connect(lambda: Page_Exercise102.After(self))
 
 
     ########################################################################
     # Exercise-103 - page503
         # Display page503
-        self.ui.Exercice103_pushButton.clicked.connect(lambda: Page_Exercise103.ShowPage(self))
-        self.ui.Exercise103_PreviousButton_pushButton.clicked.connect(lambda: Page_Exercise103.Previous(self))
-        self.ui.Exercise103_AfterButton_pushButton.clicked.connect(lambda: Page_Exercise103.After(self))
-
-        self.ui.FireRate_pushButton.clicked.connect(lambda: Page_Exercise103.FiringRate.Plot(self))
 
     ########################################################################
     # Exercise-104 - page504
         # Display page504
-        self.ui.Exercice104_pushButton.clicked.connect(lambda: Page_Exercise104.ShowPage(self))
-        self.ui.Exercise104_PreviousButton_pushButton.clicked.connect(lambda: Page_Exercise104.Previous(self))
-        self.ui.Exercise104_AfterButton_pushButton.clicked.connect(lambda: Page_Exercise104.After(self))
-
-        self.ui.FI_Curve_pushButton_3.clicked.connect(lambda: Page_Exercise104.FI.Plot(self))
 
     ########################################################################
     # Exercise-105 - page505
         # Display page505
-        self.ui.Exercice105_pushButton.clicked.connect(lambda: Page_Exercise105.ShowPage(self))
-        self.ui.Exercise105_PreviousButton_pushButton.clicked.connect(lambda: Page_Exercise10.Previous(self))
-        self.ui.Exercise105_AfterButton_pushButton.clicked.connect(lambda: Page_Exercise105.After(self))
 
 
         ########################################################################
@@ -653,7 +631,7 @@ def Buttons(self):
     ########################################################################
     # GitHub - page901
         # Display Git page
-        self.ui.GitHubMenu_pushButton.clicked.connect(lambda: Page901.ShowPage(self))
+        self.ui.GitHubMenu_pushButton.clicked.connect(lambda: Page_GitHub.ShowPage(self))
 
         ########################################################################
 

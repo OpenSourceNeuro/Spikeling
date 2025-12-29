@@ -166,8 +166,10 @@ def EmulatorPlot(self):
             if self.Emulator_StimCounter >= self.Emulator_StimSteps:
                 self.Emulator_StimCounter = 0
                 self.Emulator_Trigger = 1
-                self.Emulator_StimSteps = int(np.round(self.Emulator_Stim_DutyCycle * (10 ** ( self.Emulator_StimulusFrequency_Value / 100.0))))
-
+                self.Emulator_StimSteps = np.around(
+                    self.Emulator_Stim_DutyCycle
+                    + (self.Emulator_StimulusFrequency_Value * self.Emulator_Stim_DutyCycle / 100)
+                )
 
         #Generate TotalCurrent Input
         ################################################################
@@ -615,7 +617,7 @@ def SetInitParameters(self):
     self.Emulator_Stimulus_Data = 0.0
     self.Emulator_StimCounter = 0
     self.Emulator_StimSteps = 1000
-    self.Emulator_Stim_DutyCycle = 1000
+    self.Emulator_Stim_DutyCycle = 100
 
     self.Emulator_NoiseSlider = 0.0
     self.Emulator_Noise_Value = 0.0

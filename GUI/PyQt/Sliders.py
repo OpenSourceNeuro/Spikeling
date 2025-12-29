@@ -290,7 +290,7 @@ def configure_sliders(self):
                             num_ticks=11,
                             handle_image=":/resources/resources/Handle.png")
     configure_styled_slider(self.ui,
-                            "Imaging_DFF_Slider",
+                            "Imaging_FluoScale_Slider",
                             groove_color="#001E26",
                             fill_color="#859900",
                             num_ticks=11,

@@ -101,7 +101,7 @@ class Emulator():
                     self.EmulatorStim_MinCycle = 10
                     self.ui.Emulator_StimFre_slider.setEnabled(True)
                     self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
-                    Steps = int(np.round(1000 * (10 ** ( -self.EmulatorStimFreValue / 100.0))))
+                    Steps = int(np.round(1000 * (10 ** ( self.EmulatorStimFreValue / 100.0))))
                     self.setTextEmulatorStimFre = str(int(np.around(10000/ Steps)))
                     self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
                     self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
@@ -114,7 +114,7 @@ class Emulator():
 
     def GetStimFreSliderValue(self):
             self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
-            Steps = int(np.round(1000 * (10 ** (-self.EmulatorStimFreValue / 100.0))))
+            Steps = int(np.round(1000 * (10 ** (self.EmulatorStimFreValue / 100.0))))
             self.setTextEmulatorStimFre = str(int(np.around(10000 / Steps)))
             self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
             self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")

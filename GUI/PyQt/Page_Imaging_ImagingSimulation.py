@@ -239,7 +239,7 @@ class Imaging():
             self.ui.Imaging_FrameRate_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
         else:
             self.ui.Imaging_FrameRate_Slider.setEnabled(False)
-            self.ui.Imaging_FrameRate_Slider.setValue(100)
+            self.ui.Imaging_FrameRate_Slider.setValue(10)
             self.ui.Imaging_FrameRate_Readings.setText('')
 
     def GetFrameRate(self):

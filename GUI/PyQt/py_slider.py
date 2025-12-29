@@ -148,10 +148,7 @@ def configure_styled_slider(
             margin-right: -2px;
         }}
         QSlider::sub-page:horizontal:disabled {{
-            background: #93A1A1; 
-            border-radius: {height // 2}px;
-            margin: 0px {margin_h}px;
-            margin-right: -2px;          
+            background: #93A1A1;           
         }}
         QSlider::add-page:horizontal {{
             background: {groove_color};

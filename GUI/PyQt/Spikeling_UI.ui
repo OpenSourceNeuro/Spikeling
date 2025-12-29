@@ -635,7 +635,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 </font>
                </property>
                <property name="text">
-                <string>Spikeling v2.5</string>
+                <string>Spikeling v3.0.1</string>
                </property>
                <property name="icon">
                 <iconset>
@@ -2057,7 +2057,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>4</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="page_000">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -2143,7 +2143,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string notr="true"/>
                       </property>
                       <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; color:#93a1a1;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#93a1a1;&quot;&gt;v2.4&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;A hardware implementation of spiking neurons for neursocience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Conceived and developed by M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Based on an original idea from T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; color:#93a1a1;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#93a1a1;&quot;&gt;v3.0.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;A hardware implementation of spiking neurons for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Conceived and developed by M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Based on an original idea from T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
