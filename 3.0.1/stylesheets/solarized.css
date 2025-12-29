@@ -1,0 +1,60 @@
+/* Spikeling Solarized theme (Material for MkDocs)
+   Based on your palette:
+   Dark:  #001e26 #002b36 #073642
+   Light: #eee8d5 #fdf6e3
+   Accents: blue #268bd2, cyan #2aa198, etc.
+*/
+
+/* -----------------------------
+   Solarized Light (scheme: default)
+   ----------------------------- */
+[data-md-color-scheme="default"][data-md-color-primary="custom"][data-md-color-accent="custom"] {
+  /* Background + text */
+  --md-default-bg-color: #fdf6e3;          /* LightBase02 */
+  --md-default-fg-color: #586e75;          /* Content01 */
+  --md-default-fg-color--light: #657b83;   /* Content02 */
+  --md-default-fg-color--lighter: #839496; /* Content03 */
+  --md-default-fg-color--lightest: #93a1a1;/* Content04 */
+
+  /* Primary / accent */
+  --md-primary-fg-color: #268bd2;          /* Blue */
+  --md-primary-bg-color: #fdf6e3;          /* text/icons on primary */
+  --md-accent-fg-color:  #2aa198;          /* Cyan */
+
+  /* Links */
+  --md-typeset-a-color:  #268bd2;
+
+  /* Code blocks */
+  --md-code-bg-color: #eee8d5;             /* LightBase01 */
+  --md-code-fg-color: #586e75;             /* Content01 */
+
+  /* Optional: subtle borders */
+  --md-default-fg-color--lighter: #839496;
+}
+
+/* -----------------------------
+   Solarized Dark (scheme: slate)
+   ----------------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="custom"][data-md-color-accent="custom"] {
+  /* If any remaining theme colors are derived, keep them in a “Solarized-ish” hue */
+  --md-hue: 192;
+
+  /* Background + text */
+  --md-default-bg-color: #002b36;          /* DarkBase02 */
+  --md-default-fg-color: #93a1a1;          /* Content04 */
+  --md-default-fg-color--light: #839496;   /* Content03 */
+  --md-default-fg-color--lighter: #657b83; /* Content02 */
+  --md-default-fg-color--lightest: #586e75;/* Content01 */
+
+  /* Primary / accent (header, sidebar, highlights) */
+  --md-primary-fg-color: #073642;          /* DarkBase03 */
+  --md-primary-bg-color: #eee8d5;          /* LightBase01 for legible header text/icons */
+  --md-accent-fg-color:  #2aa198;          /* Cyan */
+
+  /* Links */
+  --md-typeset-a-color:  #268bd2;          /* Blue */
+
+  /* Code blocks */
+  --md-code-bg-color: #001e26;             /* DarkBase01 */
+  --md-code-fg-color: #eee8d5;             /* LightBase01 */
+}
