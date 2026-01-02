@@ -7,7 +7,7 @@
       
       
       
-        <link rel="canonical" href="https://&lt;your-org&gt;.github.io/spikeling/2.2/quickstart/hardware-setup/">
+        <link rel="canonical" href="https://www.opensourceneuro.com/3.0.1/quickstart/hardware-setup/">
       
       
         <link rel="prev" href="../what-you-need/">
@@ -19,12 +19,12 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Hardware setup - Spikeling v2.2</title>
+        <title>Hardware setup - Spikeling v3.0.1</title>
       
     
     
@@ -52,6 +52,8 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
+      <link rel="stylesheet" href="../../stylesheets/solarized.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -78,7 +80,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="teal">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -94,6 +96,20 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<div class="spk-announce">
+  <a class="spk-buy-announce" href="https://YOUR-SHOP-URL" target="_blank" rel="noopener">
+    Purchase a Spikeling unit directly
+  </a>
+</div>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -107,10 +123,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Spikeling v2.2" class="md-header__button md-logo" aria-label="Spikeling v2.2" data-md-component="logo">
+    <a href="../.." title="Spikeling v3.0.1" class="md-header__button md-logo" aria-label="Spikeling v3.0.1" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+  <img src="../../assets/images/SpikyLogo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -121,7 +136,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Spikeling v2.2
+            Spikeling v3.0.1
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -140,7 +155,21 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="teal" aria-hidden="true" type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
     
   
 </form>
@@ -176,8 +205,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -195,7 +222,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/&lt;your-org&gt;/spikeling" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/OpenSourceNeuro/Spikeling" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -220,28 +247,28 @@
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+  <!-- Navigation -->
+  
+    
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
 
 
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Spikeling v2.2" class="md-nav__button md-logo" aria-label="Spikeling v2.2" data-md-component="logo">
+    <a href="../.." title="Spikeling v3.0.1" class="md-nav__button md-logo" aria-label="Spikeling v3.0.1" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+  <img src="../../assets/images/SpikyLogo.png" alt="logo">
 
     </a>
-    Spikeling v2.2
+    Spikeling v3.0.1
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/&lt;your-org&gt;/spikeling" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/OpenSourceNeuro/Spikeling" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -291,20 +318,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -436,20 +458,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -601,10 +618,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#power-and-usb" class="md-nav__link">
+  <a href="#identify-your-board-family" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Power and USB
+        Identify your board family
       
     </span>
   </a>
@@ -612,10 +629,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#io-connections-bncttlsensors" class="md-nav__link">
+  <a href="#step-1-connect-power-and-usb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        I/O connections (BNC/TTL/sensors)
+        Step 1 — Connect power and USB
       
     </span>
   </a>
@@ -623,10 +640,116 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#safety-notes" class="md-nav__link">
+  <a href="#step-2-confirm-the-board-appears-as-a-serial-device" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Safety notes
+        Step 2 — Confirm the board appears as a serial device
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2 — Confirm the board appears as a serial device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v2x-cp210x-confirm-driver-comserial-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2.x (CP210x) — confirm driver + COM/serial port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v3x-esp32-s3-native-usb-confirm-usb-cdc-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v3.x (ESP32-S3 native USB) — confirm USB CDC port
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-25-choose-the-right-port-in-the-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.5 — Choose the right port in the GUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.5 — Choose the right port in the GUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-port-names-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical port names (examples)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-the-gui-cannot-open-the-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If the GUI cannot open the port
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-understand-trs-io-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Understand TRS I/O wiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Understand TRS I/O wiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-cabling-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended cabling practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-set-up-the-led-light-stimulus-photodiode-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Set up the LED light stimulus (photodiode workflow)
       
     </span>
   </a>
@@ -634,10 +757,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-functional-checks" class="md-nav__link">
+  <a href="#step-5-quick-functional-checks-before-opening-the-gui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick functional checks
+        Step 5 — Quick functional checks (before opening the GUI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
       
     </span>
   </a>
@@ -782,20 +916,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1093,20 +1222,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1348,20 +1472,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1455,8 +1574,6 @@
     
     
     
-    
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -1716,20 +1833,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1999,20 +2111,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8">
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -2282,20 +2389,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
         
           
-          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   
@@ -2537,20 +2639,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -2764,20 +2861,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11">
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -2963,20 +3055,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12">
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -3190,20 +3277,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13">
         
           
-          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
             
   
   
@@ -3381,16 +3463,25 @@
     
   </ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+
+          <div class="spk-buy">
+            <a class="spk-buy__btn" href="https://YOUR-SHOP-URL" target="_blank" rel="noopener">
+              Buy Spikeling units
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  
+
+  <!-- Table of contents -->
+  
+    
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
@@ -3406,10 +3497,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#power-and-usb" class="md-nav__link">
+  <a href="#identify-your-board-family" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Power and USB
+        Identify your board family
       
     </span>
   </a>
@@ -3417,10 +3508,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#io-connections-bncttlsensors" class="md-nav__link">
+  <a href="#step-1-connect-power-and-usb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        I/O connections (BNC/TTL/sensors)
+        Step 1 — Connect power and USB
       
     </span>
   </a>
@@ -3428,10 +3519,116 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#safety-notes" class="md-nav__link">
+  <a href="#step-2-confirm-the-board-appears-as-a-serial-device" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Safety notes
+        Step 2 — Confirm the board appears as a serial device
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2 — Confirm the board appears as a serial device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v2x-cp210x-confirm-driver-comserial-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2.x (CP210x) — confirm driver + COM/serial port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v3x-esp32-s3-native-usb-confirm-usb-cdc-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v3.x (ESP32-S3 native USB) — confirm USB CDC port
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-25-choose-the-right-port-in-the-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.5 — Choose the right port in the GUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.5 — Choose the right port in the GUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-port-names-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical port names (examples)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-the-gui-cannot-open-the-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If the GUI cannot open the port
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-understand-trs-io-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Understand TRS I/O wiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Understand TRS I/O wiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-cabling-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended cabling practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-set-up-the-led-light-stimulus-photodiode-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Set up the LED light stimulus (photodiode workflow)
       
     </span>
   </a>
@@ -3439,10 +3636,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-functional-checks" class="md-nav__link">
+  <a href="#step-5-quick-functional-checks-before-opening-the-gui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick functional checks
+        Step 5 — Quick functional checks (before opening the GUI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
       
     </span>
   </a>
@@ -3452,11 +3660,11 @@
     </ul>
   
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
+        </div>
+      </div>
+    </div>
+  
+
           
             <div class="md-content" data-md-component="content">
               
@@ -3469,16 +3677,138 @@
   
 
 
-<h1 id="hardware-setup">Hardware setup<a class="headerlink" href="#hardware-setup" title="Permanent link">¶</a></h1>
-<p>Connect the Spikeling board, verify power, and prepare I/O.</p>
-<h2 id="power-and-usb">Power and USB<a class="headerlink" href="#power-and-usb" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="io-connections-bncttlsensors">I/O connections (BNC/TTL/sensors)<a class="headerlink" href="#io-connections-bncttlsensors" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="safety-notes">Safety notes<a class="headerlink" href="#safety-notes" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="quick-functional-checks">Quick functional checks<a class="headerlink" href="#quick-functional-checks" title="Permanent link">¶</a></h2>
-<p>TODO</p>
+<h1 id="hardware-setup"><strong>Hardware setup</strong><a class="headerlink" href="#hardware-setup" title="Permanent link">¶</a></h1>
+<p>This page walks you through the physical setup of Spikeling: powering the board, establishing a USB/serial connection, and preparing the TRS I/O used for analog + digital signals and light stimulation.</p>
+<h2 id="identify-your-board-family"><strong>Identify your board family</strong><a class="headerlink" href="#identify-your-board-family" title="Permanent link">¶</a></h2>
+<p>Spikeling exists in two official board families:</p>
+<ul>
+<li><strong>v2.x (e.g., v2.5)</strong>: ESP32 <strong>WROOM-32</strong>, <strong>mini-USB</strong>, USB-to-UART bridge (<strong>CP210x</strong>)</li>
+<li><strong>v3.x (e.g., v3.0)</strong>: ESP32 <strong>S3 WROOM-1</strong>, <strong>USB-C</strong>, native USB (<strong>USB CDC serial</strong>), additional DAC IC</li>
+</ul>
+<p>If you are unsure, the USB connector is usually the easiest identifier:
+- v2.x: <strong>mini-USB</strong>
+- v3.x: <strong>USB-C</strong></p>
+<h2 id="step-1-connect-power-and-usb"><strong>Step 1 — Connect power and USB</strong><a class="headerlink" href="#step-1-connect-power-and-usb" title="Permanent link">¶</a></h2>
+<ol>
+<li>Place the board on a non-conductive surface.</li>
+<li>Connect the board to your computer using a <strong>data-capable</strong> USB cable:</li>
+<li>v2.x: mini-USB data cable</li>
+<li>v3.x: USB-C data cable</li>
+<li>Avoid charge-only cables. If the board is not detected later, swap the cable first.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Classroom best practice</p>
+<p>Use a powered USB hub at each station. It improves stability on laptops with weak USB power and reduces intermittent disconnects.</p>
+</div>
+<h2 id="step-2-confirm-the-board-appears-as-a-serial-device"><strong>Step 2 — Confirm the board appears as a serial device</strong><a class="headerlink" href="#step-2-confirm-the-board-appears-as-a-serial-device" title="Permanent link">¶</a></h2>
+<p>This is the most important checkpoint before opening the GUI.</p>
+<h3 id="v2x-cp210x-confirm-driver-comserial-port"><strong>v2.x (CP210x) — confirm driver + COM/serial port</strong><a class="headerlink" href="#v2x-cp210x-confirm-driver-comserial-port" title="Permanent link">¶</a></h3>
+<ol>
+<li>Install the CP210x driver if you have not already:
+<div class="highlight"><pre><span></span><code>https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers
+</code></pre></div></li>
+<li>Reconnect the board after installation.</li>
+<li>Confirm a serial port appears:</li>
+</ol>
+<p><strong>Windows</strong>
+- Open <strong>Device Manager</strong>
+- Look under <strong>Ports (COM &amp; LPT)</strong> for something like <strong>“Silicon Labs CP210x USB to UART Bridge (COMx)”</strong></p>
+<p><strong>macOS</strong>
+- In Terminal:
+  - <code>ls /dev/tty.*</code>
+- CP210x devices often appear as something like:
+  - <code>/dev/tty.SLAB_USBtoUART</code></p>
+<p><strong>Linux</strong>
+- In Terminal:
+  - <code>ls /dev/ttyUSB* /dev/ttyACM* 2&gt;/dev/null</code>
+- CP210x commonly enumerates as:
+  - <code>/dev/ttyUSB0</code></p>
+<p>If no port appears:
+- try a different USB cable
+- try a powered hub or a different USB port
+- confirm the CP210x driver is installed (Windows especially)</p>
+<h3 id="v3x-esp32-s3-native-usb-confirm-usb-cdc-port"><strong>v3.x (ESP32-S3 native USB) — confirm USB CDC port</strong><a class="headerlink" href="#v3x-esp32-s3-native-usb-confirm-usb-cdc-port" title="Permanent link">¶</a></h3>
+<p>v3.x boards typically enumerate without a separate driver.</p>
+<p><strong>Windows</strong>
+- Device Manager → <strong>Ports (COM &amp; LPT)</strong>
+- Look for a <strong>USB Serial Device (COMx)</strong> or an Espressif/USB CDC serial entry (naming may vary)</p>
+<p><strong>macOS</strong>
+- <code>ls /dev/tty.*</code> (or <code>ls /dev/cu.*</code>)
+- You should see a new <code>/dev/tty.*</code> or <code>/dev/cu.*</code> entry after plugging the board in</p>
+<p><strong>Linux</strong>
+- <code>ls /dev/ttyACM* /dev/ttyUSB* 2&gt;/dev/null</code>
+- Native USB CDC devices often show up as <code>/dev/ttyACM0</code></p>
+<p>If no port appears:
+- swap the USB-C cable (most common issue)
+- try a different port/hub
+- avoid front-panel ports on desktops (they can be noisier/less reliable)</p>
+<h2 id="step-25-choose-the-right-port-in-the-gui"><strong>Step 2.5 — Choose the right port in the GUI</strong><a class="headerlink" href="#step-25-choose-the-right-port-in-the-gui" title="Permanent link">¶</a></h2>
+<p>When you open the Spikeling GUI, you will need to select the correct serial/COM port.</p>
+<h3 id="typical-port-names-examples"><strong>Typical port names (examples)</strong><a class="headerlink" href="#typical-port-names-examples" title="Permanent link">¶</a></h3>
+<p><strong>Windows</strong>
+- v2.x (CP210x): <code>COM3</code>, <code>COM4</code>, … (often labeled as CP210x in Device Manager)
+- v3.x (USB CDC): <code>COMx</code> (often labeled “USB Serial Device” or similar)</p>
+<p><strong>macOS</strong>
+- v2.x (CP210x): <code>/dev/tty.SLAB_USBtoUART</code> (or similar)<br>
+- v3.x (USB CDC): commonly shows as <code>/dev/tty.usbmodem*</code> or <code>/dev/cu.usbmodem*</code></p>
+<p><strong>Linux</strong>
+- v2.x (CP210x): <code>/dev/ttyUSB0</code> (or another <code>ttyUSB*</code>)
+- v3.x (USB CDC): <code>/dev/ttyACM0</code> (or another <code>ttyACM*</code>)</p>
+<h3 id="if-the-gui-cannot-open-the-port"><strong>If the GUI cannot open the port</strong><a class="headerlink" href="#if-the-gui-cannot-open-the-port" title="Permanent link">¶</a></h3>
+<p>Only one application can own a serial port at a time. If the GUI cannot connect:</p>
+<ul>
+<li>Close <strong>Arduino IDE Serial Monitor</strong></li>
+<li>Close <strong>PlatformIO Serial Monitor</strong></li>
+<li>Close any other serial terminal (PuTTY, CoolTerm, screen, minicom, etc.)</li>
+<li>Unplug/replug the board and refresh the port list in the GUI</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Fast identification trick</p>
+<p>Unplug the board, note the list of ports, plug it back in, and select the <strong>new</strong> port that appears.</p>
+</div>
+<h2 id="step-3-understand-trs-io-wiring"><strong>Step 3 — Understand TRS I/O wiring</strong><a class="headerlink" href="#step-3-understand-trs-io-wiring" title="Permanent link">¶</a></h2>
+<p>Spikeling uses <strong>3.5 mm stereo TRS</strong> jacks to carry both digital and analog signals with a shared ground:</p>
+<ul>
+<li><strong>Tip (T)</strong> = digital / TTL (trigger, sync, digital events)</li>
+<li><strong>Ring (R)</strong> = analog signal</li>
+<li><strong>Sleeve (S)</strong> = ground</li>
+</ul>
+<h3 id="recommended-cabling-practice"><strong>Recommended cabling practice</strong><a class="headerlink" href="#recommended-cabling-practice" title="Permanent link">¶</a></h3>
+<ul>
+<li>Use <strong>short TRS cables</strong> for analog signals when possible (reduces noise pickup).</li>
+<li>Keep <strong>sleeve/ground continuity</strong> consistent across connected devices.</li>
+<li>If you need to interface to breadboards or external hardware, use a <strong>TRS-to-breakout adapter</strong> so you can access Tip/Ring/Sleeve explicitly.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Ground matters</p>
+<p>Many “mystery” issues (noise, unstable readings, incorrect triggers) are grounding problems. If you connect Spikeling to other devices, ensure a shared ground reference via the TRS sleeve or an explicit ground lead.</p>
+</div>
+<h2 id="step-4-set-up-the-led-light-stimulus-photodiode-workflow"><strong>Step 4 — Set up the LED light stimulus (photodiode workflow)</strong><a class="headerlink" href="#step-4-set-up-the-led-light-stimulus-photodiode-workflow" title="Permanent link">¶</a></h2>
+<p>Spikeling can use a <strong>3.5 mm jack cable wired to an LED</strong> to deliver a light stimulus that the onboard photodiode reads.</p>
+<ol>
+<li>Plug the LED stimulus cable into the appropriate jack (as used by your board’s light stimulus input).</li>
+<li>Position the LED so it illuminates the photodiode reliably:</li>
+<li>keep the LED close and stable (tape or a small mount helps)</li>
+<li>reduce ambient light if you want clean responses</li>
+<li>In later steps (GUI), you will use the stimulus controls to drive the LED and observe the photodiode response.</li>
+</ol>
+<p>Recommended checks:
+- Verify LED polarity and wiring if it does not light.
+- If the photodiode response is noisy, reduce ambient light and shorten cables.</p>
+<h2 id="step-5-quick-functional-checks-before-opening-the-gui"><strong>Step 5 — Quick functional checks (before opening the GUI)</strong><a class="headerlink" href="#step-5-quick-functional-checks-before-opening-the-gui" title="Permanent link">¶</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Board is connected with a <strong>data-capable</strong> USB cable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> A new serial/COM port appears (v2.x: CP210x; v3.x: USB CDC)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> I can identify the correct port and it is not in use by another program</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> I have at least one <strong>TRS cable</strong> available for I/O</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> (Optional) LED stimulus cable is connected and positioned for photodiode reading</li>
+</ul>
+<h2 id="next-steps"><strong>Next steps</strong><a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<ul>
+<li>Install and launch the GUI: <strong><a href="../install-gui/">Install the GUI</a></strong></li>
+<li>Run your first test protocol: <strong><a href="../first-experiment/">First experiment</a></strong></li>
+<li>If anything fails: <strong><a href="../troubleshooting/">Troubleshooting</a></strong></li>
+</ul>
 
 
 
@@ -3517,8 +3847,6 @@
             </div>
           
           
-  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
-
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -3548,8 +3876,16 @@
       
       
     
-    <a href="https://github.com/&lt;your-org&gt;/spikeling" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/OpenSourceNeuro/Spikeling" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://YOUR-SHOP-URL-HERE" target="_blank" rel="noopener" title="Buy Spikeling" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M24-16C10.7-16 0-5.3 0 8s10.7 24 24 24h45.3c3.9 0 7.2 2.8 7.9 6.6l52.1 286.3c6.2 34.2 36 59.1 70.8 59.1H456c13.3 0 24-10.7 24-24s-10.7-24-24-24H200.1c-11.6 0-21.5-8.3-23.6-19.7l-5.1-28.3H475c30.8 0 57.2-21.9 62.9-52.2l31-165.9c3.7-19.7-11.4-37.9-31.5-37.9H124.7l-.4-2c-4.8-26.6-28-46-55.1-46zm184 528a48 48 0 1 0 0-96 48 48 0 1 0 0 96m224 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96"></path></svg>
     </a>
   
 </div>
@@ -3567,7 +3903,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>

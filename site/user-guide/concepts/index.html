@@ -7,7 +7,7 @@
       
       
       
-        <link rel="canonical" href="https://&lt;your-org&gt;.github.io/spikeling/2.2/user-guide/concepts/">
+        <link rel="canonical" href="https://www.opensourceneuro.com/3.0.1/user-guide/concepts/">
       
       
         <link rel="prev" href="../">
@@ -19,12 +19,12 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Concepts - Spikeling v2.2</title>
+        <title>Concepts - Spikeling v3.0.1</title>
       
     
     
@@ -52,6 +52,8 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
+      <link rel="stylesheet" href="../../stylesheets/solarized.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -78,7 +80,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="teal">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -94,6 +96,20 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<div class="spk-announce">
+  <a class="spk-buy-announce" href="https://YOUR-SHOP-URL" target="_blank" rel="noopener">
+    Purchase a Spikeling unit directly
+  </a>
+</div>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -107,10 +123,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Spikeling v2.2" class="md-header__button md-logo" aria-label="Spikeling v2.2" data-md-component="logo">
+    <a href="../.." title="Spikeling v3.0.1" class="md-header__button md-logo" aria-label="Spikeling v3.0.1" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+  <img src="../../assets/images/SpikyLogo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -121,7 +136,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Spikeling v2.2
+            Spikeling v3.0.1
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -140,7 +155,21 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="teal" aria-hidden="true" type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
     
   
 </form>
@@ -176,8 +205,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -195,7 +222,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/&lt;your-org&gt;/spikeling" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/OpenSourceNeuro/Spikeling" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -220,28 +247,28 @@
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+  <!-- Navigation -->
+  
+    
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
 
 
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Spikeling v2.2" class="md-nav__button md-logo" aria-label="Spikeling v2.2" data-md-component="logo">
+    <a href="../.." title="Spikeling v3.0.1" class="md-nav__button md-logo" aria-label="Spikeling v3.0.1" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+  <img src="../../assets/images/SpikyLogo.png" alt="logo">
 
     </a>
-    Spikeling v2.2
+    Spikeling v3.0.1
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/&lt;your-org&gt;/spikeling" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/OpenSourceNeuro/Spikeling" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -291,20 +318,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -434,20 +456,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -691,20 +708,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -828,10 +840,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#signals-and-units" class="md-nav__link">
+  <a href="#the-core-idea-practise-electrophysiology-style-experiments-without-a-full-rig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Signals and units
+        The core idea: practise electrophysiology-style experiments without a full rig
       
     </span>
   </a>
@@ -839,10 +851,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stimulus-vs-response" class="md-nav__link">
+  <a href="#signals-you-will-see-what-the-traces-mean" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stimulus vs response
+        Signals you will see (what the traces mean)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signals you will see (what the traces mean)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#membrane-potential-vm-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Membrane potential (Vm), red
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-current-current-clamp-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input current (current clamp logic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-digital-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger / digital events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#total-input-current-itot-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Total input current (Itot), green
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-most-important-control-current-injection-potentiometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The most important control: current injection potentiometer
       
     </span>
   </a>
@@ -850,10 +923,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#noise-and-variability" class="md-nav__link">
+  <a href="#threshold-and-excitability-why-spiking-starts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Noise and variability
+        Threshold and excitability (why spiking starts)
       
     </span>
   </a>
@@ -861,10 +934,265 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#models-vs-hardware-behavior" class="md-nav__link">
+  <a href="#adaptation-why-firing-slows-down" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Models vs hardware behavior
+        Adaptation (why firing slows down)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-neuron-model-izhikevich-dynamics-and-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The neuron model: Izhikevich dynamics and “modes”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The neuron model: Izhikevich dynamics and “modes”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changes-when-you-change-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changes when you change “mode”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-modes-are-selected-board-revision-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How modes are selected (board revision detail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stimulus-protocols-what-is-built-in-vs-what-the-gui-adds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stimulus protocols: what is built in vs what the GUI adds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stimulus protocols: what is built in vs what the GUI adds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-board-stimulus-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-board stimulus (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gui-stimulus-modes-built-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GUI stimulus modes (built-in)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-stimuli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom stimuli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise-input-why-spikes-can-become-stochastic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise input: why spikes can become stochastic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#light-input-photodiode-as-a-visual-sensory-stimulation-pathway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light input: photodiode as a visual sensory stimulation pathway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Light input: photodiode as a visual sensory stimulation pathway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-ways-to-deliver-light-stimuli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two ways to deliver light stimuli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#photodiode-gain-and-polarity-photo-gain-potentiometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Photodiode gain and polarity (Photo-gain potentiometer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synapses-and-networks-two-synaptic-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synapses and networks: two synaptic inputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Synapses and networks: two synaptic inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-synapse-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the synapse does
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multisensory-feedback-led-and-buzzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multisensory feedback: LED and buzzer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#channels-connectors-and-grounding-practical-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channels, connectors, and grounding (practical concept)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emulator-vs-hardware-why-both-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emulator vs hardware (why both exist)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluorescence-imaging-simulation-why-vm-can-become-fluorescence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluorescence imaging simulation (why Vm can become fluorescence)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to read next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-background-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References (background reading)
       
     </span>
   </a>
@@ -1093,20 +1421,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1348,20 +1671,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1455,8 +1773,6 @@
     
     
     
-    
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -1716,20 +2032,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1999,20 +2310,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8">
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -2282,20 +2588,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
         
           
-          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   
@@ -2537,20 +2838,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -2764,20 +3060,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11">
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -2963,20 +3254,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12">
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -3190,20 +3476,15 @@
     
     
     
-      
-        
-        
-      
     
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13">
         
           
-          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
             
   
   
@@ -3381,16 +3662,25 @@
     
   </ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+
+          <div class="spk-buy">
+            <a class="spk-buy__btn" href="https://YOUR-SHOP-URL" target="_blank" rel="noopener">
+              Buy Spikeling units
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  
+
+  <!-- Table of contents -->
+  
+    
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
@@ -3406,10 +3696,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#signals-and-units" class="md-nav__link">
+  <a href="#the-core-idea-practise-electrophysiology-style-experiments-without-a-full-rig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Signals and units
+        The core idea: practise electrophysiology-style experiments without a full rig
       
     </span>
   </a>
@@ -3417,10 +3707,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stimulus-vs-response" class="md-nav__link">
+  <a href="#signals-you-will-see-what-the-traces-mean" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stimulus vs response
+        Signals you will see (what the traces mean)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signals you will see (what the traces mean)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#membrane-potential-vm-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Membrane potential (Vm), red
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-current-current-clamp-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input current (current clamp logic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-digital-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger / digital events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#total-input-current-itot-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Total input current (Itot), green
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-most-important-control-current-injection-potentiometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The most important control: current injection potentiometer
       
     </span>
   </a>
@@ -3428,10 +3779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#noise-and-variability" class="md-nav__link">
+  <a href="#threshold-and-excitability-why-spiking-starts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Noise and variability
+        Threshold and excitability (why spiking starts)
       
     </span>
   </a>
@@ -3439,10 +3790,265 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#models-vs-hardware-behavior" class="md-nav__link">
+  <a href="#adaptation-why-firing-slows-down" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Models vs hardware behavior
+        Adaptation (why firing slows down)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-neuron-model-izhikevich-dynamics-and-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The neuron model: Izhikevich dynamics and “modes”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The neuron model: Izhikevich dynamics and “modes”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changes-when-you-change-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changes when you change “mode”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-modes-are-selected-board-revision-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How modes are selected (board revision detail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stimulus-protocols-what-is-built-in-vs-what-the-gui-adds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stimulus protocols: what is built in vs what the GUI adds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stimulus protocols: what is built in vs what the GUI adds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-board-stimulus-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-board stimulus (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gui-stimulus-modes-built-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GUI stimulus modes (built-in)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-stimuli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom stimuli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise-input-why-spikes-can-become-stochastic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise input: why spikes can become stochastic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#light-input-photodiode-as-a-visual-sensory-stimulation-pathway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light input: photodiode as a visual sensory stimulation pathway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Light input: photodiode as a visual sensory stimulation pathway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-ways-to-deliver-light-stimuli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two ways to deliver light stimuli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#photodiode-gain-and-polarity-photo-gain-potentiometer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Photodiode gain and polarity (Photo-gain potentiometer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synapses-and-networks-two-synaptic-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synapses and networks: two synaptic inputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Synapses and networks: two synaptic inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-synapse-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the synapse does
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multisensory-feedback-led-and-buzzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multisensory feedback: LED and buzzer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#channels-connectors-and-grounding-practical-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channels, connectors, and grounding (practical concept)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emulator-vs-hardware-why-both-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emulator vs hardware (why both exist)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluorescence-imaging-simulation-why-vm-can-become-fluorescence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluorescence imaging simulation (why Vm can become fluorescence)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to read next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-background-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References (background reading)
       
     </span>
   </a>
@@ -3452,11 +4058,11 @@
     </ul>
   
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
+        </div>
+      </div>
+    </div>
+  
+
           
             <div class="md-content" data-md-component="content">
               
@@ -3469,16 +4075,251 @@
   
 
 
-<h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">¶</a></h1>
-<p>Explain the core concepts used throughout Spikeling (Vm, stimulus, synaptic input, firing patterns, etc.).</p>
-<h2 id="signals-and-units">Signals and units<a class="headerlink" href="#signals-and-units" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="stimulus-vs-response">Stimulus vs response<a class="headerlink" href="#stimulus-vs-response" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="noise-and-variability">Noise and variability<a class="headerlink" href="#noise-and-variability" title="Permanent link">¶</a></h2>
-<p>TODO</p>
-<h2 id="models-vs-hardware-behavior">Models vs hardware behavior<a class="headerlink" href="#models-vs-hardware-behavior" title="Permanent link">¶</a></h2>
-<p>TODO</p>
+<h1 id="concepts"><strong>Concepts</strong><a class="headerlink" href="#concepts" title="Permanent link">¶</a></h1>
+<p>This page introduces the minimum set of concepts needed to use Spikeling effectively. It is written for quick scanning: each section links a familiar neuroscience idea (current clamp, spikes, synapses) to what you can <strong>see, touch, and measure</strong> on the device and in the GUI.</p>
+<p>If you are new: read this once, then return to it while doing Quickstart and the first teaching labs.</p>
+<hr>
+<h2 id="the-core-idea-practise-electrophysiology-style-experiments-without-a-full-rig"><strong>The core idea: practise electrophysiology-style experiments without a full rig</strong><a class="headerlink" href="#the-core-idea-practise-electrophysiology-style-experiments-without-a-full-rig" title="Permanent link">¶</a></h2>
+<p>In a traditional patch-clamp setup, you inject a known current into a neuron and measure the resulting membrane potential (<strong>Vm</strong>), including whether and how the cell fires action potentials. Spikeling recreates this workflow with:</p>
+<ul>
+<li>a compact hardware device implementing a spiking neuron model</li>
+<li>a desktop GUI that provides real-time visualisation and stimulus generation</li>
+<li>a data export path (CSV) supports the same downstream analysis you would do for real electrophysiology</li>
+</ul>
+<p>The goal is not to replace patch-clamp hardware, but to make the <strong>logic of electrophysiology</strong> accessible, interactive, repeatable, and teachable.
+It is designed to let students practise <em>the reasoning</em> of electrophysiology: input–output relationships, excitability, adaptation, synaptic integration, and network interactions.<br>
+(See also: <a href="../device-overview/">Device overview</a>, <a href="../gui-overview/">GUI overview</a>.)</p>
+<hr>
+<h2 id="signals-you-will-see-what-the-traces-mean"><strong>Signals you will see (what the traces mean)</strong><a class="headerlink" href="#signals-you-will-see-what-the-traces-mean" title="Permanent link">¶</a></h2>
+<h3 id="membrane-potential-vm-red"><strong>Membrane potential (Vm), red</strong><a class="headerlink" href="#membrane-potential-vm-red" title="Permanent link">¶</a></h3>
+<p><strong>Vm</strong> is the main signal. It represents the “state” of the neuron model. It is the trace students learn to read first.</p>
+<p>Typical behaviours you will observe:</p>
+<ul>
+<li><strong>Resting baseline</strong>: stable Vm without spiking</li>
+<li><strong>Hyperpolarisation</strong>: Vm shifts downward (more negative)</li>
+<li><strong>Depolarisation</strong>: Vm shifts upward (more positive)</li>
+<li><strong>Spikes</strong>: rapid events when Vm crosses threshold and the model generates an action potential</li>
+<li><strong>Adaptation</strong>: with sustained input, spikes may slow down over time</li>
+</ul>
+<p>In Spikeling teaching labs, most conclusions come from how Vm changes in response to input.</p>
+<div class="admonition tip">
+<p class="admonition-title">Teaching tip</p>
+<p>Early teaching wins come from having students predict: “If I increase depolarising current, what should Vm do? When should spikes appear? What should happen to firing rate over time?”</p>
+</div>
+<h3 id="input-current-current-clamp-logic"><strong>Input current (current clamp logic)</strong><a class="headerlink" href="#input-current-current-clamp-logic" title="Permanent link">¶</a></h3>
+<p>Spikeling is used primarily in a <strong>current-clamp style</strong> workflow: you control an input current and observe Vm.</p>
+<p>There are two common ways the input is applied:</p>
+<ul>
+<li><strong>Direct current injection (DC)</strong> using the on-board <strong>current injection potentiometer</strong></li>
+<li><strong>Programmed stimuli</strong> (steps, pulses, trains, noise) initiated from the GUI</li>
+</ul>
+<p>These correspond to the same conceptual action: changing the net input current over time.</p>
+<h3 id="trigger-digital-events"><strong>Trigger / digital events</strong><a class="headerlink" href="#trigger-digital-events" title="Permanent link">¶</a></h3>
+<p>Many workflows include a digital marker (often called <strong>trigger</strong>) that indicates when a stimulus begins/ends or when a protocol event occurs.</p>
+<p>This is used to align traces during analysis and to segment recordings into “baseline vs stimulation” windows.</p>
+<hr>
+<h3 id="total-input-current-itot-green"><strong>Total input current (Itot), green</strong><a class="headerlink" href="#total-input-current-itot-green" title="Permanent link">¶</a></h3>
+<p>In addition to Vm, Spikeling can display a <strong>current trace</strong> that represents the <strong>total input drive</strong> entering the neuron model (<strong>Itot</strong>). This is useful because it makes explicit that the neuron is responding to a <em>sum</em> of inputs.</p>
+<p>Itot typically includes contributions from:</p>
+<ul>
+<li><strong>Direct current injection</strong> (current injection potentiometer)</li>
+<li><strong>Photodiode input</strong> (light converted into current; Photo-gain sets sign and gain)</li>
+<li><strong>Noise input</strong> (Gaussian noise, adjustable amplitude)</li>
+<li><strong>Synaptic inputs</strong> (spike-triggered exponentially decaying currents from Synapse 1 and 2)</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Teaching tip</p>
+<p>Encourage students to interpret experiments as: <strong>Itot (input) → Vm (state) → spikes (output)</strong>.<br>
+When something “unexpected” happens, Itot is often the quickest way to see which input pathway is dominating.</p>
+</div>
+<hr>
+<h2 id="the-most-important-control-current-injection-potentiometer"><strong>The most important control: current injection potentiometer</strong><a class="headerlink" href="#the-most-important-control-current-injection-potentiometer" title="Permanent link">¶</a></h2>
+<p>Spikeling includes a <strong>centre-detent potentiometer</strong> representing direct current injection from a patch pipette.</p>
+<ul>
+<li><strong>Centre detent</strong>: 0 current (no injection)</li>
+<li>Turn <strong>left</strong>: hyperpolarising current (Vm decreases)</li>
+<li>Turn <strong>right</strong>: depolarising current (Vm increases)</li>
+</ul>
+<p>This control is deliberately physical and immediate: it is the fastest way to demonstrate the transition:</p>
+<p><strong>silent → depolarised → spiking → spike-frequency adaptation</strong></p>
+<p>(Quickstart uses this to teach “how to drive Vm” before introducing more structured protocols.)</p>
+<hr>
+<h2 id="threshold-and-excitability-why-spiking-starts"><strong>Threshold and excitability (why spiking starts)</strong><a class="headerlink" href="#threshold-and-excitability-why-spiking-starts" title="Permanent link">¶</a></h2>
+<p>Spiking starts when Vm crosses an effective <strong>threshold</strong>. The threshold is not a fixed “line” in all neuron models—many models have state-dependent dynamics—but for teaching, a useful mental model is:</p>
+<ul>
+<li>below threshold: inputs shift Vm but do not spike</li>
+<li>near threshold: small changes can trigger spikes</li>
+<li>above threshold: repeated spiking occurs</li>
+</ul>
+<p>This is what makes neurons <strong>excitable</strong>: a small difference in input can qualitatively change the output.</p>
+<hr>
+<h2 id="adaptation-why-firing-slows-down"><strong>Adaptation (why firing slows down)</strong><a class="headerlink" href="#adaptation-why-firing-slows-down" title="Permanent link">¶</a></h2>
+<p>Many neurons show <strong>spike-frequency adaptation</strong>: a constant depolarising input initially produces fast spiking, then the spiking rate slows.</p>
+<p>In Spikeling, you can see adaptation by:</p>
+<ol>
+<li>Turning the current injection potentiometer rightward enough to cause sustained spiking</li>
+<li>Holding it steady for several seconds</li>
+<li>Watching the interval between spikes increase over time</li>
+</ol>
+<p>In experiments, adaptation is often summarised by an <strong>F–I curve</strong> (firing rate vs input current) and by comparing early vs late firing rate during a step.</p>
+<hr>
+<h2 id="the-neuron-model-izhikevich-dynamics-and-modes"><strong>The neuron model: Izhikevich dynamics and “modes”</strong><a class="headerlink" href="#the-neuron-model-izhikevich-dynamics-and-modes" title="Permanent link">¶</a></h2>
+<p>Spikeling uses an <strong>Izhikevich-style</strong> spiking neuron model, which is widely used in computational neuroscience because it can reproduce diverse firing patterns with a compact set of equations and a small number of parameters.</p>
+<h3 id="what-changes-when-you-change-mode"><strong>What changes when you change “mode”</strong><a class="headerlink" href="#what-changes-when-you-change-mode" title="Permanent link">¶</a></h3>
+<p>A “mode” changes the four key parameters of the Izhikevich formulation (commonly labelled <strong>a, b, c, d</strong>), which tune:</p>
+<ul>
+<li>recovery/adaptation dynamics</li>
+<li>spike reset behaviour</li>
+<li>whether the neuron behaves more like regular-spiking, fast-spiking, bursting, etc.</li>
+</ul>
+<h3 id="how-modes-are-selected-board-revision-detail"><strong>How modes are selected (board revision detail)</strong><a class="headerlink" href="#how-modes-are-selected-board-revision-detail" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Board v2.x</strong>: an on-board <strong>Mode</strong> button cycles through <strong>12 preset modes</strong></li>
+<li><strong>Board v3.x</strong>: neuron mode is selected from the <strong>GUI</strong> (no on-board cycling)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Mode selection changes the model’s intrinsic excitability and adaptation. For teaching, it is useful to keep the stimulus fixed and show how different modes produce different firing patterns.</p>
+</div>
+<hr>
+<h2 id="stimulus-protocols-what-is-built-in-vs-what-the-gui-adds"><strong>Stimulus protocols: what is built in vs what the GUI adds</strong><a class="headerlink" href="#stimulus-protocols-what-is-built-in-vs-what-the-gui-adds" title="Permanent link">¶</a></h2>
+<p>A stimulus protocol is simply the time-course of injected input.</p>
+<h3 id="on-board-stimulus-default"><strong>On-board stimulus (default)</strong><a class="headerlink" href="#on-board-stimulus-default" title="Permanent link">¶</a></h3>
+<p>By default, the board provides a <strong>square-wave stimulus</strong> where users can adjust:</p>
+<ul>
+<li><strong>frequency</strong> (how fast it repeats)</li>
+<li><strong>strength</strong> (amplitude)</li>
+</ul>
+<p>This is ideal for rapid classroom demonstrations: “change frequency, change strength, watch Vm.”</p>
+<h3 id="gui-stimulus-modes-built-in"><strong>GUI stimulus modes (built-in)</strong><a class="headerlink" href="#gui-stimulus-modes-built-in" title="Permanent link">¶</a></h3>
+<p>The GUI expands stimulus generation for proper protocol settings. Out of the box, users can select:</p>
+<ul>
+<li><strong>Steps</strong> (baseline → constant input → baseline)</li>
+<li><strong>Sine waves</strong></li>
+<li><strong>Triangle waves</strong></li>
+<li><strong>Chirps / ZAP-style sweeps</strong>
+  (linear sweep, exponential sweep, and amplitude-increasing variants)</li>
+<li><strong>Noise</strong></li>
+</ul>
+<p>These waveforms are standard in electrophysiology and modelling for probing excitability, resonance/impedance, temporal integration, and variability.</p>
+<h3 id="custom-stimuli"><strong>Custom stimuli</strong><a class="headerlink" href="#custom-stimuli" title="Permanent link">¶</a></h3>
+<p>Beyond built-in modes, the GUI supports imported user-defined/custom stimuli. This is the bridge from “following a lab handout” to “designing your own protocol”.</p>
+<div class="admonition tip">
+<p class="admonition-title">Teaching tip</p>
+<p>Treat the stimulus generator as a “function generator for neurons”. Have students state the hypothesis first (“I think this neuron prefers low frequencies”), then choose a waveform that tests it (e.g., a chirp).</p>
+</div>
+<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">¶</a></h2>
+<h2 id="noise-input-why-spikes-can-become-stochastic"><strong>Noise input: why spikes can become stochastic</strong><a class="headerlink" href="#noise-input-why-spikes-can-become-stochastic" title="Permanent link">¶</a></h2>
+<p>Real neurons are never perfectly quiet: thermal (Johnson–Nyquist) noise, ion channel fluctuations, synaptic background activity, and measurement noise all add variability. This is one reason spike timing can be <strong>probabilistic</strong>, especially near threshold.</p>
+<p>Spikeling includes an on-board <strong>Noise</strong> potentiometer that generates <strong>Gaussian noise</strong> added to the input drive.</p>
+<ul>
+<li>Increasing the Noise potentiometer increases the <strong>noise amplitude</strong></li>
+<li>Noise is summed into the <strong>total input current (Itot)</strong></li>
+<li>Near threshold, noise can:</li>
+<li>trigger occasional spikes (“stochastic spiking”)</li>
+<li>jitter spike timing (reduced precision / increased variability)</li>
+<li>reveal that small differences in Vm can change spike outcome</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Teaching tip</p>
+<p>A simple classroom demonstration is to set the neuron <em>just below</em> spiking with the current injection potentiometer, then slowly increase Noise. Students will see spiking emerge intermittently without changing the mean input—illustrating variability-driven threshold crossings.</p>
+</div>
+<hr>
+<h2 id="light-input-photodiode-as-a-visual-sensory-stimulation-pathway"><strong>Light input: photodiode as a visual sensory stimulation pathway</strong><a class="headerlink" href="#light-input-photodiode-as-a-visual-sensory-stimulation-pathway" title="Permanent link">¶</a></h2>
+<p>Spikeling includes a <strong>photodiode</strong> that converts changes in light intensity into an input current pathway for the neuron model. Conceptually, this is intended to mimic a <strong>visual sensory experiment</strong>: light is used as the stimulus (as in retinal stimulation), and the neuron’s response is read out as <strong>Vm and spikes</strong>.</p>
+<h3 id="two-ways-to-deliver-light-stimuli"><strong>Two ways to deliver light stimuli</strong><a class="headerlink" href="#two-ways-to-deliver-light-stimuli" title="Permanent link">¶</a></h3>
+<ol>
+<li>
+<p><strong>Controlled light stimulation (recommended): LED stimulus cable</strong><br>
+   Use the dedicated <strong>LED cable</strong> plugged into the <strong>stimulus output port</strong>. This allows the GUI (or on-board stimulus) to drive the LED with precise timing and amplitude, producing reproducible light flashes or flicker patterns aimed at the photodiode.</p>
+</li>
+<li>
+<p><strong>Flexible demonstrations: external light source</strong><br>
+   You can also use <strong>any external LED/light source</strong> aimed at the photodiode (for example, a handheld LED, a lamp with modulation, or another experimental light source) to deliver a stimulus. This is useful for quick classroom demonstrations and exploratory setups.</p>
+</li>
+</ol>
+<h3 id="photodiode-gain-and-polarity-photo-gain-potentiometer"><strong>Photodiode gain and polarity (Photo-gain potentiometer)</strong><a class="headerlink" href="#photodiode-gain-and-polarity-photo-gain-potentiometer" title="Permanent link">¶</a></h3>
+<p>The <strong>Photo-gain</strong> potentiometer controls how strongly light is converted into input drive, and can be set with either polarity:</p>
+<ul>
+<li><strong>Positive gain</strong>: increased light produces a <strong>depolarising</strong> effect (Vm tends to rise)</li>
+<li><strong>Negative gain</strong>: increased light produces an <strong>inhibitory/hyperpolarising</strong> effect (Vm tends to fall)</li>
+</ul>
+<p>This lets you demonstrate both “excitatory” and “inhibitory” sensory drive using the same light stimulus, and it supports classic teaching questions such as: <em>How does stimulus intensity affect firing rate? What changes when the sign of sensory input is inverted?</em></p>
+<hr>
+<h2 id="synapses-and-networks-two-synaptic-inputs"><strong>Synapses and networks: two synaptic inputs</strong><a class="headerlink" href="#synapses-and-networks-two-synaptic-inputs" title="Permanent link">¶</a></h2>
+<p>Spikeling can receive up to <strong>two synaptic inputs</strong> from other Spikeling units.</p>
+<h3 id="physical-concept"><strong>Physical concept</strong><a class="headerlink" href="#physical-concept" title="Permanent link">¶</a></h3>
+<p>A cable from the <strong>axon output</strong> of a second unit into one of the <strong>synaptic input</strong> jacks transmits:</p>
+<ul>
+<li>a spike event (digital) and</li>
+<li>Vm (analogue)</li>
+</ul>
+<h3 id="what-the-synapse-does"><strong>What the synapse does</strong><a class="headerlink" href="#what-the-synapse-does" title="Permanent link">¶</a></h3>
+<p>When a presynaptic spike arrives, the receiving unit generates an <strong>exponentially decaying synaptic current</strong> (a classic simplified postsynaptic current model).</p>
+<p>Each synapse has its own gain potentiometer:</p>
+<ul>
+<li><strong>Synapse 1 gain</strong>: positive (excitatory) or negative (inhibitory)</li>
+<li><strong>Synapse 2 gain</strong>: positive (excitatory) or negative (inhibitory)</li>
+</ul>
+<p>This lets students practise the most important network idea in neuroscience:</p>
+<blockquote>
+<p>spikes from one neuron can drive or suppress another neuron, depending on sign and strength of synaptic coupling.</p>
+</blockquote>
+<p>(See also: <a href="../../experiments/synapses-and-inputs/">Synapses and inputs</a>, <a href="../../experiments/network-two-units/">Network with two units</a>.)</p>
+<hr>
+<h2 id="multisensory-feedback-led-and-buzzer"><strong>Multisensory feedback: LED and buzzer</strong><a class="headerlink" href="#multisensory-feedback-led-and-buzzer" title="Permanent link">¶</a></h2>
+<p>Spikeling provides immediate “non-screen” feedback:</p>
+<ul>
+<li><strong>On-board LED</strong> follows Vm and blinks strongly on spikes</li>
+<li><strong>On-board buzzer</strong> clicks at each spike</li>
+</ul>
+<p>These are not just cosmetic: they help students build intuition about spiking without staring at plots, which is useful in classroom demonstrations and outreach settings.
+They can also be deactivated if they become annoying to the user or the class</p>
+<hr>
+<h2 id="channels-connectors-and-grounding-practical-concept"><strong>Channels, connectors, and grounding (practical concept)</strong><a class="headerlink" href="#channels-connectors-and-grounding-practical-concept" title="Permanent link">¶</a></h2>
+<p>Spikeling uses stereo <strong>3.5 mm TRS</strong> connectors:</p>
+<ul>
+<li><strong>Tip (T)</strong>: digital (commonly trigger)</li>
+<li><strong>Ring (R)</strong>: analogue (commonly Vm or stimulus signal, depending on the jack)</li>
+<li><strong>Sleeve (S)</strong>: ground</li>
+</ul>
+<p>Good grounding and short cables matter. Many “mystery noise” issues reduce to an incomplete ground reference or a swapped cable.</p>
+<p>(See: <a href="../controls-and-io/">Controls and I/O</a> and <a href="../../quickstart/troubleshooting/">Quickstart → Troubleshooting</a>.)</p>
+<hr>
+<h2 id="emulator-vs-hardware-why-both-exist"><strong>Emulator vs hardware (why both exist)</strong><a class="headerlink" href="#emulator-vs-hardware-why-both-exist" title="Permanent link">¶</a></h2>
+<p>Spikeling includes an emulator mode to support:</p>
+<ul>
+<li>demonstrations without physical devices</li>
+<li>remote teaching and workshops</li>
+<li>rapid development and testing of GUI workflows</li>
+</ul>
+<p>Conceptually, the emulator behave like the hardware from the user’s point of view: you apply inputs, observe Vm/spiking, record, and analyse.</p>
+<hr>
+<h2 id="fluorescence-imaging-simulation-why-vm-can-become-fluorescence"><strong>Fluorescence imaging simulation (why Vm can become fluorescence)</strong><a class="headerlink" href="#fluorescence-imaging-simulation-why-vm-can-become-fluorescence" title="Permanent link">¶</a></h2>
+<p>Spikeling can simulate fluorescence imaging by transforming Vm into:</p>
+<ol>
+<li>a simulated intracellular calcium trace</li>
+<li>a simulated fluorescence readout</li>
+</ol>
+<p>This helps connect spike-driven Vm dynamics to calcium transients and fluorescence signals commonly used in modern systems neuroscience.</p>
+<p>(See: <a href="../fluorescence-imaging-sim/">Fluorescence imaging simulation</a>.)</p>
+<p>--</p>
+<h2 id="what-to-read-next"><strong>What to read next</strong><a class="headerlink" href="#what-to-read-next" title="Permanent link">¶</a></h2>
+<ul>
+<li>Physical layout and signals: <a href="../device-overview/">Device overview</a></li>
+<li>Knobs, jacks, and I/O: <a href="../controls-and-io/">Controls and I/O</a></li>
+<li>GUI workflow: <a href="../gui-overview/">GUI overview</a></li>
+<li>Export + analysis: <a href="../recording-and-export/">Recording and export</a></li>
+</ul>
+<hr>
+<h2 id="references-background-reading"><strong>References (background reading)</strong><a class="headerlink" href="#references-background-reading" title="Permanent link">¶</a></h2>
+<ol>
+<li>Izhikevich EM (2003). <em>Simple model of spiking neurons.</em> IEEE Trans Neural Networks. https://www.izhikevich.org/publications/spikes.pdf</li>
+<li>Moleculardevices (overview). <em>What is current-clamp?</em> https://www.moleculardevices.com/applications/patch-clamp-electrophysiology/what-current-clamp-method</li>
+<li>Hutcheon B, Yarom Y (2000). <em>Resonance, oscillation and the intrinsic frequency preferences of neurons.</em> Trends Neurosci. https://pubmed.ncbi.nlm.nih.gov/10782127/</li>
+<li>Gerstner W, Kistler W, Naud R, Paninski L (online book). <em>Neuronal Dynamics: Synapses (exponential/biophysical synapse models).</em> https://neuronaldynamics.epfl.ch/online/Ch3.S1.html</li>
+<li>Vogelstein JT et al. (2009). <em>Spike inference from calcium imaging using sequential Monte Carlo methods.</em> Biophys J. https://pubmed.ncbi.nlm.nih.gov/19619479/</li>
+</ol>
 
 
 
@@ -3517,8 +4358,6 @@
             </div>
           
           
-  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
-
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -3548,8 +4387,16 @@
       
       
     
-    <a href="https://github.com/&lt;your-org&gt;/spikeling" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/OpenSourceNeuro/Spikeling" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://YOUR-SHOP-URL-HERE" target="_blank" rel="noopener" title="Buy Spikeling" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M24-16C10.7-16 0-5.3 0 8s10.7 24 24 24h45.3c3.9 0 7.2 2.8 7.9 6.6l52.1 286.3c6.2 34.2 36 59.1 70.8 59.1H456c13.3 0 24-10.7 24-24s-10.7-24-24-24H200.1c-11.6 0-21.5-8.3-23.6-19.7l-5.1-28.3H475c30.8 0 57.2-21.9 62.9-52.2l31-165.9c3.7-19.7-11.4-37.9-31.5-37.9H124.7l-.4-2c-4.8-26.6-28-46-55.1-46zm184 528a48 48 0 1 0 0-96 48 48 0 1 0 0 96m224 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96"></path></svg>
     </a>
   
 </div>
@@ -3567,7 +4414,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
