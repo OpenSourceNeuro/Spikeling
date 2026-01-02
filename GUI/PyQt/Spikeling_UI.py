@@ -24465,7 +24465,7 @@ class Ui_Spikeling(object):
         self.retranslateUi(Spikeling)
 
         self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(0)
-        self.mainbody_stackedWidget.setCurrentIndex(4)
+        self.mainbody_stackedWidget.setCurrentIndex(0)
         self.Spikeling_parameter_stackedwidget.setCurrentIndex(1)
         self.Emulator_parameter_stackedwidget.setCurrentIndex(2)
         self.DataAnalysis_Display_StackedWidget.setCurrentIndex(8)
@@ -24484,7 +24484,7 @@ class Ui_Spikeling(object):
 
     def retranslateUi(self, Spikeling):
         Spikeling.setWindowTitle(QCoreApplication.translate("Spikeling", u"MainWindow", None))
-        self.appTitle_pushButton.setText(QCoreApplication.translate("Spikeling", u"Spikeling v2.5", None))
+        self.appTitle_pushButton.setText(QCoreApplication.translate("Spikeling", u"Spikeling v3.0.1", None))
         self.reduce_pushButton.setText("")
         self.expand_pushButton.setText("")
         self.exit_pushButton.setText("")
@@ -24520,7 +24520,7 @@ class Ui_Spikeling(object):
         self.label_13.setText(QCoreApplication.translate("Spikeling", u"Help", None))
         self.label_14.setText(QCoreApplication.translate("Spikeling", u"GitHub", None))
         self.label_8.setText("")
-        self.mainbody_header_text.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:48pt; color:#93a1a1;\">Spikeling </span><span style=\" font-size:16pt; color:#93a1a1;\">v2.4</span></p><p align=\"center\"><span style=\" font-size:16pt;\">A hardware implementation of spiking neurons for neursocience teaching and outreach</span></p><p align=\"right\"><span style=\" font-weight:696;\">Conceived and developed by M.J.Y. Zimmermann</span></p><p align=\"right\"><span style=\" font-weight:696;\">Based on an original idea from T. Baden</span></p></body></html>", None))
+        self.mainbody_header_text.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:48pt; color:#93a1a1;\">Spikeling </span><span style=\" font-size:16pt; color:#93a1a1;\">v3.0.1</span></p><p align=\"center\"><span style=\" font-size:16pt;\">A hardware implementation of spiking neurons for neuroscience teaching and outreach</span></p><p align=\"right\"><span style=\" font-weight:696;\">Conceived and developed by M.J.Y. Zimmermann</span></p><p align=\"right\"><span style=\" font-weight:696;\">Based on an original idea from T. Baden</span></p></body></html>", None))
         self.mainbody_content_text.setText(QCoreApplication.translate("Spikeling", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

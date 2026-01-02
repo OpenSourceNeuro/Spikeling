@@ -5,10 +5,10 @@
 	(uuid "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55")
 	(paper "A3")
 	(title_block
-		(title "Spikeling v 3.0")
+		(title "Spikeling v 3.1")
 		(date "2026-01-01")
 		(company "OpenSourceNeuro")
-		(comment 1 "Licensed under CERN-OHL-S-2.0")
+		(comment 1 "SPDX-License-Identifier: CERN-OHL-S-2.0")
 		(comment 4 "Author: Maxime Zimmermann")
 	)
 	(lib_symbols
