@@ -1,6 +1,14 @@
 <p align="left"><img width="270" height="170" src="https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/Images/SpikyLogo.png">
 </p>
 
+SPDX-License-Identifier: CERN-OHL-S-2.0
+
+This directory contains the hardware design sources (KiCad schematics/PCBs, fabrication outputs).
+Copyright (c) 2026 OpenSourceNeuro contributors.
+
+Source Location: https://github.com/OpenSourceNeuro/Spikeling
+License text: see PCB/LICENSE (CERN-OHL-S v2)
+
 <h1 align="center"> Spikeling v2 - Assembly Manual</h1></p>
 
 

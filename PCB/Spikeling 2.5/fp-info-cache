@@ -1,4 +1,4 @@
-26742462199034618
+26745992523504954
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -69279,6 +69279,13 @@ SOIC-8_L5.0-W4.0-P1.27-LS6.0-BL
 8
 8
 Maxime
+SOIC-14_L8.7-W3.9-P1.27-LS6.0-BL
+
+
+0
+14
+14
+Maxime
 SOIC-16_L9.9-W3.9-P1.27-LS6.0-BL
 
 
@@ -69324,6 +69331,13 @@ Maxime
 SW-TH_MMP122-R
 
 
+0
+3
+3
+Maxime
+Spikeling Audio Jack 3.5mm
+Single 2.4 GHz Wi-Fi and Bluetooth combo chip with U.FL connector, https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d_esp32-wroom-32u_datasheet_en.pdf
+Single 2.4 GHz Wi-Fi and Bluetooth combo  chip
 0
 3
 3
