@@ -1,26 +1,37 @@
-site_name: Spikeling v2.2
+site_name: Spikeling v3.0.1
 site_description: A hardware implementation of spiking neurons for neuroscience teaching and outreach
-site_url: https://<your-org>.github.io/spikeling
-repo_url: https://github.com/<your-org>/spikeling
+site_url: https://www.opensourceneuro.com
+repo_url: https://github.com/OpenSourceNeuro/Spikeling
 # Optional but nice in the UI:
 # repo_name: <your-org>/spikeling
 # edit_uri: edit/main/docs/
 
 theme:
   name: material
+  custom_dir: docs/overrides
+  logo: assets/images/SpikyLogo.png
+  favicon: assets/favicon.png
   features:
     - navigation.instant
     - navigation.tracking
-    - navigation.sections
-    - search.suggest
-    - search.highlight
-    - content.code.copy
-    - content.tabs.link
-    - toc.follow
+
   palette:
+    # Default: Solarized Dark
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Optional: Solarized Light
     - scheme: default
-      primary: blue
-      accent: teal
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
 
 markdown_extensions:
   - admonition
@@ -167,4 +178,10 @@ extra:
     alias: true
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/<your-org>/spikeling
+      link: https://github.com/OpenSourceNeuro/Spikeling
+    - icon: fontawesome/solid/cart-shopping
+      link: https://YOUR-SHOP-URL-HERE
+      name: Buy Spikeling
+
+extra_css:
+  - stylesheets/solarized.css
