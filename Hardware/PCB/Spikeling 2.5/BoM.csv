@@ -1,0 +1,23 @@
+Name,Manufacturer,Manufacturer ID,Retailer,Retailer ID,Quantity,Observation 1 ,Suggested URL,Cost,,Electronic,,PCB,,Screw
+ESP32 Dev module,Espressif Systems,ESP32-DEVKITC-VE,Digikey,1965-ESP32-DEVKITC-VE-ND,1,,https://www.digikey.co.uk/en/products/detail/espressif-systems/ESP32-DEVKITC-VE/12091812?s=N4IgTCBcDaIIwE4BsBWAtAUQMoAUDMYaAIhgGoDSAkgCoDCapGaAckSALoC%2BQA,9.3,,38.543,,1.15,,2.7264
+Detent potentiometer,Bourns,PTV09A-4225F-B103,RS,827-4990,6,"Syn1, Syn2, Vm, PD, Fr, St",https://uk.rs-online.com/web/p/potentiometers/8274990?searchId=22493bc3-c651-455c-9294-958e63f149a7&gb=s,1.12,,,,,,
+No-detent potentiometer,Bourns,PTV09A-4025F-B103,RS,181-4488,1,Noise ,https://uk.rs-online.com/web/p/potentiometers/1814488?searchId=5138736d-87d0-4a75-9752-bf8f8f23c40a&gb=s,1.008,,Electronic TTC,,,,Screw TTC
+3.5mm jack connector,RS-Pro,913-1009,RS,913-1009,5,,https://uk.rs-online.com/web/p/jack-plugs-sockets/9131009?searchId=2c0336f3-d739-40b2-949a-42ff9f557dda&gb=s,7.48,,46.2516,,,,3.27168
+Plunger Tactile Switch,Omron,B3F-3120,RS,686-6884,2,,https://uk.rs-online.com/web/p/tactile-switches/6866884?searchId=70f29464-77be-4218-9553-7f822bebb458&gb=s,2.176,,,,,,
+Tactile Switch,Alps Alpine,SKHHDHA010,RS,758-1975,1,,https://uk.rs-online.com/web/p/tactile-switches/7581975?gb=s,0.662,,,,,,
+Piezo Buzzer,RS-Pro,181-2739,RS,181-2739,1,,https://uk.rs-online.com/web/p/piezo-buzzers/1812739?searchId=69850575-7d3e-4b5f-a63a-7f8974e75ec1&gb=s,1.033,,,,,,
+Photodiode,ams OSRAM,SFH 203 P,RS,654-8671,1,,https://uk.rs-online.com/web/p/photodiodes/6548671?searchId=9db1ab38-9fea-4dfe-ad95-fc149c7bcfdf&gb=s,0.95,,,,,,
+10? Resistor,RS-Pro,707-7509,RS,707-7509,1,,https://uk.rs-online.com/web/p/through-hole-resistors/7077509?searchId=0bd241c4-7fd2-4b35-94cd-a7251b73cba4&gb=s,0.127,,,,,,
+ 10k? Resistor,RS-Pro,707-7745,RS,707-7745,3,,https://uk.rs-online.com/web/p/through-hole-resistors/7077745?searchId=7aa2fa83-7976-4765-98da-bd94c03fa660&gb=s,0.501,,,,,,
+220? Resistor,RS-Pro,707-7612,RS,707-7612,5,"Replace the 100ohm, depending on the top acrylic opacity, adjusting these resistor values modify LEDs brightness",,0.845,,,,Total PCB,,
+DIP 16,ASSMANN WSW,A 16-LC-TT,RS,674-2432,2,,https://uk.rs-online.com/web/p/dil-sockets/6742432?searchId=86e0a296-b2f8-4870-8640-661f18704577&gb=s,0.536,,,,50.67328,,
+MCP3208,Microchip,MCP3208-CI/P,RS,379-2516,2,,https://uk.rs-online.com/web/p/analogue-to-digital-converters/3792516?searchId=1d16ee8c-3275-450b-b003-6397808660eb&gb=s,2.806,,,,,,
+1?F Capacitor,RS-Pro,711-2103,RS,711-2103,2,,https://uk.rs-online.com/web/p/aluminium-capacitors/7112103?searchId=3bd5c97d-0696-4fca-8943-63c37c72144c&gb=s,0.28,,,,,,
+1nF Capacitor,Vishay,HVCC153Y6P102KEAX,RS,204-2380,1,,https://uk.rs-online.com/web/p/single-layer-ceramic-capacitors/2042380?gb=s,0.335,,,,,,
+Potentiometer knob,Sifam,3/03/DR110-006/237/233,RS,299-4907,7,,https://uk.rs-online.com/web/p/potentiometer-knobs/2994907?searchId=1bc9294d-ccd6-49b0-b7ef-d202f5742ca7&gb=s,4.676,,,,,,
+3mm LED ,Kingbright,L-34QBC-D,RS,862-2872,12,Select any colour relevant or matching the top acrylic ,,3.624,,,,,,
+Common Cathode RGB LED,Kingbright,L-154A4SURKQBDZGW,RS,861-4307,1,,https://uk.rs-online.com/web/p/leds/8614307?gb=s,1.084,,,,,,
+,,,,,,,,,,,,,,
+"M3 x M3 Thread, 5mm Body",RS-Pro,606-670,RS,606-670,4,,https://uk.rs-online.com/web/p/standoffs/0606670?searchId=bd61539a-c524-4924-a727-4a801f65e7a6&gb=s,0.8488,,,,,,
+"M3 x M3 Thread, 10mm Body",RS-Pro,222-395,RS,222-395,4,,https://uk.rs-online.com/web/p/standoffs/0222395?searchId=7eb9d18b-541a-4336-a950-aaf816f4ba9f&gb=s,1.244,,,,,,
+"Screws DIN 7985, M3x6mm",RS-Pro,190-428,RS,190-428,8,,https://uk.rs-online.com/web/p/machine-screws/0190428?searchId=1c54ddf7-234e-442e-84dc-f56f64f62ed1&gb=s,0.6336,,,,,,
