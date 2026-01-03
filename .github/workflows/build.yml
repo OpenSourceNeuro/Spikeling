@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write   # allow creating/updating releases
 
+env:
+  GUI_DIR: "Software/GUI - PyQt6-PySide6"
+
 jobs:
   build-macos:
     name: Build on macOS
@@ -27,39 +30,41 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: |
           python -m pip install --upgrade pip
           pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
           pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
 
       - name: Build with PyInstaller
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: pyinstaller --clean --log-level=DEBUG Spikeling-mac.spec
 
       - name: Package macOS build
         run: |
-          version=${GITHUB_REF_NAME}
+          version="${GITHUB_REF_NAME}"
           zipName="Spikeling-${version}-macOS.zip"
+
           mkdir -p release
-          cp GUI/PyQt/dist/Spikeling release/
+          cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
           chmod +x release/Spikeling
-          cp -r GUI/PyQt/Recordings release/
-          cp -r GUI/PyQt/Neurons release/
-          cp -r GUI/PyQt/Stimuli release/
+          cp -r "${{ env.GUI_DIR }}/Recordings" release/
+          cp -r "${{ env.GUI_DIR }}/Neurons" release/
+          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+
           zip -r "$zipName" release/*
-          mkdir -p GUI/macOS
-          mv "$zipName" GUI/macOS/
+          mkdir -p "${{ env.GUI_DIR }}/macOS"
+          mv "$zipName" "${{ env.GUI_DIR }}/macOS/"
           rm -rf release
 
       - name: Upload macOS artifact to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: GUI/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
+          files: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
 
       - name: Cleanup
-        run: rm -rf GUI/PyQt/build GUI/PyQt/dist GUI/PyQt/__pycache__
+        run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
 
   build-linux:
     name: Build on Linux
@@ -80,39 +85,41 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: |
           python -m pip install --upgrade pip
           pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
           pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
 
       - name: Build with PyInstaller
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: pyinstaller --clean --log-level=DEBUG Spikeling-linux.spec
 
       - name: Package Linux build
         run: |
-          version=${GITHUB_REF_NAME}
+          version="${GITHUB_REF_NAME}"
           zipName="Spikeling-${version}-Linux.zip"
+
           mkdir -p release
-          cp GUI/PyQt/dist/Spikeling release/
+          cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
           chmod +x release/Spikeling
-          cp -r GUI/PyQt/Recordings release/
-          cp -r GUI/PyQt/Neurons release/
-          cp -r GUI/PyQt/Stimuli release/
+          cp -r "${{ env.GUI_DIR }}/Recordings" release/
+          cp -r "${{ env.GUI_DIR }}/Neurons" release/
+          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+
           zip -r "$zipName" release/*
-          mkdir -p GUI/Linux
-          mv "$zipName" GUI/Linux/
+          mkdir -p "${{ env.GUI_DIR }}/Linux"
+          mv "$zipName" "${{ env.GUI_DIR }}/Linux/"
           rm -rf release
 
       - name: Upload Linux artifact to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: GUI/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
+          files: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
 
       - name: Cleanup
-        run: rm -rf GUI/PyQt/build GUI/PyQt/dist GUI/PyQt/__pycache__
+        run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
 
   build-windows:
     name: Build on Windows
@@ -133,14 +140,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: |
           python -m pip install --upgrade pip
           pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
           pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
 
       - name: Build with PyInstaller
-        working-directory: GUI/PyQt
+        working-directory: ${{ env.GUI_DIR }}
         run: pyinstaller --clean --log-level=DEBUG Spikeling-win.spec
 
       - name: Package Windows build
@@ -149,14 +156,14 @@ jobs:
           $version = "${{ github.ref_name }}"
           $zipName = "Spikeling-$version-Windows.zip"
 
-          New-Item -ItemType Directory -Force -Path release
-          Copy-Item -Path "GUI/PyQt/dist/Spikeling.exe" -Destination release/
-          Copy-Item -Path "GUI/PyQt/Recordings" -Destination release/ -Recurse
-          Copy-Item -Path "GUI/PyQt/Neurons" -Destination release/ -Recurse
-          Copy-Item -Path "GUI/PyQt/Stimuli" -Destination release/ -Recurse
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Copy-Item -Path "${{ env.GUI_DIR }}/dist/Spikeling.exe" -Destination release/
+          Copy-Item -Path "${{ env.GUI_DIR }}/Recordings" -Destination release/ -Recurse
+          Copy-Item -Path "${{ env.GUI_DIR }}/Neurons" -Destination release/ -Recurse
+          Copy-Item -Path "${{ env.GUI_DIR }}/Stimuli" -Destination release/ -Recurse
 
-          New-Item -ItemType Directory -Force -Path "GUI\Windows"
-          Compress-Archive -Path "release\*" -DestinationPath "GUI\Windows\$zipName" -Force
+          New-Item -ItemType Directory -Force -Path "${{ env.GUI_DIR }}/Windows" | Out-Null
+          Compress-Archive -Path "release\*" -DestinationPath "${{ env.GUI_DIR }}/Windows/$zipName" -Force
 
           Remove-Item -Recurse -Force release
 
@@ -164,11 +171,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: GUI/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
+          files: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
 
       - name: Cleanup
         shell: powershell
         run: |
-          Remove-Item -Recurse -Force GUI/PyQt/build
-          Remove-Item -Recurse -Force GUI/PyQt/dist
-          Remove-Item -Recurse -Force GUI/PyQt/__pycache__
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/build" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/dist" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/__pycache__" -ErrorAction SilentlyContinue
