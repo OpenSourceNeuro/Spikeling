@@ -1,3 +1,10 @@
-*__pycache__*
-*GUI/*build*
-*GUI/*dist*
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# IDEs
+.idea/
+
+# Build / packaging artifacts (scoped to GUI folder)
+build/
+dist/
