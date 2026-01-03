@@ -1,0 +1,2 @@
+a,b,c,d,PhotoGain (%),PhotoDecay (1/ms),PhotoRecovery (1/ms),Syn1 Gain (%),Syn1 Decay (1/ms),Syn2 Gain (%),Syn2 Decay (1/ms)
+0.02,0.2,-50,2,-50,0.0005,0.001,0,0.995,0,0.995

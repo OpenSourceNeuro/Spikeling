@@ -1,0 +1,6 @@
+PySide6==6.9.2
+numpy==2.3.2
+pandas==2.3.2
+pyinstaller==6.15
+pyqtgraph==0.13.7
+scipy==1.16.1
