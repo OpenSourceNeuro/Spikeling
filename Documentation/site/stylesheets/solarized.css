@@ -1,0 +1,467 @@
+/* ============================================================================
+   Spikeling Solarized theme (Material for MkDocs)
+   Teaching-oriented: high scanability, clear active state, polished UI feedback.
+
+   Solarized (approx):
+     Dark base:   #001e26 #002b36 #073642
+     Light base:  #eee8d5 #fdf6e3
+     Accents:     Blue #268bd2, Cyan #2aa198, Orange #cb4b16, Red #dc322f
+============================================================================ */
+
+
+/* ============================================================================
+   1) Theme variables (Light + Dark) + Spikeling custom tokens
+   Keep MkDocs Material variables here; define Spikeling tokens once per scheme.
+============================================================================ */
+
+/* ----------------------------- Solarized Light (scheme: default) ----------- */
+[data-md-color-scheme="default"][data-md-color-primary="custom"][data-md-color-accent="custom"] {
+  /* Base */
+  --md-default-bg-color: #fdf6e3;          /* LightBase02 */
+  --md-default-fg-color: #586e75;          /* Content01 */
+  --md-default-fg-color--light: #657b83;   /* Content02 */
+  --md-default-fg-color--lighter: #839496; /* Content03 */
+  --md-default-fg-color--lightest: #93a1a1;/* Content04 */
+
+  /* Brand accents (canonical Solarized accents) */
+  --spk-blue:   #268bd2;
+  --spk-cyan:   #2aa198;
+  --spk-orange: #cb4b16;
+  --spk-red:    #dc322f;
+
+  /* Non-canonical lighter content steps you introduced */
+  --spk-content05: #A7B5B5;
+  --spk-content06: #B6C4C4;
+
+  /* Primary / accent (Material for MkDocs) */
+  --md-primary-fg-color: var(--spk-blue);
+  --md-primary-bg-color: #fdf6e3;
+  --md-accent-fg-color:  var(--spk-cyan);
+
+  /* Links */
+  --md-typeset-a-color: var(--spk-blue);
+
+  /* Code blocks */
+  --md-code-bg-color: #eee8d5;             /* LightBase01 */
+  --md-code-fg-color: #586e75;             /* Content01 */
+
+  /* Spikeling UI tokens */
+  --spk-sidebar-bg: #eee8d5;               /* LightBase01 */
+  --spk-sidebar-border: rgba(88, 110, 117, 0.15);
+
+  /* CTA (Buy) styling tokens (use Orange for visibility) */
+  --spk-cta-fg: #586e75;
+  --spk-cta-fg-hover: var(--spk-cta-fg);
+  --spk-cta-bg: rgba(203, 75, 22, 0.14);
+  --spk-cta-bg-hover: rgba(203, 75, 22, 0.20);
+  --spk-cta-border: rgba(203, 75, 22, 0.35);
+
+  /* Banner background tint (subtle) */
+  --spk-banner-bg: rgba(238, 232, 213, 0.85);
+  --spk-banner-border: rgba(88, 110, 117, 0.12);
+}
+
+/* ----------------------------- Solarized Dark (scheme: slate) -------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="custom"][data-md-color-accent="custom"] {
+  --md-hue: 192;
+
+  /* Base */
+  --md-default-bg-color: #002b36;          /* DarkBase02 */
+  --md-default-fg-color: #93a1a1;          /* Content04 */
+  --md-default-fg-color--light: #839496;   /* Content03 */
+  --md-default-fg-color--lighter: #657b83; /* Content02 */
+  --md-default-fg-color--lightest: #586e75;/* Content01 */
+
+  /* Brand accents */
+  --spk-blue:   #268bd2;
+  --spk-cyan:   #2aa198;
+  --spk-orange: #cb4b16;
+  --spk-red:    #dc322f;
+
+  /* Non-canonical lighter content steps */
+  --spk-content05: #A8B3B3;
+  --spk-content06: #B8C1C1;
+
+  /* Primary / accent */
+  --md-primary-fg-color: #073642;          /* DarkBase03 */
+  --md-primary-bg-color: #eee8d5;          /* LightBase01 (header text/icons) */
+  --md-accent-fg-color:  var(--spk-cyan);
+
+  /* Links */
+  --md-typeset-a-color: var(--spk-blue);
+
+  /* Code blocks */
+  --md-code-bg-color: #001e26;             /* DarkBase01 */
+  --md-code-fg-color: #eee8d5;             /* LightBase01 */
+
+  /* Spikeling UI tokens */
+  --spk-sidebar-bg: #001e26;               /* DarkBase01 */
+  --spk-sidebar-border: rgba(131, 148, 150, 0.15);
+
+  /* CTA (Buy) tokens */
+  --spk-cta-fg: #eee8d5;
+  --spk-cta-fg-hover: var(--spk-cta-fg);
+  --spk-cta-bg: rgba(203, 75, 22, 0.20);
+  --spk-cta-bg-hover: rgba(203, 75, 22, 0.28);
+  --spk-cta-border: rgba(203, 75, 22, 0.50);
+
+  /* Banner background tint (subtle) */
+  --spk-banner-bg: rgba(7, 54, 66, 0.88);   /* DarkBase03 tint */
+  --spk-banner-border: rgba(131, 148, 150, 0.12);
+}
+
+
+/* ============================================================================
+   2) Content typography (scanability)
+============================================================================ */
+
+.md-typeset {
+  max-width: 980px;
+  line-height: 1.65;
+}
+
+/* Clear section rhythm */
+.md-typeset h1 { margin-bottom: 0.6em; }
+.md-typeset h2 { margin-top: 1.6em; }
+.md-typeset h3 { margin-top: 1.2em; }
+.md-typeset h4 { margin-top: 1.0em; }
+
+/* Headings (content only) */
+[data-md-color-scheme="slate"] .md-typeset h1,
+[data-md-color-scheme="slate"] .md-typeset h2 { color: var(--spk-content06); }
+
+[data-md-color-scheme="slate"] .md-typeset h3,
+[data-md-color-scheme="slate"] .md-typeset h4 { color: var(--spk-content05); }
+
+[data-md-color-scheme="default"] .md-typeset h1 { color: var(--spk-blue); }
+[data-md-color-scheme="default"] .md-typeset h2,
+[data-md-color-scheme="default"] .md-typeset h3,
+[data-md-color-scheme="default"] .md-typeset h4 { color: var(--spk-cyan); }
+
+/* Inline code */
+[data-md-color-scheme="slate"] .md-typeset code {
+  background: rgba(7, 54, 66, 0.55);
+  color: #eee8d5;
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+}
+
+[data-md-color-scheme="default"] .md-typeset code {
+  background: rgba(238, 232, 213, 0.85);
+  color: #586e75;
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+}
+
+
+/* ============================================================================
+   3) Admonitions and details
+============================================================================ */
+
+[data-md-color-scheme="slate"] .md-typeset .admonition,
+[data-md-color-scheme="slate"] .md-typeset details {
+  border-color: rgba(42, 161, 152, 0.35);
+  background: rgba(7, 54, 66, 0.25);
+}
+
+[data-md-color-scheme="default"] .md-typeset .admonition,
+[data-md-color-scheme="default"] .md-typeset details {
+  border-color: rgba(38, 139, 210, 0.30);
+  background: rgba(238, 232, 213, 0.45);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition-title,
+[data-md-color-scheme="slate"] .md-typeset summary {
+  background: rgba(42, 161, 152, 0.14);
+  color: var(--spk-content06);
+  font-weight: 800;
+}
+
+[data-md-color-scheme="default"] .md-typeset .admonition-title,
+[data-md-color-scheme="default"] .md-typeset summary {
+  background: rgba(38, 139, 210, 0.10);
+  color: #586e75;
+  font-weight: 800;
+}
+
+
+/* ============================================================================
+   4) Tables
+============================================================================ */
+
+.md-typeset table:not([class]) {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 0.95em;
+}
+
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.55em 0.75em;
+  vertical-align: top;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background: rgba(7, 54, 66, 0.55);
+  color: #eee8d5;
+  border-bottom: 1px solid rgba(131, 148, 150, 0.25);
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) th {
+  background: rgba(238, 232, 213, 0.85);
+  color: #586e75;
+  border-bottom: 1px solid rgba(88, 110, 117, 0.20);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(odd) {
+  background: rgba(0, 43, 54, 0.18);
+}
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background: rgba(0, 30, 38, 0.18);
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) tbody tr:nth-child(odd) {
+  background: rgba(253, 246, 227, 0.45);
+}
+[data-md-color-scheme="default"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background: rgba(238, 232, 213, 0.45);
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  filter: brightness(1.03);
+}
+
+
+/* ============================================================================
+   5) Left navigation (primary sidebar)
+   Collapsible nav (no navigation.sections): style top-level items via primary list.
+============================================================================ */
+
+/* Sidebar background + border */
+.md-sidebar--primary,
+.md-sidebar--primary .md-sidebar__scrollwrap,
+.md-sidebar--primary .md-sidebar__inner {
+  background-color: var(--spk-sidebar-bg);
+}
+
+.md-sidebar--primary {
+  border-right: 1px solid var(--spk-sidebar-border);
+}
+
+/* Hover/focus feedback for all nav links */
+.md-sidebar--primary .md-nav__link:hover,
+.md-sidebar--primary .md-nav__link:focus {
+  background: rgba(147, 161, 161, 0.08);
+  border-radius: 6px;
+}
+
+/* Active page highlight: Cyan in dark, Blue in light */
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav__link--active {
+  background: rgba(42, 161, 152, 0.12);
+  border-left: 3px solid var(--spk-cyan);
+  padding-left: 0.7rem;
+  border-radius: 6px;
+}
+
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav__link--active {
+  background: rgba(38, 139, 210, 0.08);
+  border-left: 3px solid var(--spk-blue);
+  padding-left: 0.7rem;
+  border-radius: 6px;
+}
+
+/* Top-level (level-1) nav items:
+   Solarized Dark convention: Blue labels + Cyan active marker is clean and common. */
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link,
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > label.md-nav__link {
+  color: var(--spk-blue) !important;
+  font-weight: 800;
+  font-size: 1.05em;
+  letter-spacing: 0.01em;
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link .md-ellipsis,
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > label.md-nav__link .md-ellipsis {
+  color: var(--spk-blue) !important;
+}
+
+/* Light mode top-level: darker neutral for legibility */
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link,
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > label.md-nav__link {
+  color: #586e75 !important;
+  font-weight: 800;
+  font-size: 1.05em;
+  letter-spacing: 0.01em;
+}
+
+/* Subtle spacing to improve scanability */
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item {
+  margin-top: 0.15rem;
+  margin-bottom: 0.15rem;
+}
+
+/* Emphasise the current top-level item container slightly */
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item--active > .md-nav__link,
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item--active > label.md-nav__link {
+  background: rgba(38, 139, 210, 0.08);
+  border-radius: 8px;
+}
+
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item--active > .md-nav__link,
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item--active > label.md-nav__link {
+  background: rgba(88, 110, 117, 0.08);
+  border-radius: 8px;
+}
+
+
+/* ============================================================================
+   6) Sidebar title (site name above left nav)
+============================================================================ */
+
+.md-sidebar--primary .md-nav__title {
+  font-size: 1.20rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.01em;
+}
+
+.md-sidebar--primary .md-nav__title .md-nav__button,
+.md-sidebar--primary .md-nav__title label,
+.md-sidebar--primary .md-nav__title a {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav__title {
+  color: var(--spk-content06, #B8C1C1) !important;
+}
+
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav__title {
+  color: #586e75 !important;
+}
+
+
+/* ============================================================================
+   7) Header: logo sizing + site title sizing
+============================================================================ */
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg,
+.md-header-nav__button.md-logo img,
+.md-header-nav__button.md-logo svg {
+  height: 5.0rem;
+  width: auto;
+}
+
+.md-header {
+  min-height: 5.0rem;
+}
+.md-header__inner {
+  align-items: center;
+}
+
+.md-header__title,
+.md-header__title .md-header__topic {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+
+/* ============================================================================
+   8) Announcement bar (header CTA) + Sidebar Buy button
+   Single source of truth: use --spk-cta-* tokens for both.
+============================================================================ */
+
+/* Make banner slightly taller and visually distinct */
+.md-banner {
+  background: var(--spk-banner-bg);
+  border-bottom: 1px solid var(--spk-banner-border);
+}
+
+/* Right-align the announce content */
+.md-banner .spk-announce {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+/* Header (banner) Buy CTA */
+.md-banner .spk-buy-announce {
+  display: inline-block;
+  font-size: 0.75rem;            /* <- change here for banner CTA text size */
+  font-weight: 900;
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+  color: var(--spk-cta-fg);
+  background: var(--spk-cta-bg);
+  border: 1px solid var(--spk-cta-border);
+}
+
+.md-banner .spk-buy-announce:hover {
+  background: var(--spk-cta-bg-hover);
+  color: var(--spk-cta-fg-hover);
+}
+
+/* Sidebar Buy CTA block (under nav tree) */
+.spk-buy {
+  margin: 0.8rem 0.6rem 0.2rem 0.6rem;
+}
+
+.spk-buy__btn {
+  display: block;
+  text-align: center;            /* <- correct CSS keyword */
+  font-size: 0.75rem;            /* <- change here for sidebar CTA text size */
+  font-weight: 900;
+  text-decoration: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  color: var(--spk-cta-fg);
+  background: var(--spk-cta-bg);
+  border: 1px solid var(--spk-cta-border);
+}
+
+.spk-buy__btn:hover {
+  background: var(--spk-cta-bg-hover);
+  color: var(--spk-cta-fg-hover);
+}
+
+
+/* ============================================================================
+   9) Responsive adjustments
+============================================================================ */
+
+@media screen and (max-width: 768px) {
+  /* Header logo + title */
+  .md-header__button.md-logo img,
+  .md-header__button.md-logo svg,
+  .md-header-nav__button.md-logo img,
+  .md-header-nav__button.md-logo svg {
+    height: 1.8rem;
+  }
+
+  .md-header { min-height: 3.0rem; }
+
+  .md-header__title,
+  .md-header__title .md-header__topic {
+    font-size: 1.05rem;
+  }
+
+  /* Sidebar title */
+  .md-sidebar--primary .md-nav__title {
+    font-size: 1.05rem !important;
+  }
+
+  /* Banner CTA */
+  .md-banner .spk-buy-announce {
+    font-size: 0.90rem;
+    padding: 0.28rem 0.75rem;
+  }
+}
