@@ -10,17 +10,17 @@
   A hands-on “artificial spiking neuron” running the **Izhikevich model** on an **ESP32**, with a desktop **GUI** for visualization, interaction, and data export.
 
   <p>
-    <a href="https://github.com/OpenSourceNeuro/Spikeling/releases">
-      <img alt="Release" src="https://img.shields.io/github/v/release/OpenSourceNeuro/Spikeling">
-    </a>
     <a href="LICENSE.txt">
       <img alt="License" src="https://img.shields.io/github/license/OpenSourceNeuro/Spikeling">
     </a>
-    <a href="https://github.com/OpenSourceNeuro/Spikeling/actions/workflows/build.yml">
-      <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/OpenSourceNeuro/Spikeling/build.yml?branch=main">
+    <a href="https://github.com/OpenSourceNeuro/Spikeling/releases">
+      <img alt="Release" src="https://img.shields.io/github/v/release/OpenSourceNeuro/Spikeling">
     </a>
+    <a href="https://opensourceneuro.github.io/Spikeling/Firmware/Spikeling_V3">
+    <img alt="Firmware" src="https://img.shields.io/badge/firmware-v3.1-blue">
+  </a>
     <a href="https://opensourceneuro.github.io/Spikeling/">
-      <img alt="Docs" src="https://img.shields.io/badge/docs-online-blue">
+      <img alt="Docs" src="https://img.shields.io/badge/docs-wiki-green">
     </a>
   </p>
 
@@ -32,7 +32,7 @@
 
 </div>
 
-![](https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/GUI/PyQt/resources/spike.gif)
+![](./Documentation/Images/SpikelingGUI.mp4)
 
 
 This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)<br>
@@ -57,9 +57,7 @@ Spikeling is used in university teaching, computational neuroscience training, a
 <br>
 
 <div>
-<img align="center" src="https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/Images/PCB.png" width="400" height="250" >
-
-<img align="center"  src="https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/Images/Spikeling_cover.png" width="400" height="250">
+<img align="center" src="./Documentation/Images/SpikelingNetwork.png" >
 
 <h6 align="center">Left: Rendering of spikeling electronic components. Right: Acrylic cover detailing spikeling functionalities.</h6>
 
