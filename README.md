@@ -1,11 +1,36 @@
-<p align="left"><img width="270" height="170" src="https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/Images/SpikyLogo.png">
+<p align="left"><img width="270" height="170" src="./Documentation/Images/SpikyLogo.png">
+</p>
 
-<h1 align="center"> Spikeling V 2.2</h1></p>
-<h3 align="center">  A hardware implementation of spiking neurons for neuroscience teaching and outreach</h3></p>
-<p align="center"><h6 align="right">developed by M.J.Y. Zimmermann, A.M. Chagas & T. Baden</h6></p>
+<div align="center">
 
-<br></br>
+  # **Spikeling v3**
 
+  ### **An open-source hardware + software platform for neuroscience teaching and outreach:**  
+
+  A hands-on “artificial spiking neuron” running the **Izhikevich model** on an **ESP32**, with a desktop **GUI** for visualization, interaction, and data export.
+
+  <p>
+    <a href="https://github.com/OpenSourceNeuro/Spikeling/releases">
+      <img alt="Release" src="https://img.shields.io/github/v/release/OpenSourceNeuro/Spikeling">
+    </a>
+    <a href="LICENSE.txt">
+      <img alt="License" src="https://img.shields.io/github/license/OpenSourceNeuro/Spikeling">
+    </a>
+    <a href="https://github.com/OpenSourceNeuro/Spikeling/actions/workflows/build.yml">
+      <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/OpenSourceNeuro/Spikeling/build.yml?branch=main">
+    </a>
+    <a href="https://opensourceneuro.github.io/Spikeling/">
+      <img alt="Docs" src="https://img.shields.io/badge/docs-online-blue">
+    </a>
+  </p>
+
+  <p align="right">
+    developed by M.J.Y. Zimmermann<br>
+    maintained by P. Rignanese & A. Koumoundourou<br>
+    based on an original idea by T. Baden
+  </p>
+
+</div>
 
 ![](https://github.com/OpenSourceNeuro/Spikeling-V2/blob/main/GUI/PyQt/resources/spike.gif)
 
@@ -16,19 +41,17 @@ The hardware is licensed under the [ CERN-OHL-S-2.0](https://gitlab.com/ohwr/pro
 ***
 
 <p style='text-align: justify;'>
-Understanding how neurons encode and compute information is fundamental to our study of the brain, but opportunities for hands-on experience with neurophysiological techniques on living neurons are scarce in science education.
+Spikeling is an open-source neuroscience education platform designed to make core neurophysiology concepts teachable through hands-on experimentation, even in settings where traditional wet-lab electrophysiology is impractical. In many degree programs, students learn about action potentials and synaptic signalling largely through lectures or static datasets because living preparations, microscopes, amplifiers, and specialist supervision do not scale well to large cohorts. Spikeling addresses this gap with a low-cost “in silico neuron” implemented in hardware.
+</p>
 
 <p style='text-align: justify;'>
-Due to budgetary constraints and logistical hurdles, few students can be afforded the opportunity to experience electrophysiological recordings on living neurons in action. Yet, a fundamental aspect of neuroscience courses is to understand electrical signalling within neurons and the transmission of signals across synapses, as well as the experimental techniques necessary to observe these properties.
+The device runs the computationally efficient and versatile Izhikevich spiking neuron model in real time on an ESP32-based microcontroller, providing electrophysiology-style interaction: controlled stimulation, measurable membrane-voltage dynamics, spike output, and parameter manipulation to explore firing regimes, adaptation, and input integration. A dedicated cross-platform desktop GUI supports real-time plotting, experiment control, and recording/export to standard formats—enabling teaching modules that extend beyond neurophysiology into protocol design, data collection, analysis pipelines, and model-based reasoning.
+</p>
 
 <p style='text-align: justify;'>
-To support university-level neuroscience teaching, we designed ‘Spikeling’, an open-source teaching support device that mimics the electrical properties of spiking neurons by running the computationally efficient yet versatile Izhikevich model.
+Spikeling is used in university teaching, computational neuroscience training, and outreach, and is intentionally open (hardware + firmware + software) so educators can customize activities for their courses and contribute back to a shared pool of teaching material.
+</p>
 
-<p style='text-align: justify;'>
-It is an artificial neuron that can receive different inputs, integrate them and outputs its computation, just like a spiking neuron would!
-
-<p style='text-align: justify;'>
-Technically, it consists on a microcontroller (an ESP32) running the computationally efficient Izhikevich model of a spiking neuron.
 
 
 <br>
