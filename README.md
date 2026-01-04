@@ -100,7 +100,7 @@ Spikeling is currently used in <strong>university teaching, computational neuros
       <sub><b>Hands-on electrophysiology-style experiments in Zambia (2025)</b></sub>
     </td>
     <td width="33%">
-      <img src="./Documentation/Images/Workshop_Rwanda.jpg" alt="Workshop photo 3"><br>
+      <img src="./Documentation/Images/Workshop_Rwanda.JPG" alt="Workshop photo 3"><br>
       <sub><b>Small-group protocol design & parameter exploration in Rwanda (2024)</b></sub>
     </td>
   </tr>
