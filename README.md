@@ -92,15 +92,15 @@ Spikeling is currently used in <strong>university teaching, computational neuros
 <table>
   <tr>
     <td width="33%">
-      <img src="./Documentation/Images/Workshop_Ghana.jpg" alt="Workshop photo 1"><br>
+      <img src="./Documentation/Images/Workshop_Ghana.jpg"  height="300"><br>
       <sub><b>Outreach demonstration of neuron activities to primary school student in Ghana (2025)</b></sub>
     </td>
     <td width="33%">
-      <img src="./Documentation/Images/Workshop_Zambia.jpg" alt="Workshop photo 2"><br>
+      <img src="./Documentation/Images/Workshop_Zambia.jpg" height="300"><br>
       <sub><b>Hands-on electrophysiology-style experiments in Zambia (2025)</b></sub>
     </td>
     <td width="33%">
-      <img src="./Documentation/Images/Workshop_Rwanda.JPG" alt="Workshop photo 3"><br>
+      <img src="./Documentation/Images/Workshop_Rwanda.JPG" height="300"><br>
       <sub><b>Small-group protocol design & parameter exploration in Rwanda (2024)</b></sub>
     </td>
   </tr>
