@@ -137,6 +137,54 @@ inline void IC_off(){
 }
 
 
+
+inline void VClampMode(){
+  int val;
+  if (readNextInt(val)) {
+    setClampMode(val ? ClampMode::VoltageClamp : ClampMode::CurrentClamp);
+  }
+}
+
+// Voltage command (hold) for voltage clamp mode
+inline void VHold_on(){
+  setFloatParam(IC.vcmd_enable, IC.v_cmd);               // disables pot by setting vcmd_enable=false and uses provided value
+}
+inline void VHold_off(){
+  IC.vcmd_enable = true;                                 // re-enable pot reading for v_cmd
+}
+
+// Set PI gains for voltage clamp: "VPID <Kp> <Ki>"
+inline void VPID_set(){
+  float kp;
+  if (readNextFloat(kp)) IC.Kp = kp;
+  float ki;
+  if (readNextFloat(ki)) IC.Ki = ki;
+}
+
+// Set compliance limits for clamp current: "VIL <Imin> <Imax>"
+inline void VILIM_set(){
+  float mn, mx;
+  if (readNextFloat(mn) && readNextFloat(mx)) {
+    IC.I_min = mn;
+    IC.I_max = mx;
+  }
+}
+
+// Set pot span around v_rest for command voltage: "VSP <span_mV>"
+inline void VSpan_set(){
+  float span;
+  if (readNextFloat(span)) {
+    IC.v_cmd_span = span;
+  }
+}
+
+// Reset PI integrator/state: "VRS"
+inline void VClampReset(){
+  IC.e_int = 0.0f;
+  IC.I_clamp = 0.0f;
+}
+
+
 inline void Noise_on(){
   setFloatParam(noise.enable, noise.current);
 }
@@ -232,6 +280,13 @@ inline void SerialFunctions(){
   SCmd.addCommand("PR0",PDRecovery_off);
   SCmd.addCommand("IC1",IC_on);
   SCmd.addCommand("IC0",IC_off);
+  SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
+  SCmd.addCommand("VH1",VHold_on);          // set v_cmd from serial and disable pot
+  SCmd.addCommand("VH0",VHold_off);         // re-enable pot for v_cmd
+  SCmd.addCommand("VPID",VPID_set);         // set PI gains
+  SCmd.addCommand("VIL",VILIM_set);         // set clamp current limits
+  SCmd.addCommand("VSP",VSpan_set);         // set pot span around v_rest
+  SCmd.addCommand("VRS",VClampReset);       // reset PI state
   SCmd.addCommand("NO1",Noise_on);
   SCmd.addCommand("NO0",Noise_off);
   SCmd.addCommand("SG11",Syn1Gain_on);

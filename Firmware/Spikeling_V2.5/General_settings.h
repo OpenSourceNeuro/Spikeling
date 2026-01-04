@@ -270,24 +270,43 @@ inline void setSpikePin(bool level) {
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
-/*                     Voltage Clamp parameters                      */
+/*                     Patch Clamp parameters                      */
 
-struct VoltageClamp{
-  // Direct Current Stimulus
+// Clamp mode: "CurrentClamp" mimics classical I-clamp (command current, observe Vm).
+// "VoltageClamp" enables a PI feedback controller that drives injected current so Vm tracks a command voltage.
+
+enum class ClampMode : uint8_t { CurrentClamp = 0, VoltageClamp = 1 };
+inline ClampMode clampMode = ClampMode::CurrentClamp;
+
+struct PatchClamp{
+  // Direct Current Stimulus (external Current-In jack)
   uint8_t pin;                                            // Input Current pin
   float   value_currentIn;                                // CurrentIn_Value
   float   currentIn_scaling;                              // CurrentInScaling
   float   current;                                        // Stimulus input current
-  // Clamp potentiometer
+  // Shared clamp potentiometer (physical "IC" knob)
   uint8_t pot_pin;                                        // Clamp current pot pin
   float   pot_value;                                      // Clamp potentiometer value
-  float   pot_scaling;                                    //  Clamp scale value
-  float   current_clamp;                                  //  Clamp input current
+  float   pot_scaling;                                    // Scaling used in current-clamp mode
+  // Current clamp (I-clamp style): knob/GUI sets injected current directly
+  float   current_clamp;                                  // Injected current from the clamp knob/GUI
+  // Voltage clamp (V-clamp style): knob/GUI sets command voltage; firmware computes I_clamp via PI feedback
+  float   v_cmd;                                          // command voltage in mV (Izhikevich v-units)
+  float   v_cmd_span;                                     // +/- span around neuron.v_rest when pot at extremes
+  bool    vcmd_enable;                                    // true: use pot, false: GUI/serial override (IC.v_cmd)
   // Input Current flag
   bool    enable;                                         // Boolean used for enabling Clamp potentiometer
+  // PI controller state (used only when clampMode == VoltageClamp)
+  float   Kp;                                             // proportional gain
+  float   Ki;                                             // integral gain (per ms, because dt_ms is in ms)
+  float   e_int;                                          // integral accumulator
+  float   I_clamp;                                        // computed clamp current (output of PI)
+  float   I_min;                                          // clamp compliance (min)
+  float   I_max;                                          // clamp compliance (max)
+  bool    anti_windup;                                    // enable conditional integration when saturated
 };
 
-inline VoltageClamp IC{
+inline PatchClamp IC{
   .pin               = pins.adc2.current_in,
   .value_currentIn   = 0.0f,                              // Stimulus Current-In value read for the voltage clamp
   .currentIn_scaling = 0.1f,
@@ -295,10 +314,27 @@ inline VoltageClamp IC{
   .pot_pin           = pins.adc1.current_in_pot,
   .pot_value         = 0.0f,
   .pot_scaling       = bits12/100.0f,                     // Inject Current value scaling - The lower, the stronger the impact of the IC potentiometer
-  .current_clamp     = 0.0f,    
+  .current_clamp     = 0.0f,
+  .v_cmd             = defaultParams.v_rest,              // default hold potential ~ resting
+  .v_cmd_span        = 50.0f,                             // pot extremes => v_rest +/- 50 mV (tune as you like)
+  .vcmd_enable       = true,
   .enable = true,
+  .Kp                = 2.0f,                              // start with Ki=0, tune Kp, then add Ki
+  .Ki                = 0.05f,
+  .e_int             = 0.0f,
+  .I_clamp           = 0.0f,
+  .I_min             = -200.0f,
+  .I_max             =  200.0f,
+  .anti_windup       = true     
 };
 
+inline void setClampMode(ClampMode m) {
+  if (clampMode == m) return;
+  clampMode = m;
+  // Reset PI state when entering/exiting voltage clamp
+  IC.e_int   = 0.0f;
+  IC.I_clamp = 0.0f;
+}
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //

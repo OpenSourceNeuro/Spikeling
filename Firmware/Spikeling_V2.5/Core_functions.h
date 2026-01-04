@@ -25,24 +25,89 @@ inline void update_NeuronMode(){
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
-/*                               Setting Voltage membrane clamp value                                    */
+/*                      Clamp control: current clamp vs voltage clamp                                    */
+
+// In CurrentClamp mode, the "IC" knob/GUI directly injects current (I-clamp style).
+// In VoltageClamp mode, the same knob/GUI defines a command voltage (v_cmd), and a PI controller
+// Computes the injected clamp current (I_clamp) so that neuron.v tracks v_cmd.
+
+inline void update_VoltageCommand() {
+  if (!IC.vcmd_enable) return;                                                              // If GUI/serial is overriding v_cmd, don't read the pot
+
+  // Raw ADC is [0..4095]; center around 0 and apply a deadzone to avoid jitter near mid-point.
+  float centered = float(ADC1.read(IC.pot_pin)) - float(bits12) * 0.5f;
+
+  if (centered >= pot.offset) {
+    centered -= pot.offset;
+  } else if (centered <= -pot.offset) {
+    centered += pot.offset;
+  } else {
+    centered = 0.0f;
+  }
+
+  const float denom = float(bits12) * 0.5f - float(pot.offset);                              // ~ (2048 - offset)
+  float frac = (denom > 1.0f) ? (centered / denom) : 0.0f;                                   // frac in [-1..+1]
+  frac = constrain(frac, -1.0f, 1.0f);
+
+  // Command voltage is centered on v_rest for intuitive use in teaching labs.
+  IC.v_cmd = neuron.v_rest + frac * IC.v_cmd_span;
+  IC.v_cmd = constrain(IC.v_cmd, neuron.Vm_min, neuron.Vm_peak);
+}
 
 inline void update_InputCurrent() {
-  if (!IC.enable) return;                                                                     // If GUI/serial is overriding the clamp (IC.enable == false), don't read the pot
-                                                                                            
-  IC.pot_value = ADC1.read(IC.pot_pin) - bits12/2;                                            // Reads IC potentiometer value and scales it to -2048 to 2048
+  if (clampMode == ClampMode::VoltageClamp) {                                                // Voltage clamp mode: pot controls v_cmd, not current
+    update_VoltageCommand();
+    return;
+  }
 
-  if (IC.pot_value >= pot.offset){                                                            // If IC potentiometer value is above the offset:
-    IC.current_clamp = (IC.pot_value - pot.offset) / IC.pot_scaling;                            // Generates "current" value from the reading, subtracts the offset and scales it from parameters
+  if (!IC.enable) return;                                                                    // If GUI/serial is overriding the clamp, don't read the pot
+
+  IC.pot_value = ADC1.read(IC.pot_pin) - bits12/2;                                           // Reads IC potentiometer value and scales it to -2048..2048
+
+  if (IC.pot_value >= pot.offset){                                                           // If IC potentiometer value is above the offset:
+    IC.current_clamp = (IC.pot_value - pot.offset) / IC.pot_scaling;                         // Generate current from the reading, subtract offset and scale
   }
-  else if (IC.pot_value <= -pot.offset){                                                      // If IC potentiometer value is below the offset:
-    IC.current_clamp = (IC.pot_value + pot.offset) / IC.pot_scaling;                            // Generates "current" value from the reading, add the offset and scales it from parameters
+  else if (IC.pot_value <= -pot.offset){                                                     // If IC potentiometer value is below the offset:
+    IC.current_clamp = (IC.pot_value + pot.offset) / IC.pot_scaling;                         // Generate current from the reading, add offset and scale
   }
-  else{                                                                                       // If IC potentiometer value is within offset range:
-    IC.current_clamp = 0.0f;                                                                    // Set IC current to 0
+  else{                                                                                      // If IC potentiometer value is within offset range:
+    IC.current_clamp = 0.0f;
   }
 }
 
+// PI feedback controller for VoltageClamp mode.
+// The controller drives I_clamp (in the Izhikevich "I" units) so that neuron.v tracks IC.v_cmd.
+inline void update_VoltageClampPI() {
+  if (clampMode != ClampMode::VoltageClamp) return;
+
+  const float v_meas = neuron.v;                                                             // "measured" membrane voltage (model state)
+  const float e = IC.v_cmd - v_meas;                                                         // error in mV
+  const float dt = neuron.dt_ms;                                                             // integration step in ms
+
+  // Candidate integral update
+  const float e_int_new = IC.e_int + e * dt;
+
+  // Candidate (unsaturated) controller output
+  const float u = IC.Kp * e + IC.Ki * e_int_new;
+  const float u_sat = constrain(u, IC.I_min, IC.I_max);
+
+  if (IC.anti_windup) {
+    const bool saturated = (u != u_sat);
+    if (!saturated) {
+      IC.e_int = e_int_new;
+    } else {
+      // Conditional integration: block windup when further integration would push deeper into saturation
+      if (!((u_sat >= IC.I_max - 1e-6f && e > 0.0f) || (u_sat <= IC.I_min + 1e-6f && e < 0.0f))) {
+        IC.e_int = e_int_new;
+      }
+    }
+  } else {
+    IC.e_int = e_int_new;
+  }
+
+  // Final output using the accepted integral state
+  IC.I_clamp = constrain(IC.Kp * e + IC.Ki * IC.e_int, IC.I_min, IC.I_max);
+}
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -180,13 +245,16 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
 
 inline void compute_AllCurrent(){
 
-  neuron.total_current = IC.current_clamp +                                                   // Sums up all input currents: from Clamp 
-                         IC.current +                                                         // from Direct current Strimulus
-                         PD.current +                                                         // from Light
-                         syn1.current +                                                       // from Synapse 2 
-                         syn2.current +                                                       // from Synapse 2
-                         noise.current;                                                       // from Noise
+  const float Iclamp = (clampMode == ClampMode::VoltageClamp) ? IC.I_clamp : IC.current_clamp;
+
+  neuron.total_current = Iclamp +                                                            // Clamp contribution (I-clamp or V-clamp PI output)
+                         IC.current +                                                        // External Current-In jack
+                         PD.current +                                                        // Light
+                         syn1.current +                                                      // Synapse 1
+                         syn2.current +                                                      // Synapse 2
+                         noise.current;                                                      // Noise
 }
+
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -338,6 +406,30 @@ inline void update_StimulusCurrentIn() {
 /*                                       Spike and Axon output                                           */
 
 inline void update_Spike() {
+
+if (clampMode == ClampMode::VoltageClamp) {
+  // In voltage clamp we do not generate spike events; we simply report the clamped Vm.
+  neuron.v_out = neuron.v;
+  digitalWrite(axon.pin_digital, LOW);
+  digitalWrite(pins.gpio.spike, LOW);
+
+  if ( LED_enable ) {
+    // Subthreshold LED encoding still useful: red encodes Vm, others off
+    float pwm_f = (neuron.v_out - neuron.Vm_min) * Vm_led_gain;
+    int pwm = int(constrain(pwm_f, 0.0f, float(bits10)));
+    setLedc(pins.gpio.led_r, pwm, led_r_last);
+    setLedc(pins.gpio.led_g, 0, led_g_last);
+    setLedc(pins.gpio.led_b, 0, led_b_last);
+  }
+
+  float norm = (neuron.v_out - neuron.Vm_min) * axon.Vm_range_inv;
+  norm = constrain(norm, 0.0f, 1.0f);
+  uint8_t dacVal = static_cast<uint8_t>(norm * dac_max + 0.5f);
+  axon.Vm = dacVal;
+  dacWrite(axon.pin_analog,axon.Vm);
+  return;
+}
+
 
   if ( neuron.v>= neuron.Vm_spike ) {                                                         // Whenever neuron is considered to be spiking,
     
