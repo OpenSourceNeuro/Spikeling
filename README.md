@@ -32,26 +32,30 @@
 
 </div>
 
-![](./Documentation/Images/SpikelingGUI.mp4)
-
 
 This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)<br>
 The hardware is licensed under the [ CERN-OHL-S-2.0](https://gitlab.com/ohwr/project/cernohl/-/wikis/uploads/b88fd806c337866bff655f2506f23d37/cern_ohl_s_v2_user_guide.txtE)
 
-***
+---
+
+
+## What is Spikeling?
 
 <p style='text-align: justify;'>
-Spikeling is an open-source neuroscience education platform designed to make core neurophysiology concepts teachable through hands-on experimentation, even in settings where traditional wet-lab electrophysiology is impractical. In many degree programs, students learn about action potentials and synaptic signalling largely through lectures or static datasets because living preparations, microscopes, amplifiers, and specialist supervision do not scale well to large cohorts. Spikeling addresses this gap with a low-cost “in silico neuron” implemented in hardware.
+Spikeling is an open-source neuroscience education platform designed to make core neurophysiology concepts teachable through hands-on experimentation, even in settings where traditional wet-lab electrophysiology is impractical.
 </p>
 
 <p style='text-align: justify;'>
-The device runs the computationally efficient and versatile Izhikevich spiking neuron model in real time on an ESP32-based microcontroller, providing electrophysiology-style interaction: controlled stimulation, measurable membrane-voltage dynamics, spike output, and parameter manipulation to explore firing regimes, adaptation, and input integration. A dedicated cross-platform desktop GUI supports real-time plotting, experiment control, and recording/export to standard formats—enabling teaching modules that extend beyond neurophysiology into protocol design, data collection, analysis pipelines, and model-based reasoning.
+In many degree programs, students learn about action potentials and synaptic signalling largely through lectures or static datasets because living preparations, microscopes, amplifiers, and specialist supervision do not scale well to large cohorts. Spikeling addresses this gap with a low-cost “in silico neuron” implemented in hardware.
 </p>
 
 <p style='text-align: justify;'>
-Spikeling is used in university teaching, computational neuroscience training, and outreach, and is intentionally open (hardware + firmware + software) so educators can customize activities for their courses and contribute back to a shared pool of teaching material.
+The device runs the computationally efficient and versatile <strong>Izhikevich spiking neuron model</strong> in real time on an ESP32-based microcontroller, providing electrophysiology-style interaction: controlled stimulation, measurable membrane-voltage dynamics, spike output, and parameter manipulation to explore firing regimes, adaptation, and input integration.
 </p>
 
+<p style='text-align: justify;'>
+A dedicated <strong>cross-platform desktop GUI</strong> supports real-time plotting, experiment control, and recording/export to standard formats—enabling teaching modules that extend beyond neurophysiology into protocol design, data collection, analysis pipelines, and model-based reasoning.
+</p>
 
 
 <br>
@@ -59,14 +63,54 @@ Spikeling is used in university teaching, computational neuroscience training, a
 <div>
 <img align="center" src="./Documentation/Images/SpikelingNetwork.png" >
 
-<h6 align="center">Left: Rendering of spikeling electronic components. Right: Acrylic cover detailing spikeling functionalities.</h6>
-
+<h6 align="center">Two spikeling units (red and green), that are synchronously stimulated (white cables), synapse with a third unit (blue).</h6>
 </div>
+
+---
+
+## Spikeling in academia & outreach
+
+<p style='text-align: justify;'>
+The spikeling project emerged from local needs to teach neuroscience class modules for direct interaction with <strong>neuron physiology, data analysis, fluorescence imaging, protocol design, etc.</strong>
+</p>
+
+<p style='text-align: justify;'>
+The aim was to provide <strong>hands-on experience</strong> on how neurons encode information and how diverse variables modulates their activities, while engaging students with <strong>crucial aspects of data collection, experimental limitations, methodology and statistical analysis.</strong>
+</p>
+
+<p style='text-align: justify;'>
+Spikeling is currently used in <strong>university teaching, computational neuroscience training, and outreach events</strong>. It is intentionally <strong>open (hardware + firmware + software)</strong> so educators can customize activities for their courses and contribute back to a shared pool of teaching material.
+</p>
+
+
+
+
+<p align="center">
+  <img src="./Documentation/Images/Workshop_SouthAfrica.jpg" width="900" alt="Spikeling workshop — students using the device in South Africa (2022)">
+</p>
+
+<table>
+  <tr>
+    <td width="33%">
+      <img src="./Documentation/Images/Workshop_Ghana.jpg" alt="Workshop photo 1"><br>
+      <sub><b>Outreach demonstration of neuron activities to primary school student in Ghana (2025)</b></sub>
+    </td>
+    <td width="33%">
+      <img src="./Documentation/Images/Workshop_Zambia.jpg" alt="Workshop photo 2"><br>
+      <sub><b>Hands-on electrophysiology-style experiments in Zambia (2025)</b></sub>
+    </td>
+    <td width="33%">
+      <img src="./Documentation/Images/Workshop_Rwanda.jpg" alt="Workshop photo 3"><br>
+      <sub><b>Small-group protocol design & parameter exploration in Rwanda (2024)</b></sub>
+    </td>
+  </tr>
+
+</table>
+
 
 <div>
 
-<p style='text-align: justify;'>
-The spikeling project emerged from local needs to teach neuroscience class modules for direct interaction with neuron physiology, data analysis, fluorescence imaging, protocol design, etc. The aim is to provide hands-on experience on how neurons encode information and how diverse variables modulates their activities, while engaging students with crucial aspects of data collection, experimental limitations, methodology and statistical analysis.
+
 
 <p style='text-align: justify;'>
 In order to give users a full interactive experience with the Spikeling neuron, a drawing engraved on the cover details in a neuro-morphic fashion all device functionalities. Furthermore, a spike-triggered LED and buzzer have been added to the device.
