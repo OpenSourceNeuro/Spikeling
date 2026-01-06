@@ -74,6 +74,7 @@ void loop() {
 
     SCmd.readSerial();                                                                        // Reads Serial for external commands
 
+    poll_ModeButton();                                                                        // Read physical mode button state (raw + time)
     update_NeuronMode();                                                                      // Sets izhikevich variables when changed
 
     update_InputCurrent();                                                                    // Sets Voltage membrane clamp value       
@@ -102,9 +103,9 @@ void loop() {
     neuron.u = neuron.u + neuron.dt_ms*(neuron.a * (neuron.b * neuron.v - neuron.u));                                        // Compute the recovery variable
 
     if (clampMode != ClampMode::VoltageClamp){                                              // If voltage clamp is off
-      if (neuron.v >= neuron.Vm_peak){                                                        // If the voltage value is above the peak (30mV by default):
-        neuron.v = neuron.c;                                                                    // The voltage variable corresponds to the "after spike reset value"
-        neuron.u = neuron.u + neuron.d;                                                         // The recovery variable is incremented by the "after spike reset of recovery variable"
+      if (neuron.v >= neuron.Vm_peak){                                                        // If the membrane voltage has crossed the spike threshold (30mV by default):
+        neuron.v = neuron.c;                                                                    // Reset membrane potential to the model’s reset value “c” (represents rapid repolarisation after an action potential).
+        neuron.u = neuron.u + neuron.d;                                                         // Increase recovery/adaptation variable by “d” (represents spike-triggered adaptation / after-spike conductances).
       }
   }
     

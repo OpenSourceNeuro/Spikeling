@@ -92,8 +92,8 @@ static inline void dispatchToken(const String& cmd, bool hasVal, float v) {
   if (cmd == "PR0")           { PD.recovery_enable = true; return; }
 
   // --- Current clamp
-  if (cmd == "IC1" && hasVal) { applyFloat(IC.enable, IC.current_clamp, v); return; }
-  if (cmd == "IC0")           { IC.enable = true; return; }
+  if (cmd == "PC1" && hasVal) { applyFloat(PC.enable, PC.current_clamp, v); return; }
+  if (cmd == "PC0")           { PC.enable = true; return; }
 
   // --- Noise
   if (cmd == "NO1" && hasVal) { applyFloat(noise.enable, noise.current, v); return; }

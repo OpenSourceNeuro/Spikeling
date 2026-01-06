@@ -252,7 +252,7 @@ inline NeuronModel neuron = {
   .pin_spike     = pins.gpio.spike,
   .mode          = 0,
   .modeState     = 0,
-  .nModes        = 12,
+  .nModes        = (int)IzhikevichModelCount,
   .modeDelay     = 500,
   .openingDelay  = 50
 };
@@ -266,6 +266,28 @@ inline void setSpikePin(bool level) {
     digitalWrite(neuron.pin_spike, level ? HIGH : LOW);
   }
 }
+
+
+// // // // // // // // // // // // // // // // // // // // // // // //
+/*           Button debounce state (shared across modules)           */
+struct ButtonDebounce {
+  uint8_t  lastStable;         // Debounced stable level
+  uint8_t  lastRaw;            // Last raw read level
+  uint32_t lastChange_ms;      // Timestamp of last raw transition
+  uint32_t debounce_ms;        // Debounce window
+  uint8_t  raw;                // Latest sampled raw level (filled by poll function)
+  uint32_t now_ms;             // Latest sampled time (filled by poll function)
+};
+
+
+inline ButtonDebounce modeBtn {// INPUT_PULLDOWN: released=LOW, pressed=HIGH
+  .lastStable   = LOW,
+  .lastRaw      = LOW,
+  .lastChange_ms= 0,
+  .debounce_ms  = 30,
+  .raw          = LOW,
+  .now_ms       = 0
+};
 
 
 
@@ -291,9 +313,12 @@ struct PatchClamp{
   // Current clamp (I-clamp style): knob/GUI sets injected current directly
   float   current_clamp;                                  // Injected current from the clamp knob/GUI
   // Voltage clamp (V-clamp style): knob/GUI sets command voltage; firmware computes I_clamp via PI feedback
+  float   v_hold;                                         // holding potential (model units, “mV-ish”) 
   float   v_cmd;                                          // command voltage in mV (Izhikevich v-units)
   float   v_cmd_span;                                     // +/- span around neuron.v_rest when pot at extremes
-  bool    vcmd_enable;                                    // true: use pot, false: GUI/serial override (IC.v_cmd)
+  bool    vcmd_enable;                                    // true: use pot, false: GUI/serial override (IC.v_cmd) 
+  float   v_step;                                         // step delta-V from StimulusOut->CurrentIn loopback
+  float   v_step_max;                                     // maps ADC full-scale to this delta-V (e.g. 50 mV)
   // Input Current flag
   bool    enable;                                         // Boolean used for enabling Clamp potentiometer
   // PI controller state (used only when clampMode == VoltageClamp)
@@ -306,7 +331,7 @@ struct PatchClamp{
   bool    anti_windup;                                    // enable conditional integration when saturated
 };
 
-inline PatchClamp IC{
+inline PatchClamp PC{
   .pin               = pins.adc2.current_in,
   .value_currentIn   = 0.0f,                              // Stimulus Current-In value read for the voltage clamp
   .currentIn_scaling = 0.1f,
@@ -315,9 +340,12 @@ inline PatchClamp IC{
   .pot_value         = 0.0f,
   .pot_scaling       = bits12/100.0f,                     // Inject Current value scaling - The lower, the stronger the impact of the IC potentiometer
   .current_clamp     = 0.0f,
+  .v_hold      = -65.0f,
   .v_cmd             = defaultParams.v_rest,              // default hold potential ~ resting
   .v_cmd_span        = 50.0f,                             // pot extremes => v_rest +/- 50 mV (tune as you like)
   .vcmd_enable       = true,
+  .v_step      = 0.0f,
+  .v_step_max  = 50.0f,     // step amplitude range you want available
   .enable = true,
   .Kp                = 2.0f,                              // start with Ki=0, tune Kp, then add Ki
   .Ki                = 0.05f,
@@ -332,8 +360,8 @@ inline void setClampMode(ClampMode m) {
   if (clampMode == m) return;
   clampMode = m;
   // Reset PI state when entering/exiting voltage clamp
-  IC.e_int   = 0.0f;
-  IC.I_clamp = 0.0f;
+  PC.e_int   = 0.0f;
+  PC.I_clamp = 0.0f;
 }
 
 
@@ -610,6 +638,9 @@ inline void HardwareSettings(){
   delay(1500);
   Serial.begin(BaudRate);
   delay(500);
+
+  pinMode(pins.gpio.mode, INPUT_PULLDOWN);   // Mode button: pulled-down, pressed = HIGH 
+
 
   pinMode(pins.gpio.spike,OUTPUT);
 

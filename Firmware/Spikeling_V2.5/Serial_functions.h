@@ -59,17 +59,51 @@ inline void SetNeuronModel(IzhikevichModel model) {
   neuron.u      = neuron.b * neuron.v;
 }
 
+inline void ApplyNeuronModeIndex(int idx) {
+  if (idx < 0) idx = 0;
+  if (idx >= (int)IzhikevichModelCount) idx = (int)IzhikevichModelCount - 1;
+  neuron.mode = idx;                                      // Store current mode index (so it doesn’t “snap back”)
+  if (idx >= LED_Num) {
+    lightOff();                                           // turns all charlieplex pins to INPUT
+  } 
+  else {
+    lightOn(idx);                                         //  Update Charlieplexed mode LED to match
+  }
+  SetNeuronModel(static_cast<IzhikevichModel>(idx));      // Apply parameters and reset v/u as defined by your function
+}
+
 inline void NeuronOpening() {
-  SetNeuronModel(IzhikevichModel::TonicSpiking);
+  ApplyNeuronModeIndex(0);   // default preset + LED behavior
 }
 
 inline void NeuronMode() {
   int idx;
   if (readNextInt(idx)) {
-    auto model = clampToModel(static_cast<std::size_t>(idx));
-    SetNeuronModel(model);
+    ApplyNeuronModeIndex(idx);                            // Updates neuron.mode + LEDs + model params in one place
   }
 }
+
+inline void NeuronCustom() {
+  float a, b, c, d; 
+  // Read required parameters
+  if (!readNextFloat(a)) return;
+  if (!readNextFloat(b)) return;
+  if (!readNextFloat(c)) return;
+  if (!readNextFloat(d)) return;
+  // Apply custom parameters
+  neuron.a = a;
+  neuron.b = b;
+  neuron.c = c;
+  neuron.d = d;
+
+  // Reset neuron state to a consistent initial condition
+  neuron.v = neuron.v_rest;
+  neuron.u = neuron.b * neuron.v;              
+  neuron.mode = -1;
+  lightOff();                                               // ensure LEDs are OFF for custom mode
+}
+
+
 
 inline void StimFre_on(){
   setIntParam(stim.frequency_enable, stim.freq);
@@ -129,12 +163,28 @@ inline void PDRecovery_off(){
 }
 
 
-inline void IC_on(){
-  setFloatParam(IC.enable, IC.current_clamp);
+inline void PC_on() {
+  float val;
+  if (!readNextFloat(val)) return;
+
+  if (clampMode == ClampMode::VoltageClamp) {         
+    PC.vcmd_enable = false;                   // GUI overrides the voltage-command potentiometer in VC mode
+    PC.v_hold = val;
+    PC.v_cmd = constrain(PC.v_hold + PC.v_step, neuron.Vm_min, neuron.Vm_peak);  // Keep v_cmd coherent immediately (step may be 0 if stimulus is OFF)
+    PC.current = 0.0f;                        // No disturbance current labs: ensure current injection is not active in VC mode
+  } 
+  else {
+    
+    PC.enable = false;                      // GUI overrides the current-command potentiometer in CC mode
+    PC.current_clamp = val;
+  }
 }
-inline void IC_off(){
-  IC.enable = true;
+
+inline void PC_off() {
+  PC.enable = true;         // re-enable current pot
+  PC.vcmd_enable = true;    // re-enable voltage pot (VC hold pot)
 }
+
 
 
 
@@ -147,26 +197,26 @@ inline void VClampMode(){
 
 // Voltage command (hold) for voltage clamp mode
 inline void VHold_on(){
-  setFloatParam(IC.vcmd_enable, IC.v_cmd);               // disables pot by setting vcmd_enable=false and uses provided value
+  setFloatParam(PC.vcmd_enable, PC.v_cmd);               // disables pot by setting vcmd_enable=false and uses provided value
 }
 inline void VHold_off(){
-  IC.vcmd_enable = true;                                 // re-enable pot reading for v_cmd
+  PC.vcmd_enable = true;                                 // re-enable pot reading for v_cmd
 }
 
 // Set PI gains for voltage clamp: "VPID <Kp> <Ki>"
 inline void VPID_set(){
   float kp;
-  if (readNextFloat(kp)) IC.Kp = kp;
+  if (readNextFloat(kp)) PC.Kp = kp;
   float ki;
-  if (readNextFloat(ki)) IC.Ki = ki;
+  if (readNextFloat(ki)) PC.Ki = ki;
 }
 
 // Set compliance limits for clamp current: "VIL <Imin> <Imax>"
 inline void VILIM_set(){
   float mn, mx;
   if (readNextFloat(mn) && readNextFloat(mx)) {
-    IC.I_min = mn;
-    IC.I_max = mx;
+    PC.I_min = mn;
+    PC.I_max = mx;
   }
 }
 
@@ -174,14 +224,14 @@ inline void VILIM_set(){
 inline void VSpan_set(){
   float span;
   if (readNextFloat(span)) {
-    IC.v_cmd_span = span;
+    PC.v_cmd_span = span;
   }
 }
 
 // Reset PI integrator/state: "VRS"
 inline void VClampReset(){
-  IC.e_int = 0.0f;
-  IC.I_clamp = 0.0f;
+  PC.e_int = 0.0f;
+  PC.I_clamp = 0.0f;
 }
 
 
@@ -265,6 +315,7 @@ inline void Unrecognized(const char *cmd) {
 inline void SerialFunctions(){
   SCmd.addCommand("DT",SetRefreshRate);
   SCmd.addCommand("NEU",NeuronMode);
+  SCmd.addCommand("NE", NeuronCustom); 
   SCmd.addCommand("FR1",StimFre_on);
   SCmd.addCommand("FR0",StimFre_off);
   SCmd.addCommand("ST1",StimStr_on);
@@ -278,8 +329,8 @@ inline void SerialFunctions(){
   SCmd.addCommand("PD0",PDDecay_off);
   SCmd.addCommand("PR1",PDRecovery_on);
   SCmd.addCommand("PR0",PDRecovery_off);
-  SCmd.addCommand("IC1",IC_on);
-  SCmd.addCommand("IC0",IC_off);
+  SCmd.addCommand("PC1",PC_on);
+  SCmd.addCommand("PC0",PC_off);
   SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
   SCmd.addCommand("VH1",VHold_on);          // set v_cmd from serial and disable pot
   SCmd.addCommand("VH0",VHold_off);         // re-enable pot for v_cmd
