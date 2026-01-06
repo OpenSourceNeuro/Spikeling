@@ -16,6 +16,11 @@ import Page_Imaging_ImagingSimulation
 def Buttons(self):
 
     # Generate toggle buttons for Spikeling Page
+    self.ui.PatchClampMode_toggleButton = PyToggle(width = 75,
+                                                   bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4]),
+                                                   circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
+                                                   active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[3])
+                                                   )
     self.ui.PatchClamp_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[11]),
                                                circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[4])
@@ -64,6 +69,8 @@ def Buttons(self):
                                                   circle_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(Settings.DarkSolarized[10])
                                                   )
+    self.ui.Spikeling_PatchClampMode_toggle_layout.addWidget(self.ui.PatchClampMode_toggleButton)
+    self.ui.Spikeling_PatchClampMode_toggle_layout.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
     self.ui.Spikeling_PatchClamp_toggle_layout.addWidget(self.ui.PatchClamp_toggleButton)
     self.ui.Spikeling_PatchClamp_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
     self.ui.Spikeling_Noise_toggle_layout.addWidget(self.ui.Noise_toggleButton)

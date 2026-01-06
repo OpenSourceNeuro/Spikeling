@@ -635,7 +635,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 </font>
                </property>
                <property name="text">
-                <string>Spikeling v3.0.1</string>
+                <string>Spikeling v3.0.2</string>
                </property>
                <property name="icon">
                 <iconset>
@@ -2057,7 +2057,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="page_000">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -2143,7 +2143,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string notr="true"/>
                       </property>
                       <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; color:#93a1a1;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#93a1a1;&quot;&gt;v3.0.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;A hardware implementation of spiking neurons for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Conceived and developed by M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Based on an original idea from T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; color:#93a1a1;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#93a1a1;&quot;&gt;v3.0.2&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;A hardware implementation of spiking neurons for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Conceived and developed by M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:696;&quot;&gt;Based on an original idea from T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
@@ -3049,6 +3049,46 @@ border-radius:10px;</string>
                                <item>
                                 <property name="text">
                                  <string>Integrator</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Rebound Spike</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Rebound Burst</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Threshold Variability</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Bistability</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Depolarising after Potential</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Accomodation</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Inhibition Induced Spiking</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Inhibition induced Bursting</string>
                                 </property>
                                </item>
                               </widget>
@@ -5798,7 +5838,7 @@ background-color: rgb(220, 50, 47);</string>
                              </property>
                              <layout class="QVBoxLayout" name="verticalLayout_21">
                               <property name="spacing">
-                               <number>0</number>
+                               <number>10</number>
                               </property>
                               <property name="leftMargin">
                                <number>5</number>
@@ -5844,6 +5884,148 @@ background-color: rgb(220, 50, 47);</string>
                                    <property name="text">
                                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;Patch Clamp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                    </property>
+                                  </widget>
+                                 </item>
+                                </layout>
+                               </widget>
+                              </item>
+                              <item alignment="Qt::AlignHCenter">
+                               <widget class="QFrame" name="Spikeling_PatchClampMode_frame">
+                                <property name="frameShape">
+                                 <enum>QFrame::StyledPanel</enum>
+                                </property>
+                                <property name="frameShadow">
+                                 <enum>QFrame::Raised</enum>
+                                </property>
+                                <layout class="QVBoxLayout" name="Spikeling_PatchClampMode_toggle_layout">
+                                 <property name="spacing">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="leftMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="topMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="rightMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="bottomMargin">
+                                  <number>0</number>
+                                 </property>
+                                </layout>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QFrame" name="Spikeling_PatchClampSelector_label">
+                                <property name="frameShape">
+                                 <enum>QFrame::StyledPanel</enum>
+                                </property>
+                                <property name="frameShadow">
+                                 <enum>QFrame::Raised</enum>
+                                </property>
+                                <layout class="QHBoxLayout" name="horizontalLayout_81">
+                                 <property name="spacing">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="leftMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="topMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="rightMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <property name="bottomMargin">
+                                  <number>0</number>
+                                 </property>
+                                 <item>
+                                  <widget class="QFrame" name="Spikeling_CurrentClamp_label_frame">
+                                   <property name="frameShape">
+                                    <enum>QFrame::StyledPanel</enum>
+                                   </property>
+                                   <property name="frameShadow">
+                                    <enum>QFrame::Raised</enum>
+                                   </property>
+                                   <layout class="QVBoxLayout" name="verticalLayout_137">
+                                    <property name="spacing">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="leftMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="topMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="rightMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="bottomMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <item>
+                                     <widget class="QLabel" name="Spikeling_CurrentClamp_label">
+                                      <property name="font">
+                                       <font>
+                                        <pointsize>8</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                       </font>
+                                      </property>
+                                      <property name="styleSheet">
+                                       <string notr="true">color: rgb(133, 153, 0);</string>
+                                      </property>
+                                      <property name="text">
+                                       <string>Current-Clamp</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                   </layout>
+                                  </widget>
+                                 </item>
+                                 <item>
+                                  <widget class="QFrame" name="Spikeling_VoltageClamp_label_frame">
+                                   <property name="frameShape">
+                                    <enum>QFrame::StyledPanel</enum>
+                                   </property>
+                                   <property name="frameShadow">
+                                    <enum>QFrame::Raised</enum>
+                                   </property>
+                                   <layout class="QVBoxLayout" name="verticalLayout_138">
+                                    <property name="spacing">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="leftMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="topMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="rightMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="bottomMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <item>
+                                     <widget class="QLabel" name="Spikeling_VoltageClamp_label">
+                                      <property name="font">
+                                       <font>
+                                        <pointsize>8</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                       </font>
+                                      </property>
+                                      <property name="styleSheet">
+                                       <string notr="true"/>
+                                      </property>
+                                      <property name="text">
+                                       <string>Voltage-Clamp</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                   </layout>
                                   </widget>
                                  </item>
                                 </layout>
@@ -57241,12 +57423,13 @@ background-color: rgb(255, 255, 255);</string>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header location="global">pyqtgraph</header>
+   <header>pyqtgraph</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
   <include location="resources.qrc"/>
+  <include location="../../../../../.designer/backup/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -5,6 +5,8 @@
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QSize, QFileInfo
+from py_toggle import PyToggle
+from py_slider import configure_styled_slider
 
 from serial_manager import serial_manager
 import os
@@ -348,29 +350,107 @@ class Spikeling():
 
 
     # PatchClamp
+    def SelectPatchClampMode(self):
+        global serial_port
+
+        is_vc = self.ui.PatchClampMode_toggleButton.isChecked()
+
+        # Prevent valueChanged callbacks firing while we reconfigure the slider
+        self.ui.Spikeling_PatchClamp_slider.blockSignals(True)
+
+        if is_vc:
+            # --- UI cosmetics (Voltage clamp) ---
+            self.ui.Spikeling_CurrentClamp_label.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + "; font: 700 10pt;"
+            )
+            self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
+            )
+            self.ui.Spikeling_PatchClamp_Label.setText("Hold Voltage (mV)")
+            self.ui.Spikeling_PatchClamp_reading.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
+            )
+
+            self.ui.Spikeling_PatchClamp_slider.set_fill_color("#DC322F")
+            self.ui.Spikeling_PatchClamp_slider.setRange(-110, 30)
+            self.ui.Spikeling_PatchClamp_slider.setValue(-70)
+
+            # NOTE: verify this is the correct button object; you check PatchClampMode_toggleButton above
+            self.ui.PatchClamp_toggleButton.set_active_color("#DC322F")
+
+            self.ui.Spikeling_PatchClamp_values_min.setText("-110")
+            self.ui.Spikeling_PatchClamp_values_0.setText("-40")
+            self.ui.Spikeling_PatchClamp_values_max.setText("30")
+
+        else:
+            # --- UI cosmetics (Current clamp) ---
+            self.ui.Spikeling_CurrentClamp_label.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
+            )
+            self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + "; font: 700 10pt;"
+            )
+            self.ui.Spikeling_PatchClamp_Label.setText("Injected Current (a.u.)")
+            self.ui.Spikeling_PatchClamp_reading.setStyleSheet(
+                "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
+            )
+
+            self.ui.Spikeling_PatchClamp_slider.set_fill_color("#859900")
+            self.ui.Spikeling_PatchClamp_slider.setRange(-100, 100)
+            self.ui.Spikeling_PatchClamp_slider.setValue(0)
+
+            self.ui.PatchClamp_toggleButton.set_active_color("#859900")
+
+            self.ui.Spikeling_PatchClamp_values_min.setText("-100")
+            self.ui.Spikeling_PatchClamp_values_0.setText("0")
+            self.ui.Spikeling_PatchClamp_values_max.setText("100")
+
+        self.ui.Spikeling_PatchClamp_slider.blockSignals(False)
+
+        # --- Send commands in a safe order: mode first, then the setpoint ---
+        if serial_port.is_open:
+            is_vc = self.ui.PatchClampMode_toggleButton.isChecked()
+            val = self.ui.Spikeling_PatchClamp_slider.value()
+            if is_vc:
+                serial_port.write('VCM 1\n')
+            else:
+                serial_port.write('VCM 0\n')
+            serial_port.write('PC1 ' + str(val)+ '\n')
+
+
     def ActivateInjectedCurrent(self):
             global serial_port
             if self.ui.PatchClamp_toggleButton.isChecked():
                     self.ui.Spikeling_PatchClamp_slider.setEnabled(True)
                     self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
                     self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
-                    self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+                    if self.ui.PatchClampMode_toggleButton.isChecked():
+                        self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
+                    else:
+                        self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
                     if serial_port.is_open:
-                            serial_port.write('IC1 ' + str(self.InjectedCurrent) + '\n')
+                            serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
             else:
                     self.ui.Spikeling_PatchClamp_slider.setEnabled(False)
-                    self.ui.Spikeling_PatchClamp_slider.setValue(0)
+                    if self.ui.PatchClampMode_toggleButton.isChecked():
+                        self.ui.Spikeling_PatchClamp_slider.setValue(-70)
+                    else:
+                        self.ui.Spikeling_PatchClamp_slider.setValue(0)
                     self.ui.Spikeling_PatchClamp_reading.setText("")
                     if serial_port.is_open:
-                            serial_port.write('IC0' + '\n')
+                            serial_port.write('PC0' + '\n')
 
     def GetInjectedCurrent(self):
             global serial_port
             self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
             self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
-            self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+            if self.ui.PatchClampMode_toggleButton.isChecked():
+                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
+            else:
+                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb"  + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
-                serial_port.write('IC1 ' + str(self.InjectedCurrent) + '\n')
+                serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
+
 
 
     # NoiseLevel
@@ -506,55 +586,40 @@ class Spikeling():
 
 
     def SelectNeuronMode(self):
-            global serial_port
-            self.neuron_mode_index = self.ui.Spikeling_NeuronModeComboBox.currentIndex()
-            if self.neuron_mode_index == 1 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[0][0]) +  ' ' + str(IzhikevichNeurons[0][1]) + ' ' +  str(IzhikevichNeurons[0][2]) + ' ' + str(IzhikevichNeurons[0][3]) + ' ' + str(IzhikevichNeurons[0][4]) + '\n')
-            if self.neuron_mode_index == 2 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[1][0]) +  ' ' + str(IzhikevichNeurons[1][1]) + ' ' +  str(IzhikevichNeurons[1][2]) + ' ' + str(IzhikevichNeurons[1][3]) + ' ' + str(IzhikevichNeurons[1][4]) + '\n')
-            if self.neuron_mode_index == 3 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[2][0]) +  ' ' + str(IzhikevichNeurons[2][1]) + ' ' +  str(IzhikevichNeurons[2][2]) + ' ' + str(IzhikevichNeurons[2][3]) + ' ' + str(IzhikevichNeurons[2][4]) + '\n')
-            if self.neuron_mode_index == 4 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[3][0]) +  ' ' + str(IzhikevichNeurons[3][1]) + ' ' +  str(IzhikevichNeurons[3][2]) + ' ' + str(IzhikevichNeurons[3][3]) + ' ' + str(IzhikevichNeurons[3][4]) + '\n')
-            if self.neuron_mode_index == 5 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[4][0]) +  ' ' + str(IzhikevichNeurons[4][1]) + ' ' +  str(IzhikevichNeurons[4][2]) + ' ' + str(IzhikevichNeurons[4][3]) + ' ' + str(IzhikevichNeurons[4][4]) + '\n')
-            if self.neuron_mode_index == 6 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[5][0]) +  ' ' + str(IzhikevichNeurons[5][1]) + ' ' +  str(IzhikevichNeurons[5][2]) + ' ' + str(IzhikevichNeurons[5][3]) + ' ' + str(IzhikevichNeurons[5][4]) + '\n')
-            if self.neuron_mode_index == 7 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[6][0]) +  ' ' + str(IzhikevichNeurons[6][1]) + ' ' +  str(IzhikevichNeurons[6][2]) + ' ' + str(IzhikevichNeurons[6][3]) + ' ' + str(IzhikevichNeurons[6][4]) + '\n')
-            if self.neuron_mode_index == 8 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[7][0]) +  ' ' + str(IzhikevichNeurons[7][1]) + ' ' +  str(IzhikevichNeurons[7][2]) + ' ' + str(IzhikevichNeurons[7][3]) + ' ' + str(IzhikevichNeurons[7][4]) + '\n')
-            if self.neuron_mode_index == 9 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[8][0]) +  ' ' + str(IzhikevichNeurons[8][1]) + ' ' +  str(IzhikevichNeurons[8][2]) + ' ' + str(IzhikevichNeurons[8][3]) + ' ' + str(IzhikevichNeurons[8][4]) + '\n')
-            if self.neuron_mode_index == 10 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[9][0]) +  ' ' + str(IzhikevichNeurons[9][1]) + ' ' +  str(IzhikevichNeurons[9][2]) + ' ' + str(IzhikevichNeurons[9][3]) + ' ' + str(IzhikevichNeurons[9][4]) + '\n')
-            if self.neuron_mode_index == 11 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[10][0]) +  ' ' + str(IzhikevichNeurons[10][1]) + ' ' +  str(IzhikevichNeurons[10][2]) + ' ' + str(IzhikevichNeurons[10][3]) + ' ' + str(IzhikevichNeurons[10][4]) + '\n')
-            if self.neuron_mode_index == 12 and serial_port.is_open:
-                serial_port.write('NEU ' + str(IzhikevichNeurons[11][0]) +  ' ' + str(IzhikevichNeurons[11][1]) + ' ' +  str(IzhikevichNeurons[11][2]) + ' ' + str(IzhikevichNeurons[11][3]) + ' ' + str(IzhikevichNeurons[11][4]) + '\n')
-            if self.neuron_mode_index > 12 and serial_port.is_open:
-                self.a_Izhi = self.ui.ImportNeuron[self.neuron_mode_index-13][0]
-                self.b_Izhi = self.ui.ImportNeuron[self.neuron_mode_index-13][1]
-                self.c_Izhi = self.ui.ImportNeuron[self.neuron_mode_index-13][2]
-                self.d_Izhi = self.ui.ImportNeuron[self.neuron_mode_index-13][3]
-                serial_port.write('NEU ' + str(self.a_Izhi) + ' ' + str(self.b_Izhi) + ' ' + str(self.c_Izhi) + ' ' + str(self.d_Izhi) + ' ' + '99' + '\n')
+        global serial_port
+        neuron_mode_index = self.ui.Spikeling_NeuronModeComboBox.currentIndex()
 
-                self.PGain = self.ui.ImportNeuron[self.neuron_mode_index - 13][4]
-                serial_port.write('PG1 ' + str(self.PGain) + '\n')
-                self.PDecay = self.ui.ImportNeuron[self.neuron_mode_index - 13][5]
-                serial_port.write('PD1 ' + str(self.PDecay) + '\n')
-                self.PRecovery = self.ui.ImportNeuron[self.neuron_mode_index - 13][6]
-                serial_port.write('PR1 ' + str(self.PRecovery) + '\n')
+        if neuron_mode_index <= 0:
+            return
 
-                self.Syn1Gain = self.ui.ImportNeuron[self.neuron_mode_index - 13][7]
-                serial_port.write('SG11 ' + str(self.Syn1Gain) + '\n')
-                self.Syn1Decay = self.ui.ImportNeuron[self.neuron_mode_index - 13][8]
-                serial_port.write('SD11 ' + str(self.Syn1Decay) + '\n')
+        mode_idx = neuron_mode_index - 1
+        if mode_idx < 20 and serial_port.is_open:
+            serial_port.write('NEU ' + str(mode_idx) + '\n')
 
-                self.Syn2Gain = self.ui.ImportNeuron[self.neuron_mode_index - 13][9]
-                serial_port.write('SG12 ' + str(self.Syn2Gain) + '\n')
-                self.Syn2Decay = self.ui.ImportNeuron[self.neuron_mode_index - 13][10]
-                serial_port.write('SD12 ' + str(self.Syn2Decay) + '\n')
+        if mode_idx >= 20 and serial_port.is_open:
+            import_idx = mode_idx - 20  # 0-based index into ImportNeuron list
+            self.a_Izhi = self.ui.ImportNeuron[import_idx][0]
+            self.b_Izhi = self.ui.ImportNeuron[import_idx][1]
+            self.c_Izhi = self.ui.ImportNeuron[import_idx][2]
+            self.d_Izhi = self.ui.ImportNeuron[import_idx][3]
+            serial_port.write('NE ' + str(self.a_Izhi) + ' ' + str(self.b_Izhi) + ' ' + str(self.c_Izhi) + ' ' + str(self.d_Izhi) + '\n')
+
+            self.PGain = self.ui.ImportNeuron[import_idx][4]
+            serial_port.write('PG1 ' + str(self.PGain) + '\n')
+            self.PDecay = self.ui.ImportNeuron[import_idx][5]
+            serial_port.write('PD1 ' + str(self.PDecay) + '\n')
+            self.PRecovery = self.ui.ImportNeuron[import_idx][6]
+            serial_port.write('PR1 ' + str(self.PRecovery) + '\n')
+
+            self.Syn1Gain = self.ui.ImportNeuron[import_idx][7]
+            serial_port.write('SG11 ' + str(self.Syn1Gain) + '\n')
+            self.Syn1Decay = self.ui.ImportNeuron[import_idx][8]
+            serial_port.write('SD11 ' + str(self.Syn1Decay) + '\n')
+
+            self.Syn2Gain = self.ui.ImportNeuron[import_idx][9]
+            serial_port.write('SG12 ' + str(self.Syn2Gain) + '\n')
+            self.Syn2Decay = self.ui.ImportNeuron[import_idx][10]
+            serial_port.write('SD12 ' + str(self.Syn2Decay) + '\n')
 
 
 
