@@ -39,39 +39,40 @@ int matrix[LED_Num][2][4] = {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                    Fucntion that turns on single declared LED and turns off others                    */
 void lightOn( int led ) {
-  pinMode( pins.gpio.pinCP1, matrix[led][PIN_CONFIG][0] );       // Set CP pin 1 mode for the declared LED
-  pinMode( pins.gpio.pinCP2, matrix[led][PIN_CONFIG][1] );       // Set CP pin 2 mode for the declared LED
-  pinMode( pins.gpio.pinCP3, matrix[led][PIN_CONFIG][2] );       // Set CP pin 3 mode for the declared LED
-  pinMode( pins.gpio.pinCP4, matrix[led][PIN_CONFIG][3] );       // Set CP pin 4 mode for the declared LED
+  pinMode( pins.gpio.pinCP1, matrix[led][PIN_CONFIG][0] );        // Set CP pin 1 mode for the declared LED
+  pinMode( pins.gpio.pinCP2, matrix[led][PIN_CONFIG][1] );        // Set CP pin 2 mode for the declared LED
+  pinMode( pins.gpio.pinCP3, matrix[led][PIN_CONFIG][2] );        // Set CP pin 3 mode for the declared LED
+  pinMode( pins.gpio.pinCP4, matrix[led][PIN_CONFIG][3] );        // Set CP pin 4 mode for the declared LED
   
-  digitalWrite( pins.gpio.pinCP1, matrix[led][PIN_STATE][0] );   // Set CP pin 1 state for the declared LED
-  digitalWrite( pins.gpio.pinCP2, matrix[led][PIN_STATE][1] );   // Set CP pin 2 state for the declared LED
-  digitalWrite( pins.gpio.pinCP3, matrix[led][PIN_STATE][2] );   // Set CP pin 3 state for the declared LED
-  digitalWrite( pins.gpio.pinCP4, matrix[led][PIN_STATE][3] );   // Set CP pin 4 state for the declared LED
+  digitalWrite( pins.gpio.pinCP1, matrix[led][PIN_STATE][0] );    // Set CP pin 1 state for the declared LED
+  digitalWrite( pins.gpio.pinCP2, matrix[led][PIN_STATE][1] );    // Set CP pin 2 state for the declared LED
+  digitalWrite( pins.gpio.pinCP3, matrix[led][PIN_STATE][2] );    // Set CP pin 3 state for the declared LED
+  digitalWrite( pins.gpio.pinCP4, matrix[led][PIN_STATE][3] );    // Set CP pin 4 state for the declared LED
 }
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                     Fucntion that lights up all LEDs in sequence while powering up                    */
 void Mode_opening() {
-  for( int l = 0; l < neuron.nModes; l++ ) {                  // For each LED within the number of total LEDs,
-    lightOn( l );                                        // Turn on declared LED while turning off the others
-    delay(neuron.openingDelay);                                // Wait for a moment before proceeding to the next one
+  int n = min(neuron.nModes, LED_Num);
+  for (int l = 0; l < n; l++){                                    // For each LED within the number of total LEDs,
+    lightOn( l );                                                 // Turn on declared LED while turning off the others
+    delay(neuron.openingDelay);                                   // Wait for a moment before proceeding to the next one
   }
   
-  pinMode(pins.gpio.pinCP1,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP2,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP3,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP4,INPUT);                               // Turn all mode LEDs off
-  delay(neuron.openingDelay);                                   // Wait the "time of a push"
-  lightOn(0);                                          // Turn on the first mode LEDs
+  pinMode(pins.gpio.pinCP1,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP2,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP3,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP4,INPUT);                                // Turn all mode LEDs off
+  delay(neuron.openingDelay);                                     // Wait the "time of a push"
+  lightOn(0);                                                     // Turn on the first mode LEDs
 }
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                   Fucntion that turns off all LEDs                                    */
 void lightOff() {
-  pinMode(pins.gpio.pinCP1,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP2,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP3,INPUT);                               // Turn all mode LEDs off
-  pinMode(pins.gpio.pinCP4,INPUT);                               // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP1,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP2,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP3,INPUT);                                // Turn all mode LEDs off
+  pinMode(pins.gpio.pinCP4,INPUT);                                // Turn all mode LEDs off
 }

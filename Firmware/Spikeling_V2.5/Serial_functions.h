@@ -1,5 +1,6 @@
 #pragma once     
 #include "Mode_LEDS.h"
+#include <math.h>
 
 
 inline SerialCommand SCmd;
@@ -22,16 +23,16 @@ static inline bool readNextInt(int &out) {
 }
 
 
-static inline void setFloatParam(bool &enableFlag, float &param, float scale = 1.0f) {
-  enableFlag = false;
+static inline void setFloatParam(bool &usePotFlag, float &param, float scale = 1.0f) {
+  usePotFlag = false;
   float val;
   if (readNextFloat(val)) {
     param = val * scale;
   }
 }
 
-static inline void setIntParam(bool &enableFlag, int &param) {
-  enableFlag = false;
+static inline void setIntParam(bool &usePotFlag, int &param) {
+  usePotFlag = false;
   int val;
   if (readNextInt(val)) {
     param = val;
@@ -106,15 +107,15 @@ inline void NeuronCustom() {
 
 
 inline void StimFre_on(){
-  setIntParam(stim.frequency_enable, stim.freq);
+  setIntParam(pot.use_stimfrequency_pot, stim.freq);
 }
 inline void StimFre_off(){
-  stim.frequency_enable = true;
+  pot.use_stimfrequency_pot = true;
 }
 
 
 inline void StimStr_on(){
-  stim.strength_enable = false;
+  pot.use_stimstrength_pot = false;
   int val;
   if (readNextInt(val)) {
     stim.str_digital = val;
@@ -122,15 +123,15 @@ inline void StimStr_on(){
   }
 }
 inline void StimStr_off(){
-  stim.strength_enable = true;
+  pot.use_stimstrength_pot = true;
 }
 
 
 inline void StimCus_on(){
-  setIntParam(stim.custom_enable, stim.value_custom);
+  setIntParam(stim.custom_disable, stim.value_custom);
 }
 inline void StimCus_off(){
-  stim.custom_enable = true;
+  stim.custom_disable = true; // Exit custom mode -> return to pot/square mode
 }
 
 
@@ -140,10 +141,10 @@ inline void Serial_Trigger(){
 
 
 inline void PDGain_on(){
-  setFloatParam(PD.gain_enable, PD.gain, 0.1f);
+  setFloatParam(pot.use_photodiode_pot, PD.gain, 0.1f);
 }
 inline void PDGain_off(){
-  PD.gain_enable = true;
+  pot.use_photodiode_pot = true;
 }
 
 
@@ -163,26 +164,22 @@ inline void PDRecovery_off(){
 }
 
 
-inline void PC_on() {
+inline void patch_on() {
   float val;
   if (!readNextFloat(val)) return;
 
-  if (clampMode == ClampMode::VoltageClamp) {         
-    PC.vcmd_enable = false;                   // GUI overrides the voltage-command potentiometer in VC mode
-    PC.v_hold = val;
-    PC.v_cmd = constrain(PC.v_hold + PC.v_step, neuron.Vm_min, neuron.Vm_peak);  // Keep v_cmd coherent immediately (step may be 0 if stimulus is OFF)
-    PC.current = 0.0f;                        // No disturbance current labs: ensure current injection is not active in VC mode
-  } 
-  else {
-    
-    PC.enable = false;                      // GUI overrides the current-command potentiometer in CC mode
-    PC.current_clamp = val;
+  pot.use_patch_pot = false;
+
+  if (clampMode == ClampMode::VoltageClamp) {
+    patch.v_hold = constrain(val, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_cmd  = constrain(patch.v_hold + patch.v_step, neuron.Vm_min, neuron.Vm_peak);
+    patch.current_input = 0.0f;
+  } else {
+    patch.current_clamp = val;
   }
 }
-
-inline void PC_off() {
-  PC.enable = true;         // re-enable current pot
-  PC.vcmd_enable = true;    // re-enable voltage pot (VC hold pot)
+inline void patch_off() {
+  pot.use_patch_pot = true;    // re-enable voltage pot (VC hold pot)
 }
 
 
@@ -195,28 +192,20 @@ inline void VClampMode(){
   }
 }
 
-// Voltage command (hold) for voltage clamp mode
-inline void VHold_on(){
-  setFloatParam(PC.vcmd_enable, PC.v_cmd);               // disables pot by setting vcmd_enable=false and uses provided value
-}
-inline void VHold_off(){
-  PC.vcmd_enable = true;                                 // re-enable pot reading for v_cmd
-}
-
 // Set PI gains for voltage clamp: "VPID <Kp> <Ki>"
 inline void VPID_set(){
   float kp;
-  if (readNextFloat(kp)) PC.Kp = kp;
+  if (readNextFloat(kp)) patch.Kp = kp;
   float ki;
-  if (readNextFloat(ki)) PC.Ki = ki;
+  if (readNextFloat(ki)) patch.Ki = ki;
 }
 
 // Set compliance limits for clamp current: "VIL <Imin> <Imax>"
 inline void VILIM_set(){
   float mn, mx;
   if (readNextFloat(mn) && readNextFloat(mx)) {
-    PC.I_min = mn;
-    PC.I_max = mx;
+    patch.I_min = mn;
+    patch.I_max = mx;
   }
 }
 
@@ -224,30 +213,30 @@ inline void VILIM_set(){
 inline void VSpan_set(){
   float span;
   if (readNextFloat(span)) {
-    PC.v_cmd_span = span;
+    patch.v_cmd_span = span;
   }
 }
 
 // Reset PI integrator/state: "VRS"
 inline void VClampReset(){
-  PC.e_int = 0.0f;
-  PC.I_clamp = 0.0f;
+  patch.e_int = 0.0f;
+  patch.I_clamp = 0.0f;
 }
 
 
 inline void Noise_on(){
-  setFloatParam(noise.enable, noise.current);
+  setFloatParam(pot.use_noise_pot, noise.current);
 }
 inline void Noise_off(){
-  noise.enable = true;
+  pot.use_noise_pot = true;
 }
 
 
 inline void Syn1Gain_on(){
-  setFloatParam(syn1.gain_enable, syn1.gain, 0.25f);
+  setFloatParam(syn1.use_syn_pot, syn1.gain, 0.25f);
 }
 inline void Syn1Gain_off(){
-  syn1.gain_enable = true;
+  syn1.use_syn_pot = true;
 }
 
 
@@ -260,10 +249,10 @@ inline void Syn1Decay_off(){
 
 
 inline void Syn2Gain_on(){
-  setFloatParam(syn2.gain_enable, syn2.gain, 0.25f);
+  setFloatParam(syn2.use_syn_pot, syn2.gain, 0.25f);
 }
 inline void Syn2Gain_off(){
-  syn2.gain_enable = true;
+  syn2.use_syn_pot = true;
 }
 
 
@@ -276,22 +265,22 @@ inline void Syn2Decay_off(){
 
 
 inline void Buzzer_on(){
-  Buzzer_enable = true;
+  spike.Buzzer_enable = true;
 }
 
 inline void Buzzer_off(){
-  Buzzer_enable = false;
+  spike.Buzzer_enable = false;
   digitalWrite(pins.gpio.spike, LOW);
 }
 
 
 inline void LED_on(){
-  LED_enable = true;
+  spike.LED_enable = true;
 }
 
 
 inline void LED_off(){
-  LED_enable = false;
+  spike.LED_enable = false;
   ledcWrite(pins.gpio.led_r, 0);
   ledcWrite(pins.gpio.led_g, 0);
   ledcWrite(pins.gpio.led_b, 0);
@@ -329,11 +318,9 @@ inline void SerialFunctions(){
   SCmd.addCommand("PD0",PDDecay_off);
   SCmd.addCommand("PR1",PDRecovery_on);
   SCmd.addCommand("PR0",PDRecovery_off);
-  SCmd.addCommand("PC1",PC_on);
-  SCmd.addCommand("PC0",PC_off);
+  SCmd.addCommand("PC1",patch_on);
+  SCmd.addCommand("PC0",patch_off);
   SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
-  SCmd.addCommand("VH1",VHold_on);          // set v_cmd from serial and disable pot
-  SCmd.addCommand("VH0",VHold_off);         // re-enable pot for v_cmd
   SCmd.addCommand("VPID",VPID_set);         // set PI gains
   SCmd.addCommand("VIL",VILIM_set);         // set clamp current limits
   SCmd.addCommand("VSP",VSpan_set);         // set pot span around v_rest

@@ -64,26 +64,26 @@ static inline void dispatchToken(const String& cmd, bool hasVal, float v) {
   }
 
   // --- Stimulus
-  if (cmd == "FR1" && hasVal) { applyInt(stim.frequency_enable, stim.freq, (int)v); return; }
-  if (cmd == "FR0")           { stim.frequency_enable = true; return; }
+  if (cmd == "FR1" && hasVal) { applyInt(pot.use_stimfrequency_pot, stim.freq, (int)v); return; }
+  if (cmd == "FR0")           { pot.use_stimfrequency_pot = true; return; }
 
   if (cmd == "ST1" && hasVal) {
-    stim.strength_enable = false;
+    pot.use_stimstrength_pot = false;
     int val = (int)v;
     stim.str_digital = val;
     stim.str_analog  = val;
     return;
   }
-  if (cmd == "ST0") { stim.strength_enable = true; return; }
+  if (cmd == "ST0") { pot.use_stimstrength_pot = true; return; }
 
-  if (cmd == "SC1" && hasVal) { applyInt(stim.custom_enable, stim.value_custom, (int)v); return; }
-  if (cmd == "SC0")           { stim.custom_enable = true; return; }
+  if (cmd == "SC1" && hasVal) { applyInt(stim.custom_disable, stim.value_custom, (int)v); return; }
+  if (cmd == "SC0")           { stim.custom_disable = false; return; }
 
   if (cmd == "TR")            { stim.serialTrigger_enable = true; return; }
 
   // --- Photodiode
-  if (cmd == "PG1" && hasVal) { applyFloat(PD.gain_enable, PD.gain, v, 0.1f); return; }
-  if (cmd == "PG0")           { PD.gain_enable = true; return; }
+  if (cmd == "PG1" && hasVal) { applyFloat(pot.use_photodiode_pot, PD.gain, v, 0.1f); return; }
+  if (cmd == "PG0")           { pot.use_photodiode_pot = true; return; }
 
   if (cmd == "PD1" && hasVal) { applyFloat(PD.decay_enable, PD.decay, v); return; }
   if (cmd == "PD0")           { PD.decay_enable = true; return; }
@@ -92,22 +92,22 @@ static inline void dispatchToken(const String& cmd, bool hasVal, float v) {
   if (cmd == "PR0")           { PD.recovery_enable = true; return; }
 
   // --- Current clamp
-  if (cmd == "PC1" && hasVal) { applyFloat(PC.enable, PC.current_clamp, v); return; }
-  if (cmd == "PC0")           { PC.enable = true; return; }
+  if (cmd == "PC1" && hasVal) { applyFloat(pot.use_patch_pot, patch.current_clamp, v); return; }
+  if (cmd == "PC0")           { pot.use_patch_pot = true; return; }
 
   // --- Noise
-  if (cmd == "NO1" && hasVal) { applyFloat(noise.enable, noise.current, v); return; }
-  if (cmd == "NO0")           { noise.enable = true; return; }
+  if (cmd == "NO1" && hasVal) { applyFloat(pot.use_noise_pot, noise.current, v); return; }
+  if (cmd == "NO0")           { pot.use_noise_pot = true; return; }
 
   // --- Synapses
-  if (cmd == "SG11" && hasVal){ applyFloat(syn1.gain_enable,  syn1.gain,  v, 0.25f); return; }
-  if (cmd == "SG10")          { syn1.gain_enable = true; return; }
+  if (cmd == "SG11" && hasVal){ applyFloat(syn1.use_syn_pot,  syn1.gain,  v, 0.25f); return; }
+  if (cmd == "SG10")          { syn1.use_syn_pot = true; return; }
 
   if (cmd == "SD11" && hasVal){ applyFloat(syn1.decay_enable, syn1.decay, v, 1.0f/1000.0f); return; }
   if (cmd == "SD10")          { syn1.decay_enable = true; return; }
 
-  if (cmd == "SG21" && hasVal){ applyFloat(syn2.gain_enable,  syn2.gain,  v, 0.25f); return; }
-  if (cmd == "SG20")          { syn2.gain_enable = true; return; }
+  if (cmd == "SG21" && hasVal){ applyFloat(syn2.use_syn_pot,  syn2.gain,  v, 0.25f); return; }
+  if (cmd == "SG20")          { syn2.use_syn_pot = true; return; }
 
   if (cmd == "SD21" && hasVal){ applyFloat(syn2.decay_enable, syn2.decay, v, 1.0f/1000.0f); return; }
   if (cmd == "SD20")          { syn2.decay_enable = true; return; }
