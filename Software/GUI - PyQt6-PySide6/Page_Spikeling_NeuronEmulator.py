@@ -9,9 +9,10 @@ import os
 import numpy as np
 import pandas as pd
 
-from Izhikevich_parameters import IzhikevichNeurons
+from Parameters_Izhikevich import IzhikevichNeurons
 
-import Settings, NavigationButtons
+import Parameters_Settings as Settings
+import Parameters_NavigationButtons as NavigationButtons
 
 
 
@@ -100,9 +101,8 @@ class Emulator():
                     self.EmulatorStim_DutyCycle = 500
                     self.EmulatorStim_MinCycle = 10
                     self.ui.Emulator_StimFre_slider.setEnabled(True)
-                    self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
-                    Steps = int(np.round(1000 * (10 ** ( self.EmulatorStimFreValue / 100.0))))
-                    self.setTextEmulatorStimFre = str(int(np.around(10000/ Steps)))
+                    self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()*(-1)
+                    self.setTextEmulatorStimFre = str(int(np.around(10000/(self.EmulatorStim_DutyCycle + (self.EmulatorStimFreValue*self.EmulatorStim_DutyCycle/100) + self.EmulatorStim_MinCycle))))
                     self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
                     self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
 
@@ -113,9 +113,9 @@ class Emulator():
 
 
     def GetStimFreSliderValue(self):
-            self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()
-            Steps = int(np.round(1000 * (10 ** (self.EmulatorStimFreValue / 100.0))))
-            self.setTextEmulatorStimFre = str(int(np.around(10000 / Steps)))
+            self.EmulatorStimFreValue = self.ui.Emulator_StimFre_slider.value()*(-1)
+            self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
+            self.setTextEmulatorStimFre = str(int(np.around(10000/(self.EmulatorStim_DutyCycle + (self.EmulatorStimFreValue*self.EmulatorStim_DutyCycle/100) + self.EmulatorStim_MinCycle))))
             self.ui.Emulator_StimFre_readings.setText(self.setTextEmulatorStimFre)
             self.ui.Emulator_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
 

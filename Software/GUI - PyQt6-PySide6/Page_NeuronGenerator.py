@@ -2,8 +2,8 @@ from PySide6.QtWidgets import QFileDialog, QWidget
 import numpy as np
 import pandas as pd
 import pyqtgraph as pg
-import Settings
-from Izhikevich_parameters import IzhikevichNeurons
+from Parameters_Settings import DarkSolarized
+from Parameters_Izhikevich import IzhikevichNeurons
 
 
 
@@ -67,7 +67,7 @@ class NeuronGenerator():
         nstim[:] = 0
         nstim[ntime1:ntime2] = self.I_dc
 
-        self.ui.NeuronGenerator_Oscilloscope_widget.plot(nt, vs, pen=(Settings.DarkSolarized[3]))
+        self.ui.NeuronGenerator_Oscilloscope_widget.plot(nt, vs, pen=(DarkSolarized[3]))
         self.StimCurve.setData(nt, nstim)
 
 
@@ -94,7 +94,7 @@ class NeuronGenerator():
         self.ui.NeuronGenerator_Oscilloscope_widget.showGrid(x=True, y=True)
         self.ui.NeuronGenerator_Oscilloscope_widget.setRange(xRange=[0, time], yRange=[-90, 40])
         self.ui.NeuronGenerator_Oscilloscope_widget.plotItem.vb.setLimits(xMin=0, xMax=time)
-        self.ui.NeuronGenerator_Oscilloscope_widget.setBackground(Settings.DarkSolarized[0])
+        self.ui.NeuronGenerator_Oscilloscope_widget.setBackground(DarkSolarized[0])
         self.ui.NeuronGenerator_Oscilloscope_widget.setLabel('left', 'Membrane potential', 'mV')
         self.ui.NeuronGenerator_Oscilloscope_widget.setLabel('bottom', 'time', 'ms')
         self.ui.NeuronGenerator_Oscilloscope_widget.setLabel('right', 'Current Input', 'a.u.')
@@ -105,9 +105,9 @@ class NeuronGenerator():
         self.StimPlot.setXLink(self.ui.NeuronGenerator_Oscilloscope_widget)
         self.StimPlot.setRange(yRange=[-10, 50])
 
-        self.NeuronCurve = self.ui.NeuronGenerator_Oscilloscope_widget.plot(nt, vs, pen=(Settings.DarkSolarized[3]))
+        self.NeuronCurve = self.ui.NeuronGenerator_Oscilloscope_widget.plot(nt, vs, pen=(DarkSolarized[3]))
         #self.NeuronCurve.clear()
-        self.StimCurve = pg.PlotCurveItem(nt, nstim, pen=(Settings.DarkSolarized[4]))
+        self.StimCurve = pg.PlotCurveItem(nt, nstim, pen=(DarkSolarized[4]))
         #self.StimCurve.clear()
         self.StimPlot.addItem(self.StimCurve)
 

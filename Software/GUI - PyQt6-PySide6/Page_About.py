@@ -1,6 +1,6 @@
 import numpy as np
 import pyqtgraph
-import Settings
+import Parameters_Settings
 
 
 def ShowPage(self):

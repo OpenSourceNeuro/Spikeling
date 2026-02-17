@@ -17,10 +17,12 @@ from PySide6.QtWidgets import QMainWindow, QGraphicsDropShadowEffect, QApplicati
 # Import GUI .ui file
 from Spikeling_UI import Ui_Spikeling
 from Spikeling_SplashScreen import Ui_SplashScreen
-from Neuron_Parameters import Ui_AdvancedParameters
+from Page_NeuronParameters import Ui_AdvancedParameters
 
 # Import Functions and navigation buttons
-import ToggleButtons, NavigationButtons, Sliders
+import Parameters_ToggleButtons as ToggleButtons
+import Parameters_NavigationButtons as NavigationButtons
+import Parameters_Sliders as Sliders
 
 GlobalState = 0
 

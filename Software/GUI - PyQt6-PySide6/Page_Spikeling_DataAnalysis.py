@@ -8,8 +8,9 @@ import pyqtgraph as pg
 import pyqtgraph.exporters
 
 import pandas as pd
+import numpy as np
 
-import Settings
+import Parameters_Settings as Settings
 
 
 class Spikeling103():

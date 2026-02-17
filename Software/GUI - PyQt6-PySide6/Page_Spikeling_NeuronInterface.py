@@ -13,8 +13,9 @@ import os
 import numpy as np
 import pandas as pd
 
-import Settings, NavigationButtons
-from Izhikevich_parameters import IzhikevichNeurons
+import Parameters_Settings as Settings
+import Parameters_NavigationButtons as NavigationButtons
+from Parameters_Izhikevich import IzhikevichNeurons
 
 
 # Use the global serial_manager instance
@@ -75,33 +76,33 @@ class Spikeling():
         icon_buzzer_on = QIcon()
         icon_buzzer_on.addFile(u":/resources/resources/SoundON.png", QSize(), QIcon.Normal, QIcon.Off)
         if self.ui.Sound_pushButton.isChecked():
-                self.ui.Sound_pushButton.setIcon(icon_buzzer_off)
-                self.ui.Sound_pushButton.setText("Buzzer Off   ")
-                if serial_port.is_open:
-                        serial_port.write('BZ0' + '\n')
+            self.ui.Sound_pushButton.setIcon(icon_buzzer_off)
+            self.ui.Sound_pushButton.setText("Buzzer Off   ")
+            if serial_port.is_open:
+                serial_port.write('BZ0' + '\n')
         else:
-                self.ui.Sound_pushButton.setIcon(icon_buzzer_on)
-                self.ui.Sound_pushButton.setText("Buzzer On   ")
-                if serial_port.is_open:
-                        serial_port.write('BZ1' + '\n')
+            self.ui.Sound_pushButton.setIcon(icon_buzzer_on)
+            self.ui.Sound_pushButton.setText("Buzzer On   ")
+            if serial_port.is_open:
+                serial_port.write('BZ1' + '\n')
 
     # Control LED light
     def ControlLED(self):
-            global serial_port
-            icon_LED_off = QIcon()
-            icon_LED_off.addFile(u":/resources/resources/LEDOFF.png", QSize(), QIcon.Normal, QIcon.Off)
-            icon_LED_on = QIcon()
-            icon_LED_on.addFile(u":/resources/resources/LEDON.png", QSize(), QIcon.Normal, QIcon.Off)
-            if self.ui.LED_pushButton.isChecked():
-                    self.ui.LED_pushButton.setIcon(icon_LED_off)
-                    self.ui.LED_pushButton.setText("LED Off   ")
-                    if serial_port.is_open:
-                            serial_port.write('LED0' + '\n')
-            else:
-                    self.ui.LED_pushButton.setIcon(icon_LED_on)
-                    self.ui.LED_pushButton.setText("LED On   ")
-                    if serial_port.is_open:
-                            serial_port.write('LED1' + '\n')
+        global serial_port
+        icon_LED_off = QIcon()
+        icon_LED_off.addFile(u":/resources/resources/LEDOFF.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon_LED_on = QIcon()
+        icon_LED_on.addFile(u":/resources/resources/LEDON.png", QSize(), QIcon.Normal, QIcon.Off)
+        if self.ui.LED_pushButton.isChecked():
+            self.ui.LED_pushButton.setIcon(icon_LED_off)
+            self.ui.LED_pushButton.setText("LED Off   ")
+            if serial_port.is_open:
+                serial_port.write('LED0' + '\n')
+        else:
+            self.ui.LED_pushButton.setIcon(icon_LED_on)
+            self.ui.LED_pushButton.setText("LED On   ")
+            if serial_port.is_open:
+                serial_port.write('LED1' + '\n')
 
 
     # Data Recording Functions
@@ -164,87 +165,88 @@ class Spikeling():
                                                                                     "background-color: rgb(50, 220, 47);")
 
         if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() == False:
-                self.ui.Spikeling_DataRecording_Record_pushButton.setText("Record")
-                self.ui.Spikeling_DataRecording_Record_pushButton.setStyleSheet("color: rgb(250, 250, 250);\n"
-                                                                                    "background-color: rgb(220, 50, 47);")
+            self.ui.Spikeling_DataRecording_Record_pushButton.setText("Record")
+            self.ui.Spikeling_DataRecording_Record_pushButton.setStyleSheet("color: rgb(250, 250, 250);\n"
+                                                                            "background-color: rgb(220, 50, 47);")
 
 
 
 
     # Stimulus Frequency
     def ActivateStimFre(self):
-            global serial_port
-            if self.ui.StimFre_toggleButton.isChecked():
-                    self.Stim_DutyCycle = 500
-                    self.Stim_MinCycle = 10
-                    self.ui.Spikeling_StimFre_slider.setEnabled(True)
-                    self.StimFreValue = self.ui.Spikeling_StimFre_slider.value()*(-1)
-                    self.setTextStimFre = str(int(np.around(10000/(self.Stim_DutyCycle + (self.StimFreValue*self.Stim_DutyCycle/100) + self.Stim_MinCycle))))
-                    self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
-                    self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
-
-            else:
-                    self.ui.Spikeling_StimFre_slider.setEnabled(False)
-                    self.ui.Spikeling_StimFre_slider.setValue(0)
-                    self.ui.Spikeling_StimFre_readings.setText('')
-                    if serial_port.is_open:
-                            serial_port.write('FR0' + '\n')
-
-
-    def GetStimFreSliderValue(self):
-            global serial_port
+        global serial_port
+        if self.ui.StimFre_toggleButton.isChecked():
+            self.Stim_DutyCycle = 500
+            self.Stim_MinCycle = 10
+            self.ui.Spikeling_StimFre_slider.setEnabled(True)
             self.StimFreValue = self.ui.Spikeling_StimFre_slider.value()*(-1)
             self.setTextStimFre = str(int(np.around(10000/(self.Stim_DutyCycle + (self.StimFreValue*self.Stim_DutyCycle/100) + self.Stim_MinCycle))))
             self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
             self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
             if serial_port.is_open:
-                print(self.StimFreValue)
-                print(self.setTextStimFre)
                 serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
+
+        else:
+            self.ui.Spikeling_StimFre_slider.setEnabled(False)
+            self.ui.Spikeling_StimFre_slider.setValue(0)
+            self.ui.Spikeling_StimFre_readings.setText('')
+            if serial_port.is_open:
+                serial_port.write('FR0' + '\n')
+
+
+    def GetStimFreSliderValue(self):
+        global serial_port
+        self.StimFreValue = self.ui.Spikeling_StimFre_slider.value()*(-1)
+        self.setTextStimFre = str(int(np.around(10000/(self.Stim_DutyCycle + (self.StimFreValue*self.Stim_DutyCycle/100) + self.Stim_MinCycle))))
+        self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
+        self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
 
 
     # Stimulus Strength
     def ActivateStimStr(self):
-            global serial_port
-            if self.ui.StimStr_toggleButton.isChecked():
-                    self.ui.Spikeling_StimStr_slider.setEnabled(True)
-                    self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
-                    self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
-                    self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
-            else:
-                    self.ui.Spikeling_StimStr_slider.setEnabled(False)
-                    self.ui.Spikeling_StimStr_slider.setValue(0)
-                    self.ui.Spikeling_StimStr_readings.setText('')
-                    if serial_port.is_open:
-                            serial_port.write('ST0' + '\n')
-
-    def GetStimStrSliderValue(self):
-            global serial_port
+        global serial_port
+        if self.ui.StimStr_toggleButton.isChecked():
+            self.ui.Spikeling_StimStr_slider.setEnabled(True)
             self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
             self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
             self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
+        else:
+            self.ui.Spikeling_StimStr_slider.setEnabled(False)
+            self.ui.Spikeling_StimStr_slider.setValue(0)
+            self.ui.Spikeling_StimStr_readings.setText('')
+            if serial_port.is_open:
+                serial_port.write('ST0' + '\n')
+
+    def GetStimStrSliderValue(self):
+        global serial_port
+        self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
+        self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
+        self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
 
 
     # Custom Stimulus
     def ActivateCustomStimulus(self):
-            global serial_port
-            if self.ui.StimCus_toggleButton.isChecked():
-                self.StimCounter = 0
-                self.StimCusValue = self.ui.df_yStim[self.StimCounter]
+        global serial_port
+        if self.ui.StimCus_toggleButton.isChecked():
+            self.StimCounter = 0
+            self.StimCusValue = self.ui.df_yStim[self.StimCounter]
 
-                if serial_port.is_open:
+            if serial_port.is_open:
+                if self.ui.PatchClampMode_toggleButton.isChecked():
+                    serial_port.write('VH1 ' + str(self.StimCusValue) + '\n')
+                else:
                     serial_port.write('SC1 ' + str(self.StimCusValue) + '\n')
-                    serial_port.write('TR' + '\n')
+                serial_port.write('TR' + '\n')
 
-            else:
-                if serial_port.is_open:
-                    serial_port.write('SC0' + '\n')
+        else:
+            if serial_port.is_open:
+                serial_port.write('SC0' + '\n')
 
 
 
@@ -273,80 +275,80 @@ class Spikeling():
 
     # PhotoGain
     def ActivatePhotoGain(self):
-            global serial_port
-            if self.ui.PhotoGain_toggleButton.isChecked():
-                    self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(True)
-                    self.PhotoGain = self.ui.Spikeling_PR_PhotoGain_slider.value()
-                    self.ui.Spikeling_PR_Photogain_readings.setText(str(self.PhotoGain))
-                    self.ui.Spikeling_PR_Photogain_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                            serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
-            else:
-                    self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(False)
-                    self.ui.Spikeling_PR_PhotoGain_slider.setValue(0)
-                    self.ui.Spikeling_PR_Photogain_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('PG0' + '\n')
-
-    def GetPhotoGain(self):
-            global serial_port
+        global serial_port
+        if self.ui.PhotoGain_toggleButton.isChecked():
+            self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(True)
             self.PhotoGain = self.ui.Spikeling_PR_PhotoGain_slider.value()
             self.ui.Spikeling_PR_Photogain_readings.setText(str(self.PhotoGain))
             self.ui.Spikeling_PR_Photogain_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
-                    serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
+                serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
+        else:
+            self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(False)
+            self.ui.Spikeling_PR_PhotoGain_slider.setValue(0)
+            self.ui.Spikeling_PR_Photogain_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('PG0' + '\n')
+
+    def GetPhotoGain(self):
+        global serial_port
+        self.PhotoGain = self.ui.Spikeling_PR_PhotoGain_slider.value()
+        self.ui.Spikeling_PR_Photogain_readings.setText(str(self.PhotoGain))
+        self.ui.Spikeling_PR_Photogain_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
 
 
     # PhotoDecay
     def ActivatePRDecay(self):
-            global serial_port
-            if self.ui.PhotoDecay_toggleButton.isChecked():
-                    self.ui.Spikeling_PR_Decay_slider.setEnabled(True)
-                    self.PhotoDecay = self.ui.Spikeling_PR_Decay_slider.value()
-                    self.ui.Spikeling_PR_Decay_readings.setText(str(self.PhotoDecay/100000))
-                    self.ui.Spikeling_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                            serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
-            else:
-                    self.ui.Spikeling_PR_Decay_slider.setEnabled(False)
-                    self.ui.Spikeling_PR_Decay_slider.setValue(100)
-                    self.ui.Spikeling_PR_Decay_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('PD0' + '\n')
-
-    def GetPRDecay(self):
-            global serial_port
+        global serial_port
+        if self.ui.PhotoDecay_toggleButton.isChecked():
+            self.ui.Spikeling_PR_Decay_slider.setEnabled(True)
             self.PhotoDecay = self.ui.Spikeling_PR_Decay_slider.value()
             self.ui.Spikeling_PR_Decay_readings.setText(str(self.PhotoDecay/100000))
             self.ui.Spikeling_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
-                    serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
+                serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
+        else:
+            self.ui.Spikeling_PR_Decay_slider.setEnabled(False)
+            self.ui.Spikeling_PR_Decay_slider.setValue(100)
+            self.ui.Spikeling_PR_Decay_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('PD0' + '\n')
+
+    def GetPRDecay(self):
+        global serial_port
+        self.PhotoDecay = self.ui.Spikeling_PR_Decay_slider.value()
+        self.ui.Spikeling_PR_Decay_readings.setText(str(self.PhotoDecay/100000))
+        self.ui.Spikeling_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
 
 
     # PhotoRecovery
     def ActivatePRRecovery(self):
-            global serial_port
-            if self.ui.PhotoRecovery_toggleButton.isChecked():
-                    self.ui.Spikeling_PR_Recovery_slider.setEnabled(True)
-                    self.PhotoRecovery = self.ui.Spikeling_PR_Recovery_slider.value()
-                    self.ui.Spikeling_PR_Recovery_readings.setText(str(self.PhotoRecovery/1000))
-                    self.ui.Spikeling_PR_Recovery_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                            serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
-            else:
-                    self.ui.Spikeling_PR_Recovery_slider.setEnabled(False)
-                    self.ui.Spikeling_PR_Recovery_slider.setValue(25)
-                    self.ui.Spikeling_PR_Recovery_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('PR0' + '\n')
-
-    def GetPRRecovery(self):
-            global serial_port
+        global serial_port
+        if self.ui.PhotoRecovery_toggleButton.isChecked():
+            self.ui.Spikeling_PR_Recovery_slider.setEnabled(True)
             self.PhotoRecovery = self.ui.Spikeling_PR_Recovery_slider.value()
             self.ui.Spikeling_PR_Recovery_readings.setText(str(self.PhotoRecovery/1000))
             self.ui.Spikeling_PR_Recovery_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
-                    serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
+                serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
+        else:
+            self.ui.Spikeling_PR_Recovery_slider.setEnabled(False)
+            self.ui.Spikeling_PR_Recovery_slider.setValue(25)
+            self.ui.Spikeling_PR_Recovery_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('PR0' + '\n')
+
+    def GetPRRecovery(self):
+        global serial_port
+        self.PhotoRecovery = self.ui.Spikeling_PR_Recovery_slider.value()
+        self.ui.Spikeling_PR_Recovery_readings.setText(str(self.PhotoRecovery/1000))
+        self.ui.Spikeling_PR_Recovery_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+                serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
 
 
     # PatchClamp
@@ -361,7 +363,7 @@ class Spikeling():
         if is_vc:
             # --- UI cosmetics (Voltage clamp) ---
             self.ui.Spikeling_CurrentClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + "; font: 700 10pt;"
+                "color: rgb" + str(tuple(Settings.DarkSolarized[11])) + "; font: 700 10pt;"
             )
             self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
                 "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
@@ -388,7 +390,7 @@ class Spikeling():
                 "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
             )
             self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + "; font: 700 10pt;"
+                "color: rgb" + str(tuple(Settings.DarkSolarized[11])) + "; font: 700 10pt;"
             )
             self.ui.Spikeling_PatchClamp_Label.setText("Injected Current (a.u.)")
             self.ui.Spikeling_PatchClamp_reading.setStyleSheet(
@@ -409,36 +411,36 @@ class Spikeling():
 
         # --- Send commands in a safe order: mode first, then the setpoint ---
         if serial_port.is_open:
-            is_vc = self.ui.PatchClampMode_toggleButton.isChecked()
             val = self.ui.Spikeling_PatchClamp_slider.value()
-            if is_vc:
+            if self.ui.PatchClampMode_toggleButton.isChecked():
                 serial_port.write('VCM 1\n')
             else:
                 serial_port.write('VCM 0\n')
             serial_port.write('PC1 ' + str(val)+ '\n')
+            serial_port.write('PC0 \n')
 
 
     def ActivateInjectedCurrent(self):
-            global serial_port
-            if self.ui.PatchClamp_toggleButton.isChecked():
-                    self.ui.Spikeling_PatchClamp_slider.setEnabled(True)
-                    self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
-                    self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
-                    if self.ui.PatchClampMode_toggleButton.isChecked():
-                        self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
-                    else:
-                        self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                            serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
+        global serial_port
+        if self.ui.PatchClamp_toggleButton.isChecked():
+            self.ui.Spikeling_PatchClamp_slider.setEnabled(True)
+            self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
+            self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
+            if self.ui.PatchClampMode_toggleButton.isChecked():
+                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
             else:
-                    self.ui.Spikeling_PatchClamp_slider.setEnabled(False)
-                    if self.ui.PatchClampMode_toggleButton.isChecked():
-                        self.ui.Spikeling_PatchClamp_slider.setValue(-70)
-                    else:
-                        self.ui.Spikeling_PatchClamp_slider.setValue(0)
-                    self.ui.Spikeling_PatchClamp_reading.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('PC0' + '\n')
+                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+            if serial_port.is_open:
+                    serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
+        else:
+            self.ui.Spikeling_PatchClamp_slider.setEnabled(False)
+            if self.ui.PatchClampMode_toggleButton.isChecked():
+                self.ui.Spikeling_PatchClamp_slider.setValue(-70)
+            else:
+                self.ui.Spikeling_PatchClamp_slider.setValue(0)
+            self.ui.Spikeling_PatchClamp_reading.setText("")
+            if serial_port.is_open:
+                    serial_port.write('PC0' + '\n')
 
     def GetInjectedCurrent(self):
             global serial_port
@@ -455,134 +457,134 @@ class Spikeling():
 
     # NoiseLevel
     def ActivateNoiseLevel(self):
-            global serial_port
-            if self.ui.Noise_toggleButton.isChecked():
-                    self.ui.Spikeling_Noise_slider.setEnabled(True)
-                    self.NoiseValue = self.ui.Spikeling_Noise_slider.value()
-                    self.Noise = np.random.normal(0, self.NoiseValue/2)
-                    self.ui.Spikeling_Noise_readings.setText(str(self.NoiseValue))
-                    self.ui.Spikeling_Noise_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('NO1 ' + str(self.Noise) + '\n')
-            else:
-                    self.ui.Spikeling_Noise_slider.setEnabled(False)
-                    self.ui.Spikeling_Noise_slider.setValue(0)
-                    self.ui.Spikeling_Noise_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('NO0' + '\n')
-
-    def GetNoiseLevel(self):
-            global serial_port
+        global serial_port
+        if self.ui.Noise_toggleButton.isChecked():
+            self.ui.Spikeling_Noise_slider.setEnabled(True)
             self.NoiseValue = self.ui.Spikeling_Noise_slider.value()
-            self.Noise = np.random.normal(0, self.NoiseValue / 2)
+            self.Noise = np.random.normal(0, self.NoiseValue/2)
             self.ui.Spikeling_Noise_readings.setText(str(self.NoiseValue))
             self.ui.Spikeling_Noise_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('NO1 ' + str(self.Noise) + '\n')
+        else:
+            self.ui.Spikeling_Noise_slider.setEnabled(False)
+            self.ui.Spikeling_Noise_slider.setValue(0)
+            self.ui.Spikeling_Noise_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('NO0' + '\n')
+
+    def GetNoiseLevel(self):
+        global serial_port
+        self.NoiseValue = self.ui.Spikeling_Noise_slider.value()
+        self.Noise = np.random.normal(0, self.NoiseValue / 2)
+        self.ui.Spikeling_Noise_readings.setText(str(self.NoiseValue))
+        self.ui.Spikeling_Noise_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('NO1 ' + str(self.Noise) + '\n')
 
 
     # Synapse1Gain
     def ActivateSynapticGain1(self):
-            global serial_port
-            if self.ui.Synapse1_toggleButton.isChecked():
-                    self.ui.Spikeling_Synapse1_slider.setEnabled(True)
-                    self.Synapse1Gain = self.ui.Spikeling_Synapse1_slider.value()
-                    self.ui.Spikeling_Synapse1_readings.setText(str(self.Synapse1Gain))
-                    self.ui.Spikeling_Synapse1_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('SG11 ' + str(self.Synapse1Gain) + '\n')
-            else:
-                    self.ui.Spikeling_Synapse1_slider.setEnabled(False)
-                    self.ui.Spikeling_Synapse1_slider.setValue(0)
-                    self.ui.Spikeling_Synapse1_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('SG10' + '\n')
-
-    def GetSynapticGain1(self):
-            global serial_port
+        global serial_port
+        if self.ui.Synapse1_toggleButton.isChecked():
+            self.ui.Spikeling_Synapse1_slider.setEnabled(True)
             self.Synapse1Gain = self.ui.Spikeling_Synapse1_slider.value()
             self.ui.Spikeling_Synapse1_readings.setText(str(self.Synapse1Gain))
             self.ui.Spikeling_Synapse1_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('SG11 ' + str(self.Synapse1Gain) + '\n')
+        else:
+            self.ui.Spikeling_Synapse1_slider.setEnabled(False)
+            self.ui.Spikeling_Synapse1_slider.setValue(0)
+            self.ui.Spikeling_Synapse1_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('SG10' + '\n')
+
+    def GetSynapticGain1(self):
+        global serial_port
+        self.Synapse1Gain = self.ui.Spikeling_Synapse1_slider.value()
+        self.ui.Spikeling_Synapse1_readings.setText(str(self.Synapse1Gain))
+        self.ui.Spikeling_Synapse1_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('SG11 ' + str(self.Synapse1Gain) + '\n')
 
 
     # Synapse1Decay
     def ActivateSynapseDecay1(self):
-            global serial_port
-            if self.ui.Synapse1Decay_toggleButton.isChecked():
-                    self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(True)
-                    self.Synapse1Decay = self.ui.Spikeling_Synapse1_Decay_slider.value()
-                    self.ui.Spikeling_Synapse1_Decay_readings.setText(str(self.Synapse1Decay/1000))
-                    self.ui.Spikeling_Synapse1_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('SD11 ' + str(self.Synapse1Decay) + '\n')
-            else:
-                    self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(False)
-                    self.ui.Spikeling_Synapse1_Decay_slider.setValue(995)
-                    self.ui.Spikeling_Synapse1_Decay_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('SD10' + '\n')
-
-    def GetSynapticDecay1(self):
-            global serial_port
+        global serial_port
+        if self.ui.Synapse1Decay_toggleButton.isChecked():
+            self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(True)
             self.Synapse1Decay = self.ui.Spikeling_Synapse1_Decay_slider.value()
             self.ui.Spikeling_Synapse1_Decay_readings.setText(str(self.Synapse1Decay/1000))
             self.ui.Spikeling_Synapse1_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('SD11 ' + str(self.Synapse1Decay) + '\n')
+        else:
+            self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(False)
+            self.ui.Spikeling_Synapse1_Decay_slider.setValue(995)
+            self.ui.Spikeling_Synapse1_Decay_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('SD10' + '\n')
+
+    def GetSynapticDecay1(self):
+        global serial_port
+        self.Synapse1Decay = self.ui.Spikeling_Synapse1_Decay_slider.value()
+        self.ui.Spikeling_Synapse1_Decay_readings.setText(str(self.Synapse1Decay/1000))
+        self.ui.Spikeling_Synapse1_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('SD11 ' + str(self.Synapse1Decay) + '\n')
 
 
     # Synapse2Gain
     def ActivateSynapticGain2(self):
-            global serial_port
-            if self.ui.Synapse2_toggleButton.isChecked():
-                    self.ui.Spikeling_Synapse2_slider.setEnabled(True)
-                    self.Synapse2Gain = self.ui.Spikeling_Synapse2_slider.value()
-                    self.ui.Spikeling_Synapse2_readings.setText(str(self.Synapse2Gain))
-                    self.ui.Spikeling_Synapse2_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('SG21 ' + str(self.Synapse2Gain) + '\n')
-            else:
-                    self.ui.Spikeling_Synapse2_slider.setEnabled(False)
-                    self.ui.Spikeling_Synapse2_slider.setValue(0)
-                    self.ui.Spikeling_Synapse2_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('SG20' + '\n')
-
-    def GetSynapticGain2(self):
-            global serial_port
+        global serial_port
+        if self.ui.Synapse2_toggleButton.isChecked():
+            self.ui.Spikeling_Synapse2_slider.setEnabled(True)
             self.Synapse2Gain = self.ui.Spikeling_Synapse2_slider.value()
             self.ui.Spikeling_Synapse2_readings.setText(str(self.Synapse2Gain))
             self.ui.Spikeling_Synapse2_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('SG21 ' + str(self.Synapse2Gain) + '\n')
+        else:
+            self.ui.Spikeling_Synapse2_slider.setEnabled(False)
+            self.ui.Spikeling_Synapse2_slider.setValue(0)
+            self.ui.Spikeling_Synapse2_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('SG20' + '\n')
+
+    def GetSynapticGain2(self):
+        global serial_port
+        self.Synapse2Gain = self.ui.Spikeling_Synapse2_slider.value()
+        self.ui.Spikeling_Synapse2_readings.setText(str(self.Synapse2Gain))
+        self.ui.Spikeling_Synapse2_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('SG21 ' + str(self.Synapse2Gain) + '\n')
 
 
     # Synapse1Decay
     def ActivateSynapseDecay2(self):
-            global serial_port
-            if self.ui.Synapse2Decay_toggleButton.isChecked():
-                    self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(True)
-                    self.Synapse2Decay = self.ui.Spikeling_Synapse2_Decay_slider.value()
-                    self.ui.Spikeling_Synapse2_Decay_readings.setText(str(self.Synapse2Decay/1000))
-                    self.ui.Spikeling_Synapse2_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
-                    if serial_port.is_open:
-                        serial_port.write('SD21 ' + str(self.Synapse2Decay) + '\n')
-            else:
-                    self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(False)
-                    self.ui.Spikeling_Synapse2_Decay_slider.setValue(990)
-                    self.ui.Spikeling_Synapse2_Decay_readings.setText("")
-                    if serial_port.is_open:
-                            serial_port.write('SD20' + '\n')
-
-    def GetSynapticDecay2(self):
-            global serial_port
+        global serial_port
+        if self.ui.Synapse2Decay_toggleButton.isChecked():
+            self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(True)
             self.Synapse2Decay = self.ui.Spikeling_Synapse2_Decay_slider.value()
             self.ui.Spikeling_Synapse2_Decay_readings.setText(str(self.Synapse2Decay/1000))
             self.ui.Spikeling_Synapse2_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('SD21 ' + str(self.Synapse2Decay) + '\n')
+        else:
+            self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(False)
+            self.ui.Spikeling_Synapse2_Decay_slider.setValue(990)
+            self.ui.Spikeling_Synapse2_Decay_readings.setText("")
+            if serial_port.is_open:
+                serial_port.write('SD20' + '\n')
+
+    def GetSynapticDecay2(self):
+        global serial_port
+        self.Synapse2Decay = self.ui.Spikeling_Synapse2_Decay_slider.value()
+        self.ui.Spikeling_Synapse2_Decay_readings.setText(str(self.Synapse2Decay/1000))
+        self.ui.Spikeling_Synapse2_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
+        if serial_port.is_open:
+            serial_port.write('SD21 ' + str(self.Synapse2Decay) + '\n')
 
 
     def SelectNeuronMode(self):

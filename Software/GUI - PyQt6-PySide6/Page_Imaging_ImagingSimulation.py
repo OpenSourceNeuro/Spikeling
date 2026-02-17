@@ -5,7 +5,8 @@
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import QSize, QSignalBlocker
 
-import Settings, NavigationButtons
+import Parameters_Settings as Settings
+import Parameters_NavigationButtons as NavigationButtons
 
 
 

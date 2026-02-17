@@ -9,7 +9,7 @@ from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtCore import QObject, Signal, QByteArray, QMutex, QMutexLocker
 from collections import deque
 
-import Settings
+import Parameters_Settings
 import struct
 
 # Binary sample packet from Spikeling firmware
@@ -19,7 +19,7 @@ SPIKELING_PACKET_SIZE = 16  # 8 * int16 = 16 bytes
 SPIKELING_FRAME_SIZE = SPIKELING_HEADER_LEN + SPIKELING_PACKET_SIZE
 V_SCALE = 100.0
 I_SCALE = 100.0
-SYN_V_SCALE = 1.0
+SYN_V_SCALE = 100.0
 
 class SerialPortManager(QObject):
     """
@@ -50,7 +50,7 @@ class SerialPortManager(QObject):
         super().__init__()
         self._serial_port = QSerialPort()
         self._port_name = ""
-        self._baud_rate = Settings.BaudRate
+        self._baud_rate = Parameters_Settings.BaudRate
         self._buffer = bytearray()
         self._data_buffer = deque(maxlen=1000)  # Buffer for storing processed data
         self._mutex = QMutex()  # Mutex for thread-safe access to the data buffer
