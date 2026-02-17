@@ -39219,7 +39219,7 @@
 		(at 187.5 91.33 -90)
 		(property "Reference" "U5"
 			(at -0.112 -4.613 90)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "2043238d-9b70-4c42-86d0-a205a671ab88")
 			(effects
 				(font
