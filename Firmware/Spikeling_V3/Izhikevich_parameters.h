@@ -88,12 +88,7 @@ inline constexpr const IzhikevichParams& getIzhikevichParams(IzhikevichModel mod
   return izhikevich[static_cast<std::size_t>(model)];
 }
 
-inline constexpr IzhikevichModel clampToModel(std::size_t index) {
-  if (index >= IzhikevichModelCount) {
-    index = 0; 
-  }
-  return static_cast<IzhikevichModel>(index);
-}
+
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                    ---  The Izhikevich Model  ---                                     */ 

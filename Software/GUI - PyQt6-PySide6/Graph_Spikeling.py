@@ -17,7 +17,7 @@ import pandas as pd
 import struct
 from decimal import Decimal
 
-import Settings
+import Parameters_Settings as Settings
 from serial_manager import serial_manager
 # Use the global serial_manager instance
 serial_port = serial_manager

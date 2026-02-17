@@ -9,8 +9,8 @@ import collections
 import numpy as np
 import pandas as pd
 
-import Settings
-import Imaging_graph
+import Parameters_Settings as Settings
+import Graph_Imaging
 
 
 Emulator_downsampling = 10
@@ -153,23 +153,45 @@ def EmulatorPlot(self):
 
         else:
             # Fallback to internal square-pulse generator
+            # Read UI
             self.Emulator_StimulusStrength_Value = self.ui.Emulator_StimStrSlider.value()
-            self.Emulator_StimulusFrequency_Value = self.ui.Emulator_StimFre_slider.value() * (-1)
+            self.Emulator_StimulusFrequency_Value = -self.ui.Emulator_StimFre_slider.value()  # match stim.freq direction
 
-            if self.Emulator_StimCounter < self.Emulator_StimSteps / 2:
+            # Constrain like the firmware effectively does (freq comes from ADC mapping)
+            self.Emulator_StimulusFrequency_Value = max(-100, min(100, int(self.Emulator_StimulusFrequency_Value)))
+
+            # ---- Trigger behavior (matches firmware trigger_enable logic) ----
+            # Firmware pulses trigger = 1 for one iteration at the *beginning* of the new period.
+            if getattr(self, "Emulator_StimTriggerEnable", False):
+                self.Emulator_Trigger = 1
+                self.Emulator_StimTriggerEnable = False
+            else:
+                self.Emulator_Trigger = 0
+
+            # ---- 50% duty waveform (matches stim.counter < stim.steps/2) ----
+            half_period = self.Emulator_StimSteps // 2  # integer division like C++ int/int
+            if self.Emulator_StimCounter < half_period:
                 self.Emulator_Stimulus_Data = self.Emulator_StimulusStrength_Value
             else:
                 self.Emulator_Stimulus_Data = 0.0
 
+            # Increment counter (matches stim.counter++)
             self.Emulator_StimCounter += 1
 
+            # Period rollover (matches if (counter >= steps) { counter=0; trigger_enable=true; steps = ... })
             if self.Emulator_StimCounter >= self.Emulator_StimSteps:
                 self.Emulator_StimCounter = 0
-                self.Emulator_Trigger = 1
-                self.Emulator_StimSteps = np.around(
-                    self.Emulator_Stim_DutyCycle
-                    + (self.Emulator_StimulusFrequency_Value * self.Emulator_Stim_DutyCycle / 100)
+                self.Emulator_StimTriggerEnable = True
+
+                s = (self.Emulator_Stim_DutyCycle
+                     + (self.Emulator_StimulusFrequency_Value * self.Emulator_Stim_DutyCycle) / 100.0
+                     + self.Emulator_Stim_DutyCycle_Min
                 )
+
+                self.Emulator_StimSteps = int(s)
+
+                if self.Emulator_StimSteps < 1:
+                    self.Emulator_StimSteps = 1
 
         #Generate TotalCurrent Input
         ################################################################
@@ -617,7 +639,8 @@ def SetInitParameters(self):
     self.Emulator_Stimulus_Data = 0.0
     self.Emulator_StimCounter = 0
     self.Emulator_StimSteps = 1000
-    self.Emulator_Stim_DutyCycle = 100
+    self.Emulator_Stim_DutyCycle = 500
+    self.Emulator_Stim_DutyCycle_Min = 10
 
     self.Emulator_NoiseSlider = 0.0
     self.Emulator_Noise_Value = 0.0

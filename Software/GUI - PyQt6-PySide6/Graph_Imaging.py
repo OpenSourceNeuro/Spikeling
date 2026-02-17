@@ -32,8 +32,8 @@ import collections
 from decimal import Decimal
 from typing import Tuple
 
-import Settings
-import GECI_parameters
+import Parameters_Settings as Settings
+import Parameters_GECI
 from serial_manager import serial_manager
 
 
@@ -418,7 +418,8 @@ class ImagingGraph(QObject):
             ui.Imaging_Fluorescence3_Checkbox,
         ]
 
-        n_disp = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL))
+        n_disp = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL / 2))
+
 
         ys = []
         offset = float(self._imaging_params.get("FluoOffset", 0.0)) if self.use_dff else 0.0
@@ -463,7 +464,7 @@ class ImagingGraph(QObject):
 
     def apply_indicator_preset(self, name: str, update_ui: bool = True) -> None:
         """
-        Load a GECI preset from GECI_parameters.GECI.
+        Load a GECI preset from Parameters_GECI.GECI.
 
         Expected preset keys:
           - Kd_uM
@@ -475,7 +476,7 @@ class ImagingGraph(QObject):
     Note: cellular calcium kinetics are controlled by the CalciumRise/CalciumDecay sliders
           and are NOT part of the GECI preset.
         """
-        geci = GECI_parameters.GECI
+        geci = Parameters_GECI.GECI
         preset = geci.get(name) or geci.get("Generic")
         if preset is None:
             raise ValueError("GECI preset dictionary has no 'Generic' fallback.")
@@ -529,7 +530,7 @@ class ImagingGraph(QObject):
 
     def SelectGECI(self):
         name = self.ui.Imaging_GECI_comboBox.currentText()  # e.g. "Generic"
-        p = GECI_parameters.GECI.get(name, GECI_parameters.GECI["Generic"])
+        p = Parameters_GECI.GECI.get(name, Parameters_GECI.GECI["Generic"])
 
         Kd_uM = float(p["Kd_uM"])
         hill_n = float(p["hill_n"])

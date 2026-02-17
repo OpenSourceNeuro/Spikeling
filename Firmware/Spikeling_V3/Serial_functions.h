@@ -1,6 +1,6 @@
 #pragma once     
 #include "General_settings.h"
-
+#include <math.h>
 
 
 inline SerialCommand SCmd;
@@ -23,16 +23,17 @@ static inline bool readNextInt(int &out) {
 }
 
 
-static inline void setFloatParam(bool &enableFlag, float &param, float scale = 1.0f) {
-  enableFlag = false;
+
+static inline void setFloatParam(bool &usePotFlag, float &param, float scale = 1.0f) {
+  usePotFlag = false;
   float val;
   if (readNextFloat(val)) {
     param = val * scale;
   }
 }
 
-static inline void setIntParam(bool &enableFlag, int &param) {
-  enableFlag = false;
+static inline void setIntParam(bool &usePotFlag, int &param) {
+  usePotFlag = false;
   int val;
   if (readNextInt(val)) {
     param = val;
@@ -44,46 +45,43 @@ static inline void setIntParam(bool &enableFlag, int &param) {
 inline void SetRefreshRate(){
   int val_us;
   if (readNextInt(val_us)) {
-    if (val_us < 999)  val_us = 1000;   // 1000 µs minimum
-    if (val_us > 1000000) val_us = 1000000; // 1 s max
     timing.step_us  = (uint32_t)(val_us);
   }
 }
 
-inline void SetNeuronModel(IzhikevichModel model) {
-  currentModel = model;
-  const auto &p = getIzhikevichParams(model);
-  neuron.a      = p.a;
-  neuron.b      = p.b;
-  neuron.c      = p.c;
-  neuron.d      = p.d;
-  neuron.v_rest = p.v_rest;
-  neuron.v      = neuron.v_rest;
-  neuron.u      = neuron.b * neuron.v;
+
+
+inline void NeuronCustom() {
+  float a, b, c, d; 
+  // Read required parameters
+  if (!readNextFloat(a)) return;
+  if (!readNextFloat(b)) return;
+  if (!readNextFloat(c)) return;
+  if (!readNextFloat(d)) return;
+  // Apply custom parameters
+  neuron.a = a;
+  neuron.b = b;
+  neuron.c = c;
+  neuron.d = d;
+
+  // Reset neuron state to a consistent initial condition
+  neuron.v = neuron.v_rest;
+  neuron.u = neuron.b * neuron.v;              
 }
 
-inline void NeuronOpening() {
-  SetNeuronModel(IzhikevichModel::TonicSpiking);
-}
 
-inline void NeuronMode() {
-  int idx;
-  if (readNextInt(idx)) {
-    auto model = clampToModel(static_cast<std::size_t>(idx));
-    SetNeuronModel(model);
-  }
-}
 
 inline void StimFre_on(){
-  setIntParam(stim.frequency_enable, stim.freq);
+  setIntParam(pot.use_stimfrequency_pot, stim.freq);
 }
 inline void StimFre_off(){
-  stim.frequency_enable = true;
+  pot.use_stimfrequency_pot = true;
 }
+
 
 
 inline void StimStr_on(){
-  stim.strength_enable = false;
+  pot.use_stimstrength_pot = false;
   int val;
   if (readNextInt(val)) {
     stim.str_digital = val;
@@ -91,16 +89,18 @@ inline void StimStr_on(){
   }
 }
 inline void StimStr_off(){
-  stim.strength_enable = true;
+  pot.use_stimstrength_pot = true;
 }
+
 
 
 inline void StimCus_on(){
-  setIntParam(stim.custom_enable, stim.value_custom);
+  setIntParam(stim.custom_disable, stim.value_custom);
 }
 inline void StimCus_off(){
-  stim.custom_enable = true;
+  stim.custom_disable = true; // Exit custom mode -> return to pot/square mode
 }
+
 
 
 inline void Serial_Trigger(){
@@ -108,12 +108,14 @@ inline void Serial_Trigger(){
 }
 
 
+
 inline void PDGain_on(){
-  setFloatParam(PD.gain_enable, PD.gain, 0.1f);
+  setFloatParam(pot.use_photodiode_pot, PD.gain, 0.1f);
 }
 inline void PDGain_off(){
-  PD.gain_enable = true;
+  pot.use_photodiode_pot = true;
 }
+
 
 
 inline void PDDecay_on(){
@@ -124,6 +126,7 @@ inline void PDDecay_off(){
 }
 
 
+
 inline void PDRecovery_on(){
   setFloatParam(PD.recovery_enable, PD.recovery);
 }
@@ -132,28 +135,90 @@ inline void PDRecovery_off(){
 }
 
 
-inline void IC_on(){
-  setFloatParam(IC.enable, IC.current_clamp);
+
+inline void patch_on() {
+  float val;
+  if (!readNextFloat(val)) return;
+
+  if (clampMode == ClampMode::VoltageClamp) {
+    // In V-clamp, PC1 sets the holding potential (Vhold). The "Current In" knob is ignored as an injected current.
+    const float old_hold = patch.v_hold;
+
+    pot.use_patch_pot = false;  // GUI overrides the voltage-command potentiometer in VC mode
+    patch.v_hold = val;
+    patch.v_cmd  = constrain(patch.v_hold + patch.v_step, neuron.Vm_min, neuron.Vm_peak);  // keep v_cmd coherent immediately
+    patch.current_input = 0.0f;  // No disturbance current labs: ensure current injection is not active in VC mode
+
+    // Only reset PI history if the command actually changed (prevents "strobing" the integrator if GUI re-sends same value).
+    if (fabsf(patch.v_hold - old_hold) > 0.05f) {
+      patch.e_int   = 0.0f;
+      patch.I_clamp = 0.0f;
+    }
+    return;
+  } 
+  else {
+    pot.use_patch_pot = false;                      // GUI overrides the current-command potentiometer in CC mode
+    patch.current_clamp = val;
+  }
 }
-inline void IC_off(){
-  IC.enable = true;
+inline void patch_off() {
+  pot.use_patch_pot = true;    // re-enable voltage pot (VC hold pot)
 }
+
+
+
+inline void VClampMode(){
+  int val;
+  if (readNextInt(val)) {
+    setClampMode(val ? ClampMode::VoltageClamp : ClampMode::CurrentClamp);
+  }
+}
+
+inline void VPID_set(){
+  float kp;
+  if (readNextFloat(kp)) patch.Kp = kp;
+  float ki;
+  if (readNextFloat(ki)) patch.Ki = ki;
+}
+
+inline void VILIM_set(){
+  float mn, mx;
+  if (readNextFloat(mn) && readNextFloat(mx)) {
+    patch.I_min = mn;
+    patch.I_max = mx;
+  }
+}
+
+inline void VSpan_set(){
+  float span;
+  if (readNextFloat(span)) {
+    patch.v_cmd_span = span;
+  }
+}
+
+inline void VClampReset(){
+  patch.e_int = 0.0f;
+  patch.I_clamp = 0.0f;
+}
+
 
 
 inline void Noise_on(){
-  setFloatParam(noise.enable, noise.current);
+  setFloatParam(pot.use_noise_pot, noise.current);
 }
 inline void Noise_off(){
-  noise.enable = true;
+  pot.use_noise_pot = true;
 }
+
 
 
 inline void Syn1Gain_on(){
-  setFloatParam(syn1.gain_enable, syn1.gain, 0.25f);
+  setFloatParam(syn1.use_syn_pot, syn1.gain, 0.25f);
 }
 inline void Syn1Gain_off(){
-  syn1.gain_enable = true;
+  syn1.use_syn_pot = true;
 }
+
 
 
 inline void Syn1Decay_on(){
@@ -164,12 +229,14 @@ inline void Syn1Decay_off(){
 }
 
 
+
 inline void Syn2Gain_on(){
-  setFloatParam(syn2.gain_enable, syn2.gain, 0.25f);
+  setFloatParam(syn2.use_syn_pot, syn2.gain, 0.25f);
 }
 inline void Syn2Gain_off(){
-  syn2.gain_enable = true;
+  syn2.use_syn_pot = true;
 }
+
 
 
 inline void Syn2Decay_on(){
@@ -180,27 +247,30 @@ inline void Syn2Decay_off(){
 }
 
 
-inline void Buzzer_on(){
-  Buzzer_enable = true;
-}
 
+inline void Buzzer_on(){
+  spike.Buzzer_enable = true;
+}
 inline void Buzzer_off(){
-  Buzzer_enable = false;
+  spike.Buzzer_enable = false;
   digitalWrite(pins.gpio.spike, LOW);
 }
 
 
-inline void LED_on(){
-  LED_enable = true;
-}
 
+inline void LED_on(){
+  spike.LED_enable = true;
+}
 inline void LED_off(){
-  LED_enable = false;
+  spike.LED_enable = false;
   ledcWrite(pins.gpio.led_r, 0);
   ledcWrite(pins.gpio.led_g, 0);
   ledcWrite(pins.gpio.led_b, 0);
-  
+  ledcWrite(pins.gpio.led_stim_r, 0);                                         
+  ledcWrite(pins.gpio.led_stim_g, 0);                                          
+  ledcWrite(pins.gpio.led_stim_b, 0);                                          
 }
+
 
 
 inline void Connected(){
@@ -211,15 +281,17 @@ inline void Connected(){
 }
 
 
+
 inline void Unrecognized(const char *cmd) {
   Serial.print("Unknown command: ");
   Serial.println(cmd);
 }
 
 
+
 inline void SerialFunctions(){
   SCmd.addCommand("DT",SetRefreshRate);
-  SCmd.addCommand("NEU",NeuronMode);
+  SCmd.addCommand("NE", NeuronCustom); 
   SCmd.addCommand("FR1",StimFre_on);
   SCmd.addCommand("FR0",StimFre_off);
   SCmd.addCommand("ST1",StimStr_on);
@@ -233,8 +305,13 @@ inline void SerialFunctions(){
   SCmd.addCommand("PD0",PDDecay_off);
   SCmd.addCommand("PR1",PDRecovery_on);
   SCmd.addCommand("PR0",PDRecovery_off);
-  SCmd.addCommand("IC1",IC_on);
-  SCmd.addCommand("IC0",IC_off);
+  SCmd.addCommand("PC1",patch_on);
+  SCmd.addCommand("PC0",patch_off);
+  SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
+  SCmd.addCommand("VPID",VPID_set);         
+  SCmd.addCommand("VIL",VILIM_set);        
+  SCmd.addCommand("VSP",VSpan_set);         
+  SCmd.addCommand("VRS",VClampReset);       
   SCmd.addCommand("NO1",Noise_on);
   SCmd.addCommand("NO0",Noise_off);
   SCmd.addCommand("SG11",Syn1Gain_on);
