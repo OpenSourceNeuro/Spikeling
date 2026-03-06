@@ -3,7 +3,7 @@
 #                          Libraries import                            #
 
 from PySide6.QtWidgets import QFileDialog
-from PySide6.QtCore import QSize, QSignalBlocker
+from PySide6.QtCore import QSize
 
 import Parameters_Settings as Settings
 import Parameters_NavigationButtons as NavigationButtons
@@ -16,6 +16,10 @@ class Imaging():
         self.parent = parent
         self.ui = parent.ui
 
+
+    # ------------------------------------------------------------------
+    # Page selection
+    # ------------------------------------------------------------------
     def ShowPage(self):
         self.ui.Imaging_rightMenuContainer.setMinimumSize(QSize(NavigationButtons.spikerightMenu_max, 16777215))
         self.ui.Imaging_Oscilloscope_widget.setBackground(Settings.DarkSolarized[0])
@@ -240,7 +244,7 @@ class Imaging():
             self.ui.Imaging_FrameRate_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
         else:
             self.ui.Imaging_FrameRate_Slider.setEnabled(False)
-            self.ui.Imaging_FrameRate_Slider.setValue(10)
+            self.ui.Imaging_FrameRate_Slider.setValue(100)
             self.ui.Imaging_FrameRate_Readings.setText('')
 
     def GetFrameRate(self):

@@ -1300,22 +1300,166 @@ class ImagingGraph(QObject):
         """
         Manage record toggle and export on stop.
 
-        Behavior:
-          - When the record button transitions from checked -> unchecked, export CSV and clear.
-          - When checked, record_flag is True and samples are appended in _record_sample().
-        """
-        if (not self.ui.Imaging_DataRecording_Record_pushButton.isChecked()) and self.record_flag:
-            # Stop event -> export and reset
-            self._export_csv()
-            self.record_flag = False
-            for k in self._rec:
-                self._rec[k].clear()
+        Updated behavior (keeps original architecture + CSV output):
+          - Still writes the original sample-rate CSV at: <base>.csv
+          - Additionally writes a frame-rate CSV at: <base>_frames.csv
+          - Additionally writes metadata JSON at: <base>_meta.json
 
-        if self.ui.Imaging_DataRecording_Record_pushButton.isChecked():
+        Where <base> comes from self.ui.Imaging_SelectedFolderLabel.text()
+        (typically "folder/filename" without extension).
+        """
+        checked = bool(self.ui.Imaging_DataRecording_Record_pushButton.isChecked())
+
+        # -------------------------
+        # Start edge: OFF -> ON
+        # -------------------------
+        if checked and (not self.record_flag):
             self.record_flag = True
 
+            # Ensure sample buffers exist + clear (keeps original columns)
+            if not hasattr(self, "_rec") or not isinstance(self._rec, dict):
+                self._rec = {}
+
+            for k in [
+                "t_ms", "stim", "trig",
+                "vm1", "vm2", "vm3",
+                "ca1_uM", "ca2_uM", "ca3_uM",
+                "F1", "F2", "F3",
+                # new (mapping)
+                "frame_idx", "frame_t_ms"
+            ]:
+                self._rec.setdefault(k, [])
+                self._rec[k].clear()
+
+            # Frame-rate recording buffers (new)
+            self._rec_frames = {
+                "frame_idx": [],
+                "t_frame_ms": [],
+                "sample_idx": [],
+                "F1": [], "F2": [], "F3": [],
+            }
+
+            # Recording state for frame mapping
+            self._rec_frame_idx = -1
+            self._rec_last_frame_time = None
+
+            # Snapshot metadata at start (kept lightweight + JSON-safe)
+            try:
+                import datetime
+                start_iso = datetime.datetime.now().isoformat(timespec="seconds")
+            except Exception:
+                start_iso = None
+
+            def _json_safe(v):
+                # Convert numpy scalars etc. to Python types
+                try:
+                    import numpy as _np
+                    if isinstance(v, (_np.generic,)):
+                        return v.item()
+                except Exception:
+                    pass
+                if isinstance(v, (float, int, str, bool)) or v is None:
+                    return v
+                # last resort
+                try:
+                    return float(v)
+                except Exception:
+                    return str(v)
+
+            self._rec_meta = {
+                "recording_start_iso": start_iso,
+                "sample_interval_ms_fallback": float(SAMPLE_INTERVAL),
+                "spike_threshold_mV": float(getattr(self, "SpikeThreshold", -20.0)),
+                "spike_refractory_ms": float(getattr(self, "SpikeRefractory_ms", 3.0)),
+                "indicator_name": str(getattr(self, "indicator_name", "Generic")),
+                "fluorescence_model": str(getattr(self, "fluorescence_model", "linear")),
+                "imaging_params": {k: _json_safe(v) for k, v in getattr(self, "_imaging_params", {}).items()},
+                "columns": {
+                    "samples_csv": [
+                        "Time (ms)", "Stim", "Trigger",
+                        "Vm1 (mV)", "Vm2 (mV)", "Vm3 (mV)",
+                        "Ca1 (uM)", "Ca2 (uM)", "Ca3 (uM)",
+                        "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)",
+                        "FrameIdx", "FrameTime (ms)"
+                    ],
+                    "frames_csv": [
+                        "FrameIdx", "FrameTime (ms)", "NearestSampleIdx",
+                        "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)"
+                    ]
+                }
+            }
+
+            return  # done for this call
+
+        # -------------------------
+        # Stop edge: ON -> OFF
+        # -------------------------
+        if (not checked) and self.record_flag:
+            self._export_csv()
+            self.record_flag = False
+
+            # Clear buffers to free memory
+            try:
+                for k in self._rec:
+                    self._rec[k].clear()
+            except Exception:
+                pass
+            try:
+                for k in self._rec_frames:
+                    self._rec_frames[k].clear()
+            except Exception:
+                pass
+
+            self._rec_frame_idx = -1
+            self._rec_last_frame_time = None
+            return
+
+        # No edge: do nothing
+
     def _record_sample(self, t_ms: float) -> None:
-        """Append the latest sample to recording buffers (cheap list appends)."""
+        """
+        Append the latest sample to recording buffers.
+
+        New: also records a clean frame-rate table + per-sample mapping to frame index/time,
+        while preserving the original per-sample columns (including held fluorescence).
+        """
+        # -------------------------
+        # 1) Detect if a new frame was committed by _update_model()
+        # -------------------------
+        current_frame_time = None
+        if (self.FrameTime_buffer is not None) and (len(self.FrameTime_buffer) > 0):
+            try:
+                current_frame_time = float(self.FrameTime_buffer[-1])
+            except Exception:
+                current_frame_time = None
+
+        # If we see a new frame time, append ONE frame row and advance frame index
+        if (current_frame_time is not None) and (current_frame_time != self._rec_last_frame_time):
+            self._rec_last_frame_time = current_frame_time
+            self._rec_frame_idx += 1
+
+            # "Nearest sample" is the sample row that will be appended now
+            nearest_sample_idx = len(self._rec["t_ms"])
+
+            # Frame CSV buffers
+            if not hasattr(self, "_rec_frames"):
+                self._rec_frames = {"frame_idx": [], "t_frame_ms": [], "sample_idx": [], "F1": [], "F2": [], "F3": []}
+
+            self._rec_frames["frame_idx"].append(int(self._rec_frame_idx))
+            self._rec_frames["t_frame_ms"].append(float(current_frame_time))
+            self._rec_frames["sample_idx"].append(int(nearest_sample_idx))
+            self._rec_frames["F1"].append(float(self.FluoData[0]))
+            self._rec_frames["F2"].append(float(self.FluoData[1]))
+            self._rec_frames["F3"].append(float(self.FluoData[2]))
+
+        # For samples, map to the latest known frame (or -1/NaN if none yet)
+        frame_idx_for_sample = int(getattr(self, "_rec_frame_idx", -1))
+        frame_t_for_sample = float(self._rec_last_frame_time) if (self._rec_last_frame_time is not None) else float(
+            "nan")
+
+        # -------------------------
+        # 2) Append sample row (original columns preserved)
+        # -------------------------
         self._rec["t_ms"].append(float(t_ms))
         self._rec["stim"].append(float(self.StimData))
         self._rec["trig"].append(float(self.TriggerData))
@@ -1328,16 +1472,44 @@ class ImagingGraph(QObject):
         self._rec["ca2_uM"].append(float(self.CalciumData[1]))
         self._rec["ca3_uM"].append(float(self.CalciumData[2]))
 
+        # Kept for backward compatibility: held between frames by design
         self._rec["F1"].append(float(self.FluoData[0]))
         self._rec["F2"].append(float(self.FluoData[1]))
         self._rec["F3"].append(float(self.FluoData[2]))
 
+        # New mapping columns
+        self._rec["frame_idx"].append(frame_idx_for_sample)
+        self._rec["frame_t_ms"].append(frame_t_for_sample)
+
     def _export_csv(self):
-        """Write recorded imaging data to CSV."""
-        if len(self._rec["t_ms"]) == 0:
+        """
+        Write recorded imaging data to CSV.
+        """
+        if (not hasattr(self, "_rec")) or (len(self._rec.get("t_ms", [])) == 0):
             return
 
-        df = pd.DataFrame({
+        base = str(self.ui.Imaging_SelectedFolderLabel.text()).strip()
+        if not base:
+            return
+
+        # If user typed ".csv" already, strip it to avoid ".csv.csv"
+        if base.lower().endswith(".csv"):
+            base = base[:-4]
+
+        # Build paths robustly
+        try:
+            from pathlib import Path
+            base_path = Path(base)
+            if str(base_path.parent) not in ("", "."):
+                base_path.parent.mkdir(parents=True, exist_ok=True)
+            sample_csv_path = str(base_path.with_suffix(".csv"))
+
+        except Exception:
+            # Fallback
+            sample_csv_path = f"{base}.csv"
+
+        # 1) Sample-rate CSV
+        df_samples = pd.DataFrame({
             "Time (ms)": self._rec["t_ms"],
             "Stim": self._rec["stim"],
             "Trigger": self._rec["trig"],
@@ -1350,10 +1522,12 @@ class ImagingGraph(QObject):
             "F1 (a.u.)": self._rec["F1"],
             "F2 (a.u.)": self._rec["F2"],
             "F3 (a.u.)": self._rec["F3"],
+            "FrameIdx": self._rec.get("frame_idx", [-1] * len(self._rec["t_ms"])),
+            "FrameTime (ms)": self._rec.get("frame_t_ms", [float("nan")] * len(self._rec["t_ms"])),
         })
+        df_samples.to_csv(sample_csv_path, index=False)
 
-        path = f"{self.ui.Imaging_SelectedFolderLabel.text()}.csv"
-        df.to_csv(path, index=False)
+
 
     # -------------------------------------------------------------------------
     # UI Helpers

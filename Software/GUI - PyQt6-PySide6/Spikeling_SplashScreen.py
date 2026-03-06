@@ -27,13 +27,13 @@ class Ui_SplashScreen(object):
         SplashScreen.resize(1314, 759)
         SplashScreen.setStyleSheet(u"QFrame{\n"
 "	background-color: rgb(0, 30, 38);\n"
-"	color: rgb(147, 161, 161);\n"
+"	color: rgb(190, 205, 205);\n"
 "	border-radius: 25px\n"
 "}\n"
 "\n"
 "QProgressBar{\n"
 "	background-color: rgb(0, 43, 54);\n"
-"	color: rgb(147, 161, 161);\n"
+"	color: rgb(190, 205, 205);\n"
 "	border-style: none;\n"
 "	border-radius: 10px;\n"
 "	text-align: center;\n"
@@ -243,7 +243,7 @@ class Ui_SplashScreen(object):
 #if QT_CONFIG(whatsthis)
         self.label_3.setWhatsThis(QCoreApplication.translate("SplashScreen", u"<html><head/><body><p align=\"center\"><span style=\" font-size:48pt; color:#93a1a1;\">Spikeling </span><span style=\" font-size:28pt; color:#93a1a1;\">v2.2</span></p><p align=\"center\"><span style=\" font-size:18pt; color:#93a1a1;\">a Hardware implementation of spiking neurons</span></p><p align=\"center\"><span style=\" font-size:18pt; color:#93a1a1;\">for neuroscience teaching and outreach</span></p></body></html>", None))
 #endif // QT_CONFIG(whatsthis)
-        self.label_3.setText(QCoreApplication.translate("SplashScreen", u"<html><head/><body><p align=\"center\"><span style=\" font-size:72pt; color:#93a1a1;\">Spikeling </span><span style=\" font-size:16pt; color:#93a1a1;\">v3.0</span></p><p align=\"center\"><span style=\" font-size:18pt; color:#93a1a1;\">A hardware implementation of spiking neurons for neuroscience teaching and outreach</span></p></body></html>", None))
+        self.label_3.setText(QCoreApplication.translate("SplashScreen", u"<html><head/><body><p align=\"center\"><span style=\" font-size:72pt; color:#becdcd;\">Spikeling </span><span style=\" font-size:16pt; color:#becdcd;\">v3.1</span></p><p align=\"center\"><span style=\" font-size:18pt; color:#becdcd;\">A hardware implementation of spiking neurons for neuroscience teaching and outreach</span></p></body></html>", None))
         self.Status_Label.setText(QCoreApplication.translate("SplashScreen", u"Welcome to Spikeling GUI", None))
         self.label_2.setText(QCoreApplication.translate("SplashScreen", u"<html><head/><body><p><span style=\" font-size:10pt;\">This project is licensed under the GNU General Public License v3.0</span></p></body></html>", None))
         self.Sussex_Logo.setText("")

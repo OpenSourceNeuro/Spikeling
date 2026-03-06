@@ -67,6 +67,8 @@ class SpikelingGraph(QObject):
         self.df_Stim = None
         self.df_yStim = None
 
+        self._cus_prev_enabled = False
+
         # Timer for GUI updates
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_plot)
@@ -166,7 +168,7 @@ class SpikelingGraph(QObject):
             for i, v in enumerate(values):
                 self.spikeling_data[i + 1].append(v)
 
-
+        self.step_custom_stimulus_on_packet()
 
     def update_plot(self):
         """Main loop: called periodically by QTimer."""
@@ -174,7 +176,7 @@ class SpikelingGraph(QObject):
             #self.buff_data() # Data are already pushed into databuffers in on_data_received
             self.save_plot_data()
             self.plot_curve()
-            self.handle_custom_stimulus()
+            #self.handle_custom_stimulus()
             self.handle_noise()
         except Exception as e:
             print(f"Error in update_plot: {e}")
@@ -540,6 +542,43 @@ class SpikelingGraph(QObject):
 # Handlers
 # -------------------------------------------------------------------------
 
+    def step_custom_stimulus_on_packet(self):
+        """Advance custom stimulus exactly once per received data packet."""
+        # basic guards
+        if not hasattr(self.ui, "StimCus_toggleButton"):
+            return
+        if not serial_manager.is_open:
+            return
+
+        # IMPORTANT: pick ONE place where the waveform lives
+        # Prefer self.df_yStim (it exists in __init__), fall back to ui.df_yStim if you truly use that elsewhere.
+        y = self.df_yStim
+        if y is None and hasattr(self.ui, "df_yStim"):
+            y = self.ui.df_yStim
+
+        enabled = (self.ui.StimCus_toggleButton.isChecked() and y is not None and len(y) > 0)
+
+        # edge: OFF -> ON
+        if enabled and not self._cus_prev_enabled:
+            self.stim_counter = 0
+            serial_manager.write("TR\n")  # if you want a trigger pulse at start
+
+        # edge: ON -> OFF
+        if (not enabled) and self._cus_prev_enabled:
+            serial_manager.write("SC0\n")  # send once, no spamming
+
+        self._cus_prev_enabled = enabled
+        if not enabled:
+            return
+
+        # wrap + send one sample per packet
+        if self.stim_counter >= len(y):
+            self.stim_counter = 0
+            serial_manager.write("TR\n")
+
+        v = y[self.stim_counter]
+        serial_manager.write(f"SC1 {v}\n")
+        self.stim_counter += 1
     def handle_custom_stimulus(self):
         """
         Handle custom stimulus if enabled.

@@ -17,24 +17,24 @@ class Spikeling103():
 
     def ShowPage(self):
         self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_103)
-        self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setBackground(Settings.DarkSolarized[1])
 
     def LoadData(self):
         FileName = QFileDialog.getOpenFileName(caption='Select recording file to load',
                                                dir="./Recordings",
                                                filter='csv files (*.csv)'
                                                )
-        self.DataAnalysis_LoadData_label.setText(FileName[0])
+        self.Spikeling_DataAnalysis_LoadData_label.setText(FileName[0])
 
         Df = pd.read_csv(FileName[0])
         self.df_DataAnalysis_Timing = Df["Time (ms)"]
@@ -48,7 +48,7 @@ class Spikeling103():
         self.df_DataAnalysis_Trigger = Df["Trigger"]
 
     def DisplayRawData(self):
-        self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
+        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
 
         self.ui.df_DataAnalysis_x = self.ui.df_DataAnalysis_Timing
 
@@ -73,81 +73,81 @@ class Spikeling103():
         self.ui.df_DataAnalysis_y6 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
         self.ui.df_DataAnalysis_y6 = self.ui.df_DataAnalysis_Synapse2Input
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
                                                          pen=(Settings.DarkSolarized[3]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
                                                          pen=(Settings.DarkSolarized[4]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
                                                          pen=(Settings.DarkSolarized[9]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
                                                          pen=(Settings.DarkSolarized[7]))
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
                                                          pen=(Settings.DarkSolarized[6]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
                                                          pen=(Settings.DarkSolarized[7]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y5,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y5,
                                                          pen=(Settings.DarkSolarized[8]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
                                                          pen=(Settings.DarkSolarized[9]))
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_1.setLabel('left', 'Input Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_2.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.setLabel('left', 'Synaptic Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_0_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.setLabel('left', 'Input Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setLabel('left', 'Synaptic Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_1.setLabel('left', 'Synaptic Input (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget1_1_2.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.setLabel('left', 'Synaptic Input (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_1.setLabel('left', 'Synaptic Input (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget1_2_2.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.setLabel('left', 'Synaptic Input (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Spike_lineEdit.setEnabled(True)
-        self.ui.DataAnalysis_Spike_Display_pushButton.setEnabled(True)
+        self.ui.Spikeling_DataAnalysis_Spike_lineEdit.setEnabled(True)
+        self.ui.Spikeling_DataAnalysis_Spike_Display_pushButton.setEnabled(True)
 
     def FindSpike(self):
-        self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0)
+        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0)
 
-        self.spike_threshold = self.ui.DataAnalysis_Spike_lineEdit.text()
+        self.spike_threshold = self.ui.Spikeling_DataAnalysis_Spike_lineEdit.text()
 
         self.n_spikes0 = 0
         self.spike_points0 = []
@@ -169,7 +169,7 @@ class Spikeling103():
                 self.spike_points2.append(x)
                 self.n_spikes2 += 1
 
-        self.ui.DataAnalysis_Spike_result_label.setText(str(self.n_spikes0) + " spikes detected")
+        self.ui.Spikeling_DataAnalysis_Spike_result_label.setText(str(self.n_spikes0) + " spikes detected")
 
         # Compute spike rate
         self.ui.spike_rate0 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
@@ -189,18 +189,18 @@ class Spikeling103():
             self.ui.spike_rate2[self.spike_points2[x]:self.spike_points2[x + 1]] = self.current_rate2
 
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setBackground(Settings.DarkSolarized[1])
 
         self.spike_points0Plot = np.zeros(self.n_spikes0)
         self.spike_points1Plot = np.zeros(self.n_spikes1)
@@ -228,114 +228,114 @@ class Spikeling103():
         for i in range(len(self.spike_points2)):
             self.ui.ySpike2[i] = 45
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate0,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate0,
                                                            pen=(Settings.DarkSolarized[15]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.spike_points0Plot, y=self.ui.ySpike0, pen=None,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.spike_points0Plot, y=self.ui.ySpike0, pen=None,
                                                            symbol='o', symbolBrush=tuple(Settings.DarkSolarized[3]), symbolSize=3)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
                                                            pen=(Settings.DarkSolarized[3]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
                                                            pen=(Settings.DarkSolarized[4]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
 
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate1,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate1,
                                                            pen=(Settings.DarkSolarized[15]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.spike_points1Plot, y=self.ui.ySpike1, pen=None,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.spike_points1Plot, y=self.ui.ySpike1, pen=None,
                                                            symbol='o', symbolBrush=tuple(Settings.DarkSolarized[6]),symbolSize=3)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
                                                            pen=(Settings.DarkSolarized[6]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
                                                            pen=(Settings.DarkSolarized[7]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
 
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate2,
                                                            pen=(Settings.DarkSolarized[15]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.spike_points2Plot, y=self.ui.ySpike2, pen=None,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.spike_points2Plot, y=self.ui.ySpike2, pen=None,
                                                            symbol='o', symbolBrush=tuple(Settings.DarkSolarized[8]),symbolSize=3)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
                                                            pen=(Settings.DarkSolarized[8]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
                                                            pen=(Settings.DarkSolarized[9]))
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
                                                            pen=(Settings.DarkSolarized[5]))
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_2.setLabel('left', 'Input Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget2_0_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.setLabel('left', 'Input Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_2.setLabel('left', 'Spike Input (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget2_1_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.setLabel('left', 'Spike Input (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_2.setLabel('left', 'Spike Input (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.setLabel('left', 'Intensity')
-        self.ui.DataAnalysis_Oscilloscope_widget2_2_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.setLabel('left', 'Spike Input (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setLabel('left', 'Intensity')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setLabel('bottom', 'Time (ms)')
 
-        self.ui.DataAnalysis_Average_Display_pushButton.setEnabled(True)
-        self.ui.DataAnalysis_Average_Save_pushButton.setEnabled(True)
+        self.ui.Spikeling_DataAnalysis_Average_Display_pushButton.setEnabled(True)
+        self.ui.Spikeling_DataAnalysis_Average_Save_pushButton.setEnabled(True)
 
 
 
     def AverageTraces(self):
     # Display Average traces frame for the main neuron
-        self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0)
+        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0)
 
     # Set all plots background
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setBackground(Settings.DarkSolarized[1])
 
     # Determine single stimulus length
         self.stimulus_times = []
@@ -403,7 +403,7 @@ class Spikeling103():
 
 
     # Print the number of loops on app
-        self.ui.DataAnalysis_Average_label.setText(
+        self.ui.Spikeling_DataAnalysis_Average_label.setText(
             str(len(self.Stim_loops)) + " loops (" + str(self.loop_duration/10) + "ms each)")
 
 
@@ -417,38 +417,38 @@ class Spikeling103():
 
     # Page 103_3_0:
     # Clear previous traces
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.clear()
     # Set graph display parameters
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_1.showGrid(x=True, y=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_1.setLabel('left', 'Loops')
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.showGrid(x=True, y=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setLabel('left', 'Loops')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setLabel('left', 'Input Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setLabel('bottom', 'Time (ms)')
 
     # For all Loops:
         for i in range(0, len(self.Stim_loops)):
         # Display all Spike rate loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate0_loops[i], pen=(Settings.DarkSolarized[11]))
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate0_loops[i], pen=(Settings.DarkSolarized[11]))
         # Display all Spikes within loops
             self.ui.ySpikeLoops0 = np.zeros(len(self.Spike0_loops[i]))
             for j in range(len(self.Spike0_loops[i])):
                 self.ui.ySpikeLoops0[j] = i
-            self.ui.DataAnalysis_Oscilloscope_widget3_0_1.plot(x=self.Spike0_loops[i], y=self.ui.ySpikeLoops0, pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[3]), symbolSize=5)
-            self.ui.DataAnalysis_Oscilloscope_widget3_0_1.setXRange(0, self.loop_duration/10)
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.plot(x=self.Spike0_loops[i], y=self.ui.ySpikeLoops0, pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[3]), symbolSize=5)
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setXRange(0, self.loop_duration/10)
         # Display all Vm loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_loops[i], pen=(Settings.DarkSolarized[11]))
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_loops[i], pen=(Settings.DarkSolarized[11]))
         # Display all I_Total loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_loops[i], pen=(Settings.DarkSolarized[11]))
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_loops[i], pen=(Settings.DarkSolarized[11]))
 
     # Compute average traces
         self.SpikeRate_mean = np.mean(self.Spikerate0_loops, axis=0)
@@ -457,49 +457,49 @@ class Spikeling103():
         self.Stim_mean = np.mean(self.Stim_loops, axis=0)
 
     # Display Spike rate Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate_mean, pen={'color':tuple(Settings.DarkSolarized[15]), 'width':3})
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate_mean, pen={'color':tuple(Settings.DarkSolarized[15]), 'width':3})
     # Display Vm Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_mean, pen={'color':(Settings.DarkSolarized[3]), 'width':3})
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_mean, pen={'color':(Settings.DarkSolarized[3]), 'width':3})
     # Display Current Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_mean, pen={'color':(Settings.DarkSolarized[4]), 'width':3})
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_mean, pen={'color':(Settings.DarkSolarized[4]), 'width':3})
 
     # Page 103_3_1:
     # Clear previous traces
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.clear()
     # Set graph display parameters
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_1.showGrid(x=True, y=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_1.setLabel('left', 'Loops')
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.showGrid(x=True, y=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setLabel('left', 'Loops')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setLabel('left', 'Input Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setLabel('bottom', 'Time (ms)')
 
     # For all loops
         for i in range(0, len(self.Stim_loops) - 1):
         # Display all Spike rate loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate1_loops[i], pen=(Settings.DarkSolarized[11]))
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate1_loops[i], pen=(Settings.DarkSolarized[11]))
         # Display all Spikes within loops
             self.ui.ySpikeLoops1 = np.zeros(len(self.Spike1_loops[i]))
             for j in range(len(self.Spike1_loops[i])):
                 self.ui.ySpikeLoops1[j] = i
-            self.ui.DataAnalysis_Oscilloscope_widget3_1_1.plot(x=self.Spike1_loops[i], y=self.ui.ySpikeLoops1,
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.plot(x=self.Spike1_loops[i], y=self.ui.ySpikeLoops1,
                                                                pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[6]),symbolSize=5)
-            self.ui.DataAnalysis_Oscilloscope_widget3_1_1.setXRange(0, self.loop_duration)
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setXRange(0, self.loop_duration)
 
         # Display all Vm loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_loops[i],
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_loops[i],
                                                                pen=(Settings.DarkSolarized[11]))
         # Display Synaptic 1 Current
-            self.ui.DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_loops[i],
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_loops[i],
                                                                pen=(Settings.DarkSolarized[11]))
 
     # Compute average traces
@@ -508,53 +508,53 @@ class Spikeling103():
         self.ISynapse1_mean = np.mean(self.ISynapse1_loops, axis=0)
 
     # Display Spike rate Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate1_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate1_mean,
                                                            pen={'color': tuple(Settings.DarkSolarized[15]), 'width': 3})
     # Display Vm Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_mean,
                                                            pen={'color': (Settings.DarkSolarized[6]), 'width': 3})
     # Display Current Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_mean,
                                                            pen={'color': (Settings.DarkSolarized[7]), 'width': 3})
 
     # Page 103_3_2:
     # Clear previous traces
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_1.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.clear()
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.clear()
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.clear()
     # Set graph display parameters
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_1.showGrid(x=True, y=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.showGrid(x=True, y=True)
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_1.setLabel('left', 'Loops')
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.setLabel('bottom', 'Time (ms)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.showGrid(x=True, y=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.getAxis('bottom').setStyle(showValues=False)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.showGrid(x=True, y=True)
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.setLabel('left', 'Spike Rate (Hz)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setLabel('left', 'Loops')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.setLabel('left', 'Membrane Voltage (mV)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setLabel('left', 'Input Current (a.u.)')
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setLabel('bottom', 'Time (ms)')
 
     # For all loops
         for i in range(0, len(self.Stim_loops) - 1):
         # Display all Spike rate loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate2_loops[i],
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate2_loops[i],
                                                                pen=(Settings.DarkSolarized[11]))
 
             self.ui.ySpikeLoops2 = np.zeros(len(self.Spike2_loops[i]))
             for j in range(len(self.Spike2_loops[i])):
                 self.ui.ySpikeLoops2[j] = i
-            self.ui.DataAnalysis_Oscilloscope_widget3_2_1.plot(x=self.Spike2_loops[i], y=self.ui.ySpikeLoops2,
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.plot(x=self.Spike2_loops[i], y=self.ui.ySpikeLoops2,
                                                                pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[8]),symbolSize=5)
-            self.ui.DataAnalysis_Oscilloscope_widget3_2_1.setXRange(0, self.loop_duration)
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setXRange(0, self.loop_duration)
 
         # Display all Vm loops
-            self.ui.DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_loops[i],
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_loops[i],
                                                                pen=(Settings.DarkSolarized[11]))
         # Display Synaptic 2 Current
-            self.ui.DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_loops[i],
+            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_loops[i],
                                                                pen=(Settings.DarkSolarized[11]))
     # Compute average traces
         self.SpikeRate2_mean = np.mean(self.Spikerate2_loops, axis=0)
@@ -562,13 +562,13 @@ class Spikeling103():
         self.ISynapse2_mean = np.mean(self.ISynapse2_loops, axis=0)
 
     # Display Spike rate Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate2_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate2_mean,
                                                            pen={'color': tuple(Settings.DarkSolarized[15]), 'width': 3})
     # Display Vm Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_mean,
                                                            pen={'color': (Settings.DarkSolarized[8]), 'width': 3})
     # Display Current Average Trace
-        self.ui.DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_mean,
+        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_mean,
                                                            pen={'color': (Settings.DarkSolarized[9]), 'width': 3})
 
 
@@ -576,30 +576,30 @@ class Spikeling103():
     def SaveRawDataImage(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Select folder to save graphs on screen',
                                                       dir="./Recordings/Graphs")
-        currentStackedWidget = self.ui.DataAnalysis_Display_StackedWidget.currentWidget()
+        currentStackedWidget = self.ui.Spikeling_DataAnalysis_Display_StackedWidget.currentWidget()
 
         if currentStackedWidget == self.ui.page_103_1_0:
-            exporter100 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_0_0.plotItem)
-            exporter101 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_0_1.plotItem)
-            exporter102 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_0_2.plotItem)
-            exporter103 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_0_3.plotItem)
+            exporter100 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.plotItem)
+            exporter101 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.plotItem)
+            exporter102 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.plotItem)
+            exporter103 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.plotItem)
             exporter100.export(FolderName + '/Spikeling Vm.png')
             exporter101.export(FolderName + '/Spikeling Total Input Current.png')
             exporter102.export(FolderName + '/Stimulus.png')
             exporter103.export(FolderName + '/Synaptic Input.png')
 
         if currentStackedWidget == self.ui.page_103_1_1:
-            exporter110 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_1_0.plotItem)
-            exporter111 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_1_1.plotItem)
-            exporter112 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_1_2.plotItem)
+            exporter110 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.plotItem)
+            exporter111 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.plotItem)
+            exporter112 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.plotItem)
             exporter110.export(FolderName + '/Auxillary Neuron1 Vm.png')
             exporter111.export(FolderName + '/Auxillary Neuron1 Synpatic Input.png')
             exporter112.export(FolderName + '/Stimulus.png')
 
         if currentStackedWidget == self.ui.page_103_1_2:
-            exporter120 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_2_0.plotItem)
-            exporter121 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_2_1.plotItem)
-            exporter122 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget1_2_2.plotItem)
+            exporter120 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.plotItem)
+            exporter121 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.plotItem)
+            exporter122 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.plotItem)
             exporter120.export(FolderName + '/Auxillary Neuron2 Vm.png')
             exporter121.export(FolderName + '/Auxillary Neuron2 Synpatic Input.png')
             exporter122.export(FolderName + '/Stimulus.png')
@@ -608,7 +608,7 @@ class Spikeling103():
     def SaveSpikeTraces(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Save Spike data traces on screen',
                                                       dir="./Recordings/Data")
-        currentStackedWidget = self.ui.DataAnalysis_Display_StackedWidget.currentWidget()
+        currentStackedWidget = self.ui.Spikeling_DataAnalysis_Display_StackedWidget.currentWidget()
 
         if currentStackedWidget == self.ui.page_103_2_0:
             dict_spikerate = {'Spikeling SpikeRate': self.ui.spike_rate0}
@@ -638,33 +638,33 @@ class Spikeling103():
     def SaveSpikeImage(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Select folder to save graphs on screen',
                                                       dir="./Recordings/Graphs")
-        currentStackedWidget = self.ui.DataAnalysis_Display_StackedWidget.currentWidget()
+        currentStackedWidget = self.ui.Spikeling_DataAnalysis_Display_StackedWidget.currentWidget()
 
         if currentStackedWidget == self.ui.page_103_2_0:
-            exporter200 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_0_0.plotItem)
-            exporter201 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_0_1.plotItem)
-            exporter202 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_0_2.plotItem)
-            exporter203 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_0_3.plotItem)
+            exporter200 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.plotItem)
+            exporter201 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.plotItem)
+            exporter202 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.plotItem)
+            exporter203 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.plotItem)
             exporter200.export(FolderName + '/Spikeling Spike Rate.png')
             exporter201.export(FolderName + '/Spikeling Vm & spike.png')
             exporter202.export(FolderName + '/Spikeling Total current.png')
             exporter203.export(FolderName + '/Stimulus.png')
 
         if currentStackedWidget == self.ui.page_103_2_1:
-            exporter210 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_1_0.plotItem)
-            exporter211 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_1_1.plotItem)
-            exporter212 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_1_2.plotItem)
-            exporter213 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_1_3.plotItem)
+            exporter210 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.plotItem)
+            exporter211 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.plotItem)
+            exporter212 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.plotItem)
+            exporter213 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.plotItem)
             exporter210.export(FolderName + '/Auxillary Neuron1 Spike Rate.png')
             exporter211.export(FolderName + '/Auxillary Neuron1 Vm & spike.png')
             exporter212.export(FolderName + '/Auxillary Neuron1 Total current.png')
             exporter213.export(FolderName + '/Stimulus.png')
 
         if currentStackedWidget == self.ui.page_103_2_2:
-            exporter220 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_2_0.plotItem)
-            exporter221 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_2_1.plotItem)
-            exporter222 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_2_2.plotItem)
-            exporter223 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget2_2_3.plotItem)
+            exporter220 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.plotItem)
+            exporter221 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.plotItem)
+            exporter222 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.plotItem)
+            exporter223 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.plotItem)
             exporter220.export(FolderName + '/Auxillary Neuron2 Spike Rate.png')
             exporter221.export(FolderName + '/Auxillary Neuron2 Vm & spike.png')
             exporter222.export(FolderName + '/Auxillary Neuron2 Total current.png')
@@ -673,7 +673,7 @@ class Spikeling103():
     def SaveAverageTraces(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Save Spike data traces on screen',
                                                       dir="./Recordings/Data")
-        currentStackedWidget = self.ui.DataAnalysis_Display_StackedWidget.currentWidget()
+        currentStackedWidget = self.ui.Spikeling_DataAnalysis_Display_StackedWidget.currentWidget()
 
         if currentStackedWidget == self.ui.page_103_3_0:
             dict_spikerateaverage = {'Spikeling SpikeRate Average': self.SpikeRate_mean}
@@ -708,33 +708,33 @@ class Spikeling103():
     def SaveAverageImage(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Select folder to save graphs on screen',
                                                       dir="./Recordings/Graphs")
-        currentStackedWidget = self.ui.DataAnalysis_Display_StackedWidget.currentWidget()
+        currentStackedWidget = self.ui.Spikeling_DataAnalysis_Display_StackedWidget.currentWidget()
 
         if currentStackedWidget == self.ui.page_103_3_0:
-            exporter300 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_0_0.plotItem)
-            exporter301 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_0_1.plotItem)
-            exporter302 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_0_2.plotItem)
-            exporter303 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_0_3.plotItem)
+            exporter300 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.plotItem)
+            exporter301 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.plotItem)
+            exporter302 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.plotItem)
+            exporter303 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.plotItem)
             exporter300.export(FolderName + '/Spikeling Spike Rate Average.png')
             exporter301.export(FolderName + '/Spikeling spike rasterplot.png')
             exporter302.export(FolderName + '/Spikeling Vm Average.png')
             exporter303.export(FolderName + '/Spikeling Total Current Average.png')
 
         if currentStackedWidget == self.ui.page_103_3_1:
-            exporter310 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_1_0.plotItem)
-            exporter311 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_1_1.plotItem)
-            exporter312 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_1_2.plotItem)
-            exporter313 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_1_3.plotItem)
+            exporter310 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.plotItem)
+            exporter311 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.plotItem)
+            exporter312 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.plotItem)
+            exporter313 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.plotItem)
             exporter310.export(FolderName + '/AuxNeuron1 Spike Rate Average.png')
             exporter311.export(FolderName + '/AuxNeuron1 spike rasterplot.png')
             exporter312.export(FolderName + '/AuxNeuron1 Vm Average.png')
             exporter313.export(FolderName + '/AuxNeuron1 Synapse Current Average.png')
 
         if currentStackedWidget == self.ui.page_103_3_2:
-            exporter320 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_2_0.plotItem)
-            exporter321 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_2_1.plotItem)
-            exporter322 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_2_2.plotItem)
-            exporter323 = pg.exporters.ImageExporter(self.ui.DataAnalysis_Oscilloscope_widget3_2_3.plotItem)
+            exporter320 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.plotItem)
+            exporter321 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.plotItem)
+            exporter322 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.plotItem)
+            exporter323 = pg.exporters.ImageExporter(self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.plotItem)
             exporter320.export(FolderName + '/AuxNeuron2 Spike Rate Average.png')
             exporter321.export(FolderName + '/AuxNeuron2 spike rasterplot.png')
             exporter322.export(FolderName + '/AuxNeuron2 Vm Average.png')

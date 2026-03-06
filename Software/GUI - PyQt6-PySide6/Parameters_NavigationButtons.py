@@ -9,10 +9,11 @@ from PySide6.QtSerialPort import QSerialPortInfo
 from PySide6.QtWidgets import QSlider
 
 from Page_NeuronParameters import Ui_AdvancedParameters
-import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_NeuronGenerator, Page_StimulusGenerator, Page_Settings, Page_About, Page_Help, Page_GitHub
+import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Spikeling_Tutorial, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_ExtraCellular_Scope, Page_NeuronGenerator, Page_StimulusGenerator, Page_Settings, Page_About, Page_GitHub
 import Graph_Emulator, Graph_Imaging
 from Graph_Spikeling import SpikelingGraph
 from Graph_Imaging import ImagingGraph
+from Graph_ExtraCellular import ExtraCellularGraph
 from serial_manager import serial_manager
 
 
@@ -146,22 +147,21 @@ def Buttons(self):
     self.ui.ImagingMenu_pushButton.clicked.connect(lambda:  expandMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
     self.ui.ImagingMenu_pushButton.clicked.connect(lambda: self.ui.centerMenuSubContainer_menu_stackedwidget.setCurrentWidget(self.ui.Imaging_SubMenu_page))
 
+    self.ui.Tetrode_pushButton.clicked.connect(lambda:  expandMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
+    self.ui.Tetrode_pushButton.clicked.connect(lambda: self.ui.centerMenuSubContainer_menu_stackedwidget.setCurrentWidget(self.ui.ExtraCellular_SubMenu_page))
+
     self.ui.NeuronGeneratorMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
     self.ui.NeuronGeneratorMenu_pushButton.clicked.connect(lambda: Page_NeuronGenerator.ShowPage(self))
 
     self.ui.StimuluGeneratorMenu_pushButton.clicked.connect(lambda: Page_StimulusGenerator.ShowPage(self))
     self.ui.StimuluGeneratorMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
 
-    #self.ui.ExercisesMenu_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
-    #self.ui.ExercisesMenu_pushButton.clicked.connect(lambda: self.ui.centerMenuSubContainer_menu_stackedwidget.setCurrentWidget(self.ui.Exercises_SubMenu_page))
 
     self.ui.centerMenuSubContainer_exit_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
 
     self.ui.SettingsMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
 
     self.ui.AboutMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
-
-    self.ui.HelpMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
 
     self.ui.GitHubMenu_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.centerMenuContainer, centerMenu_min, centerMenu_max, animation_speed, True))
 
@@ -412,52 +412,57 @@ def Buttons(self):
     self.ui.NeuronDataAnalysis_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.ShowPage(self))
 
     # Raw Data Analysis part
-    self.ui.DataAnalysis_LoadData_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.LoadData(self.ui))
-    self.ui.DataAnalysis_LoadData_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.DisplayRawData(self))
-    self.ui.DataAnalysis_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveRawDataImage(self))
+    self.ui.Spikeling_DataAnalysis_LoadData_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.LoadData(self.ui))
+    self.ui.Spikeling_DataAnalysis_LoadData_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.DisplayRawData(self))
+    self.ui.Spikeling_DataAnalysis_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveRawDataImage(self))
     # Find spike analysis part
-    self.ui.DataAnalysis_Spike_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.FindSpike(self))
-    self.ui.DataAnalysis_Spike_Export_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveSpikeTraces(self))
-    self.ui.DataAnalysis_Spike_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveSpikeImage(self))
+    self.ui.Spikeling_DataAnalysis_Spike_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.FindSpike(self))
+    self.ui.Spikeling_DataAnalysis_Spike_Export_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveSpikeTraces(self))
+    self.ui.Spikeling_DataAnalysis_Spike_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveSpikeImage(self))
     # Compute average trace and spike raster plot
-    self.ui.DataAnalysis_Average_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.AverageTraces(self))
-    self.ui.DataAnalysis_Average_Save_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveAverageTraces(self))
-    self.ui.DataAnalysis_Average_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveAverageImage(self))
+    self.ui.Spikeling_DataAnalysis_Average_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.AverageTraces(self))
+    self.ui.Spikeling_DataAnalysis_Average_Save_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveAverageTraces(self))
+    self.ui.Spikeling_DataAnalysis_Average_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveAverageImage(self))
     # Switch Neuron display pages on raw data page
-    self.ui.DataAnalysis_Neuron0Vm_pushButton10.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton11.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton12.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton20.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton21.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton22.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton30.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton31.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
-    self.ui.DataAnalysis_Neuron0Vm_pushButton32.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
+    self.ui.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0))
     # Switch Neuron display pages on find spike age
-    self.ui.DataAnalysis_Neuron1Vm_pushButton10.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton11.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton12.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton20.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton21.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton22.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton30.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton31.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
-    self.ui.DataAnalysis_Neuron1Vm_pushButton32.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
+    self.ui.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_1))
     # Switch Neuron display pages on compute and average page
-    self.ui.DataAnalysis_Neuron2Vm_pushButton10.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton11.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton12.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton20.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton21.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton22.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton30.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton31.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
-    self.ui.DataAnalysis_Neuron2Vm_pushButton32.clicked.connect(lambda: self.ui.DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
+    self.ui.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.clicked.connect(lambda: self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_2))
 
-    # Raw Data Analysis part
-    self.ui.DataAnalysis_StepStim_LoadData_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.LoadData(self.ui))
-    self.ui.DataAnalysis_StepStim_LoadData_Display_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.DisplayRawData(self))
-    self.ui.DataAnalysis_StepStim_SaveImage_pushButton.clicked.connect(lambda: Page_Spikeling_DataAnalysis.Spikeling103.SaveRawDataImage(self))
+
+
+
+########################################################################
+# Spikeling Tutorial - page 104
+    # Display Page_Spikeling_Tutorial when Tutorial button is clicked
+    self.ui.NeuronTutorial_pushButton.clicked.connect(lambda: Page_Spikeling_Tutorial.Turorial.ShowPage(self))
+
+
 
 ########################################################################
 # Imaging Page - page201
@@ -531,22 +536,62 @@ def Buttons(self):
     self.ui.Imaging_FluoOffset_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFluoOffset(self))
 
 
-
 ########################################################################
 # Imaging Tutorial - page202
     # Display page202 when imaging button is clicked
     self.ui.ImagingDataAnalysis_pushButton.clicked.connect(lambda: Page_Imaging_DataAnalysis.Imaging202.ShowPage(self))
 
 
-    ########################################################################
+########################################################################
 # Imaging Data Analysis- page203
     # Display page201 when imaging button is clicked
     self.ui.ImagingTutorial_pushButton.clicked.connect(lambda: Page_Imaging_Tutorial.Imaging203.ShowPage(self))
 
 
 
+########################################################################
+# ExtraCellular Page - page301
+    # Display page301 when extracellular button is clicked
+    self.ui.ExtraCellularScope_pushButton.clicked.connect(lambda: Page_ExtraCellular_Scope.Scope.ShowPage(self))
+
+    # Create an instance of ExtraCellularGraph
+    self.extracellular_graph  = ExtraCellularGraph(self)
+    self.extracellular_page = Page_ExtraCellular_Scope.Scope(self)
+
+    # Connect the button to the instance method
+    self.ui.ExtraCellular_ConnectButton.clicked.connect(lambda: self.extracellular_page.UpdateSource())
+
+    # Update the Vm source for ExtraCellular
+    self.ui.ExtraCellular_Source_comboBox.currentIndexChanged.connect(lambda: self.extracellular_page.UpdateSource())
+
+    # Data Recording
+    self.ui.ExtraCellular_DataRecording_RecordFolder_value.textChanged.connect(lambda: self.extracellular_page.RecordFolderText())
+    self.ui.ExtraCellular_DataRecording_RecordFolderDir_pushButton.clicked.connect(lambda: self.extracellular_page.BrowseRecordFolder())
+    self.ui.ExtraCellular_DataRecording_Record_pushButton.setCheckable(True)
+    self.ui.ExtraCellular_DataRecording_Record_pushButton.clicked.connect(lambda: self.extracellular_page.RecordButton())
+
+    # ExtraCellular Parameters
+    self.ui.ExtraCellular_SignalMode_toggleButton.toggled.connect(self.extracellular_graph.SignalMode)
+
+    self.ui.ExtraCellular_Distance_toggleButton.toggled.connect(lambda:self.extracellular_page.ActivateElectrodeDistance())
+    self.ui.ExtraCellular_Distance_Slider.valueChanged.connect(lambda: self.extracellular_page.GetElectrodeDistance())
+    self.ui.ExtraCellular_Orientation_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateElectrodeOrientation())
+    self.ui.ExtraCellular_Orientation_Slider.valueChanged.connect(lambda: self.extracellular_page.GetElectrodeOrientation())
+    self.ui.ExtraCellular_Spread_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSpatialFalloff())
+    self.ui.ExtraCellular_Spread_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSpatialFalloff())
+    self.ui.ExtraCellular_BaselineNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateBaselineNoise())
+    self.ui.ExtraCellular_BaselineNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetBaselineNoise())
+    self.ui.ExtraCellular_SharedNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSharedNoise())
+    self.ui.ExtraCellular_SharedNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSharedNoise())
+    self.ui.ExtraCellular_HumNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateCHumNoise())
+    self.ui.ExtraCellular_HumNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetCHumNoise())
+    self.ui.ExtraCellular_CAR_toggleButton.toggled.connect(lambda: self.extracellular_graph.CAR())
+
+
+
+
     ########################################################################
-# Neuron Generator Page - page301
+# Neuron Generator Page - page401
     # Display Page_NeuronGenerator when neuron button is clicked
     self.ui.NeuronGeneratorMenu_pushButton.clicked.connect(lambda: Page_NeuronGenerator.ShowPage(self))
 
@@ -567,7 +612,7 @@ def Buttons(self):
 
 
 ########################################################################
-# Stimulus Generator Page - page401
+# Stimulus Generator Page - page501
     # Display Page_StimulusGenerator
     self.ui.StimuluGeneratorMenu_pushButton.clicked.connect(lambda: Page_StimulusGenerator.ShowPage(self))
     # Change Stimulus parameter page
@@ -582,29 +627,6 @@ def Buttons(self):
 
 
 
-########################################################################
-# Exercise-101 - page501
-    # Display page501
-
-
-########################################################################
-# Exercise-102 - page502
-    # Display page502
-
-
-########################################################################
-# Exercise-103 - page503
-    # Display page503
-
-########################################################################
-# Exercise-104 - page504
-    # Display page504
-
-########################################################################
-# Exercise-105 - page505
-    # Display page505
-
-
     ########################################################################
 # Settings - page601
     # Display Settings
@@ -616,21 +638,13 @@ def Buttons(self):
 ########################################################################
 # About - page701
     # Display Info page
-    self.ui.AboutMenu_pushButton.clicked.connect(lambda: Page701.ShowPage(self))
+    self.ui.AboutMenu_pushButton.clicked.connect(lambda: Page_About.ShowPage(self))
 
 
 
 
 ########################################################################
-# Help - page801
-    # Display Help page
-    self.ui.HelpMenu_pushButton.clicked.connect(lambda: Page801.ShowPage(self))
-
-
-
-
-########################################################################
-# GitHub - page901
+# GitHub - page801
     # Display Git page
     self.ui.GitHubMenu_pushButton.clicked.connect(lambda: Page_GitHub.ShowPage(self))
 

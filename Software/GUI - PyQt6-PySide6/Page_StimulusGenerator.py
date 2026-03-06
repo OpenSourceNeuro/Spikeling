@@ -13,7 +13,7 @@ from Parameters_Settings import DarkSolarized
 
 
 def ShowPage(self):
-    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_401)
+    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_501)
     self.ui.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(0)
     self.ui.StimulusGenerator_Selection_comboBox.setCurrentIndex(0)
     self.ui.StimulusGenerator_Oscilloscope_widget.clear()
@@ -66,6 +66,7 @@ def ChangeChirpParameter(self):
                                                        "border : none;"
                                                        )
 
+
 class StimulusGenerator():
 
     def SetGraph(self):
@@ -85,6 +86,12 @@ class StimulusGenerator():
             StimulusGenerator.TriangularWave(self)
         if self.StimulusIndex == 3:
             StimulusGenerator.ChirpWave(self)
+
+
+    def _ensure_csv_path(path: str) -> str:
+        if not path:
+            return ""
+        return path if path.lower().endswith(".csv") else path + ".csv"
 
 
     def SaveStimulus(self):
@@ -341,32 +348,76 @@ class StimulusGenerator():
         self.OnDuration = int(self.ui.Chirp_PreChirpOn_Duration_Value.text())
         self.OffAmplitude = int(self.ui.Chirp_PreChirpOff_Amplitude_Value.text())
         self.OffDuration = int(self.ui.Chirp_PreChirpOff_Duration_Value.text())
-        #self.ui.Chirp_PreChirpMid_Amplitude.setText(str(int(self.ChirpAmplitude/2)))
         self.MidAmplitude = int(self.ui.Chirp_PreChirpMid_Amplitude.text())
         self.MidDuration = int(self.ui.Chirp_PreChirpMid_Duration.text())
-        self.ChirpFrequency = int(self.ui.Chirp_Frequency_Value.text())/1000
-        self.StartFrequency = int(self.ui.Chirp_StartFrequency_Value.text())/1000
-        self.EndFrequency = int(self.ui.Chirp_EndFrequency_Value.text())/1000
+
+        # Keep the same unit conventions as ChirpWave():
+        # UI frequency in Hz -> divide by 1000 so it combines with time in ms in your current formulation.
+        self.ChirpFrequency = int(self.ui.Chirp_Frequency_Value.text()) / 1000
+        self.StartFrequency = int(self.ui.Chirp_StartFrequency_Value.text()) / 1000
+        self.EndFrequency = int(self.ui.Chirp_EndFrequency_Value.text()) / 1000
+
         self.ChirpDuration = int(self.ui.Chirp_Duration_Value.text())
 
-        self.StimDur = self.OnDuration*10 + self.OffDuration*10 + self.MidDuration*10 + self.ChirpDuration*10
+        # Saved stimuli use *10 samples per ms elsewhere in the file
+        self.OnDuration_s = self.OnDuration * 10
+        self.OffDuration_s = self.OffDuration * 10
+        self.MidDuration_s = self.MidDuration * 10
+        self.ChirpDuration_s = self.ChirpDuration * 10
 
-        self.LinTime = np.linspace(0, self.ChirpDuration, self.ChirpDuration*10)
-        self.LinModulation = np.linspace(self.StartFrequency, self.EndFrequency, self.ChirpDuration*10)
-        self.LinSinusoid = np.sin(self.LinTime * self.LinModulation) * self.ChirpAmplitude/2 + self.MidAmplitude
-        self.Linear_Chirp = np.around(self.LinSinusoid).astype(int)
+        self.StimDur = self.OnDuration_s + self.OffDuration_s + self.MidDuration_s + self.ChirpDuration_s
 
-        self.XStim = np.arange(self.StimDur)
+        # Time base for the chirp segment (same style as your current save attempt)
+        self.ChirpTime = np.linspace(0, self.ChirpDuration, self.ChirpDuration_s)
+
+        self.ChirpIndex = self.ui.Chirp_comboBox.currentIndex()
+
+        # --- Generate chirp segment (match ChirpWave() modes, but at *10 sampling) ---
+        if self.ChirpIndex == 0:
+            # Linear frequency sweep
+            self.ChirpModulation = np.linspace(self.StartFrequency, self.EndFrequency, self.ChirpDuration_s)
+            self.ChirpSinusoid = np.sin(self.ChirpTime * self.ChirpModulation) * self.ChirpAmplitude/2 + self.MidAmplitude
+            self.Chirp = np.around(self.ChirpSinusoid).astype(int)
+
+        elif self.ChirpIndex == 1:
+            # Exponential/log-like sweep (robust version)
+            # If StartFrequency <= 0, fall back to linear to avoid log issues
+            if self.StartFrequency > 0 and self.EndFrequency > 0:
+                self.ChirpModulation = np.exp(
+                    np.linspace(np.log(self.StartFrequency), np.log(self.EndFrequency), self.ChirpDuration_s)
+                )
+            else:
+                self.ChirpModulation = np.linspace(self.StartFrequency, self.EndFrequency, self.ChirpDuration_s)
+
+            self.ChirpSinusoid = np.sin(self.ChirpTime * self.ChirpModulation) * self.ChirpAmplitude/2 + self.MidAmplitude
+            self.Chirp = np.around(self.ChirpSinusoid).astype(int)
+
+        else:
+            # Mode 2: amplitude modulation at fixed frequency
+            self.ChirpModulation = np.linspace(0, self.ChirpAmplitude/2, self.ChirpDuration_s)
+            self.ChirpSinusoid = np.sin(self.ChirpTime * self.ChirpFrequency) * self.ChirpModulation + self.MidAmplitude
+            self.Chirp = np.around(self.ChirpSinusoid).astype(int)
+
+        # --- Assemble full stimulus ---
         self.nStim = np.zeros(self.StimDur)
-        self.nStim[:self.OnDuration*10] = self.OnAmplitude
-        self.nStim[self.OnDuration*10:self.OnDuration*10+self.OffDuration*10] = self.OffAmplitude
-        self.nStim[self.OnDuration*10+self.OffDuration*10:self.OnDuration*10+self.OffDuration*10+self.MidDuration*10] = self.MidAmplitude
-        for i in range (self.ChirpDuration*10):
-            self.nStim[self.OnDuration*10+self.OffDuration*10+self.MidDuration*10+i] = self.Linear_Chirp[i]
+        self.nStim[:self.OnDuration_s] = self.OnAmplitude
+        self.nStim[self.OnDuration_s : self.OnDuration_s + self.OffDuration_s] = self.OffAmplitude
+        self.nStim[self.OnDuration_s + self.OffDuration_s : self.OnDuration_s + self.OffDuration_s + self.MidDuration_s] = self.MidAmplitude
 
-        self.ui.StimulusGenerator_Oscilloscope_widget.clear()
-        self.SineCurve = self.ui.StimulusGenerator_Oscilloscope_widget.plot(self.XStim, self.nStim,pen=(DarkSolarized[5]))
+        chirp_start = self.OnDuration_s + self.OffDuration_s + self.MidDuration_s
+        self.nStim[chirp_start : chirp_start + self.ChirpDuration_s] = self.Chirp
+
+        # Trigger (same convention as the others)
+        self.nTrigger = np.zeros(self.StimDur)
+        self.nTrigger[0] = 1
+
+        FileName = QFileDialog.getSaveFileName(caption='Save Stimulus on screen',
+                                               dir="./Stimuli",
+                                               filter='csv files (*.csv)')
 
 
+        self.dict_ChirpStim = {'Stim': self.nStim, 'Trigger': self.nTrigger}
+        self.df_ChirpStim = pd.DataFrame(self.dict_ChirpStim)
 
+        self.df_ChirpStim.to_csv(FileName[0], index=False)
 

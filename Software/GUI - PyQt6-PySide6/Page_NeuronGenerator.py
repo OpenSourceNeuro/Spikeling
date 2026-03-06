@@ -8,7 +8,7 @@ from Parameters_Izhikevich import IzhikevichNeurons
 
 
 def ShowPage(self):
-    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_301)
+    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_401)
     self.ui.NeuronGenerator_Oscilloscope_widget.clear()
     NeuronGenerator.SetGraph(self)
 
