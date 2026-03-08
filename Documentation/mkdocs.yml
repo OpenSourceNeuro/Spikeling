@@ -2,9 +2,7 @@ site_name: Spikeling v3.0.1
 site_description: A hardware implementation of spiking neurons for neuroscience teaching and outreach
 site_url: https://opensourceneuro.github.io/Spikeling
 repo_url: https://github.com/OpenSourceNeuro/Spikeling
-# Optional but nice in the UI:
-# repo_name: <your-org>/spikeling
-# edit_uri: edit/main/docs/
+
 
 theme:
   name: material
