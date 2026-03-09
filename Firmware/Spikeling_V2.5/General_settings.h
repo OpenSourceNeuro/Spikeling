@@ -1,4 +1,5 @@
 #pragma once  
+
 #include <cstdint>
 
 
@@ -246,6 +247,28 @@ inline const HardwarePins pins = {
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
+/*           Button debounce state (shared across modules)           */
+
+struct ButtonDebounce {
+  uint8_t  lastStable;                                      // Debounced stable level
+  uint8_t  lastRaw;                                         // Last raw read level
+  uint32_t lastChange_ms;                                   // Timestamp of last raw transition
+  uint32_t debounce_ms;                                     // Debounce window
+  uint8_t  raw;                                             // Latest sampled raw level (filled by poll function)
+  uint32_t now_ms;                                          // Latest sampled time (filled by poll function)
+};
+inline ButtonDebounce modeBtn {
+  .lastStable         = LOW,
+  .lastRaw            = LOW,
+  .lastChange_ms      = 0,
+  .debounce_ms        = 30,
+  .raw                = LOW,
+  .now_ms             = 0
+};
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // //
 /*                         Neuron parameters                         */
 
 struct NeuronModel {
@@ -310,34 +333,8 @@ inline NeuronModel neuron = {
 };
 
 
-inline bool spike_pin_last = false;
-
-inline void setSpikePin(bool level) {
-  if (level != spike_pin_last) {
-    spike_pin_last = level;
-    digitalWrite(neuron.pin_spike, level ? HIGH : LOW);
-  }
-}
 
 
-// // // // // // // // // // // // // // // // // // // // // // // //
-/*           Button debounce state (shared across modules)           */
-struct ButtonDebounce {
-  uint8_t  lastStable;                                    // Debounced stable level
-  uint8_t  lastRaw;                                       // Last raw read level
-  uint32_t lastChange_ms;                                 // Timestamp of last raw transition
-  uint32_t debounce_ms;                                   // Debounce window
-  uint8_t  raw;                                           // Latest sampled raw level (filled by poll function)
-  uint32_t now_ms;                                        // Latest sampled time (filled by poll function)
-};
-inline ButtonDebounce modeBtn {
-  .lastStable         = LOW,
-  .lastRaw            = LOW,
-  .lastChange_ms      = 0,
-  .debounce_ms        = 30,
-  .raw                = LOW,
-  .now_ms             = 0
-};
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                     Patch Clamp parameters                      */
@@ -510,49 +507,69 @@ inline NoiseGenerator noise{
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                      PhotoDiode parameters                        */
 
+// // // // // // // // // // // // // // // // // // // // // // // //
+/*                      PhotoDiode parameters                        */
+
 struct Photodiode {
   // --- Hardware 
-  uint8_t  pin;                                           // ADC pin for photodiode sensor input (raw light signal)
-  uint8_t  pot_pin;                                       // ADC pin for photodiode gain pot (bipolar, centered)
-  PotFilter pot_filt;                                     // Filter state for PD gain pot ADC (median + IIR + deadband)
+  uint8_t  pin;                                             // ADC pin for photodiode sensor input (raw light signal)
+  uint8_t  pot_pin;                                         // ADC pin for photodiode gain pot (bipolar, centered)
+  PotFilter pot_filt;                                       // Filter state for PD gain pot ADC (median + IIR + deadband)
   // --- Gain pot / control
-  int16_t  pot_value;                                     // Raw ADC reading (0..4095)
-  float    pot_scaling;                                   // Gain-units-per-count
-  float    gain;                                          // Photodiode gain applied to averaged sensor signal (dimensionless)
+  int16_t  pot_value;                                       // Raw ADC reading (0..4095)
+  float    pot_scaling;                                     // Gain-units-per-count
+  float    gain;                                            // Photodiode gain applied to averaged sensor signal (dimensionless)
   // --- Adaptive gain (photoreceptor-style adaptation)
-  float    amp;                                           // Adaptive amplitude / gain state (dimensionless). Multiplies the photodiode-driven current
-  // --- Raw readings + moving average
-  uint16_t value;                                         // Latest raw photodiode ADC reading 
-  int      values[10] = {0};                              // Ring buffer of last PD_WindowSize readings
-  int      counter;                                       // Ring-buffer index [0..avgWindow-1]
-  float    avgWindow;                                     // Window length used for averaging (usually = PD_WindowSize)
-  int32_t  sum;                                           // Sum of samples currently in ring buffer
-  float    average;                                       // Moving-average photodiode reading
+  float    amp;                                             // Adaptive amplitude / gain state (dimensionless). Multiplies the photodiode-driven current
+  // --- Raw readings + moving average (ring buffer)
+  uint16_t raw;
+  uint16_t adc;
+  uint16_t value;                                           // Latest raw photodiode ADC reading
+  int      values[10] = {0};                                // Ring buffer (fixed length = 10)
+  uint8_t  counter;                                         // Ring-buffer index [0..windowN-1]
+  uint8_t  windowN;                                         // Window length in samples (<= 10)
+  float    invWindowN;                                      // 1.0f / windowN
+  int32_t  sum;                                             // Sum of samples currently in ring buffer
+  float    average;                                         // Moving-average photodiode reading
   // --- Current generation
-  float    scaling;                                       // Calibration factor for mapping (average * gain) to current units (e.g., uA/count)
-  float    current;                                       // Photodiode-driven injected current (uA) added into I_total
+    // --- Current generation (Option B: explicit normalization)
+  float    dark_counts;                                     // Baseline (dark) ADC level in counts (measured at boot)
+  float    full_counts;                                     // Counts above dark that correspond to "full light" (normalization denominator)
+  float    I_full;                                          // Injected current at full light when gain=1 and amp=1 (model current units)
+  float    eff;                                             // Effective light signal in ADC counts after removing the dark baseline.
+  float    norm;                                            // Normalized light level in the range 0…1.
+  float    denom;                                           // Normalization denominator
+  float    current;                                         // Photodiode-driven injected current added into I_total
   // --- Adaptation dynamics
-  float    decay;                                         // Decay rate for amp per tick
-  float    ampMin;                                        // Minimum allowed amp (prevents gain collapsing to zero)
-  float    recovery;                                      // Recovery rate pushing amp back toward 1.0
-  int      polarity;                                      // Sign derived from gain (+1 if gain>=0 else -1)
+  float    decay;                                           // Decay rate for amp per tick
+  float    ampMin;                                          // Minimum allowed amp (prevents gain collapsing to zero)
+  float    recovery;                                        // Recovery rate pushing amp back toward 1.0
+  int      polarity;                                        // Sign derived from gain (+1 if gain>=0 else -1)
   // --- Control flags
-  bool     decay_enable;                                  // Photodiode Decay Flag
-  bool     recovery_enable;                               // Photodiode Recovery Flag
+  bool     decay_enable;                                    // Photodiode Decay Flag
+  bool     recovery_enable;                                 // Photodiode Recovery Flag
 };
 inline Photodiode PD = {
     .pin             = pins.adc2.pd,
     .pot_pin         = pins.adc1.pd_pot,
     .pot_value       = 0,
-    .pot_scaling     = 1 / (bits12/50.0f),                      
+    .pot_scaling     = 1 / (bits12/25.0f),                      
     .gain            = 0.0f,
     .amp             = 1.0f,
+    .raw             = 0,
+    .adc             = 0,
     .value           = 0,
     .counter         = 0,
-    .avgWindow       = 0.1f,
+    .windowN         = 10,
+    .invWindowN      = 0.1f,     
     .sum             = 0,
     .average         = 0.0f,
-    .scaling         = 1.0 / 0.45f,
+    .dark_counts     = 0.0f,                               // Will be calibrated in setup()
+    .full_counts     = 400.0f,                             // Set to (bright_counts - dark_counts) for your "100% light" reference
+    .I_full          = 10.0f,                              // Injected current at full light (gain=1, amp=1). Tune this.
+    .eff             = 0.0f,
+    .norm            = 0.0f,
+    .denom           = 0.0f,
     .current         = 0.0f,
     .decay           = 0.001f,
     .ampMin          = 0.0f,                              
@@ -569,33 +586,38 @@ inline Photodiode PD = {
 
 struct Synapse {
   // --- Hardware
-  uint8_t  pin_digital;                                   // Digital spike/trigger input (TTL) from presynaptic source
-  uint8_t  pin_analog;                                    // Analog Vm input (ADC) from presynaptic source (optional, for display/monitoring)
-  uint8_t  pot_pin;                                       // ADC pin for the Synapse knobs (front-panel control) 
-  PotFilter pot_filt;                                     // Filter state for Synapse gain pot ADC (median + IIR + deadband)
+  uint8_t  pin_digital;                                     // Digital spike/trigger input (TTL) from presynaptic source
+  uint8_t  pin_analog;                                      // Analog Vm input (ADC) from presynaptic source (optional, for display/monitoring)
+  uint8_t  pot_pin;                                         // ADC pin for the Synapse knobs (front-panel control) 
+  uint16_t pot_raw;
+  uint16_t pot_raw_filter;
+  PotFilter pot_filt;                                       // Filter state for Synapse gain pot ADC (median + IIR + deadband)
   // --- Gain (synaptic weight)
-  float    gain;                                          // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
-  int16_t  pot_value;                                     // Raw ADC reading (0..4095)
-  float    pot_scaling;                                   // Counts-per-gain-unit
+  float    gain;                                            // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
+  int16_t  pot_value;                                       // Raw ADC reading (0..4095)
+  float    pot_scaling;                                     // Counts-per-gain-unit
   // --- State
-  uint8_t  spikeState;                                    // Last read digital level 
-  uint8_t  lastSpikeState;                                // For edge detection of digital spike input
-  bool     risingEdge;                                    // Edge detection bool
-  float    current;                                       // Synaptic current state (uA). Decays exponentially each tick.
-  float    decay;                                         // Per-tick decay factor in (0..1). Closer to 1 = slower decay.
-  float    Vm;                                            // Mapped presynaptic Vm in internal model units (mV)
-  uint16_t Vm_input;                                      // Raw ADC reading (counts) for presynaptic Vm
+  uint8_t  spikeState;                                      // Last read digital level 
+  uint8_t  lastSpikeState;                                  // For edge detection of digital spike input
+  bool     risingEdge;                                      // Edge detection bool
+  float    current;                                         // Synaptic current state (uA). Decays exponentially each tick.
+  float    decay;                                           // Per-tick decay factor in (0..1). Closer to 1 = slower decay.
+  float    defaultdecay;
+  float    Vm;                                              // Mapped presynaptic Vm in internal model units (mV)
+  uint16_t Vm_input;                                        // Raw ADC reading (counts) for presynaptic Vm
   // --- ADC calibration for Vm mapping
-  float analogOffsetLow;                                  // ADC count corresponding to "low" reference in mapfloat 
-  float analogOffsetHigh;                                 // ADC count offset for high-end reference in mapfloat
+  float analogOffsetLow;                                    // ADC count corresponding to "low" reference in mapfloat 
+  float analogOffsetHigh;                                   // ADC count offset for high-end reference in mapfloat
   // --- Control flags
   bool  use_syn_pot;
-  bool  decay_enable;                                     // Activate GUI decay input
+  bool  decay_enable;                                       // Activate GUI decay input
 };
 inline Synapse syn1 = {
   .pin_digital      = pins.gpio.syn1_d,
   .pin_analog       = pins.adc2.syn1_a,
   .pot_pin          = pins.adc1.syn1_pot,
+  .pot_raw          = 0,
+  .pot_raw_filter   = 0,
   .gain             = 0,                                  
   .pot_value        = 0,
   .pot_scaling       = 1 / (bits12/50.0f),
@@ -604,10 +626,11 @@ inline Synapse syn1 = {
   .risingEdge       = false,
   .current          = 0.0f,
   .decay            = 0.995f,
+  .defaultdecay     = 0.995f,
   .Vm               = 0.0f,
   .Vm_input         = 0,
-  .analogOffsetLow  = -10.0f,
-  .analogOffsetHigh = -400.0f,
+  .analogOffsetLow  = 0.0f,
+  .analogOffsetHigh = 1425.0f,
   .use_syn_pot      = true,
   .decay_enable     = true
 };
@@ -617,14 +640,15 @@ inline Synapse syn2 = {
   .pot_pin          = pins.adc1.syn2_pot,
   .gain             = 0,
   .pot_value        = 0,
-  .pot_scaling      = bits12/50.0f,
+  .pot_scaling      = 1 / (bits12/50.0f),
   .spikeState       = LOW,
   .current          = 0.0f,
   .decay            = 0.990f,
+  .defaultdecay     = 0.990f,
   .Vm               = 0.0f,
   .Vm_input         = 0, 
-  .analogOffsetLow  = -10.0f,
-  .analogOffsetHigh = -400.0f,
+  .analogOffsetLow  = 0.0f,
+  .analogOffsetHigh = 1425.0f,
   .use_syn_pot      = true,
   .decay_enable     = true
 };
@@ -659,7 +683,6 @@ struct Stimulus {
   float   freqPot_f;                                        // Filter accumulator for frequency ADC.
   int     freqPot_centered;                                 // Centered frequency pot counts: freqPot - half_range.
   int     freqPot_adj;                                      // Dead-zone–adjusted centered frequency.
-  float   freq_map;                                         // Scale: ADC counts -> freq units (e.g., +100..-100)
   int     freq;                                             // Signed frequency modifier (mapped units; used to compute steps/period)
   // --- Polarity
   float   sign;                                             // Stimulus polarity
@@ -679,8 +702,7 @@ struct Stimulus {
   int     value_analog;                                     // DAC amplitude command before duty-cycle gating (0..dac_max)
   int     value_custom;                                     // Custom stimulus command from host/serial (signed; sign = polarity)
   float   current_scaling;                                  // Scale factor mapping analog strength units -> DAC counts
-  float   light_scaling;                                    // Scale factor mapping digital strength units -> PWM counts
-  float   light_offset;                                     // Optional LED offset (minimum brightness) - currently unused in your function
+  int     amp;
   // -- Duty-cycle waveform state (pot mode)
   int     counter;                                          // Tick counter within stimulus period
   int     steps;                                            // Period length in ticks (full period). ON phase uses steps/2.
@@ -691,7 +713,7 @@ struct Stimulus {
   int     trigger;                                          // One-tick pulse marking start of each stimulus period (for logging)
   int     pwm;                                              // Phase-gated PWM output actually written this tick
   int     dac;                                              // Phase-gated DAC output actually written this tick
-  uint8_t dacVal;                                           // DAC ouput in 8bits format
+  uint16_t dacVal;                                          // 12-bit DAC code [0..dac_max] (MCP4922 => 0..4095)
   // --- Control flags
   bool    custom_disable;                                   // true => custom stimulus ON  (host/serial uses value_custom) / false => custom stimulus OFF (pot mode)
   bool    trigger_enable;                                   // Internal “pending trigger” flag (can be replaced by (counter==0))
@@ -700,16 +722,16 @@ struct Stimulus {
 inline Stimulus stim{
   .pin_stim_light       = pins.gpio.stim_d,
   .pin_stim_current     = pins.gpio.stim_a,
-  .pin_strPot           = pins.adc1.stim_str_pot,
-  .pin_freqPot          = pins.adc1.stim_freq_pot,
+  .pin_strPot           = pins.adc2.stim_str_pot,
+  .pin_freqPot          = pins.adc2.stim_freq_pot,
   .strPot_raw           = 0,
   .strPot               = 0,
   .strPot_f             = bits12 * 0.5f,
   .strPot_centered      = 0,
   .strPot_adj           = 0,
-  .str_digitalMap       = 100.0f / (bits12 / 2),
+  .str_digitalMap       = 100.0f / ((bits12 / 2) - pot.offset),
   .str_digital          = 0,
-  .str_analogMap        = 200.0f / bits12,
+  .str_analogMap        = 100.0f / ((bits12 / 2) - pot.offset),
   .str_analog           = 0,
   .str_analog_min       = 5,
   .freqPot_raw          = 0,
@@ -717,7 +739,6 @@ inline Stimulus stim{
   .freqPot_f            = bits12 * 0.5f,
   .freqPot_centered     = 0,
   .freqPot_adj          = 0,
-  .freq_map             = 200.0f / float(bits12),
   .freq                 = 0,           
   .sign                 = 0.0f,
   .denom                = 0.0f,
@@ -733,9 +754,8 @@ inline Stimulus stim{
   .value_digital        = 0,                              
   .value_analog         = 0,                              
   .value_custom         = 0,
-  .current_scaling      = 0.9f,
-  .light_scaling        = 5.12f,                          
-  .light_offset         = 10.0f,
+  .current_scaling      = (float)dac_max / 100.0f,   // 4095/100 = 40.95 : maps 0..100% -> 0..4095 DAC codes
+  .amp                  = 0,                     
   .counter              = 0,                              
   .steps                = 0,                              
   .dutyCycle            = 500,                            
@@ -753,6 +773,7 @@ inline Stimulus stim{
 
 
 
+
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                         Axon parameters                           */
 
@@ -762,7 +783,6 @@ struct Axon {
   uint8_t  pin_analog;                                    // DAC "Vm out" pin (axon analog output) 
   // --- Output state
   float    Vm;                                            // Store the *analog output representation*
-  float    offset;                                        // Calibration/offset term
   // --- DAC mapping helpers
   float    Vm_range;                                      // Precomputed 1/(Vm_max - Vm_min) for mapping v_out -> normalized [0..1]
   float    norm;                                          // Working variable: normalized v_out in [0..1] before quantization
@@ -772,7 +792,6 @@ inline Axon axon{
   .pin_digital  = pins.gpio.axon_d,
   .pin_analog   = pins.gpio.axon_a,
   .Vm           = 0.0f,
-  .offset       = -6.75f,
   .Vm_range     = 1.0f / (neuron.Vm_max - neuron.Vm_min),
   .norm         = 0.0f,
   .dacVal       = 0
@@ -865,58 +884,72 @@ inline void init_PotFilters() {
 }
 
 inline void HardwareSettings(){
-  // Give USB a moment (especially after reset on S3)
-  delay(1500);
-  Serial.begin(BaudRate);
-  delay(500);
 
-  pinMode(pins.gpio.mode, INPUT_PULLDOWN);   // Mode button: pulled-down, pressed = HIGH 
+  delay(500);                                               // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
+  Serial.begin(BaudRate);                                   // Start UART for CLI + streaming at the configured baud rate
+  delay(500);                                               // Extra settle time so the host opens the port before first prints
 
 
-  pinMode(pins.gpio.spike,OUTPUT);
 
-  pinMode(pins.gpio.led_r, OUTPUT);
-  pinMode(pins.gpio.led_g, OUTPUT);
-  pinMode(pins.gpio.led_b, OUTPUT);
+  pinMode(pins.gpio.spike,  OUTPUT);                        // Buzzer / spike digital output pin (TTL gate for buzzer / spike pulse)
+  pinMode(pins.gpio.axon_d, OUTPUT);                        // Axon digital output (TTL spike output to BNC / header)
+  pinMode(pins.gpio.stim_d, OUTPUT);                        // Stimulus digital output (TTL stim gate / square-wave output)
   
-  pinMode(pins.gpio.syn1_d,INPUT);
-
-  pinMode(pins.gpio.syn2_d,INPUT);
-
-  pinMode(pins.gpio.axon_d,OUTPUT);
+  pinMode(pins.gpio.led_r,  OUTPUT);                        // RGB LED (neuron state) - Red channel GPIO
+  pinMode(pins.gpio.led_g,  OUTPUT);                        // RGB LED (neuron state) - Green channel GPIO
+  pinMode(pins.gpio.led_b,  OUTPUT);                        // RGB LED (neuron state) - Blue channel GPIO
   
-  pinMode(pins.gpio.stim_d,OUTPUT);
+  pinMode(pins.gpio.syn1_d, INPUT);                         // Synapse 1 digital input (external trigger / synapse gate)
+  pinMode(pins.gpio.syn2_d, INPUT);                         // Synapse 2 digital input (external trigger / synapse gate)
 
-  digitalWrite(pins.gpio.spike,LOW);
-  digitalWrite(pins.gpio.axon_d,LOW);
-  digitalWrite(pins.gpio.stim_d,LOW);
-  digitalWrite(pins.gpio.led_r,LOW);
-  digitalWrite(pins.gpio.led_g,LOW);
-  digitalWrite(pins.gpio.led_b,LOW);
+  pinMode(pins.gpio.mode,   INPUT_PULLDOWN);                // Mode button: pulled-down, pressed = HIGH 
 
-  ledcAttach(pins.gpio.led_r, spike.ledc_Freq, spike.ledc_Resolution);
-  ledcAttach(pins.gpio.led_g, spike.ledc_Freq, spike.ledc_Resolution);
-  ledcAttach(pins.gpio.led_b, spike.ledc_Freq, spike.ledc_Resolution);
-  ledcWrite(pins.gpio.led_r, 0);  
-  ledcWrite(pins.gpio.led_g, 0);   
-  ledcWrite(pins.gpio.led_b, 0);  
+  ledcAttach(pins.gpio.led_r, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Red pin (hardware PWM)
+  ledcAttach(pins.gpio.led_g, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Green pin
+  ledcAttach(pins.gpio.led_b, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Blue pin
 
-  ledcAttach(pins.gpio.stim_d, spike.ledc_Freq, spike.ledc_Resolution);
-  ledcWrite(pins.gpio.stim_d, 0);
+  ledcAttach(pins.gpio.stim_d, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stim TTL pin (for analog-ish PWM output)
 
-  SPI.begin(pins.spi.sck, pins.spi.miso, pins.spi.mosi, -1);
-  ADC1.begin(pins.spi.cs_adc1);
-  ADC2.begin(pins.spi.cs_adc2);
+  
 
-  init_PotFilters();   // Initialise all potentiometer filters (seeds state + reduces jitter)
+  digitalWrite(pins.gpio.spike,  LOW);                      // Force buzzer/spike output LOW at boot (avoid accidental beep)
+  digitalWrite(pins.gpio.axon_d, LOW);                      // Force axon TTL LOW at boot (avoid false spike on connected devices)
+  digitalWrite(pins.gpio.stim_d, LOW);                      // Force stim TTL LOW at boot (avoid unintended stimulus)
 
-  // --- Seed RNG once (ESP32S3 has a hw RNG) ---
-  randomSeed(esp_random());
+  digitalWrite(pins.gpio.led_r,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
+  digitalWrite(pins.gpio.led_g,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
+  digitalWrite(pins.gpio.led_b,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
+
+  ledcWrite(pins.gpio.led_r,     0);                        // Start PWM duty at 0 (LED fully off)
+  ledcWrite(pins.gpio.led_g,     0);                        // Start PWM duty at 0 (LED fully off)
+  ledcWrite(pins.gpio.led_b,     0);                        // Start PWM duty at 0 (LED fully off)
+
+  ledcWrite(pins.gpio.stim_d, 0);                           // Start stim PWM duty at 0 (no stimulus output)
+
+
+
+  modeBtn.lastStable = modeBtn.lastRaw = digitalRead(pins.gpio.mode); // Seed debouncer with current level (prevents boot toggle)
+
+
+
+  init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
+  
+
+
+  randomSeed(esp_random());                                 // Seed pseudo-RNG using ESP32-S3 hardware RNG (used for noise, etc.)
+  
+
+
+  // Put all SPI chip-selects in a safe inactive state
+  pinMode(pins.spi.cs_adc1, OUTPUT); digitalWrite(pins.spi.cs_adc1, HIGH);
+  pinMode(pins.spi.cs_adc2, OUTPUT); digitalWrite(pins.spi.cs_adc2, HIGH);
+  // Start SPI 
+  SPI.begin(pins.spi.sck, pins.spi.miso, pins.spi.mosi, -1);// Start SPI bus (explicit SCK/MISO/MOSI; no HW CS pin used here)
+  // Initialise devices (library-specific)
+  ADC1.begin(pins.spi.cs_adc1);                             // Initialize external ADC #1 with its chip-select pin
+  ADC2.begin(pins.spi.cs_adc2);                             // Initialize external ADC #2 with its chip-select pin
 }
 
-inline void SerialBlank(){        
-
-}
 
 
 

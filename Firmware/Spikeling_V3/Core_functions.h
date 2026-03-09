@@ -1,5 +1,7 @@
-#pragma once     
+#pragma once  
+   
 #include "Serial_functions.h"
+
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -163,6 +165,8 @@ inline void calibrate_PhotodiodeDark(uint16_t nSamples = 200, uint16_t sampleDel
   PD.current = 0.0f;
 }
 
+
+
 inline void update_Photodiode() {
   
   PD.value = ADC1.read(PD.pin);                                                               // Reads Photodiode value from 0 to ~400
@@ -192,11 +196,11 @@ inline void update_Photodiode() {
   PD.polarity = (PD.gain >= 0.0f) ? 1 : -1;                                                   // Set Photodiode polarity (positive if gain above 0, negative if gain stricly below 0)
 
   // Map photodiode reading (counts) -> normalized light (0..1) -> injected current
-  PD.eff = PD.average - PD.dark_counts;                                                  // subtract dark baseline (counts)
+  PD.eff = PD.average - PD.dark_counts;                                                       // subtract dark baseline (counts)
   if (PD.eff < 0.0f) PD.eff = 0.0f;
 
-  PD.denom = (PD.full_counts > 1e-6f) ? PD.full_counts : 1.0f;                        // avoid divide-by-zero
-  PD.norm = PD.eff / PD.denom;                                                             // 0..~1
+  PD.denom = (PD.full_counts > 1e-6f) ? PD.full_counts : 1.0f;                                // avoid divide-by-zero
+  PD.norm = PD.eff / PD.denom;                                                                // 0..~1
   if (PD.norm > 1.0f) PD.norm = 1.0f;
 
   PD.current = (PD.norm * PD.I_full) * PD.gain * PD.amp;                                      //// Generates Photodiode current, amplified by the PD_Gain readings
@@ -404,18 +408,18 @@ inline void update_StimulusOutput() {
     stim.custom_active = (stim.cmd_abs >= stim.str_analog_min);                               // Reuse the existing analog-min threshold as dead-zone
 
     
-    if (stim.custom_active && (stim.cmd > 0)) {// LED output (stim LED): only positive command produces light, mapped to full PWM range
-      int32_t cmd_pos = stim.cmd;                      // expected in 0..100
-      if (cmd_pos > 100) cmd_pos = 100;               // safety clamp
+    if (stim.custom_active && (stim.cmd > 0)) {                                               // LED output (stim LED): only positive command produces light, mapped to full PWM range
+      int32_t cmd_pos = stim.cmd;                                                               // expected in 0..100
+      if (cmd_pos > 100) cmd_pos = 100;                                                         // safety clamp
 
       // Map 0..100 (%) -> 0..ledc_Max (with rounding)
       stim.value_digital = (int)((cmd_pos * (int32_t)spike.ledc_Max + 50) / 100);
     } else {
-      stim.value_digital = 0;                         // negative or inactive => LED off
+      stim.value_digital = 0;                                                                   // negative or inactive => LED off
     }
 
 
-    stim.value_analog = stim.custom_active                                                    // --- Analog output: magnitude drives DAC amplitude, sign is handled elsewhere (polarity logic)
+    stim.value_analog = stim.custom_active                                                      // --- Analog output: magnitude drives DAC amplitude, sign is handled elsewhere (polarity logic)
                       ? (int)lroundf((float)constrain(stim.cmd_abs, 0, 100) * stim.current_scaling)  // Scale magnitude to DAC counts
                       : 0;
 
@@ -686,8 +690,6 @@ inline void send_SamplePacket() {
   Serial.write(header, 2);
   Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));
   // wifiSendSamplePacket(pkt);
-  // Serial.println(syn1.Vm_input); 
-  // Serial.println(syn1.Vm_input * SYN_V_SCALE); 
 }
 
 

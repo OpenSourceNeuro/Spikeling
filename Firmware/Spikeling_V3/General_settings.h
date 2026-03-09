@@ -1,4 +1,5 @@
 #pragma once  
+
 #include <cstdint>
 
 
@@ -11,7 +12,7 @@
 #include <esp_system.h>
 #include <SPI.h>
 #include <MCP_ADC.h>                                        // Microchip SPI ADC Library by Rob Tillaart                 https://github.com/RobTillaart/MCP_ADC
-#include <MCP_DAC.h>                                        // Microchip SPI ADC Library by Rob Tillaart                 https://github.com/RobTillaart/MCP_DAC
+#include <MCP_DAC.h>                                        // Microchip SPI DAC Library by Rob Tillaart                 https://github.com/RobTillaart/MCP_DAC
 #include <Gaussian.h>                                       // Gaussian Library by Ivan Seidel                           https://github.com/ivanseidel/Gaussian
 #include <SerialCommand.h>                                  // SerialCommand Library by Shyd (based on Steven Cogswell)  https://github.com/shyd/Arduino-SerialCommand
 
@@ -131,7 +132,6 @@ struct Potentiometer {
   int      offset;                                          // Potentiometer zero offset to controle misreading
   int      half_range;                                      // Potentiometer 12bits half-range :2047
   float    alpha_pot;                                       // Default IIR alpha for all pot filters (0..1)
-
   uint16_t deadband_detent;                                 // Deadband (counts) for detent pots (patch, stim, syn, PD): kills +/-1 LSB chatter
   uint16_t deadband_smooth;                                 // Deadband (counts) for smooth pots (noise): keeps it responsive
   bool     use_patch_pot;                                   // Boolean used for enabling Patch potentiometer
@@ -257,6 +257,7 @@ inline const HardwarePins pins = {
  
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*           Button debounce state (shared across modules)           */
+
 struct ButtonDebounce {
   uint8_t  lastStable;                                      // Debounced stable level
   uint8_t  lastRaw;                                         // Last raw read level
@@ -919,68 +920,80 @@ inline void init_PotFilters() {
 
 inline void HardwareSettings(){
 
-  delay(1500);                                              // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
+  delay(500);                                               // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
   Serial.begin(BaudRate);                                   // Start UART for CLI + streaming at the configured baud rate
   delay(500);                                               // Extra settle time so the host opens the port before first prints
 
-  pinMode(pins.gpio.spike, OUTPUT);                         // Buzzer / spike digital output pin (TTL gate for buzzer / spike pulse)
 
-  pinMode(pins.gpio.led_r, OUTPUT);                         // RGB LED (neuron state) - Red channel GPIO
-  pinMode(pins.gpio.led_g, OUTPUT);                         // RGB LED (neuron state) - Green channel GPIO
-  pinMode(pins.gpio.led_b, OUTPUT);                         // RGB LED (neuron state) - Blue channel GPIO
 
-  pinMode(pins.gpio.led_stim_r, OUTPUT);                    // Stimulus LED RGB - Red channel GPIO
-  pinMode(pins.gpio.led_stim_g, OUTPUT);                    // Stimulus LED RGB - Green channel GPIO
-  pinMode(pins.gpio.led_stim_b, OUTPUT);                    // Stimulus LED RGB - Blue channel GPIO
+  pinMode(pins.gpio.spike,         OUTPUT);                 // Buzzer / spike digital output pin (TTL gate for buzzer / spike pulse)
+  pinMode(pins.gpio.axon_d,        OUTPUT);                 // Axon digital output (TTL spike output to BNC / header)
+  pinMode(pins.gpio.stim_d,        OUTPUT);                 // Stimulus digital output (TTL stim gate / square-wave output)
+
+  pinMode(pins.gpio.led_r,         OUTPUT);                 // RGB LED (neuron state) - Red channel GPIO
+  pinMode(pins.gpio.led_g,         OUTPUT);                 // RGB LED (neuron state) - Green channel GPIO
+  pinMode(pins.gpio.led_b,         OUTPUT);                 // RGB LED (neuron state) - Blue channel GPIO
+
+  pinMode(pins.gpio.led_stim_r,    OUTPUT);                 // Stimulus LED RGB - Red channel GPIO
+  pinMode(pins.gpio.led_stim_g,    OUTPUT);                 // Stimulus LED RGB - Green channel GPIO
+  pinMode(pins.gpio.led_stim_b,    OUTPUT);                 // Stimulus LED RGB - Blue channel GPIO
   
-  pinMode(pins.gpio.syn1_d, INPUT);                         // Synapse 1 digital input (external trigger / synapse gate)
-  pinMode(pins.gpio.syn2_d, INPUT);                         // Synapse 2 digital input (external trigger / synapse gate)
-
-  pinMode(pins.gpio.axon_d, OUTPUT);                        // Axon digital output (TTL spike output to BNC / header)
-  pinMode(pins.gpio.stim_d, OUTPUT);                        // Stimulus digital output (TTL stim gate / square-wave output)
+  pinMode(pins.gpio.syn1_d,        INPUT);                  // Synapse 1 digital input (external trigger / synapse gate)
+  pinMode(pins.gpio.syn2_d,        INPUT);                  // Synapse 2 digital input (external trigger / synapse gate)
 
   pinMode(pins.gpio.buzzer_button, INPUT_PULLDOWN);         // User button: toggle buzzer enable (released=LOW, pressed=HIGH)
   pinMode(pins.gpio.led_button,    INPUT_PULLDOWN);         // User button: toggle LED enable (released=LOW, pressed=HIGH)
 
-  digitalWrite(pins.gpio.spike, LOW);                       // Force buzzer/spike output LOW at boot (avoid accidental beep)
-  digitalWrite(pins.gpio.axon_d, LOW);                      // Force axon TTL LOW at boot (avoid false spike on connected devices)
-  digitalWrite(pins.gpio.stim_d, LOW);                      // Force stim TTL LOW at boot (avoid unintended stimulus)
 
-  digitalWrite(pins.gpio.led_r, LOW);                       // Force RGB neuron LED channels LOW before PWM attach
-  digitalWrite(pins.gpio.led_g, LOW);                       // Force RGB neuron LED channels LOW before PWM attach
-  digitalWrite(pins.gpio.led_b, LOW);                       // Force RGB neuron LED channels LOW before PWM attach
-
-  digitalWrite(pins.gpio.led_stim_r, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
-  digitalWrite(pins.gpio.led_stim_g, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
-  digitalWrite(pins.gpio.led_stim_b, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
 
   ledcAttach(pins.gpio.led_r, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Red pin (hardware PWM)
   ledcAttach(pins.gpio.led_g, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Green pin
   ledcAttach(pins.gpio.led_b, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Blue pin
 
-  ledcWrite(pins.gpio.led_r, 0);                            // Start PWM duty at 0 (LED fully off)
-  ledcWrite(pins.gpio.led_g, 0);                            // Start PWM duty at 0 (LED fully off)
-  ledcWrite(pins.gpio.led_b, 0);                            // Start PWM duty at 0 (LED fully off)
-
   ledcAttach(pins.gpio.led_stim_r, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stimulus LED Red channel
   ledcAttach(pins.gpio.led_stim_g, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stimulus LED Green channel
   ledcAttach(pins.gpio.led_stim_b, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stimulus LED Blue channel
-
-  ledcWrite(pins.gpio.led_stim_r, 0);                       // Start stimulus LED Red OFF (0 duty)
-  ledcWrite(pins.gpio.led_stim_g, 0);                       // Start stimulus LED Green OFF (0 duty)
-  ledcWrite(pins.gpio.led_stim_b, 0);                       // Start stimulus LED Blue OFF (0 duty)
-
-
+  
   ledcAttach(pins.gpio.stim_d, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stim TTL pin (for analog-ish PWM output)
-  ledcWrite(pins.gpio.stim_d, 0);                           // Start stim PWM duty at 0 (no stimulus output)
+
+
+  digitalWrite(pins.gpio.spike,      LOW);                  // Force buzzer/spike output LOW at boot (avoid accidental beep)
+  digitalWrite(pins.gpio.axon_d,     LOW);                  // Force axon TTL LOW at boot (avoid false spike on connected devices)
+  digitalWrite(pins.gpio.stim_d,     LOW);                  // Force stim TTL LOW at boot (avoid unintended stimulus)
+
+  digitalWrite(pins.gpio.led_r,      LOW);                  // Force RGB neuron LED channels LOW before PWM attach
+  digitalWrite(pins.gpio.led_g,      LOW);                  // Force RGB neuron LED channels LOW before PWM attach
+  digitalWrite(pins.gpio.led_b,      LOW);                  // Force RGB neuron LED channels LOW before PWM attach
+
+  digitalWrite(pins.gpio.led_stim_r, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
+  digitalWrite(pins.gpio.led_stim_g, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
+  digitalWrite(pins.gpio.led_stim_b, LOW);                  // Force RGB stim LED channels LOW (if used as plain GPIO)
+
+  ledcWrite(pins.gpio.led_r,         0);                    // Start PWM duty at 0 (LED fully off)
+  ledcWrite(pins.gpio.led_g,         0);                    // Start PWM duty at 0 (LED fully off)
+  ledcWrite(pins.gpio.led_b,         0);                    // Start PWM duty at 0 (LED fully off)
+
+  ledcWrite(pins.gpio.led_stim_r,    0);                    // Start stimulus LED Red OFF (0 duty)
+  ledcWrite(pins.gpio.led_stim_g,    0);                    // Start stimulus LED Green OFF (0 duty)
+  ledcWrite(pins.gpio.led_stim_b,    0);                    // Start stimulus LED Blue OFF (0 duty)
+
+  ledcWrite(pins.gpio.stim_d,        0);                    // Start stim PWM duty at 0 (no stimulus output)
+
+
 
   buzzerButton.lastStable = buzzerButton.lastRaw = digitalRead(pins.gpio.buzzer_button); // Seed debouncer with current level (prevents boot toggle)
   ledButton.lastStable    = ledButton.lastRaw    = digitalRead(pins.gpio.led_button);    // Seed debouncer with current level (prevents boot toggle)
 
+
+
   init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
   
+
+
   randomSeed(esp_random());                                 // Seed pseudo-RNG using ESP32-S3 hardware RNG (used for noise, etc.)
   
+
+
   // Put all SPI chip-selects in a safe inactive state
   pinMode(pins.spi.cs_adc1, OUTPUT); digitalWrite(pins.spi.cs_adc1, HIGH);
   pinMode(pins.spi.cs_adc2, OUTPUT); digitalWrite(pins.spi.cs_adc2, HIGH);

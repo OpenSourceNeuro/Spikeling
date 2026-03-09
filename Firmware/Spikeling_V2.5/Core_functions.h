@@ -1,4 +1,5 @@
 #pragma once     
+
 #include "Serial_functions.h"
 
 
@@ -118,23 +119,57 @@ inline void update_Noise() {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                              PhotoDiode                                               */
 
-inline void update_Photodiode() {
+inline void calibrate_PhotodiodeDark(uint16_t nSamples = 200, uint16_t sampleDelay_ms = 2) {// Calibrate the photodiode "dark" baseline at boot.
 
+  // Force stimulus outputs OFF during calibration
+  ledcWrite(pins.gpio.stim_d, 0);                 // stim PWM off (stim LED / stim gate)
+  dacWrite(stim.pin_stim_current,0);              // stim DAC off (no injected current output)
+  delay(50);                                      // settle time for analog front-end
+
+  uint32_t acc = 0;
+  for (uint16_t i = 0; i < nSamples; i++) {
+    acc += (uint16_t)ADC2.read(PD.pin);
+    delay(sampleDelay_ms);
+  }
+
+  PD.dark_counts = (float)acc / (float)nSamples;
+
+  // Prime the moving-average ring buffer so the first seconds after boot are stable.
+  const int v = (int)lroundf(PD.dark_counts);
+  PD.sum = 0;
+  for (uint8_t k = 0; k < PD.windowN; k++) {
+    PD.values[k] = v;
+    PD.sum += v;
+  }
+  PD.counter = 0;
+  PD.value   = (uint16_t)v;
+  PD.average = PD.dark_counts;
+
+  // Start from a neutral PD state
+  PD.gain    = 0.0f;
+  PD.amp     = 1.0f;
+  PD.current = 0.0f;
+}
+
+
+
+inline void update_Photodiode() {
+  
   PD.value = ADC2.read(PD.pin);                                                               // Reads Photodiode value from 0 to ~400
 
   PD.sum -= PD.values[PD.counter];                                                            // Remove old sample
   PD.values[PD.counter] = PD.value;                                                           // Store new sample
   PD.sum += PD.value;                                                                         // Add new sample
-  PD.counter ++;                                                                              // Increment the counter by 1
-  if (PD.counter >= PD.avgWindow) {                                                           // If, for this void loop, the counter has reached the max count number:
-    PD.counter = 0;                                                                             // Reset the counter to 0
+  PD.counter++;                                                                               // Next ring-buffer slot
+  if (PD.counter >= PD.windowN) {                                                             // Wrap at window length
+    PD.counter = 0;
   }
-  PD.average = PD.sum * PD.avgWindow;                                                         // Generate an average Photodiode value from the 10 latest reading samples
+  PD.average = (float)PD.sum * PD.invWindowN;                                                 // True mean of last windowN samples
 
   if (pot.use_photodiode_pot){                                                                // If the board Photodiode Gain is enabled:
-    const uint16_t pd_raw = ADC1.read(PD.pot_pin);                                               // Read PD gain knob raw ADC (0..4095)
-    const uint16_t pd_adc = PD.pot_filt.update(pd_raw);                                          // Filtered ADC (median + IIR + deadband)
-    PD.pot_value = (int16_t)((int32_t)pd_adc - (int32_t)pot.half_range);                          // Center to -2048..+2047
+    PD.raw = ADC1.read(PD.pot_pin);                                                             // Read PD gain knob raw ADC (0..4095)
+    PD.adc = PD.pot_filt.update(PD.raw);                                                        // Filtered ADC (median + IIR + deadband)
+    PD.pot_value = (int16_t)((int32_t)PD.adc - (int32_t)pot.half_range);                        // Center to -2048..+2047
     
     if (PD.pot_value >= pot.offset){                                                            // If PD potentiometer value is above the offset:
         PD.gain = (PD.pot_value - pot.offset) * PD.pot_scaling;                                   // Generates gain value from the reading, subtracts the offset and scales it from parameters
@@ -146,7 +181,15 @@ inline void update_Photodiode() {
   } 
   PD.polarity = (PD.gain >= 0.0f) ? 1 : -1;                                                   // Set Photodiode polarity (positive if gain above 0, negative if gain stricly below 0)
 
-  PD.current = (PD.average * PD.gain * PD.scaling) * PD.amp;                                  // Generates Photodiode current, amplified by the PD_Gain readings
+  // Map photodiode reading (counts) -> normalized light (0..1) -> injected current
+  PD.eff = PD.average - PD.dark_counts;                                                       // subtract dark baseline (counts)
+  if (PD.eff < 0.0f) PD.eff = 0.0f;
+
+  PD.denom = (PD.full_counts > 1e-6f) ? PD.full_counts : 1.0f;                                // avoid divide-by-zero
+  PD.norm = PD.eff / PD.denom;                                                                // 0..~1
+  if (PD.norm > 1.0f) PD.norm = 1.0f;
+
+  PD.current = (PD.norm * PD.I_full) * PD.gain * PD.amp;                                      //// Generates Photodiode current, amplified by the PD_Gain readings
 
   if (PD.decay_enable){                                                                       // If the GUI Photodiode Decay is disabled 
     PD.decay = 0.001f;                                                                          // Set Photodiode Decay by default to 0.001
@@ -167,6 +210,7 @@ inline void update_Photodiode() {
 
 
 
+
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                              Synapses                                                 */
 
@@ -181,9 +225,9 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
   syn.lastSpikeState = syn.spikeState;
 
   if (syn.use_syn_pot){                                                                       // If the board Synapse Gain is enabled:
-    const uint16_t syn_raw = ADC1.read(syn.pot_pin);                                             // Read Syn gain knob raw ADC (0..4095)
-    const uint16_t syn_adc = syn.pot_filt.update(syn_raw);                                       // Filtered ADC (median + IIR + deadband)
-    syn.pot_value = (int16_t)((int32_t)syn_adc - (int32_t)pot.half_range);                        // Center to -2048..+2047
+    syn.pot_raw = ADC1.read(syn.pot_pin);                                                       // Read Syn gain knob raw ADC (0..4095)
+    syn.pot_raw_filter = syn.pot_filt.update(syn.pot_raw);                                      // Filtered ADC (median + IIR + deadband)
+    syn.pot_value = (int16_t)((int32_t)syn.pot_raw_filter - (int32_t)pot.half_range);           // Center to -2048..+2047
     
     if (syn.pot_value >= pot.offset){                                                           // If the Synaptic Gain is above offset:
       syn.gain = (syn.pot_value - pot.offset) * syn.pot_scaling;                                  // Generates Synaptic Amplification 1 from the reading, substracts the offset and scales it from parameters
@@ -205,10 +249,8 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
 
   syn.Vm_input = ADC2.read(syn.pin_analog);                                                   // Reads Synapse Vm input
   syn.Vm = mapfloat(syn.Vm_input,
-                    syn.analogOffsetLow,
-                    bits12 - syn.analogOffsetHigh, 
-                    neuron.Vm_min, 
-                    neuron.Vm_max) + axon.offset;                                             // Maps Synapse Vm to Spikeling Neuron range
+                    syn.analogOffsetLow, bits12 - syn.analogOffsetHigh, 
+                    neuron.Vm_min,  neuron.Vm_max);                                           // Maps Synapse Vm to Spikeling Neuron range
 }
 
 
@@ -268,12 +310,13 @@ inline void update_StimulusOutput() {
       }
     }
 
-    stim.value_analog = (int)lroundf((float)abs(stim.str_analog) * stim.current_scaling);       // The stimulus analog output absolute value is proportional to the potentiometer reading and scaled to parameters
-
-    if (stim.str_digital >= 0){                                                                 // If the Stimulus Strength value is positive:
-      stim.value_digital = (int)lroundf((float)stim.str_digital * stim.light_scaling);            // The stimulus digital output is proportional to the potentiometer reading and scaled from parameters
-    } else {                                                                                    // Otherwise
-      stim.value_digital = 0;                                                                     // Set the stimulus digital output to 0
+    stim.amp = constrain(abs(stim.str_analog), 0, 100);                         
+    stim.value_analog = (int)lroundf((float)stim.amp * stim.current_scaling);                 // The stimulus analog output absolute value is proportional to the potentiometer reading and scaled to parameters
+       
+    if (stim.str_digital > 0) {                                                               // If the Stimulus Strength value is positive:
+      stim.value_digital = (int)(((int32_t)stim.str_digital*(int32_t)spike.ledc_Max+50)/100);   // Map 1..100 (%) -> 0..ledc_Max
+    } else {                                                                                  // Otherwise
+      stim.value_digital = 0;                                                                   // Set the stimulus digital output to 0
     }
 
     if (pot.use_stimfrequency_pot) {                                                          // If GUI "Stimulus Frequency" is disabled:
@@ -351,19 +394,27 @@ inline void update_StimulusOutput() {
     stim.cmd_abs = (stim.cmd >= 0) ? stim.cmd : -stim.cmd;                                    // Apply the same dead-zone concept for custom values near zero
     stim.custom_active = (stim.cmd_abs >= stim.str_analog_min);                               // Reuse the existing analog-min threshold as dead-zone
 
-    stim.value_digital = (stim.custom_active && (stim.cmd > 0))                               // LED output: only positive command drives LED (negative => LED off)
-                      ? (int)lroundf((float)stim.cmd * stim.light_scaling)                    // Scale signed command to PWM counts
-                      : 0;
 
-    stim.value_analog = stim.custom_active                                                    // --- Analog output: magnitude drives DAC amplitude, sign is handled elsewhere (polarity logic)
-                      ? (int)lroundf((float)stim.cmd_abs * stim.current_scaling)              // Scale magnitude to DAC counts
+    if (stim.custom_active && (stim.cmd > 0)) {                                               // LED output (stim LED): only positive command produces light, mapped to full PWM range
+      int32_t cmd_pos = stim.cmd;                                                               // expected in 0..100
+      if (cmd_pos > 100) cmd_pos = 100;                                                         // safety clamp
+
+      // Map 0..100 (%) -> 0..ledc_Max (with rounding)
+      stim.value_digital = (int)((cmd_pos * (int32_t)spike.ledc_Max + 50) / 100);
+    } else {
+      stim.value_digital = 0;                                                                   // negative or inactive => LED off
+    }
+
+
+    stim.value_analog = stim.custom_active                                                      // --- Analog output: magnitude drives DAC amplitude, sign is handled elsewhere (polarity logic)
+                      ? (int)lroundf((float)constrain(stim.cmd_abs, 0, 100) * stim.current_scaling)  // Scale magnitude to DAC counts
                       : 0;
 
     // Keep telemetry coherent (optional but recommended)
     stim.pwm = constrain(stim.value_digital, 0, spike.ledc_Max);                               // Store the PWM value actually being written
     stim.dac = constrain(stim.value_analog, 0, dac_max);                                       // Store the DAC magnitude actually being written
 
-    stim.dacVal = (uint8_t)stim.dac;                                                          // DAC value in 8-bit format
+    stim.dacVal = (uint8_t)stim.dac;                                                           // DAC value in 8-bit format
     ledcWrite(stim.pin_stim_light, stim.pwm);                                                  // Clamp to PWM max and write
     dacWrite(stim.pin_stim_current, stim.dacVal);                                              // Write the DAC value
 
@@ -373,6 +424,8 @@ inline void update_StimulusOutput() {
 
 
 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+/*                                    Stimulus - Applying Analog Values                                  */
 
 inline void update_StimulusCurrentIn() {
 
@@ -572,7 +625,7 @@ inline void send_SamplePacket() {
   const uint8_t header[2] = { 0xAA, 0x55 };
   Serial.write(header, 2);
   Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));
-  wifiSendSamplePacket(pkt);
+  //wifiSendSamplePacket(pkt);
 }
 
 

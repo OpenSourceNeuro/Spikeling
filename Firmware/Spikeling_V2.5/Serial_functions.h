@@ -1,4 +1,6 @@
 #pragma once     
+
+#include "General_settings.h"
 #include "Mode_LEDS.h"
 #include <math.h>
 
@@ -168,20 +170,30 @@ inline void patch_on() {
   float val;
   if (!readNextFloat(val)) return;
 
-  pot.use_patch_pot = false;
-
   if (clampMode == ClampMode::VoltageClamp) {
-    patch.v_hold = constrain(val, neuron.Vm_min, neuron.Vm_peak);
-    patch.v_cmd  = constrain(patch.v_hold + patch.v_step, neuron.Vm_min, neuron.Vm_peak);
-    patch.current_input = 0.0f;
-  } else {
+    // In V-clamp, PC1 sets the holding potential (Vhold). The "Current In" knob is ignored as an injected current.
+    const float old_hold = patch.v_hold;
+
+    pot.use_patch_pot = false;  // GUI overrides the voltage-command potentiometer in VC mode
+    patch.v_hold = val;
+    patch.v_cmd  = constrain(patch.v_hold + patch.v_step, neuron.Vm_min, neuron.Vm_peak);  // keep v_cmd coherent immediately
+    patch.current_input = 0.0f;  // No disturbance current labs: ensure current injection is not active in VC mode
+
+    // Only reset PI history if the command actually changed (prevents "strobing" the integrator if GUI re-sends same value).
+    if (fabsf(patch.v_hold - old_hold) > 0.05f) {
+      patch.e_int   = 0.0f;
+      patch.I_clamp = 0.0f;
+    }
+    return;
+  } 
+  else {
+    pot.use_patch_pot = false;                      // GUI overrides the current-command potentiometer in CC mode
     patch.current_clamp = val;
   }
 }
 inline void patch_off() {
   pot.use_patch_pot = true;    // re-enable voltage pot (VC hold pot)
 }
-
 
 
 
@@ -267,7 +279,6 @@ inline void Syn2Decay_off(){
 inline void Buzzer_on(){
   spike.Buzzer_enable = true;
 }
-
 inline void Buzzer_off(){
   spike.Buzzer_enable = false;
   digitalWrite(pins.gpio.spike, LOW);
@@ -277,8 +288,6 @@ inline void Buzzer_off(){
 inline void LED_on(){
   spike.LED_enable = true;
 }
-
-
 inline void LED_off(){
   spike.LED_enable = false;
   ledcWrite(pins.gpio.led_r, 0);

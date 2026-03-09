@@ -1,48 +1,42 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* ==========================================================================
-   Spikeling V2.5 – Main Firmware
-   --------------------------------------------------------------------------
-   Open-source, Arduino-compatible spiking neuron simulator
-   running an Izhikevich-style model on an ESP32-WROOM-32.
+/* ========================================================================================================
 
-   Project      : Spikeling
-   Repository   : https://github.com/OpenSourceNeuro/Spikeling
-   File         : Spikeling_V2.5.ino
-   Board        : ESP32-WROOM-32 (ESP32 DevKit-style board)
-   Author       : Maxime Zimmermann
-   Contributors : Spikeling / OpenSourceNeuro community
+  Spikeling V3.0 – Main Firmware
+  ---------------------------------------------------------------------------------------------------------
 
-   License      : GPL-3.0-or-later
-                  See the LICENSE file in the repository for details
-                  or https://www.gnu.org/licenses/gpl-3.0.html
+  Open-source, spiking neuron simulator running an Izhikevich-style model.
+    Project      : Spikeling
+    Repository   : https://github.com/OpenSourceNeuro/Spikeling
+    File         : Spikeling_V3.ino
+    Board        : ESP32-WROOM-32
+    Author       : Maxime Zimmermann
+    License      : GPL-3.0-or-later (https://www.gnu.org/licenses/gpl-3.0.html)
 
-   Dependencies :
-     - Arduino core for ESP32
-     - MCP_ADC (MCP3208 driver)
-     - SerialCommand
-     - Gaussian noise library
+  Libraries :
+    - Arduino core for ESP32
+    - MCP_ADC 
+    - SerialCommand
+    - Gaussian noise library
 
-   Description  :
-     This sketch configures the Spikeling hardware, runs the Izhikevich
-     neuron model in real time, handles all analog/digital IO (Vm,
-     synapses, photodiode, stimulus, noise), and streams compact binary
-     packets to the host GUI for oscilloscope-style visualization and
-     control.
+  Description  :
+    This sketch configures the Spikeling hardware, runs the Izhikevich neuron model in real time, handles 
+    all analog/digital IO (Vm, synapses, photodiode, stimulus, noise), and streams compact binary packets 
+    to the host GUI for oscilloscope-style visualisation and control.
 
-   --------------------------------------------------------------------------
-   (c) 2025 Maxime Zimmermann and contributors.
-   This is free software; you can redistribute it and/or modify it under the
-   terms of the GNU General Public License as published by the Free Software
-   Foundation; either version 3 of the License, or (at your option) any
-   later version.
-   ========================================================================== */
+  ---------------------------------------------------------------------------------------------------------
+  (c) 2025 Maxime Zimmermann and contributors.
+  This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+  License as published by the Free Software Foundation; 
+  ====================================================================================================== */
+
    
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                        Header import                                                  */ 
 
-  #include "WiFi_functions.h"                                                          
+  //#include "WiFi_functions.h"                                                          
   #include "Core_functions.h"
+  #include "Serial_functions.h"
 
 
 
@@ -53,7 +47,7 @@ void setup() {
   HardwareSettings();                                                                           // Initialise all components
   NeuronOpening();                                                                              // Set neuron default parameters
   SerialFunctions();                                                                            // Initialise Serial commands
-  setupWifiAP();
+  //setupWifiAP();
   Mode_opening();
 }
 
@@ -64,7 +58,7 @@ void setup() {
 
 void loop() {
 
-  wifiLoop();                                                                                   // Keep websocket responsive
+  //wifiLoop();                                                                                   // Keep websocket responsive
 
   timing.current_us = micros();
 
@@ -82,9 +76,9 @@ void loop() {
 
     update_Photodiode();                                                                        // Sets Light generated current
 
-    update_Synapse(syn1, 0.995f);                                                               // Sets Synapse 1 current
+    update_Synapse(syn1, syn1.defaultdecay);                                                    // Sets Synapse 1 current
 
-    update_Synapse(syn2, 0.990f);                                                               // Sets Synapse 2 current
+    update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current
 
     update_StimulusOutput();                                                                    // Determines Analog and Digital Values
 
@@ -107,9 +101,11 @@ void loop() {
         neuron.u = neuron.u + neuron.d;                                                             // Increase recovery/adaptation variable by “d” (represents spike-triggered adaptation / after-spike conductances).
       }
     }
-    // ---------- Voltage clamp numeric safety ----------
+
+
+/*                          -----  Voltage clamp numeric safety  -----                                   */
+
     if (clampMode == ClampMode::VoltageClamp) {
-      // 1) Recover from NaN/Inf without requiring an ESP reset
       if (!isfinite(neuron.v) || !isfinite(neuron.u)) {
         neuron.v = constrain(patch.v_cmd, neuron.Vm_min, neuron.Vm_peak);
         neuron.u = neuron.b * neuron.v;                                                         // Reinitialize recovery variable consistently
@@ -117,9 +113,6 @@ void loop() {
         patch.I_clamp = 0.0f;
       }
 
-      // 2) If Vm has hit the hard ceiling (Vm_peak), the Izhikevich quadratic term can keep pushing it up.
-      //    With limited PI gains and/or compliance this can "stick" at +30.
-      //    Detect repeated clipping and force a controlled recovery back to Vcmd.
       static uint8_t vc_clip_ctr = 0;
       if (neuron.v >= (neuron.Vm_peak - 1e-3f)) vc_clip_ctr++; else vc_clip_ctr = 0;
 
