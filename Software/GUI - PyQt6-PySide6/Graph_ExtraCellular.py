@@ -1145,15 +1145,15 @@ class ExtraCellularGraph(QObject):
         x = t_arr - t_arr[-1]
 
         checks = [
-            ui.Extracellular_Tetrode_Ch1_Checkbox,
-            ui.Extracellular_Tetrode_Ch2_Checkbox,
-            ui.Extracellular_Tetrode_Ch3_Checkbox_2,
-            ui.Extracellular_Tetrode_Ch4_Checkbox,
+            ui.Extracellular_Tetrode_Ch1_checkBox,
+            ui.Extracellular_Tetrode_Ch2_checkBox,
+            ui.Extracellular_Tetrode_Ch3_checkBox,
+            ui.Extracellular_Tetrode_Ch4_checkBox,
         ]
 
-        show_thr = ui.Extracellular_Tetrode_Threshold_Checkbox.isChecked()
-        show_spikes = ui.Extracellular_Tetrode_Spikes_Checkbox.isChecked()
-        show_events = ui.Extracellular_Tetrode_Events_Checkbox.isChecked()
+        show_thr = ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
+        show_spikes = ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
+        show_events = ui.Extracellular_Tetrode_Events_checkBox.isChecked()
 
         for k in range(N_CHANNELS):
             pw = self.channel_plot_widgets[k]
