@@ -28,7 +28,7 @@ class Ui_Spikeling(object):
     def setupUi(self, Spikeling):
         if not Spikeling.objectName():
             Spikeling.setObjectName(u"Spikeling")
-        Spikeling.resize(1280, 760)
+        Spikeling.resize(1280, 720)
         Spikeling.setMinimumSize(QSize(1280, 720))
         Spikeling.setStyleSheet(u"*{\n"
 "	border:none;\n"
@@ -47,9 +47,6 @@ class Ui_Spikeling(object):
 "        selection-background-color: lightblue;  /* highlight color when item is selected */\n"
 "    }\n"
 "\n"
-"\n"
-"\n"
-"\n"
 "#app_ID_frame QPushButton:hover{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
@@ -57,7 +54,6 @@ class Ui_Spikeling(object):
 "#centralwidget{\n"
 "	background-color:  rgb(0, 43, 54);\n"
 "}\n"
-"\n"
 "\n"
 "#leftMenuSubContainer{\n"
 "	background-color: rgb(0, 30, 38);\n"
@@ -73,11 +69,9 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
-"\n"
-"\n"
 "#centerMenuSubContainer{\n"
-""
-                        "	background-color: rgb(0, 43, 54);\n"
+"	background-color: rgb(0, 4"
+                        "3, 54);\n"
 "}\n"
 "\n"
 "#centerMenuSubContainer_exit_frame{\n"
@@ -106,6 +100,9 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 101 - Spikeling_NeuronInterface\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#Connection_frame QPushButton{\n"
 "	background-color: rgb(7, 54, 66);\n"
@@ -115,15 +112,14 @@ class Ui_Spikeling(object):
 "}\n"
 "\n"
 "#Spikeling_CenterMenuContainer{\n"
-"	background-color: rgb(7, 54, 66)\n"
+""
+                        "	background-color: rgb(7, 54, 66)\n"
 "}\n"
-"\n"
 "\n"
 "#Spikeling_rightMenuSubContainer{\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
-"#Spikeling_rightMenuSubCo"
-                        "ntainer QPushButton{\n"
+"#Spikeling_rightMenuSubContainer QPushButton{\n"
 "	text-align: left;\n"
 "	padding: 20px 0px;\n"
 "	border-top-right-radius:20px;\n"
@@ -141,7 +137,6 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
-"\n"
 "#Spikeling_parameter_stackedwidget{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
@@ -154,16 +149,15 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
-"\n"
-"#Spikeling_CustomStimulus_Selection_frame QPushButton{\n"
+"#Spikeling_CustomStimulus_Selection_frame "
+                        "QPushButton{\n"
 "	padding: 4px 0px;\n"
 "	border-radius:10px;\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
 "\n"
-"#Spikeling_DataRecording_bo"
-                        "x{\n"
+"#Spikeling_DataRecording_box{\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "}\n"
 "#Spikeling_DataRecording_box QLineEdit{\n"
@@ -175,7 +169,6 @@ class Ui_Spikeling(object):
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
-"\n"
 "#Spikeling_bottom_subframe QPushButton{\n"
 "	padding: 5px 5px;\n"
 "	border-radius:10px;\n"
@@ -184,10 +177,9 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
-"\n"
-"\n"
-"\n"
-"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 102 - Spikeling_NeuronEmulator\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#Emulator_top_subframe1 QPushButton{\n"
 "	background-color: rgb(7, 54, 66);\n"
@@ -195,7 +187,8 @@ class Ui_Spikeling(object):
 "	border-radius: 10px;\n"
 "    padding: 3px 10px;\n"
 "}\n"
-"#Emulator_top_subframe1 QPushButton:hover{\n"
+"#Emulator_top_subframe"
+                        "1 QPushButton:hover{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
 "\n"
@@ -207,8 +200,7 @@ class Ui_Spikeling(object):
 "}\n"
 "\n"
 "#Emulator_rightMenuSubContainer{\n"
-"	background-colo"
-                        "r: rgb(0, 30, 38);\n"
+"	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "#Emulator_rightMenuSubContainer QPushButton{\n"
 "	text-align: left;\n"
@@ -228,12 +220,12 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
-"\n"
 "#Emulator_parameter_stackedwidget{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
 "#EmulatorStimulusParameter_page QComboBox{\n"
-"	border: 2px solid rgb(190, 205, 205);\n"
+"	border: 2px solid rgb(1"
+                        "90, 205, 205);\n"
 "	background-color: rgb(0, 30, 38);\n"
 "	padding: 2px;\n"
 "}\n"
@@ -241,15 +233,11 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
-"\n"
 "#Emulator_CustomStimulus_Selection_frame QPushButton{\n"
 "	padding: 4px 0px;\n"
 "	border-radius:10px;\n"
-"	background-color: rgb(0,"
-                        " 30, 38);\n"
+"	background-color: rgb(0, 30, 38);\n"
 "}\n"
-"\n"
-"\n"
 "\n"
 "#Emulator_Synapse1Parameter_page QPushButton{\n"
 "	padding: 5px 5px;\n"
@@ -257,13 +245,11 @@ class Ui_Spikeling(object):
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
-"\n"
 "#Emulator_Synapse2Parameter_page QPushButton{\n"
 "	padding: 5px 5px;\n"
 "	border-radius:10px;\n"
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
-"\n"
 "\n"
 "#Emulator_DataRecording_box{\n"
 "	border: 2px solid rgb(147,161,161);\n"
@@ -279,21 +265,23 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "#Emulator_bottom_subframe QPushButton{\n"
-"	padding: 5px 5px;\n"
+"	paddi"
+                        "ng: 5px 5px;\n"
 "	border-radius:10px;\n"
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
 "\n"
 "\n"
-"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 103 - Spikeling_DataAnalysis\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#Spikeling_DataAnalysis_stackedWidget{\n"
 "	background-color: rgb(7,54,66);\n"
 "    border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
-"#Spikeling_DataAnalysis_stackedWidge"
-                        "t QPushButton{\n"
+"#Spikeling_DataAnalysis_stackedWidget QPushButton{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
@@ -313,29 +301,13 @@ class Ui_Spikeling(object):
 "	padding: 2px;\n"
 "}\n"
 "\n"
-"#Spikeling_DataAnalysis_RightMenu_Container{\n"
-"	background-color: rgb(0, 30, 38);\n"
-"}\n"
-"#DataAnalysis_RightMenu_Container QPushButton{\n"
-"	text-align: left;\n"
-"	padding: 20px 0px;\n"
-"	border-top-right-radius:20px;\n"
-"	border-bottom-right-radius: 20px;\n"
-"	background-color: rgb(0, 43, 54);\n"
-"}\n"
-"#Spikeling_DataAnalysis_RightMenu_Container QPushButton:hover{\n"
-"	background-color: rgb(0, 30, 38);\n"
-"}\n"
-"#Spikeling_DataAnalysis_RightMenu_Frame QPushButt"
-                        "on{\n"
-"	background-color: rgb(0, 43, 54);\n"
-"}\n"
-"#Spikeling_DataAnalysis_RightMenu_Frame QPushButton:hover{\n"
-"	background-color: rgb(0, 30, 38);\n"
-"}\n"
 "\n"
 "\n"
 "\n"
+""
+                        "/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 201 - Imaging_ImagingSimulation \n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#Imaging_rightMenuSubContainer{\n"
 "	background-color: rgb(0, 30, 38);\n"
@@ -364,9 +336,9 @@ class Ui_Spikeling(object):
 "}\n"
 "#Imaging_parameter_exit_frame{\n"
 "	background-color: rgb(0, 30, 38);\n"
-"}\n"
-"#Imag"
-                        "ing_pushButton_frame QPushButton{\n"
+""
+                        "}\n"
+"#Imaging_pushButton_frame QPushButton{\n"
 "	background-color: rgb(7, 54, 66);\n"
 "    border: 1px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
@@ -399,9 +371,9 @@ class Ui_Spikeling(object):
 "}\n"
 "#Imaging_DataRecording_box QPushButton{\n"
 "	padding: 5px 5px;\n"
-"	border-radius:10px;\n"
-"	"
-                        "background-color: rgb(7, 54, 66);\n"
+"	border-radius:"
+                        "10px;\n"
+"	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
 "#Imaging_Oscilloscope_widget QPushButton{\n"
@@ -416,13 +388,65 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 202 - Imaging_DataAnalysis\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
+"\n"
+"#Imaging_DataAnalysis_Container_frame{\n"
+"	background-color: rgb(7,54,66);\n"
+"    border: 2px solid rgb(190, 205, 205);\n"
+"}\n"
+"#Imaging_DataAnalysis_Container_frame QPushButton{\n"
+"	background-color: rgb(0, 43, 54);\n"
+"	border: 2px solid rgb(190, 205, 205);\n"
+"	border-radius: 10px;\n"
+"	padding: 2px;\n"
+"}\n"
+"#Imaging_DataAnalysis_Container_frame QLineEdit{\n"
+"    border: 2px solid rgb(190, 205, 205);\n"
+"}\n"
+"#Imaging_DataAnalysis_Container_frame Line{\n"
+"    border: 1px solid rgb(190, 205, 205);\n"
+"}"
+                        "\n"
+"\n"
+"#Imaging_DataAnalysis_Display_frame QPushButton{\n"
+"	background-color: rgb(7,54,66);\n"
+"	border: 2px solid rgb(190, 205, 205);\n"
+"	border-radius: 10px;\n"
+"	padding: 2px;\n"
+"}\n"
+"\n"
+"#Imaging_DataAnalysis_rightSubContainer_frame{\n"
+"	background-color: rgb(0, 30, 38);\n"
+"}\n"
+"#Imaging_DataAnalysis_rightSubContainer_frame QPushButton{\n"
+"	text-align: left;\n"
+"	padding: 20px 0px;\n"
+"	border-top-right-radius:20px;\n"
+"	border-bottom-right-radius: 20px;\n"
+"	background-color: rgb(0, 43, 54);\n"
+"}\n"
+"#Imaging_DataAnalysis_rightSubContainer_frame QPushButton:hover{\n"
+"	background-color: rgb(0, 30, 38);\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 301 - ExtraCellular_Scope\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
+"\n"
+"\n"
 "#ExtraCellular_rightMenuSubContainer{\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "#ExtraCellular_parameter_stackedWidget{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
-"#ExtraCellular_rightMenuSubContainer QPushButton{\n"
+""
+                        "#ExtraCellular_rightMenuSubContainer QPushButton{\n"
 "	text-align: left;\n"
 "	padding: 20px 0px;\n"
 "	border-top-right-radius:20px;\n"
@@ -438,8 +462,7 @@ class Ui_Spikeling(object):
 "#ExtraCellular_rightMenuSubContainer_frame QPushButton:hover{\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
-"#Ex"
-                        "traCellular_CenterMenuContainer{\n"
+"#ExtraCellular_CenterMenuContainer{\n"
 "	background-color: rgb(7, 54, 66)\n"
 "}\n"
 "#ExtraCellular_parameter_exit_frame{\n"
@@ -455,7 +478,8 @@ class Ui_Spikeling(object):
 "#ExtraCellular_DataRecording_box{\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
-"#ExtraCellular_DataRecording_box QLineEdit{\n"
+"#ExtraCellular_DataRecording_"
+                        "box QLineEdit{\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "    background-color: rgb(7, 54, 66);\n"
 "}\n"
@@ -474,19 +498,23 @@ class Ui_Spikeling(object):
 "	border-radius:10px;\n"
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
-"#Extr"
-                        "aCellular_Oscilloscope_widget QPushButton:hover{\n"
+"#ExtraCellular_Oscilloscope_widget QPushButton:hover{\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
 "\n"
+"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 401 - Neuron_Generator\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#NeuronGenerator_subframe1_middle_frame QLineEdit{\n"
 "	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "}\n"
 "#NeuronGenerator_subframe2 QLineEdit{\n"
-"	background-color: rgb(7, 54, 66);\n"
+""
+                        "	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
 "#NeuronGenerator_subframe2 QPushButton{\n"
@@ -509,23 +537,19 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 501 - Stimulus_Generator\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
 "#page_501 QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
-""
-                        "	border: 2px solid rgb(190, 205, 205);\n"
+"	border: 2px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
 "	padding: 2px;\n"
 "}\n"
 "#StimulusGenerator_Container QComboBox{\n"
-"	background-color: rgb(7, 54, 66);\n"
+"	background"
+                        "-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
 "	padding: 5px 5px;\n"
@@ -543,6 +567,7 @@ class Ui_Spikeling(object):
         self.centralwidget = QWidget(Spikeling)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setMinimumSize(QSize(1280, 720))
+        self.centralwidget.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout_75 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_75.setSpacing(0)
         self.verticalLayout_75.setObjectName(u"verticalLayout_75")
@@ -4161,7 +4186,7 @@ class Ui_Spikeling(object):
         self.Emulator_parameter_exit_pushButton.setIcon(icon18)
         self.Emulator_parameter_exit_pushButton.setIconSize(QSize(20, 20))
 
-        self.horizontalLayout_428.addWidget(self.Emulator_parameter_exit_pushButton)
+        self.horizontalLayout_428.addWidget(self.Emulator_parameter_exit_pushButton, 0, Qt.AlignLeft)
 
 
         self.verticalLayout_101.addWidget(self.Emulator_parameter_exit_frame)
@@ -12334,7 +12359,9 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_frame.setFrameShape(QFrame.StyledPanel)
         self.Imaging_DataAnalysis_frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_140 = QHBoxLayout(self.Imaging_DataAnalysis_frame)
+        self.horizontalLayout_140.setSpacing(0)
         self.horizontalLayout_140.setObjectName(u"horizontalLayout_140")
+        self.horizontalLayout_140.setContentsMargins(0, 0, 0, 0)
         self.Imaging_DataAnalysis_Display_frame = QFrame(self.Imaging_DataAnalysis_frame)
         self.Imaging_DataAnalysis_Display_frame.setObjectName(u"Imaging_DataAnalysis_Display_frame")
         self.Imaging_DataAnalysis_Display_frame.setFrameShape(QFrame.StyledPanel)
@@ -12353,1096 +12380,586 @@ class Ui_Spikeling(object):
         self.verticalLayout_38.setContentsMargins(0, 0, 0, 0)
         self.DataAnalysis_Display_StackedWidget_2 = QStackedWidget(self.DataAnalysis_Display_frame_2)
         self.DataAnalysis_Display_StackedWidget_2.setObjectName(u"DataAnalysis_Display_StackedWidget_2")
-        self.page_103_1_3 = QWidget()
-        self.page_103_1_3.setObjectName(u"page_103_1_3")
-        self.verticalLayout_50 = QVBoxLayout(self.page_103_1_3)
+        self.page_202_10 = QWidget()
+        self.page_202_10.setObjectName(u"page_202_10")
+        self.verticalLayout_50 = QVBoxLayout(self.page_202_10)
         self.verticalLayout_50.setSpacing(0)
         self.verticalLayout_50.setObjectName(u"verticalLayout_50")
         self.verticalLayout_50.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget1_0_4 = PlotWidget(self.page_103_1_3)
-        self.DataAnalysis_Oscilloscope_widget1_0_4.setObjectName(u"DataAnalysis_Oscilloscope_widget1_0_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_0_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_0_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_0_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_0 = PlotWidget(self.page_202_10)
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget10_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget10_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_50.addWidget(self.DataAnalysis_Oscilloscope_widget1_0_4)
+        self.verticalLayout_50.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget10_0)
 
-        self.line_43 = QFrame(self.page_103_1_3)
+        self.line_43 = QFrame(self.page_202_10)
         self.line_43.setObjectName(u"line_43")
         self.line_43.setFrameShape(QFrame.Shape.HLine)
         self.line_43.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_50.addWidget(self.line_43)
 
-        self.DataAnalysis_Oscilloscope_widget1_0_5 = PlotWidget(self.page_103_1_3)
-        self.DataAnalysis_Oscilloscope_widget1_0_5.setObjectName(u"DataAnalysis_Oscilloscope_widget1_0_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_0_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_0_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_0_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_1 = PlotWidget(self.page_202_10)
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget10_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget10_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget10_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_50.addWidget(self.DataAnalysis_Oscilloscope_widget1_0_5)
+        self.verticalLayout_50.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget10_1)
 
-        self.line_45 = QFrame(self.page_103_1_3)
-        self.line_45.setObjectName(u"line_45")
-        self.line_45.setFrameShape(QFrame.Shape.HLine)
-        self.line_45.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_50.addWidget(self.line_45)
-
-        self.DataAnalysis_Oscilloscope_widget1_0_6 = PlotWidget(self.page_103_1_3)
-        self.DataAnalysis_Oscilloscope_widget1_0_6.setObjectName(u"DataAnalysis_Oscilloscope_widget1_0_6")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_0_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_0_6.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget1_0_6.setMinimumSize(QSize(0, 100))
-        self.DataAnalysis_Oscilloscope_widget1_0_6.setMaximumSize(QSize(16777215, 100))
-        self.DataAnalysis_Oscilloscope_widget1_0_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_50.addWidget(self.DataAnalysis_Oscilloscope_widget1_0_6)
-
-        self.line_46 = QFrame(self.page_103_1_3)
+        self.line_46 = QFrame(self.page_202_10)
         self.line_46.setObjectName(u"line_46")
         self.line_46.setFrameShape(QFrame.Shape.HLine)
         self.line_46.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_50.addWidget(self.line_46)
 
-        self.DataAnalysis_Oscilloscope_widget1_0_7 = PlotWidget(self.page_103_1_3)
-        self.DataAnalysis_Oscilloscope_widget1_0_7.setObjectName(u"DataAnalysis_Oscilloscope_widget1_0_7")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_0_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_0_7.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget1_0_7.setMinimumSize(QSize(0, 150))
-        self.DataAnalysis_Oscilloscope_widget1_0_7.setMaximumSize(QSize(16777215, 150))
-        self.DataAnalysis_Oscilloscope_widget1_0_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_50.addWidget(self.DataAnalysis_Oscilloscope_widget1_0_7)
-
-        self.line_47 = QFrame(self.page_103_1_3)
-        self.line_47.setObjectName(u"line_47")
-        self.line_47.setFrameShape(QFrame.Shape.HLine)
-        self.line_47.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_50.addWidget(self.line_47)
-
-        self.DataAnalysis_Neurons_pushButton10_frame_2 = QFrame(self.page_103_1_3)
-        self.DataAnalysis_Neurons_pushButton10_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton10_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton10_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton10_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton10_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton10_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton10_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_129 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton10_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame = QFrame(self.page_202_10)
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton10_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton10_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton10_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_129 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton10_frame)
         self.horizontalLayout_129.setSpacing(5)
         self.horizontalLayout_129.setObjectName(u"horizontalLayout_129")
         self.horizontalLayout_129.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton10_2 = QPushButton(self.DataAnalysis_Neurons_pushButton10_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton10_2")
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setStyleSheet(u"color: rgb(220, 50, 47);")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton10_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton10")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setStyleSheet(u"color: rgb(220, 50, 47);")
 
-        self.horizontalLayout_129.addWidget(self.DataAnalysis_Neuron0Vm_pushButton10_2)
+        self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton10)
 
-        self.DataAnalysis_Neuron1Vm_pushButton10_2 = QPushButton(self.DataAnalysis_Neurons_pushButton10_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton10_2")
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setStyleSheet(u"color: rgb(203, 75, 22);")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton10_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton10")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setStyleSheet(u"color: rgb(203, 75, 22);")
 
-        self.horizontalLayout_129.addWidget(self.DataAnalysis_Neuron1Vm_pushButton10_2)
+        self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton10)
 
-        self.DataAnalysis_Neuron2Vm_pushButton10_2 = QPushButton(self.DataAnalysis_Neurons_pushButton10_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton10_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton10_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setStyleSheet(u"color: rgb(181, 137, 0);")
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton10_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton10")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setStyleSheet(u"color: rgb(181, 137, 0);")
 
-        self.horizontalLayout_129.addWidget(self.DataAnalysis_Neuron2Vm_pushButton10_2)
+        self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton10)
 
 
-        self.verticalLayout_50.addWidget(self.DataAnalysis_Neurons_pushButton10_frame_2)
+        self.verticalLayout_50.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton10_frame)
 
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_1_3)
-        self.page_103_1_4 = QWidget()
-        self.page_103_1_4.setObjectName(u"page_103_1_4")
-        self.verticalLayout_51 = QVBoxLayout(self.page_103_1_4)
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_10)
+        self.page_202_11 = QWidget()
+        self.page_202_11.setObjectName(u"page_202_11")
+        self.verticalLayout_51 = QVBoxLayout(self.page_202_11)
         self.verticalLayout_51.setSpacing(0)
         self.verticalLayout_51.setObjectName(u"verticalLayout_51")
         self.verticalLayout_51.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget1_1_3 = PlotWidget(self.page_103_1_4)
-        self.DataAnalysis_Oscilloscope_widget1_1_3.setObjectName(u"DataAnalysis_Oscilloscope_widget1_1_3")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_1_3.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_1_3.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_1_3.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_0 = PlotWidget(self.page_202_11)
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget11_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget11_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_51.addWidget(self.DataAnalysis_Oscilloscope_widget1_1_3)
+        self.verticalLayout_51.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget11_0)
 
-        self.line_48 = QFrame(self.page_103_1_4)
+        self.line_48 = QFrame(self.page_202_11)
         self.line_48.setObjectName(u"line_48")
         self.line_48.setFrameShape(QFrame.Shape.HLine)
         self.line_48.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_51.addWidget(self.line_48)
 
-        self.DataAnalysis_Oscilloscope_widget1_1_4 = PlotWidget(self.page_103_1_4)
-        self.DataAnalysis_Oscilloscope_widget1_1_4.setObjectName(u"DataAnalysis_Oscilloscope_widget1_1_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_1_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_1_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_1_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_1 = PlotWidget(self.page_202_11)
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget11_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget11_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget11_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_51.addWidget(self.DataAnalysis_Oscilloscope_widget1_1_4)
+        self.verticalLayout_51.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget11_1)
 
-        self.line_49 = QFrame(self.page_103_1_4)
-        self.line_49.setObjectName(u"line_49")
-        self.line_49.setFrameShape(QFrame.Shape.HLine)
-        self.line_49.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_51.addWidget(self.line_49)
-
-        self.DataAnalysis_Oscilloscope_widget1_1_5 = PlotWidget(self.page_103_1_4)
-        self.DataAnalysis_Oscilloscope_widget1_1_5.setObjectName(u"DataAnalysis_Oscilloscope_widget1_1_5")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_1_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_1_5.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget1_1_5.setMinimumSize(QSize(0, 150))
-        self.DataAnalysis_Oscilloscope_widget1_1_5.setMaximumSize(QSize(16777215, 150))
-        self.DataAnalysis_Oscilloscope_widget1_1_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_51.addWidget(self.DataAnalysis_Oscilloscope_widget1_1_5)
-
-        self.line_50 = QFrame(self.page_103_1_4)
+        self.line_50 = QFrame(self.page_202_11)
         self.line_50.setObjectName(u"line_50")
         self.line_50.setFrameShape(QFrame.Shape.HLine)
         self.line_50.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_51.addWidget(self.line_50)
 
-        self.DataAnalysis_Neurons_pushButton11_frame_2 = QFrame(self.page_103_1_4)
-        self.DataAnalysis_Neurons_pushButton11_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton11_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton11_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton11_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton11_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton11_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton11_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_130 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton11_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame = QFrame(self.page_202_11)
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton11_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton11_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton11_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_130 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton11_frame)
         self.horizontalLayout_130.setSpacing(5)
         self.horizontalLayout_130.setObjectName(u"horizontalLayout_130")
         self.horizontalLayout_130.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton11_2 = QPushButton(self.DataAnalysis_Neurons_pushButton11_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton11_2")
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setStyleSheet(u"color: rgb(220, 50, 47);")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton11_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton11")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setStyleSheet(u"color: rgb(220, 50, 47);")
 
-        self.horizontalLayout_130.addWidget(self.DataAnalysis_Neuron0Vm_pushButton11_2)
+        self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton11)
 
-        self.DataAnalysis_Neuron1Vm_pushButton11_2 = QPushButton(self.DataAnalysis_Neurons_pushButton11_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton11_2")
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setStyleSheet(u"color: rgb(203, 75, 22);")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton11_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton11")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setStyleSheet(u"color: rgb(203, 75, 22);")
 
-        self.horizontalLayout_130.addWidget(self.DataAnalysis_Neuron1Vm_pushButton11_2)
+        self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton11)
 
-        self.DataAnalysis_Neuron2Vm_pushButton11_2 = QPushButton(self.DataAnalysis_Neurons_pushButton11_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton11_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton11_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setStyleSheet(u"color: rgb(181, 137, 0);")
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton11_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton11")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setStyleSheet(u"color: rgb(181, 137, 0);")
 
-        self.horizontalLayout_130.addWidget(self.DataAnalysis_Neuron2Vm_pushButton11_2)
+        self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton11)
 
 
-        self.verticalLayout_51.addWidget(self.DataAnalysis_Neurons_pushButton11_frame_2)
+        self.verticalLayout_51.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton11_frame)
 
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_1_4)
-        self.page_103_1_5 = QWidget()
-        self.page_103_1_5.setObjectName(u"page_103_1_5")
-        self.verticalLayout_52 = QVBoxLayout(self.page_103_1_5)
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_11)
+        self.page_202_12 = QWidget()
+        self.page_202_12.setObjectName(u"page_202_12")
+        self.verticalLayout_52 = QVBoxLayout(self.page_202_12)
         self.verticalLayout_52.setSpacing(0)
         self.verticalLayout_52.setObjectName(u"verticalLayout_52")
         self.verticalLayout_52.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget1_2_3 = PlotWidget(self.page_103_1_5)
-        self.DataAnalysis_Oscilloscope_widget1_2_3.setObjectName(u"DataAnalysis_Oscilloscope_widget1_2_3")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_2_3.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_2_3.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_2_3.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_0 = PlotWidget(self.page_202_12)
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget12_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget12_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_52.addWidget(self.DataAnalysis_Oscilloscope_widget1_2_3)
+        self.verticalLayout_52.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget12_0)
 
-        self.line_51 = QFrame(self.page_103_1_5)
+        self.line_51 = QFrame(self.page_202_12)
         self.line_51.setObjectName(u"line_51")
         self.line_51.setFrameShape(QFrame.Shape.HLine)
         self.line_51.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_52.addWidget(self.line_51)
 
-        self.DataAnalysis_Oscilloscope_widget1_2_4 = PlotWidget(self.page_103_1_5)
-        self.DataAnalysis_Oscilloscope_widget1_2_4.setObjectName(u"DataAnalysis_Oscilloscope_widget1_2_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_2_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_2_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget1_2_4.setMinimumSize(QSize(0, 0))
-        self.DataAnalysis_Oscilloscope_widget1_2_4.setMaximumSize(QSize(16777215, 16777215))
-        self.DataAnalysis_Oscilloscope_widget1_2_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1 = PlotWidget(self.page_202_12)
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget12_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget12_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1.setMinimumSize(QSize(0, 0))
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1.setMaximumSize(QSize(16777215, 16777215))
+        self.Imaging_DataAnalysis_Oscilloscope_widget12_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_52.addWidget(self.DataAnalysis_Oscilloscope_widget1_2_4)
+        self.verticalLayout_52.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget12_1)
 
-        self.line_52 = QFrame(self.page_103_1_5)
+        self.line_52 = QFrame(self.page_202_12)
         self.line_52.setObjectName(u"line_52")
         self.line_52.setFrameShape(QFrame.Shape.HLine)
         self.line_52.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_52.addWidget(self.line_52)
 
-        self.DataAnalysis_Oscilloscope_widget1_2_5 = PlotWidget(self.page_103_1_5)
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setObjectName(u"DataAnalysis_Oscilloscope_widget1_2_5")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget1_2_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setMinimumSize(QSize(0, 150))
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setMaximumSize(QSize(16777215, 150))
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setFont(font10)
-        self.DataAnalysis_Oscilloscope_widget1_2_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_52.addWidget(self.DataAnalysis_Oscilloscope_widget1_2_5)
-
-        self.line_53 = QFrame(self.page_103_1_5)
-        self.line_53.setObjectName(u"line_53")
-        self.line_53.setFrameShape(QFrame.Shape.HLine)
-        self.line_53.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_52.addWidget(self.line_53)
-
-        self.DataAnalysis_Neurons_pushButton12_frame_2 = QFrame(self.page_103_1_5)
-        self.DataAnalysis_Neurons_pushButton12_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton12_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton12_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton12_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton12_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton12_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton12_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_131 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton12_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame = QFrame(self.page_202_12)
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton12_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton12_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton12_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_131 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton12_frame)
         self.horizontalLayout_131.setSpacing(5)
         self.horizontalLayout_131.setObjectName(u"horizontalLayout_131")
         self.horizontalLayout_131.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton12_2 = QPushButton(self.DataAnalysis_Neurons_pushButton12_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton12_2")
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setStyleSheet(u"color: rgb(220, 50, 47);")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton12_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton12")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setStyleSheet(u"color: rgb(220, 50, 47);")
 
-        self.horizontalLayout_131.addWidget(self.DataAnalysis_Neuron0Vm_pushButton12_2)
+        self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton12)
 
-        self.DataAnalysis_Neuron1Vm_pushButton12_2 = QPushButton(self.DataAnalysis_Neurons_pushButton12_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton12_2")
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setStyleSheet(u"color: rgb(203, 75, 22);")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton12_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton12")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setStyleSheet(u"color: rgb(203, 75, 22);")
 
-        self.horizontalLayout_131.addWidget(self.DataAnalysis_Neuron1Vm_pushButton12_2)
+        self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton12)
 
-        self.DataAnalysis_Neuron2Vm_pushButton12_2 = QPushButton(self.DataAnalysis_Neurons_pushButton12_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton12_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton12_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setStyleSheet(u"color: rgb(181, 137, 0);")
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton12_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton12")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setStyleSheet(u"color: rgb(181, 137, 0);")
 
-        self.horizontalLayout_131.addWidget(self.DataAnalysis_Neuron2Vm_pushButton12_2)
+        self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton12)
 
 
-        self.verticalLayout_52.addWidget(self.DataAnalysis_Neurons_pushButton12_frame_2)
+        self.verticalLayout_52.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton12_frame)
 
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_1_5)
-        self.page_103_2_3 = QWidget()
-        self.page_103_2_3.setObjectName(u"page_103_2_3")
-        self.verticalLayout_99 = QVBoxLayout(self.page_103_2_3)
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_12)
+        self.page_202_20 = QWidget()
+        self.page_202_20.setObjectName(u"page_202_20")
+        self.verticalLayout_99 = QVBoxLayout(self.page_202_20)
         self.verticalLayout_99.setSpacing(0)
         self.verticalLayout_99.setObjectName(u"verticalLayout_99")
         self.verticalLayout_99.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget2_0_4 = PlotWidget(self.page_103_2_3)
-        self.DataAnalysis_Oscilloscope_widget2_0_4.setObjectName(u"DataAnalysis_Oscilloscope_widget2_0_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_0_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_0_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_0_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_0 = PlotWidget(self.page_202_20)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget20_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget20_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_99.addWidget(self.DataAnalysis_Oscilloscope_widget2_0_4)
+        self.verticalLayout_99.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget20_0)
 
-        self.line_54 = QFrame(self.page_103_2_3)
+        self.line_54 = QFrame(self.page_202_20)
         self.line_54.setObjectName(u"line_54")
         self.line_54.setFrameShape(QFrame.Shape.HLine)
         self.line_54.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_99.addWidget(self.line_54)
 
-        self.DataAnalysis_Oscilloscope_widget2_0_5 = PlotWidget(self.page_103_2_3)
-        self.DataAnalysis_Oscilloscope_widget2_0_5.setObjectName(u"DataAnalysis_Oscilloscope_widget2_0_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_0_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_0_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_0_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_1 = PlotWidget(self.page_202_20)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget20_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget20_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_99.addWidget(self.DataAnalysis_Oscilloscope_widget2_0_5)
+        self.verticalLayout_99.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget20_1)
 
-        self.line_55 = QFrame(self.page_103_2_3)
+        self.line_55 = QFrame(self.page_202_20)
         self.line_55.setObjectName(u"line_55")
         self.line_55.setFrameShape(QFrame.Shape.HLine)
         self.line_55.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_99.addWidget(self.line_55)
 
-        self.DataAnalysis_Oscilloscope_widget2_0_6 = PlotWidget(self.page_103_2_3)
-        self.DataAnalysis_Oscilloscope_widget2_0_6.setObjectName(u"DataAnalysis_Oscilloscope_widget2_0_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_0_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_0_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_0_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_2 = PlotWidget(self.page_202_20)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_2.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget20_2")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget20_2.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_2.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_99.addWidget(self.DataAnalysis_Oscilloscope_widget2_0_6)
+        self.verticalLayout_99.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget20_2)
 
-        self.line_56 = QFrame(self.page_103_2_3)
+        self.line_56 = QFrame(self.page_202_20)
         self.line_56.setObjectName(u"line_56")
         self.line_56.setFrameShape(QFrame.Shape.HLine)
         self.line_56.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_99.addWidget(self.line_56)
 
-        self.DataAnalysis_Oscilloscope_widget2_0_7 = PlotWidget(self.page_103_2_3)
-        self.DataAnalysis_Oscilloscope_widget2_0_7.setObjectName(u"DataAnalysis_Oscilloscope_widget2_0_7")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_0_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_0_7.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget2_0_7.setMinimumSize(QSize(0, 100))
-        self.DataAnalysis_Oscilloscope_widget2_0_7.setMaximumSize(QSize(16777215, 100))
-        self.DataAnalysis_Oscilloscope_widget2_0_7.setStyleSheet(u"background-color: rgb(0, 30, 38);\n"
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3 = PlotWidget(self.page_202_20)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget20_3")
+        sizePolicy5.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget20_3.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3.setSizePolicy(sizePolicy5)
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3.setMinimumSize(QSize(0, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3.setMaximumSize(QSize(16777215, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget20_3.setStyleSheet(u"background-color: rgb(0, 30, 38);\n"
 "")
 
-        self.verticalLayout_99.addWidget(self.DataAnalysis_Oscilloscope_widget2_0_7)
+        self.verticalLayout_99.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget20_3)
 
-        self.line_57 = QFrame(self.page_103_2_3)
+        self.line_57 = QFrame(self.page_202_20)
         self.line_57.setObjectName(u"line_57")
         self.line_57.setFrameShape(QFrame.Shape.HLine)
         self.line_57.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_99.addWidget(self.line_57)
 
-        self.DataAnalysis_Neurons_pushButton20_frame_2 = QFrame(self.page_103_2_3)
-        self.DataAnalysis_Neurons_pushButton20_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton20_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton20_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton20_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton20_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton20_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton20_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_132 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton20_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame = QFrame(self.page_202_20)
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton20_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton20_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton20_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_132 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton20_frame)
         self.horizontalLayout_132.setSpacing(5)
         self.horizontalLayout_132.setObjectName(u"horizontalLayout_132")
         self.horizontalLayout_132.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton20_2 = QPushButton(self.DataAnalysis_Neurons_pushButton20_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton20_2")
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setStyleSheet(u"color: rgb(220, 50, 47);")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton20_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton20")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setStyleSheet(u"color: rgb(220, 50, 47);")
 
-        self.horizontalLayout_132.addWidget(self.DataAnalysis_Neuron0Vm_pushButton20_2)
+        self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton20)
 
-        self.DataAnalysis_Neuron1Vm_pushButton20_2 = QPushButton(self.DataAnalysis_Neurons_pushButton20_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton20_2")
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setStyleSheet(u"color: rgb(203, 75, 22);")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton20_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton20")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setStyleSheet(u"color: rgb(203, 75, 22);")
 
-        self.horizontalLayout_132.addWidget(self.DataAnalysis_Neuron1Vm_pushButton20_2)
+        self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton20)
 
-        self.DataAnalysis_Neuron2Vm_pushButton20_2 = QPushButton(self.DataAnalysis_Neurons_pushButton20_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton20_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton20_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setStyleSheet(u"color: rgb(181, 137, 0);")
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton20_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton20")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setStyleSheet(u"color: rgb(181, 137, 0);")
 
-        self.horizontalLayout_132.addWidget(self.DataAnalysis_Neuron2Vm_pushButton20_2)
+        self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton20)
 
 
-        self.verticalLayout_99.addWidget(self.DataAnalysis_Neurons_pushButton20_frame_2)
+        self.verticalLayout_99.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton20_frame)
 
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_2_3)
-        self.page_103_2_4 = QWidget()
-        self.page_103_2_4.setObjectName(u"page_103_2_4")
-        self.verticalLayout_113 = QVBoxLayout(self.page_103_2_4)
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_20)
+        self.page_202_21 = QWidget()
+        self.page_202_21.setObjectName(u"page_202_21")
+        self.verticalLayout_113 = QVBoxLayout(self.page_202_21)
         self.verticalLayout_113.setSpacing(0)
         self.verticalLayout_113.setObjectName(u"verticalLayout_113")
         self.verticalLayout_113.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget2_1_4 = PlotWidget(self.page_103_2_4)
-        self.DataAnalysis_Oscilloscope_widget2_1_4.setObjectName(u"DataAnalysis_Oscilloscope_widget2_1_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_1_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_1_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_1_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_0 = PlotWidget(self.page_202_21)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget21_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget21_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_113.addWidget(self.DataAnalysis_Oscilloscope_widget2_1_4)
+        self.verticalLayout_113.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget21_0)
 
-        self.line_58 = QFrame(self.page_103_2_4)
+        self.line_58 = QFrame(self.page_202_21)
         self.line_58.setObjectName(u"line_58")
         self.line_58.setFrameShape(QFrame.Shape.HLine)
         self.line_58.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_113.addWidget(self.line_58)
 
-        self.DataAnalysis_Oscilloscope_widget2_1_5 = PlotWidget(self.page_103_2_4)
-        self.DataAnalysis_Oscilloscope_widget2_1_5.setObjectName(u"DataAnalysis_Oscilloscope_widget2_1_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_1_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_1_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_1_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_1 = PlotWidget(self.page_202_21)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget21_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget21_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_113.addWidget(self.DataAnalysis_Oscilloscope_widget2_1_5)
+        self.verticalLayout_113.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget21_1)
 
-        self.line_59 = QFrame(self.page_103_2_4)
+        self.line_59 = QFrame(self.page_202_21)
         self.line_59.setObjectName(u"line_59")
         self.line_59.setFrameShape(QFrame.Shape.HLine)
         self.line_59.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_113.addWidget(self.line_59)
 
-        self.DataAnalysis_Oscilloscope_widget2_1_6 = PlotWidget(self.page_103_2_4)
-        self.DataAnalysis_Oscilloscope_widget2_1_6.setObjectName(u"DataAnalysis_Oscilloscope_widget2_1_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_1_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_1_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_1_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_2 = PlotWidget(self.page_202_21)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_2.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget21_2")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget21_2.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_2.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_113.addWidget(self.DataAnalysis_Oscilloscope_widget2_1_6)
+        self.verticalLayout_113.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget21_2)
 
-        self.line_60 = QFrame(self.page_103_2_4)
+        self.line_60 = QFrame(self.page_202_21)
         self.line_60.setObjectName(u"line_60")
         self.line_60.setFrameShape(QFrame.Shape.HLine)
         self.line_60.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_113.addWidget(self.line_60)
 
-        self.DataAnalysis_Oscilloscope_widget2_1_7 = PlotWidget(self.page_103_2_4)
-        self.DataAnalysis_Oscilloscope_widget2_1_7.setObjectName(u"DataAnalysis_Oscilloscope_widget2_1_7")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_1_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_1_7.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget2_1_7.setMinimumSize(QSize(0, 100))
-        self.DataAnalysis_Oscilloscope_widget2_1_7.setMaximumSize(QSize(16777215, 100))
-        self.DataAnalysis_Oscilloscope_widget2_1_7.setStyleSheet(u"background-color: rgb(0, 30, 38);\n"
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3 = PlotWidget(self.page_202_21)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget21_3")
+        sizePolicy5.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget21_3.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3.setSizePolicy(sizePolicy5)
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3.setMinimumSize(QSize(0, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3.setMaximumSize(QSize(16777215, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget21_3.setStyleSheet(u"background-color: rgb(0, 30, 38);\n"
 "")
 
-        self.verticalLayout_113.addWidget(self.DataAnalysis_Oscilloscope_widget2_1_7)
+        self.verticalLayout_113.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget21_3)
 
-        self.line_61 = QFrame(self.page_103_2_4)
+        self.line_61 = QFrame(self.page_202_21)
         self.line_61.setObjectName(u"line_61")
         self.line_61.setFrameShape(QFrame.Shape.HLine)
         self.line_61.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_113.addWidget(self.line_61)
 
-        self.DataAnalysis_Neurons_pushButton21_frame_2 = QFrame(self.page_103_2_4)
-        self.DataAnalysis_Neurons_pushButton21_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton21_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton21_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton21_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton21_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton21_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton21_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_133 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton21_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame = QFrame(self.page_202_21)
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton21_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton21_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton21_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_133 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton21_frame)
         self.horizontalLayout_133.setSpacing(5)
         self.horizontalLayout_133.setObjectName(u"horizontalLayout_133")
         self.horizontalLayout_133.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton21_2 = QPushButton(self.DataAnalysis_Neurons_pushButton21_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton21_2")
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setStyleSheet(u"color: rgb(220, 50, 47);")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton21_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton21")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setStyleSheet(u"color: rgb(220, 50, 47);")
 
-        self.horizontalLayout_133.addWidget(self.DataAnalysis_Neuron0Vm_pushButton21_2)
+        self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton21)
 
-        self.DataAnalysis_Neuron1Vm_pushButton21_2 = QPushButton(self.DataAnalysis_Neurons_pushButton21_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton21_2")
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setStyleSheet(u"color: rgb(203, 75, 22);")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton21_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton21")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setStyleSheet(u"color: rgb(203, 75, 22);")
 
-        self.horizontalLayout_133.addWidget(self.DataAnalysis_Neuron1Vm_pushButton21_2)
+        self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton21)
 
-        self.DataAnalysis_Neuron2Vm_pushButton21_2 = QPushButton(self.DataAnalysis_Neurons_pushButton21_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton21_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton21_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setStyleSheet(u"color: rgb(181, 137, 0);")
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton21_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton21")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setStyleSheet(u"color: rgb(181, 137, 0);")
 
-        self.horizontalLayout_133.addWidget(self.DataAnalysis_Neuron2Vm_pushButton21_2)
+        self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton21)
 
 
-        self.verticalLayout_113.addWidget(self.DataAnalysis_Neurons_pushButton21_frame_2)
+        self.verticalLayout_113.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton21_frame)
 
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_2_4)
-        self.page_103_2_5 = QWidget()
-        self.page_103_2_5.setObjectName(u"page_103_2_5")
-        self.verticalLayout_114 = QVBoxLayout(self.page_103_2_5)
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_21)
+        self.page_202_22 = QWidget()
+        self.page_202_22.setObjectName(u"page_202_22")
+        self.verticalLayout_114 = QVBoxLayout(self.page_202_22)
         self.verticalLayout_114.setSpacing(0)
         self.verticalLayout_114.setObjectName(u"verticalLayout_114")
         self.verticalLayout_114.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget2_2_4 = PlotWidget(self.page_103_2_5)
-        self.DataAnalysis_Oscilloscope_widget2_2_4.setObjectName(u"DataAnalysis_Oscilloscope_widget2_2_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_2_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_2_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_2_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_0 = PlotWidget(self.page_202_22)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_0.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget22_0")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget22_0.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_0.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_0.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_114.addWidget(self.DataAnalysis_Oscilloscope_widget2_2_4)
+        self.verticalLayout_114.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget22_0)
 
-        self.line_62 = QFrame(self.page_103_2_5)
+        self.line_62 = QFrame(self.page_202_22)
         self.line_62.setObjectName(u"line_62")
         self.line_62.setFrameShape(QFrame.Shape.HLine)
         self.line_62.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_114.addWidget(self.line_62)
 
-        self.DataAnalysis_Oscilloscope_widget2_2_5 = PlotWidget(self.page_103_2_5)
-        self.DataAnalysis_Oscilloscope_widget2_2_5.setObjectName(u"DataAnalysis_Oscilloscope_widget2_2_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_2_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_2_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_2_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_1 = PlotWidget(self.page_202_22)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_1.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget22_1")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget22_1.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_1.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_114.addWidget(self.DataAnalysis_Oscilloscope_widget2_2_5)
+        self.verticalLayout_114.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget22_1)
 
-        self.line_63 = QFrame(self.page_103_2_5)
+        self.line_63 = QFrame(self.page_202_22)
         self.line_63.setObjectName(u"line_63")
         self.line_63.setFrameShape(QFrame.Shape.HLine)
         self.line_63.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_114.addWidget(self.line_63)
 
-        self.DataAnalysis_Oscilloscope_widget2_2_6 = PlotWidget(self.page_103_2_5)
-        self.DataAnalysis_Oscilloscope_widget2_2_6.setObjectName(u"DataAnalysis_Oscilloscope_widget2_2_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_2_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_2_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget2_2_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_2 = PlotWidget(self.page_202_22)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_2.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget22_2")
+        sizePolicy1.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget22_2.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_2.setSizePolicy(sizePolicy1)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_114.addWidget(self.DataAnalysis_Oscilloscope_widget2_2_6)
+        self.verticalLayout_114.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget22_2)
 
-        self.line_64 = QFrame(self.page_103_2_5)
+        self.line_64 = QFrame(self.page_202_22)
         self.line_64.setObjectName(u"line_64")
         self.line_64.setFrameShape(QFrame.Shape.HLine)
         self.line_64.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_114.addWidget(self.line_64)
 
-        self.DataAnalysis_Oscilloscope_widget2_2_7 = PlotWidget(self.page_103_2_5)
-        self.DataAnalysis_Oscilloscope_widget2_2_7.setObjectName(u"DataAnalysis_Oscilloscope_widget2_2_7")
-        sizePolicy5.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget2_2_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget2_2_7.setSizePolicy(sizePolicy5)
-        self.DataAnalysis_Oscilloscope_widget2_2_7.setMinimumSize(QSize(0, 100))
-        self.DataAnalysis_Oscilloscope_widget2_2_7.setMaximumSize(QSize(16777215, 100))
-        self.DataAnalysis_Oscilloscope_widget2_2_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3 = PlotWidget(self.page_202_22)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3.setObjectName(u"Imaging_DataAnalysis_Oscilloscope_widget22_3")
+        sizePolicy5.setHeightForWidth(self.Imaging_DataAnalysis_Oscilloscope_widget22_3.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3.setSizePolicy(sizePolicy5)
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3.setMinimumSize(QSize(0, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3.setMaximumSize(QSize(16777215, 100))
+        self.Imaging_DataAnalysis_Oscilloscope_widget22_3.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.verticalLayout_114.addWidget(self.DataAnalysis_Oscilloscope_widget2_2_7)
+        self.verticalLayout_114.addWidget(self.Imaging_DataAnalysis_Oscilloscope_widget22_3)
 
-        self.line_75 = QFrame(self.page_103_2_5)
+        self.line_75 = QFrame(self.page_202_22)
         self.line_75.setObjectName(u"line_75")
         self.line_75.setFrameShape(QFrame.Shape.HLine)
         self.line_75.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout_114.addWidget(self.line_75)
 
-        self.DataAnalysis_Neurons_pushButton22_frame_2 = QFrame(self.page_103_2_5)
-        self.DataAnalysis_Neurons_pushButton22_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton22_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton22_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton22_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton22_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton22_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton22_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_134 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton22_frame_2)
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame = QFrame(self.page_202_22)
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame.setObjectName(u"Imaging_DataAnalysis_Neurons_pushButton22_frame")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataAnalysis_Neurons_pushButton22_frame.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame.setSizePolicy(sizePolicy2)
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Neurons_pushButton22_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_134 = QHBoxLayout(self.Imaging_DataAnalysis_Neurons_pushButton22_frame)
         self.horizontalLayout_134.setSpacing(5)
         self.horizontalLayout_134.setObjectName(u"horizontalLayout_134")
         self.horizontalLayout_134.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton22_2 = QPushButton(self.DataAnalysis_Neurons_pushButton22_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton22_2")
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setStyleSheet(u"color: rgb(220, 50, 47);")
-
-        self.horizontalLayout_134.addWidget(self.DataAnalysis_Neuron0Vm_pushButton22_2)
-
-        self.DataAnalysis_Neuron1Vm_pushButton22_2 = QPushButton(self.DataAnalysis_Neurons_pushButton22_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton22_2")
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setStyleSheet(u"color: rgb(203, 75, 22);")
-
-        self.horizontalLayout_134.addWidget(self.DataAnalysis_Neuron1Vm_pushButton22_2)
-
-        self.DataAnalysis_Neuron2Vm_pushButton22_2 = QPushButton(self.DataAnalysis_Neurons_pushButton22_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton22_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton22_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setStyleSheet(u"color: rgb(181, 137, 0);")
-
-        self.horizontalLayout_134.addWidget(self.DataAnalysis_Neuron2Vm_pushButton22_2)
-
-
-        self.verticalLayout_114.addWidget(self.DataAnalysis_Neurons_pushButton22_frame_2)
-
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_2_5)
-        self.page_103_3_3 = QWidget()
-        self.page_103_3_3.setObjectName(u"page_103_3_3")
-        self.verticalLayout_119 = QVBoxLayout(self.page_103_3_3)
-        self.verticalLayout_119.setSpacing(0)
-        self.verticalLayout_119.setObjectName(u"verticalLayout_119")
-        self.verticalLayout_119.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget3_0_4 = PlotWidget(self.page_103_3_3)
-        self.DataAnalysis_Oscilloscope_widget3_0_4.setObjectName(u"DataAnalysis_Oscilloscope_widget3_0_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_0_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_0_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_0_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_119.addWidget(self.DataAnalysis_Oscilloscope_widget3_0_4)
-
-        self.line_76 = QFrame(self.page_103_3_3)
-        self.line_76.setObjectName(u"line_76")
-        self.line_76.setFrameShape(QFrame.Shape.HLine)
-        self.line_76.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_119.addWidget(self.line_76)
-
-        self.DataAnalysis_Oscilloscope_widget3_0_5 = PlotWidget(self.page_103_3_3)
-        self.DataAnalysis_Oscilloscope_widget3_0_5.setObjectName(u"DataAnalysis_Oscilloscope_widget3_0_5")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_0_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_0_5.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Oscilloscope_widget3_0_5.setMinimumSize(QSize(0, 50))
-        self.DataAnalysis_Oscilloscope_widget3_0_5.setMaximumSize(QSize(16777215, 75))
-        self.DataAnalysis_Oscilloscope_widget3_0_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_119.addWidget(self.DataAnalysis_Oscilloscope_widget3_0_5)
-
-        self.line_77 = QFrame(self.page_103_3_3)
-        self.line_77.setObjectName(u"line_77")
-        self.line_77.setFrameShape(QFrame.Shape.HLine)
-        self.line_77.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_119.addWidget(self.line_77)
-
-        self.DataAnalysis_Oscilloscope_widget3_0_6 = PlotWidget(self.page_103_3_3)
-        self.DataAnalysis_Oscilloscope_widget3_0_6.setObjectName(u"DataAnalysis_Oscilloscope_widget3_0_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_0_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_0_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_0_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_119.addWidget(self.DataAnalysis_Oscilloscope_widget3_0_6)
-
-        self.line_78 = QFrame(self.page_103_3_3)
-        self.line_78.setObjectName(u"line_78")
-        self.line_78.setFrameShape(QFrame.Shape.HLine)
-        self.line_78.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_119.addWidget(self.line_78)
-
-        self.DataAnalysis_Oscilloscope_widget3_0_7 = PlotWidget(self.page_103_3_3)
-        self.DataAnalysis_Oscilloscope_widget3_0_7.setObjectName(u"DataAnalysis_Oscilloscope_widget3_0_7")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_0_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_0_7.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_0_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_119.addWidget(self.DataAnalysis_Oscilloscope_widget3_0_7)
-
-        self.line_79 = QFrame(self.page_103_3_3)
-        self.line_79.setObjectName(u"line_79")
-        self.line_79.setFrameShape(QFrame.Shape.HLine)
-        self.line_79.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_119.addWidget(self.line_79)
-
-        self.DataAnalysis_Neurons_pushButton30_frame_2 = QFrame(self.page_103_3_3)
-        self.DataAnalysis_Neurons_pushButton30_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton30_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton30_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton30_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton30_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton30_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton30_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_135 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton30_frame_2)
-        self.horizontalLayout_135.setSpacing(5)
-        self.horizontalLayout_135.setObjectName(u"horizontalLayout_135")
-        self.horizontalLayout_135.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton30_2 = QPushButton(self.DataAnalysis_Neurons_pushButton30_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton30_2")
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setStyleSheet(u"color: rgb(220, 50, 47);")
-
-        self.horizontalLayout_135.addWidget(self.DataAnalysis_Neuron0Vm_pushButton30_2)
-
-        self.DataAnalysis_Neuron1Vm_pushButton30_2 = QPushButton(self.DataAnalysis_Neurons_pushButton30_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton30_2")
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setStyleSheet(u"color: rgb(203, 75, 22);")
-
-        self.horizontalLayout_135.addWidget(self.DataAnalysis_Neuron1Vm_pushButton30_2)
-
-        self.DataAnalysis_Neuron2Vm_pushButton30_2 = QPushButton(self.DataAnalysis_Neurons_pushButton30_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton30_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton30_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setStyleSheet(u"color: rgb(181, 137, 0);")
-
-        self.horizontalLayout_135.addWidget(self.DataAnalysis_Neuron2Vm_pushButton30_2)
-
-
-        self.verticalLayout_119.addWidget(self.DataAnalysis_Neurons_pushButton30_frame_2)
-
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_3_3)
-        self.page_103_3_4 = QWidget()
-        self.page_103_3_4.setObjectName(u"page_103_3_4")
-        self.verticalLayout_140 = QVBoxLayout(self.page_103_3_4)
-        self.verticalLayout_140.setSpacing(0)
-        self.verticalLayout_140.setObjectName(u"verticalLayout_140")
-        self.verticalLayout_140.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget3_1_4 = PlotWidget(self.page_103_3_4)
-        self.DataAnalysis_Oscilloscope_widget3_1_4.setObjectName(u"DataAnalysis_Oscilloscope_widget3_1_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_1_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_1_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_1_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_140.addWidget(self.DataAnalysis_Oscilloscope_widget3_1_4)
-
-        self.line_80 = QFrame(self.page_103_3_4)
-        self.line_80.setObjectName(u"line_80")
-        self.line_80.setFrameShape(QFrame.Shape.HLine)
-        self.line_80.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_140.addWidget(self.line_80)
-
-        self.DataAnalysis_Oscilloscope_widget3_1_5 = PlotWidget(self.page_103_3_4)
-        self.DataAnalysis_Oscilloscope_widget3_1_5.setObjectName(u"DataAnalysis_Oscilloscope_widget3_1_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_1_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_1_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_1_5.setMinimumSize(QSize(0, 50))
-        self.DataAnalysis_Oscilloscope_widget3_1_5.setMaximumSize(QSize(16777215, 75))
-        self.DataAnalysis_Oscilloscope_widget3_1_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_140.addWidget(self.DataAnalysis_Oscilloscope_widget3_1_5)
-
-        self.line_81 = QFrame(self.page_103_3_4)
-        self.line_81.setObjectName(u"line_81")
-        self.line_81.setFrameShape(QFrame.Shape.HLine)
-        self.line_81.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_140.addWidget(self.line_81)
-
-        self.DataAnalysis_Oscilloscope_widget3_1_6 = PlotWidget(self.page_103_3_4)
-        self.DataAnalysis_Oscilloscope_widget3_1_6.setObjectName(u"DataAnalysis_Oscilloscope_widget3_1_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_1_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_1_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_1_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_140.addWidget(self.DataAnalysis_Oscilloscope_widget3_1_6)
-
-        self.line_82 = QFrame(self.page_103_3_4)
-        self.line_82.setObjectName(u"line_82")
-        self.line_82.setFrameShape(QFrame.Shape.HLine)
-        self.line_82.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_140.addWidget(self.line_82)
-
-        self.DataAnalysis_Oscilloscope_widget3_1_7 = PlotWidget(self.page_103_3_4)
-        self.DataAnalysis_Oscilloscope_widget3_1_7.setObjectName(u"DataAnalysis_Oscilloscope_widget3_1_7")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_1_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_1_7.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_1_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_140.addWidget(self.DataAnalysis_Oscilloscope_widget3_1_7)
-
-        self.line_83 = QFrame(self.page_103_3_4)
-        self.line_83.setObjectName(u"line_83")
-        self.line_83.setFrameShape(QFrame.Shape.HLine)
-        self.line_83.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_140.addWidget(self.line_83)
-
-        self.DataAnalysis_Neurons_pushButton31_frame_2 = QFrame(self.page_103_3_4)
-        self.DataAnalysis_Neurons_pushButton31_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton31_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton31_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton31_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton31_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton31_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton31_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_136 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton31_frame_2)
-        self.horizontalLayout_136.setSpacing(5)
-        self.horizontalLayout_136.setObjectName(u"horizontalLayout_136")
-        self.horizontalLayout_136.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton31_2 = QPushButton(self.DataAnalysis_Neurons_pushButton31_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton31_2")
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setStyleSheet(u"color: rgb(220, 50, 47);")
-
-        self.horizontalLayout_136.addWidget(self.DataAnalysis_Neuron0Vm_pushButton31_2)
-
-        self.DataAnalysis_Neuron1Vm_pushButton31_2 = QPushButton(self.DataAnalysis_Neurons_pushButton31_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton31_2")
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setStyleSheet(u"color: rgb(203, 75, 22);")
-
-        self.horizontalLayout_136.addWidget(self.DataAnalysis_Neuron1Vm_pushButton31_2)
-
-        self.DataAnalysis_Neuron2Vm_pushButton31_2 = QPushButton(self.DataAnalysis_Neurons_pushButton31_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton31_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton31_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setStyleSheet(u"color: rgb(181, 137, 0);")
-
-        self.horizontalLayout_136.addWidget(self.DataAnalysis_Neuron2Vm_pushButton31_2)
-
-
-        self.verticalLayout_140.addWidget(self.DataAnalysis_Neurons_pushButton31_frame_2)
-
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_3_4)
-        self.page_103_3_5 = QWidget()
-        self.page_103_3_5.setObjectName(u"page_103_3_5")
-        self.verticalLayout_141 = QVBoxLayout(self.page_103_3_5)
-        self.verticalLayout_141.setSpacing(0)
-        self.verticalLayout_141.setObjectName(u"verticalLayout_141")
-        self.verticalLayout_141.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget3_2_4 = PlotWidget(self.page_103_3_5)
-        self.DataAnalysis_Oscilloscope_widget3_2_4.setObjectName(u"DataAnalysis_Oscilloscope_widget3_2_4")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_2_4.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_2_4.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_2_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_141.addWidget(self.DataAnalysis_Oscilloscope_widget3_2_4)
-
-        self.line_84 = QFrame(self.page_103_3_5)
-        self.line_84.setObjectName(u"line_84")
-        self.line_84.setFrameShape(QFrame.Shape.HLine)
-        self.line_84.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_141.addWidget(self.line_84)
-
-        self.DataAnalysis_Oscilloscope_widget3_2_5 = PlotWidget(self.page_103_3_5)
-        self.DataAnalysis_Oscilloscope_widget3_2_5.setObjectName(u"DataAnalysis_Oscilloscope_widget3_2_5")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_2_5.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_2_5.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_2_5.setMinimumSize(QSize(0, 50))
-        self.DataAnalysis_Oscilloscope_widget3_2_5.setMaximumSize(QSize(16777215, 75))
-        self.DataAnalysis_Oscilloscope_widget3_2_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_141.addWidget(self.DataAnalysis_Oscilloscope_widget3_2_5)
-
-        self.line_85 = QFrame(self.page_103_3_5)
-        self.line_85.setObjectName(u"line_85")
-        self.line_85.setFrameShape(QFrame.Shape.HLine)
-        self.line_85.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_141.addWidget(self.line_85)
-
-        self.DataAnalysis_Oscilloscope_widget3_2_6 = PlotWidget(self.page_103_3_5)
-        self.DataAnalysis_Oscilloscope_widget3_2_6.setObjectName(u"DataAnalysis_Oscilloscope_widget3_2_6")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_2_6.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_2_6.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_2_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_141.addWidget(self.DataAnalysis_Oscilloscope_widget3_2_6)
-
-        self.line_86 = QFrame(self.page_103_3_5)
-        self.line_86.setObjectName(u"line_86")
-        self.line_86.setFrameShape(QFrame.Shape.HLine)
-        self.line_86.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_141.addWidget(self.line_86)
-
-        self.DataAnalysis_Oscilloscope_widget3_2_7 = PlotWidget(self.page_103_3_5)
-        self.DataAnalysis_Oscilloscope_widget3_2_7.setObjectName(u"DataAnalysis_Oscilloscope_widget3_2_7")
-        sizePolicy1.setHeightForWidth(self.DataAnalysis_Oscilloscope_widget3_2_7.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Oscilloscope_widget3_2_7.setSizePolicy(sizePolicy1)
-        self.DataAnalysis_Oscilloscope_widget3_2_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_141.addWidget(self.DataAnalysis_Oscilloscope_widget3_2_7)
-
-        self.line_87 = QFrame(self.page_103_3_5)
-        self.line_87.setObjectName(u"line_87")
-        self.line_87.setFrameShape(QFrame.Shape.HLine)
-        self.line_87.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_141.addWidget(self.line_87)
-
-        self.DataAnalysis_Neurons_pushButton32_frame_2 = QFrame(self.page_103_3_5)
-        self.DataAnalysis_Neurons_pushButton32_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton32_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton32_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton32_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton32_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton32_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton32_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_137 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton32_frame_2)
-        self.horizontalLayout_137.setSpacing(5)
-        self.horizontalLayout_137.setObjectName(u"horizontalLayout_137")
-        self.horizontalLayout_137.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton32_2 = QPushButton(self.DataAnalysis_Neurons_pushButton32_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton32_2")
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setStyleSheet(u"color: rgb(220, 50, 47);")
-
-        self.horizontalLayout_137.addWidget(self.DataAnalysis_Neuron0Vm_pushButton32_2)
-
-        self.DataAnalysis_Neuron1Vm_pushButton32_2 = QPushButton(self.DataAnalysis_Neurons_pushButton32_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton32_2")
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setStyleSheet(u"color: rgb(203, 75, 22);")
-
-        self.horizontalLayout_137.addWidget(self.DataAnalysis_Neuron1Vm_pushButton32_2)
-
-        self.DataAnalysis_Neuron2Vm_pushButton32_2 = QPushButton(self.DataAnalysis_Neurons_pushButton32_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton32_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton32_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setStyleSheet(u"color: rgb(181, 137, 0);")
-
-        self.horizontalLayout_137.addWidget(self.DataAnalysis_Neuron2Vm_pushButton32_2)
-
-
-        self.verticalLayout_141.addWidget(self.DataAnalysis_Neurons_pushButton32_frame_2)
-
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_3_5)
-        self.page_103_11_1 = QWidget()
-        self.page_103_11_1.setObjectName(u"page_103_11_1")
-        self.verticalLayout_142 = QVBoxLayout(self.page_103_11_1)
-        self.verticalLayout_142.setSpacing(0)
-        self.verticalLayout_142.setObjectName(u"verticalLayout_142")
-        self.verticalLayout_142.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_Oscilloscope_widget11_0_4 = PlotWidget(self.page_103_11_1)
-        self.DataAnalysis_Oscilloscope_widget11_0_4.setObjectName(u"DataAnalysis_Oscilloscope_widget11_0_4")
-        self.DataAnalysis_Oscilloscope_widget11_0_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_142.addWidget(self.DataAnalysis_Oscilloscope_widget11_0_4)
-
-        self.line_88 = QFrame(self.page_103_11_1)
-        self.line_88.setObjectName(u"line_88")
-        self.line_88.setFrameShape(QFrame.Shape.HLine)
-        self.line_88.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_142.addWidget(self.line_88)
-
-        self.DataAnalysis_Oscilloscope_widget11_0_5 = PlotWidget(self.page_103_11_1)
-        self.DataAnalysis_Oscilloscope_widget11_0_5.setObjectName(u"DataAnalysis_Oscilloscope_widget11_0_5")
-        self.DataAnalysis_Oscilloscope_widget11_0_5.setMinimumSize(QSize(0, 50))
-        self.DataAnalysis_Oscilloscope_widget11_0_5.setMaximumSize(QSize(16777215, 75))
-        self.DataAnalysis_Oscilloscope_widget11_0_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_142.addWidget(self.DataAnalysis_Oscilloscope_widget11_0_5)
-
-        self.line_89 = QFrame(self.page_103_11_1)
-        self.line_89.setObjectName(u"line_89")
-        self.line_89.setFrameShape(QFrame.Shape.HLine)
-        self.line_89.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_142.addWidget(self.line_89)
-
-        self.DataAnalysis_Oscilloscope_widget11_0_6 = PlotWidget(self.page_103_11_1)
-        self.DataAnalysis_Oscilloscope_widget11_0_6.setObjectName(u"DataAnalysis_Oscilloscope_widget11_0_6")
-        self.DataAnalysis_Oscilloscope_widget11_0_6.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_142.addWidget(self.DataAnalysis_Oscilloscope_widget11_0_6)
-
-        self.line_90 = QFrame(self.page_103_11_1)
-        self.line_90.setObjectName(u"line_90")
-        self.line_90.setFrameShape(QFrame.Shape.HLine)
-        self.line_90.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_142.addWidget(self.line_90)
-
-        self.DataAnalysis_Oscilloscope_widget11_0_7 = PlotWidget(self.page_103_11_1)
-        self.DataAnalysis_Oscilloscope_widget11_0_7.setObjectName(u"DataAnalysis_Oscilloscope_widget11_0_7")
-        self.DataAnalysis_Oscilloscope_widget11_0_7.setStyleSheet(u"background-color: rgb(0, 30, 38);")
-
-        self.verticalLayout_142.addWidget(self.DataAnalysis_Oscilloscope_widget11_0_7)
-
-        self.line_91 = QFrame(self.page_103_11_1)
-        self.line_91.setObjectName(u"line_91")
-        self.line_91.setFrameShape(QFrame.Shape.HLine)
-        self.line_91.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_142.addWidget(self.line_91)
-
-        self.DataAnalysis_Neurons_pushButton110_frame_2 = QFrame(self.page_103_11_1)
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setObjectName(u"DataAnalysis_Neurons_pushButton110_frame_2")
-        sizePolicy2.setHeightForWidth(self.DataAnalysis_Neurons_pushButton110_frame_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setSizePolicy(sizePolicy2)
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_Neurons_pushButton110_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_520 = QHBoxLayout(self.DataAnalysis_Neurons_pushButton110_frame_2)
-        self.horizontalLayout_520.setSpacing(5)
-        self.horizontalLayout_520.setObjectName(u"horizontalLayout_520")
-        self.horizontalLayout_520.setContentsMargins(5, 0, 5, 0)
-        self.DataAnalysis_Neuron0Vm_pushButton110_2 = QPushButton(self.DataAnalysis_Neurons_pushButton110_frame_2)
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setObjectName(u"DataAnalysis_Neuron0Vm_pushButton110_2")
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setMinimumSize(QSize(25, 0))
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setFont(font8)
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setStyleSheet(u"color: rgb(220, 50, 47);")
-
-        self.horizontalLayout_520.addWidget(self.DataAnalysis_Neuron0Vm_pushButton110_2)
-
-        self.DataAnalysis_Neuron1Vm_pushButton110_2 = QPushButton(self.DataAnalysis_Neurons_pushButton110_frame_2)
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setObjectName(u"DataAnalysis_Neuron1Vm_pushButton110_2")
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setFont(font8)
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setStyleSheet(u"color: rgb(203, 75, 22);")
-
-        self.horizontalLayout_520.addWidget(self.DataAnalysis_Neuron1Vm_pushButton110_2)
-
-        self.DataAnalysis_Neuron2Vm_pushButton110_2 = QPushButton(self.DataAnalysis_Neurons_pushButton110_frame_2)
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setObjectName(u"DataAnalysis_Neuron2Vm_pushButton110_2")
-        sizePolicy7.setHeightForWidth(self.DataAnalysis_Neuron2Vm_pushButton110_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setSizePolicy(sizePolicy7)
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setMinimumSize(QSize(0, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setMaximumSize(QSize(16777215, 25))
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setFont(font8)
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setStyleSheet(u"color: rgb(181, 137, 0);")
-
-        self.horizontalLayout_520.addWidget(self.DataAnalysis_Neuron2Vm_pushButton110_2)
-
-
-        self.verticalLayout_142.addWidget(self.DataAnalysis_Neurons_pushButton110_frame_2)
-
-        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_103_11_1)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton22_frame)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton22")
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setMinimumSize(QSize(25, 0))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setStyleSheet(u"color: rgb(220, 50, 47);")
+
+        self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton22)
+
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton22_frame)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton22")
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setStyleSheet(u"color: rgb(203, 75, 22);")
+
+        self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton22)
+
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22 = QPushButton(self.Imaging_DataAnalysis_Neurons_pushButton22_frame)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setObjectName(u"Imaging_DataAnalysis_Neuron2Vm_pushButton22")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setSizePolicy(sizePolicy7)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setMinimumSize(QSize(0, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setFont(font8)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setStyleSheet(u"color: rgb(181, 137, 0);")
+
+        self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton22)
+
+
+        self.verticalLayout_114.addWidget(self.Imaging_DataAnalysis_Neurons_pushButton22_frame)
+
+        self.DataAnalysis_Display_StackedWidget_2.addWidget(self.page_202_22)
 
         self.verticalLayout_38.addWidget(self.DataAnalysis_Display_StackedWidget_2)
 
@@ -13452,13 +12969,71 @@ class Ui_Spikeling(object):
 
         self.horizontalLayout_140.addWidget(self.Imaging_DataAnalysis_Display_frame)
 
-        self.frame_12 = QFrame(self.Imaging_DataAnalysis_frame)
-        self.frame_12.setObjectName(u"frame_12")
-        self.frame_12.setFrameShape(QFrame.StyledPanel)
-        self.frame_12.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_15 = QVBoxLayout(self.frame_12)
+        self.Imaging_DataAnalysis_Container_frame = QFrame(self.Imaging_DataAnalysis_frame)
+        self.Imaging_DataAnalysis_Container_frame.setObjectName(u"Imaging_DataAnalysis_Container_frame")
+        self.Imaging_DataAnalysis_Container_frame.setMaximumSize(QSize(250, 16777215))
+        self.Imaging_DataAnalysis_Container_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_Container_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_15 = QVBoxLayout(self.Imaging_DataAnalysis_Container_frame)
+        self.verticalLayout_15.setSpacing(20)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.DataAnalysis_stackedWidget_2 = QStackedWidget(self.frame_12)
+        self.verticalLayout_15.setContentsMargins(0, 50, 0, 0)
+        self.Imaging_DataAnalysis_LoadData_frame = QFrame(self.Imaging_DataAnalysis_Container_frame)
+        self.Imaging_DataAnalysis_LoadData_frame.setObjectName(u"Imaging_DataAnalysis_LoadData_frame")
+        self.Imaging_DataAnalysis_LoadData_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_LoadData_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_237 = QVBoxLayout(self.Imaging_DataAnalysis_LoadData_frame)
+        self.verticalLayout_237.setObjectName(u"verticalLayout_237")
+        self.verticalLayout_237.setContentsMargins(15, -1, 15, -1)
+        self.Imaging_DataAnalysis_LoadData_subframe = QFrame(self.Imaging_DataAnalysis_LoadData_frame)
+        self.Imaging_DataAnalysis_LoadData_subframe.setObjectName(u"Imaging_DataAnalysis_LoadData_subframe")
+        self.Imaging_DataAnalysis_LoadData_subframe.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_LoadData_subframe.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_138 = QHBoxLayout(self.Imaging_DataAnalysis_LoadData_subframe)
+        self.horizontalLayout_138.setSpacing(0)
+        self.horizontalLayout_138.setObjectName(u"horizontalLayout_138")
+        self.horizontalLayout_138.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataAnalysis_LoadData_label = QLabel(self.Imaging_DataAnalysis_LoadData_subframe)
+        self.Imaging_DataAnalysis_LoadData_label.setObjectName(u"Imaging_DataAnalysis_LoadData_label")
+        sizePolicy3.setHeightForWidth(self.Imaging_DataAnalysis_LoadData_label.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataAnalysis_LoadData_label.setSizePolicy(sizePolicy3)
+        self.Imaging_DataAnalysis_LoadData_label.setWordWrap(True)
+
+        self.horizontalLayout_138.addWidget(self.Imaging_DataAnalysis_LoadData_label)
+
+        self.Imaging_DataAnalysis_LoadData_pushButton = QPushButton(self.Imaging_DataAnalysis_LoadData_subframe)
+        self.Imaging_DataAnalysis_LoadData_pushButton.setObjectName(u"Imaging_DataAnalysis_LoadData_pushButton")
+        self.Imaging_DataAnalysis_LoadData_pushButton.setIconSize(QSize(14, 16))
+
+        self.horizontalLayout_138.addWidget(self.Imaging_DataAnalysis_LoadData_pushButton)
+
+
+        self.verticalLayout_237.addWidget(self.Imaging_DataAnalysis_LoadData_subframe)
+
+        self.Imaging_DataAnalysis_DisplayFrameData_pushButton = QPushButton(self.Imaging_DataAnalysis_LoadData_frame)
+        self.Imaging_DataAnalysis_DisplayFrameData_pushButton.setObjectName(u"Imaging_DataAnalysis_DisplayFrameData_pushButton")
+
+        self.verticalLayout_237.addWidget(self.Imaging_DataAnalysis_DisplayFrameData_pushButton)
+
+        self.pushButton = QPushButton(self.Imaging_DataAnalysis_LoadData_frame)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.verticalLayout_237.addWidget(self.pushButton)
+
+        self.Imaging_DataAnalysis_SaveImage_pushButton = QPushButton(self.Imaging_DataAnalysis_LoadData_frame)
+        self.Imaging_DataAnalysis_SaveImage_pushButton.setObjectName(u"Imaging_DataAnalysis_SaveImage_pushButton")
+
+        self.verticalLayout_237.addWidget(self.Imaging_DataAnalysis_SaveImage_pushButton)
+
+
+        self.verticalLayout_15.addWidget(self.Imaging_DataAnalysis_LoadData_frame)
+
+        self.Imaging_DataAnalysis_LoadData_readings = QLabel(self.Imaging_DataAnalysis_Container_frame)
+        self.Imaging_DataAnalysis_LoadData_readings.setObjectName(u"Imaging_DataAnalysis_LoadData_readings")
+
+        self.verticalLayout_15.addWidget(self.Imaging_DataAnalysis_LoadData_readings)
+
+        self.DataAnalysis_stackedWidget_2 = QStackedWidget(self.Imaging_DataAnalysis_Container_frame)
         self.DataAnalysis_stackedWidget_2.setObjectName(u"DataAnalysis_stackedWidget_2")
         sizePolicy.setHeightForWidth(self.DataAnalysis_stackedWidget_2.sizePolicy().hasHeightForWidth())
         self.DataAnalysis_stackedWidget_2.setSizePolicy(sizePolicy)
@@ -13471,51 +13046,6 @@ class Ui_Spikeling(object):
         self.verticalLayout_236.setSpacing(5)
         self.verticalLayout_236.setObjectName(u"verticalLayout_236")
         self.verticalLayout_236.setContentsMargins(0, 0, 0, 1)
-        self.DataAnalysis_LoadData_frame_2 = QFrame(self.DataAnalysis_SquareStim_2)
-        self.DataAnalysis_LoadData_frame_2.setObjectName(u"DataAnalysis_LoadData_frame_2")
-        self.DataAnalysis_LoadData_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_LoadData_frame_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_237 = QVBoxLayout(self.DataAnalysis_LoadData_frame_2)
-        self.verticalLayout_237.setObjectName(u"verticalLayout_237")
-        self.verticalLayout_237.setContentsMargins(15, -1, 15, -1)
-        self.DataAnalysis_LoadData_subframe_2 = QFrame(self.DataAnalysis_LoadData_frame_2)
-        self.DataAnalysis_LoadData_subframe_2.setObjectName(u"DataAnalysis_LoadData_subframe_2")
-        self.DataAnalysis_LoadData_subframe_2.setFrameShape(QFrame.StyledPanel)
-        self.DataAnalysis_LoadData_subframe_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_138 = QHBoxLayout(self.DataAnalysis_LoadData_subframe_2)
-        self.horizontalLayout_138.setSpacing(0)
-        self.horizontalLayout_138.setObjectName(u"horizontalLayout_138")
-        self.horizontalLayout_138.setContentsMargins(0, 0, 0, 0)
-        self.DataAnalysis_LoadData_label_2 = QLabel(self.DataAnalysis_LoadData_subframe_2)
-        self.DataAnalysis_LoadData_label_2.setObjectName(u"DataAnalysis_LoadData_label_2")
-        sizePolicy3.setHeightForWidth(self.DataAnalysis_LoadData_label_2.sizePolicy().hasHeightForWidth())
-        self.DataAnalysis_LoadData_label_2.setSizePolicy(sizePolicy3)
-        self.DataAnalysis_LoadData_label_2.setWordWrap(True)
-
-        self.horizontalLayout_138.addWidget(self.DataAnalysis_LoadData_label_2)
-
-        self.DataAnalysis_LoadData_pushButton_2 = QPushButton(self.DataAnalysis_LoadData_subframe_2)
-        self.DataAnalysis_LoadData_pushButton_2.setObjectName(u"DataAnalysis_LoadData_pushButton_2")
-        self.DataAnalysis_LoadData_pushButton_2.setIconSize(QSize(14, 16))
-
-        self.horizontalLayout_138.addWidget(self.DataAnalysis_LoadData_pushButton_2)
-
-
-        self.verticalLayout_237.addWidget(self.DataAnalysis_LoadData_subframe_2)
-
-        self.DataAnalysis_LoadData_Display_pushButton_2 = QPushButton(self.DataAnalysis_LoadData_frame_2)
-        self.DataAnalysis_LoadData_Display_pushButton_2.setObjectName(u"DataAnalysis_LoadData_Display_pushButton_2")
-
-        self.verticalLayout_237.addWidget(self.DataAnalysis_LoadData_Display_pushButton_2)
-
-        self.DataAnalysis_SaveImage_pushButton_2 = QPushButton(self.DataAnalysis_LoadData_frame_2)
-        self.DataAnalysis_SaveImage_pushButton_2.setObjectName(u"DataAnalysis_SaveImage_pushButton_2")
-
-        self.verticalLayout_237.addWidget(self.DataAnalysis_SaveImage_pushButton_2)
-
-
-        self.verticalLayout_236.addWidget(self.DataAnalysis_LoadData_frame_2)
-
         self.DataAnalysis_LoadData_line_2 = QFrame(self.DataAnalysis_SquareStim_2)
         self.DataAnalysis_LoadData_line_2.setObjectName(u"DataAnalysis_LoadData_line_2")
         self.DataAnalysis_LoadData_line_2.setFrameShape(QFrame.Shape.HLine)
@@ -13739,104 +13269,95 @@ class Ui_Spikeling(object):
         self.verticalLayout_15.addWidget(self.DataAnalysis_stackedWidget_2)
 
 
-        self.horizontalLayout_140.addWidget(self.frame_12)
+        self.horizontalLayout_140.addWidget(self.Imaging_DataAnalysis_Container_frame)
 
-        self.Imaging_DataAnalysis_rightContainer = QFrame(self.Imaging_DataAnalysis_frame)
-        self.Imaging_DataAnalysis_rightContainer.setObjectName(u"Imaging_DataAnalysis_rightContainer")
-        self.Imaging_DataAnalysis_rightContainer.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_DataAnalysis_rightContainer.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_141 = QHBoxLayout(self.Imaging_DataAnalysis_rightContainer)
-        self.horizontalLayout_141.setObjectName(u"horizontalLayout_141")
-        self.Imaging_rightMenuContainer_2 = QFrame(self.Imaging_DataAnalysis_rightContainer)
-        self.Imaging_rightMenuContainer_2.setObjectName(u"Imaging_rightMenuContainer_2")
-        self.Imaging_rightMenuContainer_2.setMaximumSize(QSize(40, 16777215))
-        self.Imaging_rightMenuContainer_2.setLayoutDirection(Qt.LeftToRight)
-        self.Imaging_rightMenuContainer_2.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_rightMenuContainer_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_242 = QVBoxLayout(self.Imaging_rightMenuContainer_2)
-        self.verticalLayout_242.setSpacing(0)
-        self.verticalLayout_242.setObjectName(u"verticalLayout_242")
-        self.verticalLayout_242.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_rightMenuSubContainer_2 = QFrame(self.Imaging_rightMenuContainer_2)
-        self.Imaging_rightMenuSubContainer_2.setObjectName(u"Imaging_rightMenuSubContainer_2")
-        self.Imaging_rightMenuSubContainer_2.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_rightMenuSubContainer_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_243 = QVBoxLayout(self.Imaging_rightMenuSubContainer_2)
+        self.Imaging_DataAnalysis_rightContainer_frame = QFrame(self.Imaging_DataAnalysis_frame)
+        self.Imaging_DataAnalysis_rightContainer_frame.setObjectName(u"Imaging_DataAnalysis_rightContainer_frame")
+        self.Imaging_DataAnalysis_rightContainer_frame.setMinimumSize(QSize(0, 0))
+        self.Imaging_DataAnalysis_rightContainer_frame.setMaximumSize(QSize(40, 16777215))
+        self.Imaging_DataAnalysis_rightContainer_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_rightContainer_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_16 = QVBoxLayout(self.Imaging_DataAnalysis_rightContainer_frame)
+        self.verticalLayout_16.setSpacing(0)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.verticalLayout_16.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataAnalysis_rightSubContainer_frame = QFrame(self.Imaging_DataAnalysis_rightContainer_frame)
+        self.Imaging_DataAnalysis_rightSubContainer_frame.setObjectName(u"Imaging_DataAnalysis_rightSubContainer_frame")
+        self.Imaging_DataAnalysis_rightSubContainer_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_rightSubContainer_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_243 = QVBoxLayout(self.Imaging_DataAnalysis_rightSubContainer_frame)
         self.verticalLayout_243.setSpacing(50)
         self.verticalLayout_243.setObjectName(u"verticalLayout_243")
         self.verticalLayout_243.setContentsMargins(0, 0, 5, 0)
-        self.Imaging_rightMenuSubContainer_frame_2 = QFrame(self.Imaging_rightMenuSubContainer_2)
-        self.Imaging_rightMenuSubContainer_frame_2.setObjectName(u"Imaging_rightMenuSubContainer_frame_2")
-        self.Imaging_rightMenuSubContainer_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_rightMenuSubContainer_frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_157 = QHBoxLayout(self.Imaging_rightMenuSubContainer_frame_2)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_frame = QFrame(self.Imaging_DataAnalysis_rightSubContainer_frame)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_frame.setObjectName(u"Imaging_DataAnalysis_rightMenuSubContainer_frame")
+        self.Imaging_DataAnalysis_rightMenuSubContainer_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_157 = QHBoxLayout(self.Imaging_DataAnalysis_rightMenuSubContainer_frame)
         self.horizontalLayout_157.setSpacing(0)
         self.horizontalLayout_157.setObjectName(u"horizontalLayout_157")
         self.horizontalLayout_157.setContentsMargins(0, 20, 0, 0)
-        self.Imaging_rightMenuSubContainer_pushButton_2 = QPushButton(self.Imaging_rightMenuSubContainer_frame_2)
-        self.Imaging_rightMenuSubContainer_pushButton_2.setObjectName(u"Imaging_rightMenuSubContainer_pushButton_2")
-        self.Imaging_rightMenuSubContainer_pushButton_2.setMinimumSize(QSize(0, 0))
-        self.Imaging_rightMenuSubContainer_pushButton_2.setFont(font1)
-        self.Imaging_rightMenuSubContainer_pushButton_2.setStyleSheet(u"")
-        self.Imaging_rightMenuSubContainer_pushButton_2.setIcon(icon19)
-        self.Imaging_rightMenuSubContainer_pushButton_2.setIconSize(QSize(30, 30))
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton = QPushButton(self.Imaging_DataAnalysis_rightMenuSubContainer_frame)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setObjectName(u"Imaging_DataAnalysis_rightMenuSubContainer_pushButton")
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setMinimumSize(QSize(0, 0))
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setFont(font1)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setStyleSheet(u"")
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setIcon(icon19)
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setIconSize(QSize(30, 30))
 
-        self.horizontalLayout_157.addWidget(self.Imaging_rightMenuSubContainer_pushButton_2)
+        self.horizontalLayout_157.addWidget(self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton)
 
 
-        self.verticalLayout_243.addWidget(self.Imaging_rightMenuSubContainer_frame_2, 0, Qt.AlignTop)
+        self.verticalLayout_243.addWidget(self.Imaging_DataAnalysis_rightMenuSubContainer_frame, 0, Qt.AlignTop)
 
-        self.Imaging_rightMenuParameterContainer_frame_2 = QFrame(self.Imaging_rightMenuSubContainer_2)
-        self.Imaging_rightMenuParameterContainer_frame_2.setObjectName(u"Imaging_rightMenuParameterContainer_frame_2")
-        self.Imaging_rightMenuParameterContainer_frame_2.setLayoutDirection(Qt.LeftToRight)
-        self.Imaging_rightMenuParameterContainer_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_rightMenuParameterContainer_frame_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_244 = QVBoxLayout(self.Imaging_rightMenuParameterContainer_frame_2)
+        self.Imaging_DataAnalysis_rightMenuContainer_frame = QFrame(self.Imaging_DataAnalysis_rightSubContainer_frame)
+        self.Imaging_DataAnalysis_rightMenuContainer_frame.setObjectName(u"Imaging_DataAnalysis_rightMenuContainer_frame")
+        self.Imaging_DataAnalysis_rightMenuContainer_frame.setLayoutDirection(Qt.LeftToRight)
+        self.Imaging_DataAnalysis_rightMenuContainer_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_rightMenuContainer_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_244 = QVBoxLayout(self.Imaging_DataAnalysis_rightMenuContainer_frame)
         self.verticalLayout_244.setSpacing(50)
         self.verticalLayout_244.setObjectName(u"verticalLayout_244")
         self.verticalLayout_244.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_ImagingParameter_pushButton_2 = QPushButton(self.Imaging_rightMenuParameterContainer_frame_2)
-        self.Imaging_ImagingParameter_pushButton_2.setObjectName(u"Imaging_ImagingParameter_pushButton_2")
-        self.Imaging_ImagingParameter_pushButton_2.setFont(font1)
-        self.Imaging_ImagingParameter_pushButton_2.setIcon(icon6)
-        self.Imaging_ImagingParameter_pushButton_2.setIconSize(QSize(30, 30))
+        self.Imaging_DataAnalysis_Tier1_pushButton = QPushButton(self.Imaging_DataAnalysis_rightMenuContainer_frame)
+        self.Imaging_DataAnalysis_Tier1_pushButton.setObjectName(u"Imaging_DataAnalysis_Tier1_pushButton")
+        self.Imaging_DataAnalysis_Tier1_pushButton.setFont(font1)
+        self.Imaging_DataAnalysis_Tier1_pushButton.setIcon(icon6)
+        self.Imaging_DataAnalysis_Tier1_pushButton.setIconSize(QSize(30, 30))
 
-        self.verticalLayout_244.addWidget(self.Imaging_ImagingParameter_pushButton_2)
+        self.verticalLayout_244.addWidget(self.Imaging_DataAnalysis_Tier1_pushButton)
 
-        self.Imaging_CalciumParameter_pushButton_2 = QPushButton(self.Imaging_rightMenuParameterContainer_frame_2)
-        self.Imaging_CalciumParameter_pushButton_2.setObjectName(u"Imaging_CalciumParameter_pushButton_2")
-        self.Imaging_CalciumParameter_pushButton_2.setFont(font1)
-        self.Imaging_CalciumParameter_pushButton_2.setIcon(icon22)
-        self.Imaging_CalciumParameter_pushButton_2.setIconSize(QSize(30, 30))
+        self.Imaging_DataAnalysis_Tier2_pushButton = QPushButton(self.Imaging_DataAnalysis_rightMenuContainer_frame)
+        self.Imaging_DataAnalysis_Tier2_pushButton.setObjectName(u"Imaging_DataAnalysis_Tier2_pushButton")
+        self.Imaging_DataAnalysis_Tier2_pushButton.setFont(font1)
+        self.Imaging_DataAnalysis_Tier2_pushButton.setIcon(icon22)
+        self.Imaging_DataAnalysis_Tier2_pushButton.setIconSize(QSize(30, 30))
 
-        self.verticalLayout_244.addWidget(self.Imaging_CalciumParameter_pushButton_2)
+        self.verticalLayout_244.addWidget(self.Imaging_DataAnalysis_Tier2_pushButton)
 
-        self.Imaging_FluoParameter_pushButton_2 = QPushButton(self.Imaging_rightMenuParameterContainer_frame_2)
-        self.Imaging_FluoParameter_pushButton_2.setObjectName(u"Imaging_FluoParameter_pushButton_2")
-        self.Imaging_FluoParameter_pushButton_2.setFont(font1)
-        self.Imaging_FluoParameter_pushButton_2.setIcon(icon16)
-        self.Imaging_FluoParameter_pushButton_2.setIconSize(QSize(30, 30))
+        self.Imaging_DataAnalysis_Tier3_pushButton = QPushButton(self.Imaging_DataAnalysis_rightMenuContainer_frame)
+        self.Imaging_DataAnalysis_Tier3_pushButton.setObjectName(u"Imaging_DataAnalysis_Tier3_pushButton")
+        self.Imaging_DataAnalysis_Tier3_pushButton.setFont(font1)
+        self.Imaging_DataAnalysis_Tier3_pushButton.setIcon(icon16)
+        self.Imaging_DataAnalysis_Tier3_pushButton.setIconSize(QSize(30, 30))
 
-        self.verticalLayout_244.addWidget(self.Imaging_FluoParameter_pushButton_2)
-
-
-        self.verticalLayout_243.addWidget(self.Imaging_rightMenuParameterContainer_frame_2)
-
-        self.Imaging_rightMenuSpacer_frame_2 = QFrame(self.Imaging_rightMenuSubContainer_2)
-        self.Imaging_rightMenuSpacer_frame_2.setObjectName(u"Imaging_rightMenuSpacer_frame_2")
-        self.Imaging_rightMenuSpacer_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.Imaging_rightMenuSpacer_frame_2.setFrameShadow(QFrame.Raised)
-
-        self.verticalLayout_243.addWidget(self.Imaging_rightMenuSpacer_frame_2)
+        self.verticalLayout_244.addWidget(self.Imaging_DataAnalysis_Tier3_pushButton)
 
 
-        self.verticalLayout_242.addWidget(self.Imaging_rightMenuSubContainer_2)
+        self.verticalLayout_243.addWidget(self.Imaging_DataAnalysis_rightMenuContainer_frame)
+
+        self.Imaging_DataAnalysis_rightMenuSpacer_frame = QFrame(self.Imaging_DataAnalysis_rightSubContainer_frame)
+        self.Imaging_DataAnalysis_rightMenuSpacer_frame.setObjectName(u"Imaging_DataAnalysis_rightMenuSpacer_frame")
+        self.Imaging_DataAnalysis_rightMenuSpacer_frame.setFrameShape(QFrame.StyledPanel)
+        self.Imaging_DataAnalysis_rightMenuSpacer_frame.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_243.addWidget(self.Imaging_DataAnalysis_rightMenuSpacer_frame)
 
 
-        self.horizontalLayout_141.addWidget(self.Imaging_rightMenuContainer_2)
+        self.verticalLayout_16.addWidget(self.Imaging_DataAnalysis_rightSubContainer_frame)
 
 
-        self.horizontalLayout_140.addWidget(self.Imaging_DataAnalysis_rightContainer)
+        self.horizontalLayout_140.addWidget(self.Imaging_DataAnalysis_rightContainer_frame)
 
 
         self.horizontalLayout_72.addWidget(self.Imaging_DataAnalysis_frame)
@@ -14014,7 +13535,7 @@ class Ui_Spikeling(object):
         self.Extracellular_Tetrode_Ch2_Checkbox.setEnabled(True)
         self.Extracellular_Tetrode_Ch2_Checkbox.setAutoFillBackground(False)
         self.Extracellular_Tetrode_Ch2_Checkbox.setStyleSheet(u"color: rgb(42, 161, 152);")
-        self.Extracellular_Tetrode_Ch2_Checkbox.setChecked(False)
+        self.Extracellular_Tetrode_Ch2_Checkbox.setChecked(True)
 
         self.verticalLayout_123.addWidget(self.Extracellular_Tetrode_Ch2_Checkbox)
 
@@ -14032,6 +13553,7 @@ class Ui_Spikeling(object):
         self.Extracellular_Tetrode_Ch3_Checkbox_2 = QCheckBox(self.Extracellular_Tetrode_Ch3_frame)
         self.Extracellular_Tetrode_Ch3_Checkbox_2.setObjectName(u"Extracellular_Tetrode_Ch3_Checkbox_2")
         self.Extracellular_Tetrode_Ch3_Checkbox_2.setStyleSheet(u"color: rgb(133, 153, 0);")
+        self.Extracellular_Tetrode_Ch3_Checkbox_2.setChecked(True)
 
         self.verticalLayout_124.addWidget(self.Extracellular_Tetrode_Ch3_Checkbox_2)
 
@@ -14130,16 +13652,16 @@ class Ui_Spikeling(object):
 
         self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_Display_frame)
 
-        self.ExtraCellular_Oscilloscope_widget = PlotWidget(self.ExtraCellular_Oscilloscope_frame)
+        self.ExtraCellular_Oscilloscope_widget = QWidget(self.ExtraCellular_Oscilloscope_frame)
         self.ExtraCellular_Oscilloscope_widget.setObjectName(u"ExtraCellular_Oscilloscope_widget")
         sizePolicy4.setHeightForWidth(self.ExtraCellular_Oscilloscope_widget.sizePolicy().hasHeightForWidth())
         self.ExtraCellular_Oscilloscope_widget.setSizePolicy(sizePolicy4)
         self.ExtraCellular_Oscilloscope_widget.setAutoFillBackground(False)
         self.ExtraCellular_Oscilloscope_widget.setStyleSheet(u"")
-        self.horizontalLayout_308 = QHBoxLayout(self.ExtraCellular_Oscilloscope_widget)
-        self.horizontalLayout_308.setSpacing(0)
-        self.horizontalLayout_308.setObjectName(u"horizontalLayout_308")
-        self.horizontalLayout_308.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_18 = QVBoxLayout(self.ExtraCellular_Oscilloscope_widget)
+        self.verticalLayout_18.setSpacing(0)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
 
         self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_widget)
 
@@ -14299,7 +13821,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_114.setContentsMargins(0, 10, 0, 0)
         self.ExtraCellular_Mode_Template_label = QLabel(self.ExtraCellular_Mode_Label_frame)
         self.ExtraCellular_Mode_Template_label.setObjectName(u"ExtraCellular_Mode_Template_label")
-        self.ExtraCellular_Mode_Template_label.setFont(font8)
+        self.ExtraCellular_Mode_Template_label.setFont(font4)
         self.ExtraCellular_Mode_Template_label.setStyleSheet(u"color: rgb(38, 139, 210);")
         self.ExtraCellular_Mode_Template_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
@@ -14358,7 +13880,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_117 = QVBoxLayout(self.ExtraCellular_Bandpass_frame)
         self.verticalLayout_117.setSpacing(10)
         self.verticalLayout_117.setObjectName(u"verticalLayout_117")
-        self.verticalLayout_117.setContentsMargins(5, 10, 5, 10)
+        self.verticalLayout_117.setContentsMargins(5, 0, 5, 0)
         self.ExtraCellular_Bandpass_Title_frame = QFrame(self.ExtraCellular_Bandpass_frame)
         self.ExtraCellular_Bandpass_Title_frame.setObjectName(u"ExtraCellular_Bandpass_Title_frame")
         self.ExtraCellular_Bandpass_Title_frame.setFrameShape(QFrame.StyledPanel)
@@ -14497,11 +14019,11 @@ class Ui_Spikeling(object):
         self.ExtraCellular_Distance_Slider = QSlider(self.ExtraCellular_Distance_Slider_frame)
         self.ExtraCellular_Distance_Slider.setObjectName(u"ExtraCellular_Distance_Slider")
         self.ExtraCellular_Distance_Slider.setEnabled(False)
-        self.ExtraCellular_Distance_Slider.setMinimum(10)
-        self.ExtraCellular_Distance_Slider.setMaximum(500)
+        self.ExtraCellular_Distance_Slider.setMinimum(1)
+        self.ExtraCellular_Distance_Slider.setMaximum(250)
         self.ExtraCellular_Distance_Slider.setSingleStep(10)
         self.ExtraCellular_Distance_Slider.setPageStep(50)
-        self.ExtraCellular_Distance_Slider.setValue(100)
+        self.ExtraCellular_Distance_Slider.setValue(50)
         self.ExtraCellular_Distance_Slider.setOrientation(Qt.Horizontal)
         self.ExtraCellular_Distance_Slider.setTickPosition(QSlider.TicksBelow)
         self.ExtraCellular_Distance_Slider.setTickInterval(50)
@@ -15184,7 +14706,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_637 = QHBoxLayout(self.ExtraCellular_CAR_Title_frame)
         self.horizontalLayout_637.setSpacing(0)
         self.horizontalLayout_637.setObjectName(u"horizontalLayout_637")
-        self.horizontalLayout_637.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_637.setContentsMargins(0, 0, 0, 5)
         self.ExtraCellular_CAR_Toggle_frame = QFrame(self.ExtraCellular_CAR_Title_frame)
         self.ExtraCellular_CAR_Toggle_frame.setObjectName(u"ExtraCellular_CAR_Toggle_frame")
         self.ExtraCellular_CAR_Toggle_frame.setMinimumSize(QSize(50, 0))
@@ -17954,14 +17476,14 @@ class Ui_Spikeling(object):
         self.retranslateUi(Spikeling)
 
         self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(0)
-        self.mainbody_stackedWidget.setCurrentIndex(3)
+        self.mainbody_stackedWidget.setCurrentIndex(8)
         self.Spikeling_parameter_stackedwidget.setCurrentIndex(0)
-        self.Emulator_parameter_stackedwidget.setCurrentIndex(1)
+        self.Emulator_parameter_stackedwidget.setCurrentIndex(0)
         self.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentIndex(0)
         self.Spikeling_DataAnalysis_stackedWidget.setCurrentIndex(0)
         self.Imaging_parameter_stackedWidget.setCurrentIndex(0)
-        self.DataAnalysis_Display_StackedWidget_2.setCurrentIndex(1)
-        self.DataAnalysis_stackedWidget_2.setCurrentIndex(0)
+        self.DataAnalysis_Display_StackedWidget_2.setCurrentIndex(5)
+        self.DataAnalysis_stackedWidget_2.setCurrentIndex(1)
         self.ExtraCellular_parameter_stackedWidget.setCurrentIndex(0)
         self.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(3)
 
@@ -18541,40 +18063,30 @@ class Ui_Spikeling(object):
         self.Imaging_ImagingParameter_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Imaging Parameters", None))
         self.Imaging_CalciumParameter_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Calcium Parameters", None))
         self.Imaging_FluoParameter_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Fluorescence Parameters", None))
-        self.DataAnalysis_Neuron0Vm_pushButton10_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton10_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton10_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton11_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton11_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton11_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton12_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton12_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton12_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton20_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton20_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton20_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton21_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton21_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton21_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton22_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton22_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton22_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton30_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton30_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton30_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton31_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton31_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton31_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton32_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton32_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton32_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_Neuron0Vm_pushButton110_2.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
-        self.DataAnalysis_Neuron1Vm_pushButton110_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
-        self.DataAnalysis_Neuron2Vm_pushButton110_2.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
-        self.DataAnalysis_LoadData_label_2.setText("")
-        self.DataAnalysis_LoadData_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"   Load Data   ", None))
-        self.DataAnalysis_LoadData_Display_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"Display Raw Data", None))
-        self.DataAnalysis_SaveImage_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"Save Image", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setText(QCoreApplication.translate("Spikeling", u"Spikeling Neuron", None))
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 1", None))
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setText(QCoreApplication.translate("Spikeling", u"Aux Neuron 2", None))
+        self.Imaging_DataAnalysis_LoadData_label.setText("")
+        self.Imaging_DataAnalysis_LoadData_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Load Data   ", None))
+        self.Imaging_DataAnalysis_DisplayFrameData_pushButton.setText(QCoreApplication.translate("Spikeling", u"Display Frame Data", None))
+        self.pushButton.setText(QCoreApplication.translate("Spikeling", u"Display Sample Data", None))
+        self.Imaging_DataAnalysis_SaveImage_pushButton.setText(QCoreApplication.translate("Spikeling", u"Save Image", None))
+        self.Imaging_DataAnalysis_LoadData_readings.setText("")
         self.DataAnalysis_Spike_label_2.setText(QCoreApplication.translate("Spikeling", u"Find Spikes along the Vm trace(s)", None))
         self.DataAnalysis_Spike_threshold_label_2.setText(QCoreApplication.translate("Spikeling", u"Spike Threshold: ", None))
         self.DataAnalysis_Spike_lineEdit_2.setText(QCoreApplication.translate("Spikeling", u"-20", None))
@@ -18594,10 +18106,10 @@ class Ui_Spikeling(object):
         self.DataAnalysis_LoadStim_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"   Load Stimulus   ", None))
         self.DataAnalysis_StepStim_LoadData_Display_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"Display Raw Data", None))
         self.DataAnalysis_StepStim_SaveImage_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"Save Image", None))
-        self.Imaging_rightMenuSubContainer_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"Hide Parameters", None))
-        self.Imaging_ImagingParameter_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"  Imaging Parameters", None))
-        self.Imaging_CalciumParameter_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"  Calcium Parameters", None))
-        self.Imaging_FluoParameter_pushButton_2.setText(QCoreApplication.translate("Spikeling", u"  Fluorescence Parameters", None))
+        self.Imaging_DataAnalysis_rightMenuSubContainer_pushButton.setText(QCoreApplication.translate("Spikeling", u"Hide Parameters", None))
+        self.Imaging_DataAnalysis_Tier1_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Imaging Parameters", None))
+        self.Imaging_DataAnalysis_Tier2_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Calcium Parameters", None))
+        self.Imaging_DataAnalysis_Tier3_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Fluorescence Parameters", None))
         self.label_7.setText("")
         self.ExtraCellular_ConnectButton.setText(QCoreApplication.translate("Spikeling", u"Connect Tetrode recording to Spikeling", None))
         self.ExtraCellular_Source_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"  from Spikeling device", None))
@@ -18630,9 +18142,9 @@ class Ui_Spikeling(object):
 
         self.ExtraCellular_Distance_Label.setText(QCoreApplication.translate("Spikeling", u"Electrode distance (\u03bcm)", None))
         self.ExtraCellular_Distance_Readings.setText("")
-        self.ExtraCellular_Distance_Value_min.setText(QCoreApplication.translate("Spikeling", u"10", None))
-        self.ExtraCellular_Distance_Value_mid.setText(QCoreApplication.translate("Spikeling", u"250", None))
-        self.ExtraCellular_Distance_Value_max.setText(QCoreApplication.translate("Spikeling", u"500", None))
+        self.ExtraCellular_Distance_Value_min.setText(QCoreApplication.translate("Spikeling", u"1", None))
+        self.ExtraCellular_Distance_Value_mid.setText(QCoreApplication.translate("Spikeling", u"125", None))
+        self.ExtraCellular_Distance_Value_max.setText(QCoreApplication.translate("Spikeling", u"250", None))
         self.ExtraCellular_Orientation_Label.setText(QCoreApplication.translate("Spikeling", u"Orientation (\u00b0)", None))
         self.ExtraCellular_Orientation_Readings.setText("")
         self.ExtraCellular_Orientation_Value_min.setText(QCoreApplication.translate("Spikeling", u"0", None))

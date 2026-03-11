@@ -24,7 +24,6 @@ class Scope():
     # Page selection
     # ------------------------------------------------------------------
     def ShowPage(self):
-        self.ui.ExtraCellular_Oscilloscope_widget.setBackground(Settings.DarkSolarized[0])
         self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_301)
 
 
@@ -33,9 +32,9 @@ class Scope():
     # ------------------------------------------------------------------
     def UpdateSource(self):
         """
-        Push UI selection down to extracellular_graph.set_source_mode().
+        Push UI selection down to parent.extracellular_graph.set_source_mode().
         """
-        extracellular_graph = getattr(self, "extracellular_graph", None)
+        extracellular_graph = getattr(self.parent, "extracellular_graph", None)
         if extracellular_graph is None:
             print("UpdateSource: extracellular_graph not found on MainWindow")
             return
@@ -156,11 +155,11 @@ class Scope():
         # (keep if you like; otherwise remove)
         try:
             if mode == "dvdt":
-                self.ui.ExtraCellular_Mode_Template_label.setStyleSheet("color: rgb(38, 139, 210);")
-                self.ui.ExtraCellular_Mode_dVdT_label.setStyleSheet("color: rgb(190, 205, 205);")
+                self.ui.ExtraCellular_Mode_Template_label.setStyleSheet("color: rgb(190, 205, 205); font-weight: normal;")
+                self.ui.ExtraCellular_Mode_dVdT_label.setStyleSheet("color: rgb(42, 161, 152); font-weight: bold;")
             else:
-                self.ui.ExtraCellular_Mode_Template_label.setStyleSheet("color: rgb(190, 205, 205);")
-                self.ui.ExtraCellular_Mode_dVdT_label.setStyleSheet("color: rgb(38, 139, 210);")
+                self.ui.ExtraCellular_Mode_Template_label.setStyleSheet("color: rgb(38, 139, 210); font-weight: bold;")
+                self.ui.ExtraCellular_Mode_dVdT_label.setStyleSheet("color: rgb(190, 205, 205); font-weight: normal;")
         except Exception:
             pass
 
@@ -228,6 +227,7 @@ class Scope():
         else:
             self.ui.ExtraCellular_Spread_Slider.setEnabled(False)
             self.ui.ExtraCellular_Spread_Slider.setValue(12)
+            self.ui.ExtraCellular_Spread_Readings.setText('')
 
     def GetSpatialFalloff(self):
         self.ExtraCellular_SpreadValue = self.ui.ExtraCellular_Spread_Slider.value()
@@ -267,6 +267,7 @@ class Scope():
         else:
             self.ui.ExtraCellular_SharedNoise_Slider.setEnabled(False)
             self.ui.ExtraCellular_SharedNoise_Slider.setValue(5)
+            self.ui.ExtraCellular_SharedNoise_Readings.setText('')
 
     def GetSharedNoise(self):
         self.ExtraCellular_SharedNoiseValue = self.ui.ExtraCellular_SharedNoise_Slider.value()

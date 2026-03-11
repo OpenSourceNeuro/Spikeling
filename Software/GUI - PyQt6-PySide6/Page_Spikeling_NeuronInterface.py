@@ -5,8 +5,8 @@
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QSize, QFileInfo
-from py_toggle import PyToggle
-from py_slider import configure_styled_slider
+from Parameters_ToggleButtons import PyToggle
+from Parameters_Sliders import configure_styled_slider
 
 from serial_manager import serial_manager
 import os

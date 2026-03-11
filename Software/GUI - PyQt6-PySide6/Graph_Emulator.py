@@ -66,6 +66,7 @@ def EmulatorPlot(self):
 
         # 2) Run several simulation steps before we redraw
         imaging_batch = []  # list of 9-field packets for imaging
+        extracellular_batch = []  # list of 9-field packets for extracellular
 
         # Resolve imaging_graph once per tick
         imaging_graph = getattr(self, "imaging_graph", None)
@@ -73,6 +74,13 @@ def EmulatorPlot(self):
                 imaging_graph is not None
                 and getattr(self, "ImagingConnectionFlag", False)
                 and imaging_graph.source_mode == "emulator"
+        )
+        # Resolve extracellular_graph once per tick
+        extracellular_graph = getattr(self, "extracellular_graph", None)
+        extracellular_enabled = (
+                extracellular_graph is not None
+                and getattr(self, "ExtraCellularConnectionFlag", False)
+                and extracellular_graph.source_mode == "emulator"
         )
 
         for _ in range(steps_per_update):
@@ -82,10 +90,16 @@ def EmulatorPlot(self):
             BuffData(self)
             SavePlotData(self)
 
+
+            # 9-field packet shared by all downstream emulator-fed graphs:
+            # [t_ms, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
+            pkt9 = [self.Emulator_sim_time_ms] + list(vec8)
+
             if imaging_enabled:
-                # 9-field: [t_ms, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
-                pkt9 = [self.Emulator_sim_time_ms] + list(vec8)
                 imaging_batch.append(pkt9)
+
+            if extracellular_enabled:
+                extracellular_batch.append(pkt9)
 
         # 3) Plot only once per GUI update (using the latest buffer contents)
         PlotCurve(self)
@@ -93,6 +107,8 @@ def EmulatorPlot(self):
         # 4) Forward the whole batch once per GUI tick
         if imaging_batch:
             imaging_graph.on_emulator_data(imaging_batch)
+        if extracellular_batch:
+            extracellular_graph.on_emulator_data(extracellular_batch)
 
     # Read Serial and return data array (7)
     def GetData(self):

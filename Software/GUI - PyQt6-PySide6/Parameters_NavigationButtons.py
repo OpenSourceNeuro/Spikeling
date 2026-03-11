@@ -571,7 +571,7 @@ def Buttons(self):
     self.ui.ExtraCellular_DataRecording_Record_pushButton.clicked.connect(lambda: self.extracellular_page.RecordButton())
 
     # ExtraCellular Parameters
-    self.ui.ExtraCellular_SignalMode_toggleButton.toggled.connect(self.extracellular_graph.SignalMode)
+    self.ui.ExtraCellular_SignalMode_toggleButton.toggled.connect(self.extracellular_page.SignalMode_toggleButton)
 
     self.ui.ExtraCellular_Distance_toggleButton.toggled.connect(lambda:self.extracellular_page.ActivateElectrodeDistance())
     self.ui.ExtraCellular_Distance_Slider.valueChanged.connect(lambda: self.extracellular_page.GetElectrodeDistance())
@@ -583,8 +583,8 @@ def Buttons(self):
     self.ui.ExtraCellular_BaselineNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetBaselineNoise())
     self.ui.ExtraCellular_SharedNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSharedNoise())
     self.ui.ExtraCellular_SharedNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSharedNoise())
-    self.ui.ExtraCellular_HumNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateCHumNoise())
-    self.ui.ExtraCellular_HumNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetCHumNoise())
+    self.ui.ExtraCellular_HumNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateHumNoise())
+    self.ui.ExtraCellular_HumNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetHumNoise())
     self.ui.ExtraCellular_CAR_toggleButton.toggled.connect(lambda: self.extracellular_graph.CAR())
 
 
