@@ -17,9 +17,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QSlider,
-    QSpacerItem, QStackedWidget, QTextBrowser, QVBoxLayout,
-    QWidget)
+    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
+    QSlider, QSpacerItem, QStackedWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import resources_rc
@@ -406,10 +406,10 @@ class Ui_Spikeling(object):
 "    border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
 "#Imaging_DataAnalysis_Container_frame Line{\n"
-"    border: 1px solid rgb(190, 205, 205);\n"
-"}"
+"    background-color: rgb(0, 30, 38);\n"
+"}\n"
+""
                         "\n"
-"\n"
 "#Imaging_DataAnalysis_Display_frame QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
@@ -445,8 +445,8 @@ class Ui_Spikeling(object):
 "#ExtraCellular_parameter_stackedWidget{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
-""
-                        "#ExtraCellular_rightMenuSubContainer QPushButton{\n"
+"#Ex"
+                        "traCellular_rightMenuSubContainer QPushButton{\n"
 "	text-align: left;\n"
 "	padding: 20px 0px;\n"
 "	border-top-right-radius:20px;\n"
@@ -465,9 +465,6 @@ class Ui_Spikeling(object):
 "#ExtraCellular_CenterMenuContainer{\n"
 "	background-color: rgb(7, 54, 66)\n"
 "}\n"
-"#ExtraCellular_parameter_exit_frame{\n"
-"	background-color: rgb(0, 30, 38);\n"
-"}\n"
 "#ExtraCellular_pushButton_frame QPushButton{\n"
 "	background-color: rgb(7, 54, 66);\n"
 "    border: 1px solid rgb(190, 205, 205);\n"
@@ -478,10 +475,10 @@ class Ui_Spikeling(object):
 "#ExtraCellular_DataRecording_box{\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
-"#ExtraCellular_DataRecording_"
-                        "box QLineEdit{\n"
+"#ExtraCellular_DataRecording_box QLineEdit{\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
-"    background-color: rgb(7, 54, 66);\n"
+"    background-color: rgb(7"
+                        ", 54, 66);\n"
 "}\n"
 "#ExtraCellular_DataRecording_box QComboBox{\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
@@ -505,6 +502,29 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+"     Page 302 - ExtraCellular_Spikes\n"
+" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
+"\n"
+"#ExtraCellular_Spikes_RightContainer{\n"
+"	background-color: rgb(7,54,66);\n"
+"    border: 2px solid rgb(190, 205, 205);\n"
+"}\n"
+"#ExtraCellular_Spikes_RightContainer QPushButton{\n"
+"	background-color: rgb(0, 43, 54);\n"
+"	border: 2px solid rgb(190, 205, 205);\n"
+"	"
+                        "border-radius: 10px;\n"
+"	padding: 2px;\n"
+"}\n"
+"#ExtraCellular_Spikes_RightContainer QLineEdit{\n"
+"    border: 2px solid rgb(190, 205, 205);\n"
+"}\n"
+"#ExtraCellular_Spikes_RightContainer Line{\n"
+"     background-color: rgb(0, 30, 38);\n"
+"}\n"
+"\n"
+"\n"
+"/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
 "     Page 401 - Neuron_Generator\n"
 " -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
@@ -513,8 +533,7 @@ class Ui_Spikeling(object):
 "	border: 2px solid rgb(147,161,161);\n"
 "}\n"
 "#NeuronGenerator_subframe2 QLineEdit{\n"
-""
-                        "	background-color: rgb(7, 54, 66);\n"
+"	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
 "#NeuronGenerator_subframe2 QPushButton{\n"
@@ -526,7 +545,8 @@ class Ui_Spikeling(object):
 "#NeuronGenerator_subframe2 QComboBox{\n"
 "	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
-"	border-radius: 10px;\n"
+"	bor"
+                        "der-radius: 10px;\n"
 "	padding: 5px 5px;\n"
 "	margin: 5px\n"
 "}\n"
@@ -548,8 +568,7 @@ class Ui_Spikeling(object):
 "	padding: 2px;\n"
 "}\n"
 "#StimulusGenerator_Container QComboBox{\n"
-"	background"
-                        "-color: rgb(7, 54, 66);\n"
+"	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
 "	padding: 5px 5px;\n"
@@ -13394,15 +13413,15 @@ class Ui_Spikeling(object):
         self.horizontalLayout_16.setSpacing(0)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_widget = QFrame(self.page_301)
-        self.ExtraCellular_widget.setObjectName(u"ExtraCellular_widget")
-        self.ExtraCellular_widget.setFrameShape(QFrame.StyledPanel)
-        self.ExtraCellular_widget.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_120 = QVBoxLayout(self.ExtraCellular_widget)
+        self.ExtraCellular_Scope_widget = QFrame(self.page_301)
+        self.ExtraCellular_Scope_widget.setObjectName(u"ExtraCellular_Scope_widget")
+        self.ExtraCellular_Scope_widget.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Scope_widget.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_120 = QVBoxLayout(self.ExtraCellular_Scope_widget)
         self.verticalLayout_120.setSpacing(0)
         self.verticalLayout_120.setObjectName(u"verticalLayout_120")
         self.verticalLayout_120.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_header_frame = QFrame(self.ExtraCellular_widget)
+        self.ExtraCellular_header_frame = QFrame(self.ExtraCellular_Scope_widget)
         self.ExtraCellular_header_frame.setObjectName(u"ExtraCellular_header_frame")
         self.ExtraCellular_header_frame.setMinimumSize(QSize(0, 30))
         self.ExtraCellular_header_frame.setMaximumSize(QSize(16777215, 25))
@@ -13460,7 +13479,7 @@ class Ui_Spikeling(object):
 
         self.verticalLayout_120.addWidget(self.ExtraCellular_header_frame)
 
-        self.ExtraCellular_Oscilloscope_frame = QFrame(self.ExtraCellular_widget)
+        self.ExtraCellular_Oscilloscope_frame = QFrame(self.ExtraCellular_Scope_widget)
         self.ExtraCellular_Oscilloscope_frame.setObjectName(u"ExtraCellular_Oscilloscope_frame")
         self.ExtraCellular_Oscilloscope_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_Oscilloscope_frame.setFrameShadow(QFrame.Raised)
@@ -13484,24 +13503,6 @@ class Ui_Spikeling(object):
         self.horizontalLayout_116.setSpacing(20)
         self.horizontalLayout_116.setObjectName(u"horizontalLayout_116")
         self.horizontalLayout_116.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Label_frame = QFrame(self.ExtraCellular_Oscilloscope_Traces_frame)
-        self.Extracellular_Tetrode_Label_frame.setObjectName(u"Extracellular_Tetrode_Label_frame")
-        self.Extracellular_Tetrode_Label_frame.setFrameShape(QFrame.StyledPanel)
-        self.Extracellular_Tetrode_Label_frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_98 = QVBoxLayout(self.Extracellular_Tetrode_Label_frame)
-        self.verticalLayout_98.setSpacing(0)
-        self.verticalLayout_98.setObjectName(u"verticalLayout_98")
-        self.verticalLayout_98.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Label = QLabel(self.Extracellular_Tetrode_Label_frame)
-        self.Extracellular_Tetrode_Label.setObjectName(u"Extracellular_Tetrode_Label")
-        self.Extracellular_Tetrode_Label.setFont(font1)
-        self.Extracellular_Tetrode_Label.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-
-        self.verticalLayout_98.addWidget(self.Extracellular_Tetrode_Label)
-
-
-        self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Label_frame, 0, Qt.AlignLeft)
-
         self.Extracellular_Tetrode_Ch1_frame = QFrame(self.ExtraCellular_Oscilloscope_Traces_frame)
         self.Extracellular_Tetrode_Ch1_frame.setObjectName(u"Extracellular_Tetrode_Ch1_frame")
         self.Extracellular_Tetrode_Ch1_frame.setFrameShape(QFrame.StyledPanel)
@@ -13510,14 +13511,14 @@ class Ui_Spikeling(object):
         self.verticalLayout_122.setSpacing(0)
         self.verticalLayout_122.setObjectName(u"verticalLayout_122")
         self.verticalLayout_122.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Ch1_Checkbox = QCheckBox(self.Extracellular_Tetrode_Ch1_frame)
-        self.Extracellular_Tetrode_Ch1_Checkbox.setObjectName(u"Extracellular_Tetrode_Ch1_Checkbox")
-        self.Extracellular_Tetrode_Ch1_Checkbox.setEnabled(True)
-        self.Extracellular_Tetrode_Ch1_Checkbox.setAutoFillBackground(False)
-        self.Extracellular_Tetrode_Ch1_Checkbox.setStyleSheet(u"color: rgb(38, 139, 210);")
-        self.Extracellular_Tetrode_Ch1_Checkbox.setChecked(True)
+        self.Extracellular_Tetrode_Ch1_checkBox = QCheckBox(self.Extracellular_Tetrode_Ch1_frame)
+        self.Extracellular_Tetrode_Ch1_checkBox.setObjectName(u"Extracellular_Tetrode_Ch1_checkBox")
+        self.Extracellular_Tetrode_Ch1_checkBox.setEnabled(True)
+        self.Extracellular_Tetrode_Ch1_checkBox.setAutoFillBackground(False)
+        self.Extracellular_Tetrode_Ch1_checkBox.setStyleSheet(u"color: rgb(38, 139, 210);")
+        self.Extracellular_Tetrode_Ch1_checkBox.setChecked(True)
 
-        self.verticalLayout_122.addWidget(self.Extracellular_Tetrode_Ch1_Checkbox)
+        self.verticalLayout_122.addWidget(self.Extracellular_Tetrode_Ch1_checkBox)
 
 
         self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Ch1_frame)
@@ -13530,14 +13531,14 @@ class Ui_Spikeling(object):
         self.verticalLayout_123.setSpacing(0)
         self.verticalLayout_123.setObjectName(u"verticalLayout_123")
         self.verticalLayout_123.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Ch2_Checkbox = QCheckBox(self.Extracellular_Tetrode_Ch2_frame)
-        self.Extracellular_Tetrode_Ch2_Checkbox.setObjectName(u"Extracellular_Tetrode_Ch2_Checkbox")
-        self.Extracellular_Tetrode_Ch2_Checkbox.setEnabled(True)
-        self.Extracellular_Tetrode_Ch2_Checkbox.setAutoFillBackground(False)
-        self.Extracellular_Tetrode_Ch2_Checkbox.setStyleSheet(u"color: rgb(42, 161, 152);")
-        self.Extracellular_Tetrode_Ch2_Checkbox.setChecked(True)
+        self.Extracellular_Tetrode_Ch2_checkBox = QCheckBox(self.Extracellular_Tetrode_Ch2_frame)
+        self.Extracellular_Tetrode_Ch2_checkBox.setObjectName(u"Extracellular_Tetrode_Ch2_checkBox")
+        self.Extracellular_Tetrode_Ch2_checkBox.setEnabled(True)
+        self.Extracellular_Tetrode_Ch2_checkBox.setAutoFillBackground(False)
+        self.Extracellular_Tetrode_Ch2_checkBox.setStyleSheet(u"color: rgb(42, 161, 152);")
+        self.Extracellular_Tetrode_Ch2_checkBox.setChecked(True)
 
-        self.verticalLayout_123.addWidget(self.Extracellular_Tetrode_Ch2_Checkbox)
+        self.verticalLayout_123.addWidget(self.Extracellular_Tetrode_Ch2_checkBox)
 
 
         self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Ch2_frame)
@@ -13550,35 +13551,35 @@ class Ui_Spikeling(object):
         self.verticalLayout_124.setSpacing(0)
         self.verticalLayout_124.setObjectName(u"verticalLayout_124")
         self.verticalLayout_124.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Ch3_Checkbox_2 = QCheckBox(self.Extracellular_Tetrode_Ch3_frame)
-        self.Extracellular_Tetrode_Ch3_Checkbox_2.setObjectName(u"Extracellular_Tetrode_Ch3_Checkbox_2")
-        self.Extracellular_Tetrode_Ch3_Checkbox_2.setStyleSheet(u"color: rgb(133, 153, 0);")
-        self.Extracellular_Tetrode_Ch3_Checkbox_2.setChecked(True)
+        self.Extracellular_Tetrode_Ch3_checkBox = QCheckBox(self.Extracellular_Tetrode_Ch3_frame)
+        self.Extracellular_Tetrode_Ch3_checkBox.setObjectName(u"Extracellular_Tetrode_Ch3_checkBox")
+        self.Extracellular_Tetrode_Ch3_checkBox.setStyleSheet(u"color: rgb(133, 153, 0);")
+        self.Extracellular_Tetrode_Ch3_checkBox.setChecked(True)
 
-        self.verticalLayout_124.addWidget(self.Extracellular_Tetrode_Ch3_Checkbox_2)
+        self.verticalLayout_124.addWidget(self.Extracellular_Tetrode_Ch3_checkBox)
 
 
         self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Ch3_frame)
 
-        self.Extracellular_Tetrode_Ch4_frame_2 = QFrame(self.ExtraCellular_Oscilloscope_Traces_frame)
-        self.Extracellular_Tetrode_Ch4_frame_2.setObjectName(u"Extracellular_Tetrode_Ch4_frame_2")
-        self.Extracellular_Tetrode_Ch4_frame_2.setFrameShape(QFrame.StyledPanel)
-        self.Extracellular_Tetrode_Ch4_frame_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_144 = QVBoxLayout(self.Extracellular_Tetrode_Ch4_frame_2)
+        self.Extracellular_Tetrode_Ch4_frame = QFrame(self.ExtraCellular_Oscilloscope_Traces_frame)
+        self.Extracellular_Tetrode_Ch4_frame.setObjectName(u"Extracellular_Tetrode_Ch4_frame")
+        self.Extracellular_Tetrode_Ch4_frame.setFrameShape(QFrame.StyledPanel)
+        self.Extracellular_Tetrode_Ch4_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_144 = QVBoxLayout(self.Extracellular_Tetrode_Ch4_frame)
         self.verticalLayout_144.setSpacing(0)
         self.verticalLayout_144.setObjectName(u"verticalLayout_144")
         self.verticalLayout_144.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Ch4_Checkbox = QCheckBox(self.Extracellular_Tetrode_Ch4_frame_2)
-        self.Extracellular_Tetrode_Ch4_Checkbox.setObjectName(u"Extracellular_Tetrode_Ch4_Checkbox")
-        self.Extracellular_Tetrode_Ch4_Checkbox.setEnabled(True)
-        self.Extracellular_Tetrode_Ch4_Checkbox.setAutoFillBackground(False)
-        self.Extracellular_Tetrode_Ch4_Checkbox.setStyleSheet(u"color: rgb(108, 113, 196);")
-        self.Extracellular_Tetrode_Ch4_Checkbox.setChecked(True)
+        self.Extracellular_Tetrode_Ch4_checkBox = QCheckBox(self.Extracellular_Tetrode_Ch4_frame)
+        self.Extracellular_Tetrode_Ch4_checkBox.setObjectName(u"Extracellular_Tetrode_Ch4_checkBox")
+        self.Extracellular_Tetrode_Ch4_checkBox.setEnabled(True)
+        self.Extracellular_Tetrode_Ch4_checkBox.setAutoFillBackground(False)
+        self.Extracellular_Tetrode_Ch4_checkBox.setStyleSheet(u"color: rgb(108, 113, 196);")
+        self.Extracellular_Tetrode_Ch4_checkBox.setChecked(True)
 
-        self.verticalLayout_144.addWidget(self.Extracellular_Tetrode_Ch4_Checkbox)
+        self.verticalLayout_144.addWidget(self.Extracellular_Tetrode_Ch4_checkBox)
 
 
-        self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Ch4_frame_2)
+        self.horizontalLayout_116.addWidget(self.Extracellular_Tetrode_Ch4_frame)
 
 
         self.horizontalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_Traces_frame)
@@ -13603,11 +13604,11 @@ class Ui_Spikeling(object):
         self.verticalLayout_250.setSpacing(0)
         self.verticalLayout_250.setObjectName(u"verticalLayout_250")
         self.verticalLayout_250.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Threshold_Checkbox = QCheckBox(self.Extracellular_Tetrode_Threshold_frame)
-        self.Extracellular_Tetrode_Threshold_Checkbox.setObjectName(u"Extracellular_Tetrode_Threshold_Checkbox")
-        self.Extracellular_Tetrode_Threshold_Checkbox.setStyleSheet(u"")
+        self.Extracellular_Tetrode_Threshold_checkBox = QCheckBox(self.Extracellular_Tetrode_Threshold_frame)
+        self.Extracellular_Tetrode_Threshold_checkBox.setObjectName(u"Extracellular_Tetrode_Threshold_checkBox")
+        self.Extracellular_Tetrode_Threshold_checkBox.setStyleSheet(u"")
 
-        self.verticalLayout_250.addWidget(self.Extracellular_Tetrode_Threshold_Checkbox, 0, Qt.AlignRight)
+        self.verticalLayout_250.addWidget(self.Extracellular_Tetrode_Threshold_checkBox, 0, Qt.AlignRight)
 
 
         self.horizontalLayout_125.addWidget(self.Extracellular_Tetrode_Threshold_frame)
@@ -13620,11 +13621,11 @@ class Ui_Spikeling(object):
         self.verticalLayout_146.setSpacing(0)
         self.verticalLayout_146.setObjectName(u"verticalLayout_146")
         self.verticalLayout_146.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Spikes_Checkbox = QCheckBox(self.Extracellular_Tetrode_Spikes_frame)
-        self.Extracellular_Tetrode_Spikes_Checkbox.setObjectName(u"Extracellular_Tetrode_Spikes_Checkbox")
-        self.Extracellular_Tetrode_Spikes_Checkbox.setStyleSheet(u"")
+        self.Extracellular_Tetrode_Spikes_checkBox = QCheckBox(self.Extracellular_Tetrode_Spikes_frame)
+        self.Extracellular_Tetrode_Spikes_checkBox.setObjectName(u"Extracellular_Tetrode_Spikes_checkBox")
+        self.Extracellular_Tetrode_Spikes_checkBox.setStyleSheet(u"")
 
-        self.verticalLayout_146.addWidget(self.Extracellular_Tetrode_Spikes_Checkbox, 0, Qt.AlignRight)
+        self.verticalLayout_146.addWidget(self.Extracellular_Tetrode_Spikes_checkBox, 0, Qt.AlignRight)
 
 
         self.horizontalLayout_125.addWidget(self.Extracellular_Tetrode_Spikes_frame)
@@ -13637,17 +13638,66 @@ class Ui_Spikeling(object):
         self.verticalLayout_145.setSpacing(0)
         self.verticalLayout_145.setObjectName(u"verticalLayout_145")
         self.verticalLayout_145.setContentsMargins(0, 0, 0, 0)
-        self.Extracellular_Tetrode_Events_Checkbox = QCheckBox(self.Extracellular_Tetrode_Events_frame)
-        self.Extracellular_Tetrode_Events_Checkbox.setObjectName(u"Extracellular_Tetrode_Events_Checkbox")
-        self.Extracellular_Tetrode_Events_Checkbox.setStyleSheet(u"")
+        self.Extracellular_Tetrode_Events_checkBox = QCheckBox(self.Extracellular_Tetrode_Events_frame)
+        self.Extracellular_Tetrode_Events_checkBox.setObjectName(u"Extracellular_Tetrode_Events_checkBox")
+        self.Extracellular_Tetrode_Events_checkBox.setStyleSheet(u"")
 
-        self.verticalLayout_145.addWidget(self.Extracellular_Tetrode_Events_Checkbox)
+        self.verticalLayout_145.addWidget(self.Extracellular_Tetrode_Events_checkBox)
 
 
         self.horizontalLayout_125.addWidget(self.Extracellular_Tetrode_Events_frame, 0, Qt.AlignRight)
 
 
         self.horizontalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_Parameters_frame)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_120.addItem(self.horizontalSpacer_2)
+
+        self.ExtraCellular_Oscilloscope_Ground_frame = QFrame(self.ExtraCellular_Oscilloscope_Display_frame)
+        self.ExtraCellular_Oscilloscope_Ground_frame.setObjectName(u"ExtraCellular_Oscilloscope_Ground_frame")
+        self.ExtraCellular_Oscilloscope_Ground_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Oscilloscope_Ground_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_135 = QHBoxLayout(self.ExtraCellular_Oscilloscope_Ground_frame)
+        self.horizontalLayout_135.setSpacing(20)
+        self.horizontalLayout_135.setObjectName(u"horizontalLayout_135")
+        self.horizontalLayout_135.setContentsMargins(0, 0, 0, 0)
+        self.Extracellular_Tetrode_Stimulus_frame = QFrame(self.ExtraCellular_Oscilloscope_Ground_frame)
+        self.Extracellular_Tetrode_Stimulus_frame.setObjectName(u"Extracellular_Tetrode_Stimulus_frame")
+        self.Extracellular_Tetrode_Stimulus_frame.setFrameShape(QFrame.StyledPanel)
+        self.Extracellular_Tetrode_Stimulus_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_140 = QVBoxLayout(self.Extracellular_Tetrode_Stimulus_frame)
+        self.verticalLayout_140.setSpacing(0)
+        self.verticalLayout_140.setObjectName(u"verticalLayout_140")
+        self.verticalLayout_140.setContentsMargins(0, 0, 0, 0)
+        self.Extracellular_Tetrode_Stimulus_checkBox = QCheckBox(self.Extracellular_Tetrode_Stimulus_frame)
+        self.Extracellular_Tetrode_Stimulus_checkBox.setObjectName(u"Extracellular_Tetrode_Stimulus_checkBox")
+        self.Extracellular_Tetrode_Stimulus_checkBox.setStyleSheet(u"color: rgb(38, 139, 210);")
+
+        self.verticalLayout_140.addWidget(self.Extracellular_Tetrode_Stimulus_checkBox)
+
+
+        self.horizontalLayout_135.addWidget(self.Extracellular_Tetrode_Stimulus_frame)
+
+        self.Extracellular_Tetrode_Vm_frame = QFrame(self.ExtraCellular_Oscilloscope_Ground_frame)
+        self.Extracellular_Tetrode_Vm_frame.setObjectName(u"Extracellular_Tetrode_Vm_frame")
+        self.Extracellular_Tetrode_Vm_frame.setFrameShape(QFrame.StyledPanel)
+        self.Extracellular_Tetrode_Vm_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_119 = QVBoxLayout(self.Extracellular_Tetrode_Vm_frame)
+        self.verticalLayout_119.setSpacing(0)
+        self.verticalLayout_119.setObjectName(u"verticalLayout_119")
+        self.verticalLayout_119.setContentsMargins(0, 0, 0, 0)
+        self.Extracellular_Tetrode_Vm_checkBox = QCheckBox(self.Extracellular_Tetrode_Vm_frame)
+        self.Extracellular_Tetrode_Vm_checkBox.setObjectName(u"Extracellular_Tetrode_Vm_checkBox")
+        self.Extracellular_Tetrode_Vm_checkBox.setStyleSheet(u"color: rgb(220, 50, 47);")
+
+        self.verticalLayout_119.addWidget(self.Extracellular_Tetrode_Vm_checkBox)
+
+
+        self.horizontalLayout_135.addWidget(self.Extracellular_Tetrode_Vm_frame)
+
+
+        self.horizontalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_Ground_frame)
 
 
         self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_Display_frame)
@@ -13662,13 +13712,27 @@ class Ui_Spikeling(object):
         self.verticalLayout_18.setSpacing(0)
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
         self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_AutoRange_frame = QFrame(self.ExtraCellular_Oscilloscope_widget)
+        self.ExtraCellular_AutoRange_frame.setObjectName(u"ExtraCellular_AutoRange_frame")
+        self.ExtraCellular_AutoRange_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_AutoRange_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_60 = QVBoxLayout(self.ExtraCellular_AutoRange_frame)
+        self.verticalLayout_60.setObjectName(u"verticalLayout_60")
+        self.ExtraCellular_AutoRange_pushButton = QPushButton(self.ExtraCellular_AutoRange_frame)
+        self.ExtraCellular_AutoRange_pushButton.setObjectName(u"ExtraCellular_AutoRange_pushButton")
+
+        self.verticalLayout_60.addWidget(self.ExtraCellular_AutoRange_pushButton)
+
+
+        self.verticalLayout_18.addWidget(self.ExtraCellular_AutoRange_frame, 0, Qt.AlignLeft|Qt.AlignTop)
+
 
         self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_widget)
 
 
         self.verticalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_frame)
 
-        self.ExtraCellular_DataRecording_box = QGroupBox(self.ExtraCellular_widget)
+        self.ExtraCellular_DataRecording_box = QGroupBox(self.ExtraCellular_Scope_widget)
         self.ExtraCellular_DataRecording_box.setObjectName(u"ExtraCellular_DataRecording_box")
         sizePolicy5.setHeightForWidth(self.ExtraCellular_DataRecording_box.sizePolicy().hasHeightForWidth())
         self.ExtraCellular_DataRecording_box.setSizePolicy(sizePolicy5)
@@ -13776,28 +13840,26 @@ class Ui_Spikeling(object):
         self.verticalLayout_120.addWidget(self.ExtraCellular_DataRecording_box)
 
 
-        self.horizontalLayout_16.addWidget(self.ExtraCellular_widget)
+        self.horizontalLayout_16.addWidget(self.ExtraCellular_Scope_widget)
 
-        self.ExtraCellular_CenterMenuContainer = QFrame(self.page_301)
-        self.ExtraCellular_CenterMenuContainer.setObjectName(u"ExtraCellular_CenterMenuContainer")
-        self.ExtraCellular_CenterMenuContainer.setMaximumSize(QSize(200, 16777215))
-        self.ExtraCellular_CenterMenuContainer.setFrameShape(QFrame.StyledPanel)
-        self.ExtraCellular_CenterMenuContainer.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_116 = QVBoxLayout(self.ExtraCellular_CenterMenuContainer)
+        self.ExtraCellular_Scope_RightMenuContainer = QFrame(self.page_301)
+        self.ExtraCellular_Scope_RightMenuContainer.setObjectName(u"ExtraCellular_Scope_RightMenuContainer")
+        self.ExtraCellular_Scope_RightMenuContainer.setMaximumSize(QSize(200, 16777215))
+        self.ExtraCellular_Scope_RightMenuContainer.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Scope_RightMenuContainer.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_116 = QVBoxLayout(self.ExtraCellular_Scope_RightMenuContainer)
         self.verticalLayout_116.setSpacing(0)
         self.verticalLayout_116.setObjectName(u"verticalLayout_116")
         self.verticalLayout_116.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_parameter_stackedWidget = QStackedWidget(self.ExtraCellular_CenterMenuContainer)
-        self.ExtraCellular_parameter_stackedWidget.setObjectName(u"ExtraCellular_parameter_stackedWidget")
-        self.ExtraCellular_parameter_stackedWidget.setMaximumSize(QSize(200, 16777215))
-        self.ExtraCellular_parameter_stackedWidget.setFont(font3)
-        self.ExtraCellular_ScopeParameter_page = QWidget()
-        self.ExtraCellular_ScopeParameter_page.setObjectName(u"ExtraCellular_ScopeParameter_page")
-        self.verticalLayout_205 = QVBoxLayout(self.ExtraCellular_ScopeParameter_page)
-        self.verticalLayout_205.setSpacing(10)
-        self.verticalLayout_205.setObjectName(u"verticalLayout_205")
-        self.verticalLayout_205.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_SignalMode_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_parameter_frame = QFrame(self.ExtraCellular_Scope_RightMenuContainer)
+        self.ExtraCellular_Scope_parameter_frame.setObjectName(u"ExtraCellular_Scope_parameter_frame")
+        self.ExtraCellular_Scope_parameter_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Scope_parameter_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_98 = QVBoxLayout(self.ExtraCellular_Scope_parameter_frame)
+        self.verticalLayout_98.setSpacing(2)
+        self.verticalLayout_98.setObjectName(u"verticalLayout_98")
+        self.verticalLayout_98.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_SignalMode_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_SignalMode_frame.setObjectName(u"ExtraCellular_SignalMode_frame")
         self.ExtraCellular_SignalMode_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_SignalMode_frame.setFrameShadow(QFrame.Raised)
@@ -13862,17 +13924,17 @@ class Ui_Spikeling(object):
         self.verticalLayout_136.addWidget(self.ExtraCellular_Mode_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_SignalMode_frame)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_SignalMode_frame)
 
-        self.ExtraCellular_Scope_line_1 = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_line_1 = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Scope_line_1.setObjectName(u"ExtraCellular_Scope_line_1")
         self.ExtraCellular_Scope_line_1.setStyleSheet(u"background-color: rgb(0, 30, 38);")
         self.ExtraCellular_Scope_line_1.setFrameShape(QFrame.Shape.HLine)
         self.ExtraCellular_Scope_line_1.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Scope_line_1)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Scope_line_1)
 
-        self.ExtraCellular_Bandpass_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Bandpass_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Bandpass_frame.setObjectName(u"ExtraCellular_Bandpass_frame")
         self.ExtraCellular_Bandpass_frame.setMaximumSize(QSize(16777215, 16777215))
         self.ExtraCellular_Bandpass_frame.setFrameShape(QFrame.StyledPanel)
@@ -13931,17 +13993,17 @@ class Ui_Spikeling(object):
         self.verticalLayout_117.addWidget(self.ExtraCellular_Bandpass_comboBox_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Bandpass_frame)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Bandpass_frame)
 
-        self.ExtraCellular_Scope_line_2 = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_line_2 = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Scope_line_2.setObjectName(u"ExtraCellular_Scope_line_2")
         self.ExtraCellular_Scope_line_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
         self.ExtraCellular_Scope_line_2.setFrameShape(QFrame.Shape.HLine)
         self.ExtraCellular_Scope_line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Scope_line_2)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Scope_line_2)
 
-        self.ExtraCellular_Distance_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Distance_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Distance_frame.setObjectName(u"ExtraCellular_Distance_frame")
         self.ExtraCellular_Distance_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_Distance_frame.setFrameShadow(QFrame.Raised)
@@ -14062,17 +14124,17 @@ class Ui_Spikeling(object):
         self.verticalLayout_207.addWidget(self.ExtraCellular_Distance_Values_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Distance_frame)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Distance_frame)
 
-        self.ExtraCellular_Scope_line_3 = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_line_3 = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Scope_line_3.setObjectName(u"ExtraCellular_Scope_line_3")
         self.ExtraCellular_Scope_line_3.setStyleSheet(u"background-color: rgb(0, 30, 38);")
         self.ExtraCellular_Scope_line_3.setFrameShape(QFrame.Shape.HLine)
         self.ExtraCellular_Scope_line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Scope_line_3)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Scope_line_3)
 
-        self.ExtraCellular_Orientation_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Orientation_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Orientation_frame.setObjectName(u"ExtraCellular_Orientation_frame")
         self.ExtraCellular_Orientation_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_Orientation_frame.setFrameShadow(QFrame.Raised)
@@ -14193,17 +14255,17 @@ class Ui_Spikeling(object):
         self.verticalLayout_251.addWidget(self.ExtraCellular_Orientation_Values_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Orientation_frame)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Orientation_frame)
 
-        self.ExtraCellular_Scope_line_5 = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_line_5 = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Scope_line_5.setObjectName(u"ExtraCellular_Scope_line_5")
         self.ExtraCellular_Scope_line_5.setStyleSheet(u"background-color: rgb(0, 30, 38);")
         self.ExtraCellular_Scope_line_5.setFrameShape(QFrame.Shape.HLine)
         self.ExtraCellular_Scope_line_5.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Scope_line_5)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Scope_line_5)
 
-        self.ExtraCellular_Spread_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Spread_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Spread_frame.setObjectName(u"ExtraCellular_Spread_frame")
         self.ExtraCellular_Spread_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_Spread_frame.setFrameShadow(QFrame.Raised)
@@ -14322,24 +14384,32 @@ class Ui_Spikeling(object):
         self.verticalLayout_234.addWidget(self.ExtraCellular_Spread_Values_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Spread_frame)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Spread_frame)
 
-        self.ExtraCellular_Scope_line_4 = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Scope_line_4 = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_Scope_line_4.setObjectName(u"ExtraCellular_Scope_line_4")
         self.ExtraCellular_Scope_line_4.setStyleSheet(u"background-color: rgb(0, 30, 38);")
         self.ExtraCellular_Scope_line_4.setFrameShape(QFrame.Shape.HLine)
         self.ExtraCellular_Scope_line_4.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Scope_line_4)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Scope_line_4)
 
-        self.ExtraCellular_Noise_label = QLabel(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_Noise_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
+        self.ExtraCellular_Noise_frame.setObjectName(u"ExtraCellular_Noise_frame")
+        self.ExtraCellular_Noise_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Noise_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_141 = QVBoxLayout(self.ExtraCellular_Noise_frame)
+        self.verticalLayout_141.setSpacing(2)
+        self.verticalLayout_141.setObjectName(u"verticalLayout_141")
+        self.verticalLayout_141.setContentsMargins(0, 0, 0, 5)
+        self.ExtraCellular_Noise_label = QLabel(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_Noise_label.setObjectName(u"ExtraCellular_Noise_label")
         self.ExtraCellular_Noise_label.setFont(font5)
         self.ExtraCellular_Noise_label.setAlignment(Qt.AlignCenter)
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_Noise_label)
+        self.verticalLayout_141.addWidget(self.ExtraCellular_Noise_label)
 
-        self.ExtraCellular_BaselineNoise_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_BaselineNoise_frame = QFrame(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_BaselineNoise_frame.setObjectName(u"ExtraCellular_BaselineNoise_frame")
         self.ExtraCellular_BaselineNoise_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_BaselineNoise_frame.setFrameShadow(QFrame.Raised)
@@ -14457,9 +14527,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_252.addWidget(self.ExtraCellular_BaselineNoise_Value_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_BaselineNoise_frame)
+        self.verticalLayout_141.addWidget(self.ExtraCellular_BaselineNoise_frame)
 
-        self.ExtraCellular_SharedNoise_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_SharedNoise_frame = QFrame(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_SharedNoise_frame.setObjectName(u"ExtraCellular_SharedNoise_frame")
         self.ExtraCellular_SharedNoise_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_SharedNoise_frame.setFrameShadow(QFrame.Raised)
@@ -14577,9 +14647,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_253.addWidget(self.ExtraCellular_SharedNoise_Value_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_SharedNoise_frame)
+        self.verticalLayout_141.addWidget(self.ExtraCellular_SharedNoise_frame)
 
-        self.ExtraCellular_HumNoise_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
+        self.ExtraCellular_HumNoise_frame = QFrame(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_HumNoise_frame.setObjectName(u"ExtraCellular_HumNoise_frame")
         self.ExtraCellular_HumNoise_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_HumNoise_frame.setFrameShadow(QFrame.Raised)
@@ -14697,17 +14767,17 @@ class Ui_Spikeling(object):
         self.verticalLayout_235.addWidget(self.ExtraCellular_HumNoise_Value_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_HumNoise_frame)
+        self.verticalLayout_141.addWidget(self.ExtraCellular_HumNoise_frame)
 
-        self.ExtraCellular_CAR_Title_frame = QFrame(self.ExtraCellular_ScopeParameter_page)
-        self.ExtraCellular_CAR_Title_frame.setObjectName(u"ExtraCellular_CAR_Title_frame")
-        self.ExtraCellular_CAR_Title_frame.setFrameShape(QFrame.StyledPanel)
-        self.ExtraCellular_CAR_Title_frame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_637 = QHBoxLayout(self.ExtraCellular_CAR_Title_frame)
+        self.ExtraCellular_CAR_frame = QFrame(self.ExtraCellular_Noise_frame)
+        self.ExtraCellular_CAR_frame.setObjectName(u"ExtraCellular_CAR_frame")
+        self.ExtraCellular_CAR_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_CAR_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_637 = QHBoxLayout(self.ExtraCellular_CAR_frame)
         self.horizontalLayout_637.setSpacing(0)
         self.horizontalLayout_637.setObjectName(u"horizontalLayout_637")
-        self.horizontalLayout_637.setContentsMargins(0, 0, 0, 5)
-        self.ExtraCellular_CAR_Toggle_frame = QFrame(self.ExtraCellular_CAR_Title_frame)
+        self.horizontalLayout_637.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_CAR_Toggle_frame = QFrame(self.ExtraCellular_CAR_frame)
         self.ExtraCellular_CAR_Toggle_frame.setObjectName(u"ExtraCellular_CAR_Toggle_frame")
         self.ExtraCellular_CAR_Toggle_frame.setMinimumSize(QSize(50, 0))
         self.ExtraCellular_CAR_Toggle_frame.setMaximumSize(QSize(50, 16777215))
@@ -14720,7 +14790,7 @@ class Ui_Spikeling(object):
 
         self.horizontalLayout_637.addWidget(self.ExtraCellular_CAR_Toggle_frame)
 
-        self.ExtraCellular_CAR_Label_frame = QFrame(self.ExtraCellular_CAR_Title_frame)
+        self.ExtraCellular_CAR_Label_frame = QFrame(self.ExtraCellular_CAR_frame)
         self.ExtraCellular_CAR_Label_frame.setObjectName(u"ExtraCellular_CAR_Label_frame")
         self.ExtraCellular_CAR_Label_frame.setFrameShape(QFrame.StyledPanel)
         self.ExtraCellular_CAR_Label_frame.setFrameShadow(QFrame.Raised)
@@ -14739,35 +14809,129 @@ class Ui_Spikeling(object):
         self.horizontalLayout_637.addWidget(self.ExtraCellular_CAR_Label_frame)
 
 
-        self.verticalLayout_205.addWidget(self.ExtraCellular_CAR_Title_frame)
-
-        self.ExtraCellular_parameter_stackedWidget.addWidget(self.ExtraCellular_ScopeParameter_page)
-
-        self.verticalLayout_116.addWidget(self.ExtraCellular_parameter_stackedWidget)
+        self.verticalLayout_141.addWidget(self.ExtraCellular_CAR_frame)
 
 
-        self.horizontalLayout_16.addWidget(self.ExtraCellular_CenterMenuContainer)
+        self.verticalLayout_98.addWidget(self.ExtraCellular_Noise_frame)
 
-        self.ExtraCellular_rightMenuContainer = QFrame(self.page_301)
-        self.ExtraCellular_rightMenuContainer.setObjectName(u"ExtraCellular_rightMenuContainer")
-        self.ExtraCellular_rightMenuContainer.setMaximumSize(QSize(40, 16777215))
-        self.ExtraCellular_rightMenuContainer.setLayoutDirection(Qt.LeftToRight)
-        self.ExtraCellular_rightMenuContainer.setFrameShape(QFrame.StyledPanel)
-        self.ExtraCellular_rightMenuContainer.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_15 = QHBoxLayout(self.ExtraCellular_rightMenuContainer)
-        self.horizontalLayout_15.setSpacing(0)
-        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.horizontalLayout_15.setContentsMargins(0, 0, 0, 0)
 
-        self.horizontalLayout_16.addWidget(self.ExtraCellular_rightMenuContainer)
+        self.verticalLayout_116.addWidget(self.ExtraCellular_Scope_parameter_frame)
+
+
+        self.horizontalLayout_16.addWidget(self.ExtraCellular_Scope_RightMenuContainer)
 
         self.mainbody_stackedWidget.addWidget(self.page_301)
         self.page_302 = QWidget()
         self.page_302.setObjectName(u"page_302")
-        self.verticalLayout_301 = QVBoxLayout(self.page_302)
-        self.verticalLayout_301.setSpacing(0)
-        self.verticalLayout_301.setObjectName(u"verticalLayout_301")
-        self.verticalLayout_301.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_15 = QHBoxLayout(self.page_302)
+        self.horizontalLayout_15.setSpacing(0)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.horizontalLayout_15.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_Spikes_LeftContainer = QFrame(self.page_302)
+        self.ExtraCellular_Spikes_LeftContainer.setObjectName(u"ExtraCellular_Spikes_LeftContainer")
+        self.ExtraCellular_Spikes_LeftContainer.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Spikes_LeftContainer.setFrameShadow(QFrame.Raised)
+
+        self.horizontalLayout_15.addWidget(self.ExtraCellular_Spikes_LeftContainer)
+
+        self.ExtraCellular_Spikes_CenterContainer = QFrame(self.page_302)
+        self.ExtraCellular_Spikes_CenterContainer.setObjectName(u"ExtraCellular_Spikes_CenterContainer")
+        self.ExtraCellular_Spikes_CenterContainer.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Spikes_CenterContainer.setFrameShadow(QFrame.Raised)
+
+        self.horizontalLayout_15.addWidget(self.ExtraCellular_Spikes_CenterContainer)
+
+        self.ExtraCellular_Spikes_RightContainer = QFrame(self.page_302)
+        self.ExtraCellular_Spikes_RightContainer.setObjectName(u"ExtraCellular_Spikes_RightContainer")
+        self.ExtraCellular_Spikes_RightContainer.setMaximumSize(QSize(250, 16777215))
+        self.ExtraCellular_Spikes_RightContainer.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Spikes_RightContainer.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_142 = QVBoxLayout(self.ExtraCellular_Spikes_RightContainer)
+        self.verticalLayout_142.setSpacing(0)
+        self.verticalLayout_142.setObjectName(u"verticalLayout_142")
+        self.verticalLayout_142.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_Spikes_LoadData_frame = QFrame(self.ExtraCellular_Spikes_RightContainer)
+        self.ExtraCellular_Spikes_LoadData_frame.setObjectName(u"ExtraCellular_Spikes_LoadData_frame")
+        self.ExtraCellular_Spikes_LoadData_frame.setStyleSheet(u"")
+        self.ExtraCellular_Spikes_LoadData_frame.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Spikes_LoadData_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_242 = QVBoxLayout(self.ExtraCellular_Spikes_LoadData_frame)
+        self.verticalLayout_242.setObjectName(u"verticalLayout_242")
+        self.verticalLayout_242.setContentsMargins(15, -1, 15, -1)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe = QFrame(self.ExtraCellular_Spikes_LoadData_frame)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe.setObjectName(u"ExtraCellular_Spikes_DataAnalysis_LoadData_subframe")
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe.setFrameShape(QFrame.StyledPanel)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_141 = QHBoxLayout(self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe)
+        self.horizontalLayout_141.setSpacing(0)
+        self.horizontalLayout_141.setObjectName(u"horizontalLayout_141")
+        self.horizontalLayout_141.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_label = QLabel(self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.setObjectName(u"ExtraCellular_Spikes_DataAnalysis_LoadData_label")
+        sizePolicy3.setHeightForWidth(self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.sizePolicy().hasHeightForWidth())
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.setSizePolicy(sizePolicy3)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.setWordWrap(True)
+
+        self.horizontalLayout_141.addWidget(self.ExtraCellular_Spikes_DataAnalysis_LoadData_label)
+
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton = QPushButton(self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe)
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton.setObjectName(u"ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton")
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton.setIconSize(QSize(14, 16))
+
+        self.horizontalLayout_141.addWidget(self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton)
+
+
+        self.verticalLayout_242.addWidget(self.ExtraCellular_Spikes_DataAnalysis_LoadData_subframe)
+
+        self.ExtraCellular_Spikes_DisplayData_pushButton = QPushButton(self.ExtraCellular_Spikes_LoadData_frame)
+        self.ExtraCellular_Spikes_DisplayData_pushButton.setObjectName(u"ExtraCellular_Spikes_DisplayData_pushButton")
+
+        self.verticalLayout_242.addWidget(self.ExtraCellular_Spikes_DisplayData_pushButton)
+
+        self.ExtraCellular_Spikes_DataAnalysis_SaveImage_pushButton = QPushButton(self.ExtraCellular_Spikes_LoadData_frame)
+        self.ExtraCellular_Spikes_DataAnalysis_SaveImage_pushButton.setObjectName(u"ExtraCellular_Spikes_DataAnalysis_SaveImage_pushButton")
+
+        self.verticalLayout_242.addWidget(self.ExtraCellular_Spikes_DataAnalysis_SaveImage_pushButton)
+
+
+        self.verticalLayout_142.addWidget(self.ExtraCellular_Spikes_LoadData_frame)
+
+        self.line_3 = QFrame(self.ExtraCellular_Spikes_RightContainer)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setStyleSheet(u"")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_142.addWidget(self.line_3)
+
+        self.ExtraCellular_Spikes_Detection_groupBox = QGroupBox(self.ExtraCellular_Spikes_RightContainer)
+        self.ExtraCellular_Spikes_Detection_groupBox.setObjectName(u"ExtraCellular_Spikes_Detection_groupBox")
+        self.verticalLayout_205 = QVBoxLayout(self.ExtraCellular_Spikes_Detection_groupBox)
+        self.verticalLayout_205.setSpacing(10)
+        self.verticalLayout_205.setObjectName(u"verticalLayout_205")
+        self.verticalLayout_205.setContentsMargins(0, 0, 0, 10)
+        self.ExtraCellular_Spikes_Detection_label = QLabel(self.ExtraCellular_Spikes_Detection_groupBox)
+        self.ExtraCellular_Spikes_Detection_label.setObjectName(u"ExtraCellular_Spikes_Detection_label")
+        self.ExtraCellular_Spikes_Detection_label.setFont(font5)
+
+        self.verticalLayout_205.addWidget(self.ExtraCellular_Spikes_Detection_label, 0, Qt.AlignHCenter)
+
+        self.radioButton = QRadioButton(self.ExtraCellular_Spikes_Detection_groupBox)
+        self.radioButton.setObjectName(u"radioButton")
+
+        self.verticalLayout_205.addWidget(self.radioButton)
+
+        self.radioButton_2 = QRadioButton(self.ExtraCellular_Spikes_Detection_groupBox)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+
+        self.verticalLayout_205.addWidget(self.radioButton_2)
+
+
+        self.verticalLayout_142.addWidget(self.ExtraCellular_Spikes_Detection_groupBox)
+
+
+        self.horizontalLayout_15.addWidget(self.ExtraCellular_Spikes_RightContainer)
+
         self.mainbody_stackedWidget.addWidget(self.page_302)
         self.page_303 = QWidget()
         self.page_303.setObjectName(u"page_303")
@@ -17475,16 +17639,15 @@ class Ui_Spikeling(object):
 
         self.retranslateUi(Spikeling)
 
-        self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(0)
-        self.mainbody_stackedWidget.setCurrentIndex(8)
+        self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(2)
+        self.mainbody_stackedWidget.setCurrentIndex(9)
         self.Spikeling_parameter_stackedwidget.setCurrentIndex(0)
         self.Emulator_parameter_stackedwidget.setCurrentIndex(0)
         self.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentIndex(0)
         self.Spikeling_DataAnalysis_stackedWidget.setCurrentIndex(0)
         self.Imaging_parameter_stackedWidget.setCurrentIndex(0)
         self.DataAnalysis_Display_StackedWidget_2.setCurrentIndex(5)
-        self.DataAnalysis_stackedWidget_2.setCurrentIndex(1)
-        self.ExtraCellular_parameter_stackedWidget.setCurrentIndex(0)
+        self.DataAnalysis_stackedWidget_2.setCurrentIndex(0)
         self.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(3)
 
 
@@ -18115,17 +18278,19 @@ class Ui_Spikeling(object):
         self.ExtraCellular_Source_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"  from Spikeling device", None))
         self.ExtraCellular_Source_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"  from GUI emulator", None))
 
-        self.Extracellular_Tetrode_Label.setText(QCoreApplication.translate("Spikeling", u"Tetrode", None))
-        self.Extracellular_Tetrode_Ch1_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Ch1", None))
+        self.Extracellular_Tetrode_Ch1_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch1", None))
 #if QT_CONFIG(whatsthis)
-        self.Extracellular_Tetrode_Ch2_Checkbox.setWhatsThis(QCoreApplication.translate("Spikeling", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.Extracellular_Tetrode_Ch2_checkBox.setWhatsThis(QCoreApplication.translate("Spikeling", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(whatsthis)
-        self.Extracellular_Tetrode_Ch2_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Ch2", None))
-        self.Extracellular_Tetrode_Ch3_Checkbox_2.setText(QCoreApplication.translate("Spikeling", u"Ch3", None))
-        self.Extracellular_Tetrode_Ch4_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Ch4", None))
-        self.Extracellular_Tetrode_Threshold_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Threshold", None))
-        self.Extracellular_Tetrode_Spikes_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Spikes", None))
-        self.Extracellular_Tetrode_Events_Checkbox.setText(QCoreApplication.translate("Spikeling", u"Events", None))
+        self.Extracellular_Tetrode_Ch2_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch2", None))
+        self.Extracellular_Tetrode_Ch3_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch3", None))
+        self.Extracellular_Tetrode_Ch4_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch4", None))
+        self.Extracellular_Tetrode_Threshold_checkBox.setText(QCoreApplication.translate("Spikeling", u"Threshold", None))
+        self.Extracellular_Tetrode_Spikes_checkBox.setText(QCoreApplication.translate("Spikeling", u"Spikes", None))
+        self.Extracellular_Tetrode_Events_checkBox.setText(QCoreApplication.translate("Spikeling", u"Events", None))
+        self.Extracellular_Tetrode_Stimulus_checkBox.setText(QCoreApplication.translate("Spikeling", u"Stimulus", None))
+        self.Extracellular_Tetrode_Vm_checkBox.setText(QCoreApplication.translate("Spikeling", u"Vm", None))
+        self.ExtraCellular_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range Y axis", None))
         self.ExtraCellular_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
         self.ExtraCellular_DataRecording_SelectRecordFolder_label.setText(QCoreApplication.translate("Spikeling", u"Data Logging: Filename", None))
         self.ExtraCellular_DataRecording_RecordFolder_value.setText("")
@@ -18172,6 +18337,13 @@ class Ui_Spikeling(object):
         self.ExtraCellular_HumNoise_Value_mid.setText(QCoreApplication.translate("Spikeling", u"15", None))
         self.ExtraCellular_HumNoise_Value_max.setText(QCoreApplication.translate("Spikeling", u"30", None))
         self.ExtraCellular_CAR_Label.setText(QCoreApplication.translate("Spikeling", u"CAR (common average reference)", None))
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.setText("")
+        self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Load Data   ", None))
+        self.ExtraCellular_Spikes_DisplayData_pushButton.setText(QCoreApplication.translate("Spikeling", u"Display Data", None))
+        self.ExtraCellular_Spikes_DataAnalysis_SaveImage_pushButton.setText(QCoreApplication.translate("Spikeling", u"Save Image", None))
+        self.ExtraCellular_Spikes_Detection_label.setText(QCoreApplication.translate("Spikeling", u"Detection", None))
+        self.radioButton.setText(QCoreApplication.translate("Spikeling", u"RadioButton", None))
+        self.radioButton_2.setText(QCoreApplication.translate("Spikeling", u"RadioButton", None))
         self.label_3.setText("")
         self.NeuronGenerator_subframe1_title_label.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p><span style=\" font-size:18pt; font-weight:700;\">Spikeling is built on the Izhikevich model</span></p></body></html>", None))
 #if QT_CONFIG(whatsthis)
