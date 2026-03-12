@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Neuron_Parameters.ui'
+## Form generated from reading UI file 'UI_NeuronParameters.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -29,7 +29,7 @@ class Ui_AdvancedParameters(object):
 "	background-color:rgb(0, 43, 54);  \n"
 "	padding: 0;\n"
 "	margin:0;\n"
-"	color: rgb(147,161,161);    \n"
+"	color: rgb(190, 205, 205);    \n"
 "}\n"
 "\n"
 "* QPushButton{\n"
@@ -37,14 +37,14 @@ class Ui_AdvancedParameters(object):
 "	padding: 10px 5px;\n"
 "	border-radius:20px;\n"
 "	background-color: rgb(7, 54, 66);\n"
-"    border: 1px solid rgb(147,161,161);\n"
+"    border: 1px solid rgb(190, 205, 205);\n"
 "}\n"
 "* QPushButton:hover{\n"
 "	background-color: rgb(0, 30, 38);\n"
 "}\n"
 "\n"
 "* QLineEdit{\n"
-"	border: 2px solid rgb(147,161,161);\n"
+"	border: 2px solid rgb(190, 205, 205);\n"
 "    background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"

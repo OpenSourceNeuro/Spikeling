@@ -521,18 +521,8 @@ def configure_sliders(self):
                             handle_image=":/resources/resources/Handle.png")
 
 
-    configure_styled_slider(self.ui,
-                            "ExtraCellular_Distance_Slider",
-                            groove_color="#001E26",
-                            fill_color="#268BD2",
-                            num_ticks=11,
-                            handle_image=":/resources/resources/Handle.png")
-    configure_styled_slider(self.ui,
-                            "ExtraCellular_Orientation_Slider",
-                            groove_color="#001E26",
-                            fill_color="#268BD2",
-                            num_ticks=13,
-                            handle_image=":/resources/resources/Handle.png")
+
+
     configure_styled_slider(self.ui,
                             "ExtraCellular_Spread_Slider",
                             groove_color="#001E26",

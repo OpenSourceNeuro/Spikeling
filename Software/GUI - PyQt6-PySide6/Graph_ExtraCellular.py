@@ -121,6 +121,15 @@ class ExtraCellularGraph(QObject):
         self._extracellular_params = {}
 
         # ------------------------------------------------------------------
+        # Optional geometry override coming from Tetrode.py
+        # ------------------------------------------------------------------
+        # If absent, the graph falls back to the legacy hidden 2D didactic model.
+        self.tetrode_geometry = None
+        self.tetrode_distance_matrix_um = {}
+        self.tetrode_contacts_um = []
+        self._use_saved_tetrode_geometry = False
+
+        # ------------------------------------------------------------------
         # Ground-truth spike detection from the incoming intracellular Vm
         # ------------------------------------------------------------------
         # These spikes drive:
@@ -327,6 +336,31 @@ class ExtraCellularGraph(QObject):
         if mode not in ("spikeling", "emulator", "none"):
             mode = "spikeling"
         self.source_mode = mode
+
+    def apply_tetrode_geometry(self, payload: dict) -> None:
+        """
+        Receive the saved tetrode payload from Tetrode.py.
+
+        This overrides the legacy hidden 2D source/contact geometry with the
+        explicit 3D neuron->contact distances computed in the tetrode window.
+        """
+        if not isinstance(payload, dict):
+            return
+
+        self.tetrode_geometry = payload
+        self.tetrode_distance_matrix_um = payload.get("distance_matrix_um", {}) or {}
+
+        contacts = payload.get("tetrode", {}).get("contacts_um", []) or []
+        try:
+            contacts = sorted(contacts, key=lambda c: int(c.get("index", 999) or 999))
+        except Exception:
+            pass
+        self.tetrode_contacts_um = contacts
+
+        self._use_saved_tetrode_geometry = bool(self.tetrode_distance_matrix_um)
+
+        print("ExtraCellularGraph: tetrode geometry received")
+        print(self.tetrode_distance_matrix_um)
 
     # -------------------------------------------------------------------------
     # Connect / Disconnect
@@ -656,28 +690,59 @@ class ExtraCellularGraph(QObject):
         positions = base[None, :] + offsets
         return positions
 
-    def _compute_projection_matrix(self, p: dict) -> np.ndarray:
+    def _get_saved_contact_names(self):
         """
-        Compute source -> channel geometric gains.
-
-        Reduced forward model:
-            a_jk = gain_j * (r_ref / (r_jk + eps))^gamma
-
-        where:
-        - j = source neuron index
-        - k = tetrode channel index
-        - gamma is the user-controlled spatial falloff
-
-        This preserves both:
-        - absolute amplitude changes with distance
-        - relative amplitude differences across channels
+        Return the saved tetrode contact names in channel order.
+        Falls back to E1..E4 if the payload is incomplete.
         """
-        contacts = self._get_contact_positions()                  # (4, 2)
-        sources = self._get_source_positions(p)                   # (3, 2)
+        if self.tetrode_contacts_um:
+            names = []
+            for k, contact in enumerate(self.tetrode_contacts_um[:N_CHANNELS]):
+                names.append(str(contact.get("name", f"E{k + 1}")))
+            if len(names) == N_CHANNELS:
+                return names
+
+        return [f"E{k + 1}" for k in range(N_CHANNELS)]
+
+    def _compute_projection_matrix_from_saved_geometry(self, p: dict) -> np.ndarray:
+        """
+        Compute source -> channel geometric gains from the saved 3D tetrode payload.
+
+        The tetrode window already computed the full neuron->contact 3D distances.
+        Here we only convert those distances into gains using the same reduced
+        pedagogical law already used by the legacy model.
+        """
         gamma = float(p.get("spatial_falloff", 1.2))
         gamma = max(0.1, gamma)
 
-        # distances r_jk : shape (3, 4)
+        contact_names = self._get_saved_contact_names()
+        neuron_keys = ["main", "aux1", "aux2"]
+
+        A = np.zeros((N_NEURONS, N_CHANNELS), dtype=float)
+
+        for j, neuron_key in enumerate(neuron_keys):
+            per_contact = self.tetrode_distance_matrix_um.get(neuron_key, {}) or {}
+
+            for k, contact_name in enumerate(contact_names):
+                r_um = float(per_contact.get(contact_name, self._reference_distance_um))
+                r_um = max(r_um, float(self._distance_floor_um))
+
+                gain = self._source_gain[j] * (float(self._reference_distance_um) / r_um) ** gamma
+                A[j, k] = gain
+
+        return np.clip(A, 0.0, 6.0)
+
+    def _compute_projection_matrix_legacy(self, p: dict) -> np.ndarray:
+        """
+        Legacy hidden 2D didactic geometry used when no saved tetrode geometry
+        has been provided yet.
+        """
+        contacts = self._get_contact_positions()  # (4, 2)
+        sources = self._get_source_positions(p)  # (3, 2)
+
+        gamma = float(p.get("spatial_falloff", 1.2))
+        gamma = max(0.1, gamma)
+
         diff = sources[:, None, :] - contacts[None, :, :]
         r = np.linalg.norm(diff, axis=2)
         r = np.maximum(r, float(self._distance_floor_um))
@@ -685,8 +750,19 @@ class ExtraCellularGraph(QObject):
         g = (float(self._reference_distance_um) / r) ** gamma
         g *= self._source_gain[:, None]
 
-        # Clip for numerical sanity when the source is very close to a contact.
         return np.clip(g, 0.0, 6.0)
+
+    def _compute_projection_matrix(self, p: dict) -> np.ndarray:
+        """
+        Compute source -> channel geometric gains.
+
+        If the tetrode window has saved an explicit 3D geometry, use it.
+        Otherwise keep the current hidden 2D educational fallback.
+        """
+        if self._use_saved_tetrode_geometry and self.tetrode_distance_matrix_um:
+            return self._compute_projection_matrix_from_saved_geometry(p)
+
+        return self._compute_projection_matrix_legacy(p)
 
     def _template_source_step(self, neuron_index: int, spike: int) -> float:
         """
@@ -1335,8 +1411,6 @@ class ExtraCellularGraph(QObject):
 
         def update(_=None):
             # Geometry
-            p["electrode_distance_um"] = float(ui.ExtraCellular_Distance_Slider.value())
-            p["orientation_deg"] = float(ui.ExtraCellular_Orientation_Slider.value())
             p["spatial_falloff"] = float(ui.ExtraCellular_Spread_Slider.value()) / 10.0
 
             # Noise / contamination
@@ -1369,8 +1443,6 @@ class ExtraCellularGraph(QObject):
 
         # Slider + combo connections
         widgets = [
-            ui.ExtraCellular_Distance_Slider,
-            ui.ExtraCellular_Orientation_Slider,
             ui.ExtraCellular_Spread_Slider,
             ui.ExtraCellular_BaselineNoise_Slider,
             ui.ExtraCellular_SharedNoise_Slider,

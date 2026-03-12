@@ -451,6 +451,16 @@ centerMenuSubContainer_menu_stackedwidget{
     padding: 0px 10px;
 }
 
+#ExtraCellular_Scope_RightMenuContainer QPushButton{
+	padding: 10px 0px;
+	border-radius: 10px;
+	background-color: rgb(0, 30, 38);
+}
+#ExtraCellular_Scope_RightMenuContainer QPushButton:hover{
+	background-color: rgb(0, 43, 54);
+}
+
+
 #ExtraCellular_DataRecording_box{
 	border: 2px solid rgb(190, 205, 205);
 }
@@ -734,7 +744,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="resources.qrc">
+                <iconset>
                  <normaloff>:/resources/resources/Expand.png</normaloff>:/resources/resources/Expand.png</iconset>
                </property>
                <property name="iconSize">
@@ -751,7 +761,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="resources.qrc">
+                <iconset>
                  <normaloff>:/resources/resources/Exit.png</normaloff>:/resources/resources/Exit.png</iconset>
                </property>
                <property name="iconSize">
@@ -905,7 +915,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Hide Menus</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/DropMenuLeft.png</normaloff>:/resources/resources/DropMenuLeft.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -970,7 +980,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Spikeling</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -992,7 +1002,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>  Imaging</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1014,7 +1024,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Extracellular</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/Tetrode_Spikes.png</normaloff>:/resources/resources/Tetrode_Spikes.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1049,7 +1059,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Neuron Generator</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/NeuroGen.png</normaloff>:/resources/resources/NeuroGen.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1071,7 +1081,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Stimulus Generator</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1136,7 +1146,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Settings</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1158,7 +1168,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>About</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/About.png</normaloff>:/resources/resources/About.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1180,7 +1190,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>GitHub</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/GitHub.png</normaloff>:/resources/resources/GitHub.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1288,7 +1298,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Hide Sub-Menus   </string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset>
                     <normaloff>:/resources/resources/DropMenuLeft.png</normaloff>:/resources/resources/DropMenuLeft.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1314,7 +1324,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>2</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="Spikeling_SubMenu_page">
                 <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1384,7 +1394,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Neuron Interface</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1419,7 +1429,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Neuron Emulator</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1454,7 +1464,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Data Analysis</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/DataAnalysis.png</normaloff>:/resources/resources/DataAnalysis.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1489,7 +1499,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1583,7 +1593,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Imaging Simulation</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1618,7 +1628,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Data Analysis</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/DataAnalysis.png</normaloff>:/resources/resources/DataAnalysis.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1653,7 +1663,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1747,7 +1757,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Scope</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Scope.png</normaloff>:/resources/resources/Scope.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1782,7 +1792,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Spikes</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Tetrode_Spikes.png</normaloff>:/resources/resources/Tetrode_Spikes.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1817,7 +1827,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Sorting</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Tetrode_Sorting.png</normaloff>:/resources/resources/Tetrode_Sorting.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1852,7 +1862,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1955,7 +1965,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>9</number>
+                <number>8</number>
                </property>
                <widget class="QWidget" name="page_000">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -2016,7 +2026,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/resources/resources/SpikyLogo.png</pixmap>
+                       <pixmap>:/resources/resources/SpikyLogo.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -2120,7 +2130,7 @@ centerMenuSubContainer_menu_stackedwidget{
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/resources/resources/Spikeling-v3_GUI.png</pixmap>
+                          <pixmap>:/resources/resources/Spikeling-v3_GUI.png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
@@ -2559,7 +2569,7 @@ border-radius:10px;</string>
                                       <string>LED On   </string>
                                      </property>
                                      <property name="icon">
-                                      <iconset resource="resources.qrc">
+                                      <iconset>
                                        <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                                      </property>
                                      <property name="iconSize">
@@ -2626,7 +2636,7 @@ border-radius:10px;</string>
                                       <string>Buzzer On   </string>
                                      </property>
                                      <property name="icon">
-                                      <iconset resource="resources.qrc">
+                                      <iconset>
                                        <normaloff>:/resources/resources/SoundON.png</normaloff>:/resources/resources/SoundON.png</iconset>
                                      </property>
                                      <property name="iconSize">
@@ -3730,7 +3740,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset resource="resources.qrc">
+                          <iconset>
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -4160,7 +4170,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="resources.qrc">:/resources/resources/StimFrequency.png</pixmap>
+                                 <pixmap>:/resources/resources/StimFrequency.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -4498,7 +4508,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="resources.qrc">:/resources/resources/StimStrenght.png</pixmap>
+                                 <pixmap>:/resources/resources/StimStrenght.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -7849,7 +7859,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -7898,7 +7908,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Stimulus Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -7920,7 +7930,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Neuron Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -9175,7 +9185,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset resource="resources.qrc">
+                          <iconset>
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -9784,7 +9794,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="resources.qrc">:/resources/resources/StimFrequency.png</pixmap>
+                                 <pixmap>:/resources/resources/StimFrequency.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -10122,7 +10132,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="resources.qrc">:/resources/resources/StimStrenght.png</pixmap>
+                                 <pixmap>:/resources/resources/StimStrenght.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -17629,7 +17639,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17678,7 +17688,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Neuron Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17700,7 +17710,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Stimulus Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17722,7 +17732,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Synapse 1</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Synapse1.png</normaloff>:/resources/resources/Synapse1.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17744,7 +17754,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Synapse 2</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Synapse2.png</normaloff>:/resources/resources/Synapse2.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -20649,7 +20659,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
+                       <pixmap>:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -21612,7 +21622,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset resource="resources.qrc">
+                          <iconset>
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -27559,7 +27569,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27611,7 +27621,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Imaging Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27633,7 +27643,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Calcium Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/Calcium.png</normaloff>:/resources/resources/Calcium.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27655,7 +27665,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Fluorescence Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset resource="resources.qrc">
+                             <iconset>
                               <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -29796,7 +29806,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>Hide Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset resource="resources.qrc">
+                                <iconset>
                                  <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29848,7 +29858,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Imaging Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset resource="resources.qrc">
+                                <iconset>
                                  <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29870,7 +29880,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Calcium Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset resource="resources.qrc">
+                                <iconset>
                                  <normaloff>:/resources/resources/Calcium.png</normaloff>:/resources/resources/Calcium.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29892,7 +29902,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Fluorescence Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset resource="resources.qrc">
+                                <iconset>
                                  <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29974,7 +29984,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
+                       <pixmap>:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -31043,6 +31053,16 @@ background-color: rgb(220, 50, 47);</string>
                   </widget>
                  </item>
                  <item>
+                  <widget class="Line" name="line_47">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(0, 30, 38);</string>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QFrame" name="ExtraCellular_Scope_RightMenuContainer">
                    <property name="maximumSize">
                     <size>
@@ -31097,6 +31117,88 @@ background-color: rgb(220, 50, 47);</string>
                         <number>0</number>
                        </property>
                        <item>
+                        <widget class="QFrame" name="ExtraCellular_Tetrode_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_207">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>5</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>5</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item alignment="Qt::AlignHCenter">
+                           <widget class="QLabel" name="ExtraCellular_Tetrode_label">
+                            <property name="font">
+                             <font>
+                              <pointsize>12</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Tetrode Geometry</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Tetrode_pushButton_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_251">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QPushButton" name="ExtraCellular_Tetrode_pushButton">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                 <weight>75</weight>
+                                 <bold>true</bold>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Open Tetrode View</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
                         <widget class="QFrame" name="ExtraCellular_SignalMode_frame">
                          <property name="frameShape">
                           <enum>QFrame::StyledPanel</enum>
@@ -31120,6 +31222,16 @@ background-color: rgb(220, 50, 47);</string>
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
+                          <item>
+                           <widget class="Line" name="ExtraCellular_Scope_line_2">
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgb(0, 30, 38);</string>
+                            </property>
+                            <property name="orientation">
+                             <enum>Qt::Horizontal</enum>
+                            </property>
+                           </widget>
+                          </item>
                           <item alignment="Qt::AlignHCenter">
                            <widget class="QLabel" name="ExtraCellular_SignalMode_label">
                             <property name="font">
@@ -31428,595 +31540,7 @@ background-color: rgb(220, 50, 47);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="Line" name="ExtraCellular_Scope_line_2">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(0, 30, 38);</string>
-                         </property>
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QFrame" name="ExtraCellular_Distance_frame">
-                         <property name="frameShape">
-                          <enum>QFrame::StyledPanel</enum>
-                         </property>
-                         <property name="frameShadow">
-                          <enum>QFrame::Raised</enum>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_207">
-                          <property name="spacing">
-                           <number>0</number>
-                          </property>
-                          <property name="leftMargin">
-                           <number>5</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>5</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Distance_Title_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_557">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="ExtraCellular_Distance_Toggle_frame">
-                               <property name="minimumSize">
-                                <size>
-                                 <width>50</width>
-                                 <height>0</height>
-                                </size>
-                               </property>
-                               <property name="maximumSize">
-                                <size>
-                                 <width>50</width>
-                                 <height>16777215</height>
-                                </size>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="ExtraCellular_Distance_Toggle_layout">
-                                <property name="spacing">
-                                 <number>0</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                               </layout>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QFrame" name="ExtraCellular_Distance_Label_frame">
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_558">
-                                <property name="spacing">
-                                 <number>0</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_Distance_Label">
-                                  <property name="font">
-                                   <font>
-                                    <pointsize>10</pointsize>
-                                   </font>
-                                  </property>
-                                  <property name="text">
-                                   <string>Electrode distance (μm)</string>
-                                  </property>
-                                  <property name="wordWrap">
-                                   <bool>true</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Distance_Readings_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_559">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Distance_Readings">
-                               <property name="text">
-                                <string/>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Distance_Slider_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="Imaging_FrameRate_toggle_layout_3">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QSlider" name="ExtraCellular_Distance_Slider">
-                               <property name="enabled">
-                                <bool>false</bool>
-                               </property>
-                               <property name="minimum">
-                                <number>1</number>
-                               </property>
-                               <property name="maximum">
-                                <number>250</number>
-                               </property>
-                               <property name="singleStep">
-                                <number>10</number>
-                               </property>
-                               <property name="pageStep">
-                                <number>50</number>
-                               </property>
-                               <property name="value">
-                                <number>50</number>
-                               </property>
-                               <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                               </property>
-                               <property name="tickPosition">
-                                <enum>QSlider::TicksBelow</enum>
-                               </property>
-                               <property name="tickInterval">
-                                <number>50</number>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Distance_Values_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_560">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Distance_Value_min">
-                               <property name="text">
-                                <string>1</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Distance_Value_mid">
-                               <property name="text">
-                                <string>125</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Distance_Value_max">
-                               <property name="text">
-                                <string>250</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                       <item>
                         <widget class="Line" name="ExtraCellular_Scope_line_3">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(0, 30, 38);</string>
-                         </property>
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QFrame" name="ExtraCellular_Orientation_frame">
-                         <property name="frameShape">
-                          <enum>QFrame::StyledPanel</enum>
-                         </property>
-                         <property name="frameShadow">
-                          <enum>QFrame::Raised</enum>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_251">
-                          <property name="spacing">
-                           <number>0</number>
-                          </property>
-                          <property name="leftMargin">
-                           <number>5</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>5</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Orientation_Title_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_628">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="ExtraCellular_Orientation_Toggle_frame">
-                               <property name="minimumSize">
-                                <size>
-                                 <width>50</width>
-                                 <height>0</height>
-                                </size>
-                               </property>
-                               <property name="maximumSize">
-                                <size>
-                                 <width>50</width>
-                                 <height>16777215</height>
-                                </size>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="ExtraCellular_Orientation_Toggle_layout">
-                                <property name="spacing">
-                                 <number>0</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                               </layout>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QFrame" name="ExtraCellular_Orientation_Label_frame">
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_629">
-                                <property name="spacing">
-                                 <number>0</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_Orientation_Label">
-                                  <property name="font">
-                                   <font>
-                                    <pointsize>10</pointsize>
-                                   </font>
-                                  </property>
-                                  <property name="text">
-                                   <string>Orientation (°)</string>
-                                  </property>
-                                  <property name="wordWrap">
-                                   <bool>true</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Orientation_Readings_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_630">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Orientation_Readings">
-                               <property name="text">
-                                <string/>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Orientation_Slider_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="Imaging_FrameRate_toggle_layout_4">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QSlider" name="ExtraCellular_Orientation_Slider">
-                               <property name="enabled">
-                                <bool>false</bool>
-                               </property>
-                               <property name="minimum">
-                                <number>0</number>
-                               </property>
-                               <property name="maximum">
-                                <number>180</number>
-                               </property>
-                               <property name="singleStep">
-                                <number>1</number>
-                               </property>
-                               <property name="pageStep">
-                                <number>10</number>
-                               </property>
-                               <property name="value">
-                                <number>0</number>
-                               </property>
-                               <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                               </property>
-                               <property name="tickPosition">
-                                <enum>QSlider::TicksBelow</enum>
-                               </property>
-                               <property name="tickInterval">
-                                <number>15</number>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_Orientation_Values_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_631">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Orientation_Value_min">
-                               <property name="text">
-                                <string>0</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Orientation_Value_mid">
-                               <property name="text">
-                                <string>90</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Orientation_Value_max">
-                               <property name="text">
-                                <string>180</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="Line" name="ExtraCellular_Scope_line_5">
                          <property name="styleSheet">
                           <string notr="true">background-color: rgb(0, 30, 38);</string>
                          </property>
@@ -33482,7 +33006,7 @@ background-color: rgb(220, 50, 47);</string>
                         <number>0</number>
                        </property>
                        <property name="bottomMargin">
-                        <number>10</number>
+                        <number>50</number>
                        </property>
                        <item alignment="Qt::AlignHCenter">
                         <widget class="QLabel" name="ExtraCellular_Spikes_Detection_label">
@@ -33499,17 +33023,536 @@ background-color: rgb(220, 50, 47);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QRadioButton" name="radioButton">
-                         <property name="text">
-                          <string>RadioButton</string>
+                        <widget class="QFrame" name="ExtraCellular_Spikes_DetectionMode_Frame">
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
                          </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_245">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QRadioButton" name="ExtraCellular_Spikes_DetectionMode_PerChannel_radioButton">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Per-channel Threshold</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="ExtraCellular_Spikes_DetectionMode_Tetrode_radioButton">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Tetrode Energy</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QRadioButton" name="radioButton_2">
-                         <property name="text">
-                          <string>RadioButton</string>
+                        <widget class="QFrame" name="ExtraCellular_Spikes_Threshold_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
                          </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_246">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Threshold_label_frame">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_254">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Threshold_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                 <weight>75</weight>
+                                 <bold>true</bold>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Threshold</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Threshold_readings_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_255">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Threshold_readings">
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Threshold_slider_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_247">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QSlider" name="ExtraCellular_Spikes_Threshold_slide">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="tickPosition">
+                                <enum>QSlider::TicksBelow</enum>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QFrame" name="ExtraCellular_Spikes_Threshold_values_frame">
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QHBoxLayout" name="horizontalLayout_136">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item alignment="Qt::AlignLeft">
+                                 <widget class="QLabel" name="ExtraCellular_Spikes_Threshold_values_min">
+                                  <property name="text">
+                                   <string>0</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item alignment="Qt::AlignHCenter">
+                                 <widget class="QLabel" name="ExtraCellular_Spikes_Threshold_values_mid">
+                                  <property name="text">
+                                   <string>0</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item alignment="Qt::AlignRight">
+                                 <widget class="QLabel" name="ExtraCellular_Spikes_Threshold_values_max">
+                                  <property name="text">
+                                   <string>0</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="ExtraCellular_Spikes_Refractory_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_259">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Refractory_label_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_260">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Refractory_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                 <weight>75</weight>
+                                 <bold>true</bold>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Refractory</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Refractory_readings_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_261">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Refractory_readings">
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Refractory_slider_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_262">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QSlider" name="ExtraCellular_Spikes_Refractory_slider">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="tickPosition">
+                                <enum>QSlider::TicksBelow</enum>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Refractory_values_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_137">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignLeft">
+                              <widget class="QLabel" name="labelExtraCellular_Spikes_Refractory_values_min">
+                               <property name="text">
+                                <string>0</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Refractory_values_mid">
+                               <property name="text">
+                                <string>0</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item alignment="Qt::AlignRight">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Refractory_values_max">
+                               <property name="text">
+                                <string>0</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="ExtraCellular_Spikes_Filter_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_142">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Filter_label_frame">
+                            <property name="maximumSize">
+                             <size>
+                              <width>50</width>
+                              <height>16777215</height>
+                             </size>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_258">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignHCenter">
+                              <widget class="QLabel" name="ExtraCellular_Spikes_Filter_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Filter</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_Spikes_Filter_comboBox_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_257">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QComboBox" name="ExtraCellular_Spikes_Filter_comboBox"/>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
                         </widget>
                        </item>
                       </layout>
@@ -33586,7 +33629,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
+                       <pixmap>:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -34178,7 +34221,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap resource="resources.qrc">:/resources/resources/izhik.png</pixmap>
+                             <pixmap>:/resources/resources/izhik.png</pixmap>
                             </property>
                             <property name="scaledContents">
                              <bool>true</bool>
@@ -40535,7 +40578,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="resources.qrc">:/resources/resources/SN-Logo.png</pixmap>
+                <pixmap>:/resources/resources/SN-Logo.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40569,7 +40612,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="resources.qrc">:/resources/resources/CaMinA.png</pixmap>
+                <pixmap>:/resources/resources/CaMinA.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40600,7 +40643,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="resources.qrc">:/resources/resources/SpikyLogo.png</pixmap>
+                <pixmap>:/resources/resources/SpikyLogo.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40655,7 +40698,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="resources.qrc">:/resources/resources/SizeGrip.png</pixmap>
+                <pixmap>:/resources/resources/SizeGrip.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>

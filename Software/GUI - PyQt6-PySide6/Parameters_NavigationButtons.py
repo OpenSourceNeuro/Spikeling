@@ -8,7 +8,9 @@ from PySide6.QtCore import QSize, QPropertyAnimation
 from PySide6.QtSerialPort import QSerialPortInfo
 from PySide6.QtWidgets import QSlider
 
-from Page_NeuronParameters import Ui_AdvancedParameters
+from UI_NeuronParameters import Ui_AdvancedParameters
+from UI_Tetrode import Ui_Tetrode
+from Tetrode import TetrodeGeometryWindow
 import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Spikeling_Tutorial, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_ExtraCellular_Scope, Page_NeuronGenerator, Page_StimulusGenerator, Page_Settings, Page_About, Page_GitHub
 import Graph_Emulator, Graph_Imaging
 from Graph_Spikeling import SpikelingGraph
@@ -114,6 +116,12 @@ def GetNeuronParameters(self):
 def CloseNeuronParameters(self):
     self.aux_window.close()
 
+
+
+def openTetrodeWindow(self):
+    self.tetrode_window.show()
+    self.tetrode_window.raise_()
+    self.tetrode_window.activateWindow()
 
 ########################################################################
 #                           Button Functions                           #
@@ -558,6 +566,10 @@ def Buttons(self):
     self.extracellular_graph  = ExtraCellularGraph(self)
     self.extracellular_page = Page_ExtraCellular_Scope.Scope(self)
 
+    # Bridge tetrode saved geometry -> extracellular scope page/controller
+    self.tetrode_window = TetrodeGeometryWindow(self)
+    self.tetrode_window.geometrySaved.connect(self.extracellular_page.apply_tetrode_geometry)
+
     # Connect the button to the instance method
     self.ui.ExtraCellular_ConnectButton.clicked.connect(lambda: self.extracellular_page.UpdateSource())
 
@@ -570,13 +582,12 @@ def Buttons(self):
     self.ui.ExtraCellular_DataRecording_Record_pushButton.setCheckable(True)
     self.ui.ExtraCellular_DataRecording_Record_pushButton.clicked.connect(lambda: self.extracellular_page.RecordButton())
 
+    # Open tetrode auxiliary window
+    self.ui.ExtraCellular_Tetrode_pushButton.clicked.connect(lambda: openTetrodeWindow(self))
+
     # ExtraCellular Parameters
     self.ui.ExtraCellular_SignalMode_toggleButton.toggled.connect(self.extracellular_page.SignalMode_toggleButton)
 
-    self.ui.ExtraCellular_Distance_toggleButton.toggled.connect(lambda:self.extracellular_page.ActivateElectrodeDistance())
-    self.ui.ExtraCellular_Distance_Slider.valueChanged.connect(lambda: self.extracellular_page.GetElectrodeDistance())
-    self.ui.ExtraCellular_Orientation_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateElectrodeOrientation())
-    self.ui.ExtraCellular_Orientation_Slider.valueChanged.connect(lambda: self.extracellular_page.GetElectrodeOrientation())
     self.ui.ExtraCellular_Spread_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSpatialFalloff())
     self.ui.ExtraCellular_Spread_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSpatialFalloff())
     self.ui.ExtraCellular_BaselineNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateBaselineNoise())

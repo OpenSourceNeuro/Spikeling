@@ -19,6 +19,11 @@ class Scope():
         self.ExtraCellularFolderFlag = False
         self.ExtraCellularConnectionFlag = False
 
+        # Last tetrode geometry saved from the auxiliary tetrode window
+        self.tetrode_geometry = None
+        self.tetrode_distance_matrix_um = {}
+        self.tetrode_contacts_um = []
+
 
     # ------------------------------------------------------------------
     # Page selection
@@ -50,6 +55,18 @@ class Scope():
         else:
             extracellular_graph.disconnect()
 
+    def apply_tetrode_geometry(self, payload: dict) -> None:
+        self.tetrode_geometry = payload
+
+        eg = getattr(self.parent, "extracellular_graph", None) or getattr(self.parent, "ExtracellularGraph", None)
+        if eg is None:
+            print("apply_tetrode_geometry: extracellular_graph not found on MainWindow")
+            return
+
+        if hasattr(eg, "apply_tetrode_geometry"):
+            eg.apply_tetrode_geometry(payload)
+
+        print("Extracellular tetrode geometry updated.")
 
     # ------------------------------------------------------------------
     # Data Recording Functions
@@ -181,40 +198,6 @@ class Scope():
     # Electrode Parameters
     # ------------------------------------------------------------------
 
-    # Electrode Distance
-    def ActivateElectrodeDistance(self, checked: bool = None):
-        if self.ui.ExtraCellular_Distance_toggleButton.isChecked():
-            self.ui.ExtraCellular_Distance_Slider.setEnabled(True)
-            self.ExtraCellular_DistanceValue = self.ui.ExtraCellular_Distance_Slider.value()
-            self.ui.ExtraCellular_Distance_Readings.setText(str(self.ExtraCellular_DistanceValue) )
-            self.ui.ExtraCellular_Distance_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-        else:
-            self.ui.ExtraCellular_Distance_Slider.setEnabled(False)
-            self.ui.ExtraCellular_Distance_Slider.setValue(50)
-            self.ui.ExtraCellular_Distance_Readings.setText('')
-
-    def GetElectrodeDistance(self):
-        self.ExtraCellular_DistanceValue = self.ui.ExtraCellular_Distance_Slider.value()
-        self.ui.ExtraCellular_Distance_Readings.setText(str(self.ExtraCellular_DistanceValue))
-        self.ui.ExtraCellular_Distance_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-
-
-    # Electrode Orientation
-    def ActivateElectrodeOrientation(self):
-        if self.ui.ExtraCellular_Orientation_toggleButton.isChecked():
-            self.ui.ExtraCellular_Orientation_Slider.setEnabled(True)
-            self.ExtraCellular_OrientationValue = self.ui.ExtraCellular_Orientation_Slider.value()
-            self.ui.ExtraCellular_Orientation_Readings.setText(str(self.ExtraCellular_OrientationValue))
-            self.ui.ExtraCellular_Orientation_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-        else:
-            self.ui.ExtraCellular_Orientation_Slider.setEnabled(False)
-            self.ui.ExtraCellular_Orientation_Slider.setValue(0)
-            self.ui.ExtraCellular_Orientation_Readings.setText('')
-
-    def GetElectrodeOrientation(self):
-        self.ExtraCellular_OrientationValue = self.ui.ExtraCellular_Orientation_Slider.value()
-        self.ui.ExtraCellular_Orientation_Readings.setText(str(self.ExtraCellular_OrientationValue))
-        self.ui.ExtraCellular_Orientation_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
 
 
     # Spatial Falloff

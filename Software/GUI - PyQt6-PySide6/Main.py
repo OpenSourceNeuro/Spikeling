@@ -15,9 +15,10 @@ from PySide6.QtGui import QColor,QIcon
 from PySide6.QtWidgets import QMainWindow, QGraphicsDropShadowEffect, QApplication, QSizeGrip
 
 # Import GUI .ui file
-from Spikeling_UI import Ui_Spikeling
-from Spikeling_SplashScreen import Ui_SplashScreen
-from Page_NeuronParameters import Ui_AdvancedParameters
+from UI_Spikeling import Ui_Spikeling
+from UI_SplashScreen import Ui_SplashScreen
+from UI_NeuronParameters import Ui_AdvancedParameters
+from Tetrode import TetrodeGeometryWindow
 
 # Import Functions and navigation buttons
 import Parameters_ToggleButtons as ToggleButtons
@@ -106,6 +107,8 @@ class MainWindow(QMainWindow):
         self.aux_window = QtWidgets.QMainWindow()
         self.ui_aux = Ui_AdvancedParameters()
         self.ui_aux.setupUi(self.aux_window)
+
+        self.tetrode_window = TetrodeGeometryWindow(self)
 
         # Remove title bar
         self.setWindowFlag(Qt.FramelessWindowHint)

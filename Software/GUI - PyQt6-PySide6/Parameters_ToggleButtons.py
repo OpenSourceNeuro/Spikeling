@@ -605,12 +605,6 @@ def Buttons(self):
                                                 bg_color='#%02x%02x%02x' % tuple(DarkSolarized[5]),
                                                circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                active_color='#%02x%02x%02x' % tuple(DarkSolarized[7]))
-    self.ui.ExtraCellular_Distance_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
-                                               circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
-                                               active_color='#%02x%02x%02x' % tuple(DarkSolarized[5]))
-    self.ui.ExtraCellular_Orientation_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
-                                               circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
-                                               active_color='#%02x%02x%02x' % tuple(DarkSolarized[5]))
     self.ui.ExtraCellular_Spread_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                active_color='#%02x%02x%02x' % tuple(DarkSolarized[5]))
@@ -630,10 +624,6 @@ def Buttons(self):
 
     self.ui.ExtraCellular_SignalMode_Toggle_layout.addWidget(self.ui.ExtraCellular_SignalMode_toggleButton)
     self.ui.ExtraCellular_SignalMode_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.ExtraCellular_Distance_Toggle_layout.addWidget(self.ui.ExtraCellular_Distance_toggleButton)
-    self.ui.ExtraCellular_Distance_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.ExtraCellular_Orientation_Toggle_layout.addWidget(self.ui.ExtraCellular_Orientation_toggleButton)
-    self.ui.ExtraCellular_Orientation_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
     self.ui.ExtraCellular_Spread_Toggle_layout.addWidget(self.ui.ExtraCellular_Spread_toggleButton)
     self.ui.ExtraCellular_Spread_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
     self.ui.ExtraCellular_BaselineNoise_Toggle_layout.addWidget(self.ui.ExtraCellular_BaselineNoise_toggleButton)

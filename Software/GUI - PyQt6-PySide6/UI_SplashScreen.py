@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Spikeling_SplashScreen.ui'
+## Form generated from reading UI file 'UI_SplashScreen.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
