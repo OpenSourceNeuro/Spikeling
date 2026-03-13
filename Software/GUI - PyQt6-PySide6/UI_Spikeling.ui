@@ -727,8 +727,8 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string/>
                </property>
                <property name="icon">
-                <iconset>
-                 <normaloff>:/resources/resources/Artboard 1.png</normaloff>:/resources/resources/Artboard 1.png</iconset>
+                <iconset resource="resources.qrc">
+                 <normaloff>:/resources/resources/Hide.png</normaloff>:/resources/resources/Hide.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -744,7 +744,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string/>
                </property>
                <property name="icon">
-                <iconset>
+                <iconset resource="resources.qrc">
                  <normaloff>:/resources/resources/Expand.png</normaloff>:/resources/resources/Expand.png</iconset>
                </property>
                <property name="iconSize">
@@ -761,7 +761,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string/>
                </property>
                <property name="icon">
-                <iconset>
+                <iconset resource="resources.qrc">
                  <normaloff>:/resources/resources/Exit.png</normaloff>:/resources/resources/Exit.png</iconset>
                </property>
                <property name="iconSize">
@@ -915,7 +915,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Hide Menus</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/DropMenuLeft.png</normaloff>:/resources/resources/DropMenuLeft.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -980,7 +980,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Spikeling</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1002,7 +1002,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>  Imaging</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1024,7 +1024,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Extracellular</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/Tetrode_Spikes.png</normaloff>:/resources/resources/Tetrode_Spikes.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1059,7 +1059,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Neuron Generator</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/NeuroGen.png</normaloff>:/resources/resources/NeuroGen.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1081,7 +1081,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Stimulus Generator</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1146,7 +1146,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Settings</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1168,7 +1168,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>About</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/About.png</normaloff>:/resources/resources/About.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1190,7 +1190,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>GitHub</string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/GitHub.png</normaloff>:/resources/resources/GitHub.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1298,7 +1298,7 @@ centerMenuSubContainer_menu_stackedwidget{
                    <string>Hide Sub-Menus   </string>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources.qrc">
                     <normaloff>:/resources/resources/DropMenuLeft.png</normaloff>:/resources/resources/DropMenuLeft.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -1394,7 +1394,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Neuron Interface</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1429,7 +1429,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Neuron Emulator</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1464,7 +1464,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Data Analysis</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/DataAnalysis.png</normaloff>:/resources/resources/DataAnalysis.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1499,7 +1499,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1593,7 +1593,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Imaging Simulation</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1628,7 +1628,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Data Analysis</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/DataAnalysis.png</normaloff>:/resources/resources/DataAnalysis.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1663,7 +1663,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1757,7 +1757,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Scope</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Scope.png</normaloff>:/resources/resources/Scope.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1792,7 +1792,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Spikes</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Tetrode_Spikes.png</normaloff>:/resources/resources/Tetrode_Spikes.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1827,7 +1827,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Sorting</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Tetrode_Sorting.png</normaloff>:/resources/resources/Tetrode_Sorting.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1862,7 +1862,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string>  Tutorial</string>
                       </property>
                       <property name="icon">
-                       <iconset>
+                       <iconset resource="resources.qrc">
                         <normaloff>:/resources/resources/Tutorial.png</normaloff>:/resources/resources/Tutorial.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -2026,7 +2026,7 @@ centerMenuSubContainer_menu_stackedwidget{
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>:/resources/resources/SpikyLogo.png</pixmap>
+                       <pixmap resource="resources.qrc">:/resources/resources/SpikyLogo.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -2130,7 +2130,7 @@ centerMenuSubContainer_menu_stackedwidget{
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap>:/resources/resources/Spikeling-v3_GUI.png</pixmap>
+                          <pixmap resource="resources.qrc">:/resources/resources/Spikeling-v3_GUI.png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
@@ -2569,7 +2569,7 @@ border-radius:10px;</string>
                                       <string>LED On   </string>
                                      </property>
                                      <property name="icon">
-                                      <iconset>
+                                      <iconset resource="resources.qrc">
                                        <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                                      </property>
                                      <property name="iconSize">
@@ -2636,7 +2636,7 @@ border-radius:10px;</string>
                                       <string>Buzzer On   </string>
                                      </property>
                                      <property name="icon">
-                                      <iconset>
+                                      <iconset resource="resources.qrc">
                                        <normaloff>:/resources/resources/SoundON.png</normaloff>:/resources/resources/SoundON.png</iconset>
                                      </property>
                                      <property name="iconSize">
@@ -3740,7 +3740,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset>
+                          <iconset resource="resources.qrc">
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -4170,7 +4170,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>:/resources/resources/StimFrequency.png</pixmap>
+                                 <pixmap resource="resources.qrc">:/resources/resources/StimFrequency.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -4508,7 +4508,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>:/resources/resources/StimStrenght.png</pixmap>
+                                 <pixmap resource="resources.qrc">:/resources/resources/StimStrenght.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -7859,7 +7859,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -7908,7 +7908,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Stimulus Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -7930,7 +7930,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Neuron Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -9185,7 +9185,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset>
+                          <iconset resource="resources.qrc">
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -9794,7 +9794,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>:/resources/resources/StimFrequency.png</pixmap>
+                                 <pixmap resource="resources.qrc">:/resources/resources/StimFrequency.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -10132,7 +10132,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>:/resources/resources/StimStrenght.png</pixmap>
+                                 <pixmap resource="resources.qrc">:/resources/resources/StimStrenght.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -17639,7 +17639,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17688,7 +17688,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Neuron Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Neuron.png</normaloff>:/resources/resources/Neuron.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17710,7 +17710,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Stimulus Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/StimGen.png</normaloff>:/resources/resources/StimGen.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17732,7 +17732,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Synapse 1</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Synapse1.png</normaloff>:/resources/resources/Synapse1.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -17754,7 +17754,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string> Synapse 2</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Synapse2.png</normaloff>:/resources/resources/Synapse2.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -20659,7 +20659,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>:/resources/resources/under_construction.png</pixmap>
+                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -21622,7 +21622,7 @@ background-color: rgb(220, 50, 47);</string>
                           <string>   Hide Parameters</string>
                          </property>
                          <property name="icon">
-                          <iconset>
+                          <iconset resource="resources.qrc">
                            <normaloff>:/resources/resources/DropMenuRight.png</normaloff>:/resources/resources/DropMenuRight.png</iconset>
                          </property>
                          <property name="iconSize">
@@ -27569,7 +27569,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>Hide Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27621,7 +27621,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Imaging Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27643,7 +27643,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Calcium Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/Calcium.png</normaloff>:/resources/resources/Calcium.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -27665,7 +27665,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string>  Fluorescence Parameters</string>
                             </property>
                             <property name="icon">
-                             <iconset>
+                             <iconset resource="resources.qrc">
                               <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                             </property>
                             <property name="iconSize">
@@ -29806,7 +29806,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>Hide Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset>
+                                <iconset resource="resources.qrc">
                                  <normaloff>:/resources/resources/MenuRight.png</normaloff>:/resources/resources/MenuRight.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29858,7 +29858,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Imaging Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset>
+                                <iconset resource="resources.qrc">
                                  <normaloff>:/resources/resources/Imaging.png</normaloff>:/resources/resources/Imaging.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29880,7 +29880,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Calcium Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset>
+                                <iconset resource="resources.qrc">
                                  <normaloff>:/resources/resources/Calcium.png</normaloff>:/resources/resources/Calcium.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29902,7 +29902,7 @@ background-color: rgb(220, 50, 47);</string>
                                 <string>  Fluorescence Parameters</string>
                                </property>
                                <property name="icon">
-                                <iconset>
+                                <iconset resource="resources.qrc">
                                  <normaloff>:/resources/resources/LEDON.png</normaloff>:/resources/resources/LEDON.png</iconset>
                                </property>
                                <property name="iconSize">
@@ -29984,7 +29984,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>:/resources/resources/under_construction.png</pixmap>
+                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -33629,7 +33629,7 @@ background-color: rgb(220, 50, 47);</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>:/resources/resources/under_construction.png</pixmap>
+                       <pixmap resource="resources.qrc">:/resources/resources/under_construction.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -34221,7 +34221,7 @@ background-color: rgb(220, 50, 47);</string>
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap>:/resources/resources/izhik.png</pixmap>
+                             <pixmap resource="resources.qrc">:/resources/resources/izhik.png</pixmap>
                             </property>
                             <property name="scaledContents">
                              <bool>true</bool>
@@ -40578,7 +40578,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap>:/resources/resources/SN-Logo.png</pixmap>
+                <pixmap resource="resources.qrc">:/resources/resources/SN-Logo.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40612,7 +40612,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap>:/resources/resources/CaMinA.png</pixmap>
+                <pixmap resource="resources.qrc">:/resources/resources/CaMinA.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40643,7 +40643,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap>:/resources/resources/SpikyLogo.png</pixmap>
+                <pixmap resource="resources.qrc">:/resources/resources/SpikyLogo.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -40698,7 +40698,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap>:/resources/resources/SizeGrip.png</pixmap>
+                <pixmap resource="resources.qrc">:/resources/resources/SizeGrip.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>

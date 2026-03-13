@@ -162,6 +162,10 @@ class GeometryView(QGraphicsView):
             return
         super().mouseReleaseEvent(event)
 
+    def resizeEvent(self, event) -> None:  # noqa: N802
+        super().resizeEvent(event)
+        self.viewResized.emit()
+
 # ---------------------------------------------------------------------
 # UI promoted-widget compatibility shim
 # ---------------------------------------------------------------------
@@ -550,7 +554,7 @@ class ScaleBarOverlay(QWidget):
 # Main window/controller
 # ---------------------------------------------------------------------
 class TetrodeGeometryWindow(QMainWindow):
-    geometrySaved = Signal(dict)
+    geometryChanged = Signal(dict)
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.ui = Ui_Tetrode()
@@ -616,16 +620,21 @@ class TetrodeGeometryWindow(QMainWindow):
             return
 
         view = self.ui.Tetrode_graphicsView
-        grid_um = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() / 10
 
-        divisions = 100
-        bar_um = grid_um * divisions
+        # Fixed physical scale bar: always 10 µm
+        bar_length_um = 10.0
+
+        # Your scene uses a 10:1 geometry scale:
+        # 1 scene unit = 0.1 µm  ->  1 µm = 10 scene units
+        um_per_scene_unit = 0.1
+        bar_length_scene = bar_length_um / um_per_scene_unit  # 10 µm -> 100 scene units
 
         p0 = view.mapFromScene(QPointF(0.0, 0.0))
-        p1 = view.mapFromScene(QPointF(bar_um, 0.0))
+        p1 = view.mapFromScene(QPointF(bar_length_scene, 0.0))
         bar_length_px = abs(p1.x() - p0.x())
 
-        self.scale_bar_overlay.set_scale(max(30, int(bar_length_px)), f"{bar_um:.0f} µm")
+        self.scale_bar_overlay.set_scale(max(1, int(round(bar_length_px))), "10 µm")
+        self._position_scale_bar_overlay()
 
     # -------------------------------------------------------------
     # Readout
@@ -715,7 +724,7 @@ class TetrodeGeometryWindow(QMainWindow):
         self.scene = GeometryScene(self)
 
         # Scene size in µm
-        self.scene.setSceneRect(-550.0, -300.0, 800.0, 600.0)
+        self.scene.setSceneRect(-550.0, -250.0, 800.0, 450.0)
 
         view = self.ui.Tetrode_graphicsView
         view.setScene(self.scene)
@@ -723,15 +732,15 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self.neuron_defaults = {
             "Main Neuron": ItemDefaults(0.0, 0.0, 0.0),
-            "Aux Neuron 1": ItemDefaults(-400.0, 150.0, 0.0),
+            "Aux Neuron 1": ItemDefaults(-400.0, 100.0, 0.0),
             "Aux Neuron 2": ItemDefaults(-300.0, -150.0, 0.0),
-            "Tetrode": ItemDefaults(0.0, 0.0, 10.0),
+            "Tetrode": ItemDefaults(0.0, 0.0, 500.0),
         }
 
         self.neuron_main = NeuronItem(
             "Main Neuron",
             png_path="resources/Spiky1.png",
-            image_size=350.0,
+            image_size=300.0,
             anchor_x_px=500,
             anchor_y_px=500,
         )
@@ -739,7 +748,7 @@ class TetrodeGeometryWindow(QMainWindow):
         self.neuron_aux1 = NeuronItem(
             "Aux Neuron 1",
             png_path="resources/Spiky2.png",
-            image_size=350.0,
+            image_size=300.0,
             anchor_x_px=500,
             anchor_y_px=500,
         )
@@ -747,7 +756,7 @@ class TetrodeGeometryWindow(QMainWindow):
         self.neuron_aux2 = NeuronItem(
             "Aux Neuron 2",
             png_path="resources/Spiky3.png",
-            image_size=350.0,
+            image_size=300.0,
             anchor_x_px=500,
             anchor_y_px=500,
         )
@@ -873,10 +882,9 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self.ui.Tetrode_Parameters_View_Center_pushButton.clicked.connect(self._center_on_electrode)
         self.ui.Tetrode_Parameters_View_RFeset_pushButton.clicked.connect(self.reset_geometry)
-        self.ui.Tetrode_Save_pushButton.clicked.connect(self._on_save_clicked)
         self.ui.Tetrode_Close_pushButton.clicked.connect(self.close)
 
-        self.ui.Tetrode_graphicsView.viewResized.connect(self._position_scale_bar_overlay)
+        self.ui.Tetrode_graphicsView.viewResized.connect(self._update_scale_bar_overlay)
 
     # -------------------------------------------------------------
     # Reset
@@ -917,6 +925,7 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self.scene.update(self.scene.sceneRect())
         self.ui.Tetrode_graphicsView.viewport().update()
+        self._emit_geometry_changed()
 
     # -------------------------------------------------------------
     # Apply controls to items
@@ -959,6 +968,7 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self._refresh_distance_lines()
         self._update_distance_readout()
+        self._emit_geometry_changed()
 
     # -------------------------------------------------------------
     # View options
@@ -1041,6 +1051,7 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self._refresh_distance_lines()
         self._update_distance_readout()
+        self._emit_geometry_changed()
 
     # -------------------------------------------------------------
     # Readout updates
@@ -1205,13 +1216,8 @@ class TetrodeGeometryWindow(QMainWindow):
             "distance_matrix_um": self.get_distance_matrix_um(),
         }
 
-    def _on_save_clicked(self) -> None:
-        payload = self.get_geometry_payload()
-        self.geometrySaved.emit(payload)
-
-        # Optional console trace while integrating
-        print("Tetrode geometry saved:")
-        print(payload)
+    def _emit_geometry_changed(self) -> None:
+        self.geometryChanged.emit(self.get_geometry_payload())
 
 
     # -------------------------------------------------------------

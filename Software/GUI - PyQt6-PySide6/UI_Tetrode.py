@@ -21,12 +21,13 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
     QWidget)
 
 from geometry_view import GeometryView
+import resources_rc
 
 class Ui_Tetrode(object):
     def setupUi(self, Tetrode):
         if not Tetrode.objectName():
             Tetrode.setObjectName(u"Tetrode")
-        Tetrode.resize(1096, 720)
+        Tetrode.resize(1096, 626)
         Tetrode.setStyleSheet(u"*{\n"
 "	border:none;\n"
 "	background-color: transparent;\n"
@@ -81,11 +82,29 @@ class Ui_Tetrode(object):
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.Tetrode_Header_widget = QWidget(self.Tetrode_Main_frame)
         self.Tetrode_Header_widget.setObjectName(u"Tetrode_Header_widget")
-        self.verticalLayout_6 = QVBoxLayout(self.Tetrode_Header_widget)
+        self.horizontalLayout_10 = QHBoxLayout(self.Tetrode_Header_widget)
+        self.horizontalLayout_10.setSpacing(0)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.horizontalLayout_10.setContentsMargins(0, 10, 0, 10)
+        self.Tetrode_Header_empty_frame = QFrame(self.Tetrode_Header_widget)
+        self.Tetrode_Header_empty_frame.setObjectName(u"Tetrode_Header_empty_frame")
+        self.Tetrode_Header_empty_frame.setFrameShape(QFrame.StyledPanel)
+        self.Tetrode_Header_empty_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_6 = QVBoxLayout(self.Tetrode_Header_empty_frame)
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 10, 0, 10)
-        self.Tetrode_Header_label = QLabel(self.Tetrode_Header_widget)
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+
+        self.horizontalLayout_10.addWidget(self.Tetrode_Header_empty_frame)
+
+        self.Tetrode_Header_label_frame = QFrame(self.Tetrode_Header_widget)
+        self.Tetrode_Header_label_frame.setObjectName(u"Tetrode_Header_label_frame")
+        self.Tetrode_Header_label_frame.setFrameShape(QFrame.StyledPanel)
+        self.Tetrode_Header_label_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_23 = QVBoxLayout(self.Tetrode_Header_label_frame)
+        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
+        self.verticalLayout_23.setContentsMargins(0, 0, 0, 0)
+        self.Tetrode_Header_label = QLabel(self.Tetrode_Header_label_frame)
         self.Tetrode_Header_label.setObjectName(u"Tetrode_Header_label")
         font = QFont()
         font.setPointSize(14)
@@ -93,7 +112,33 @@ class Ui_Tetrode(object):
         self.Tetrode_Header_label.setFont(font)
         self.Tetrode_Header_label.setStyleSheet(u"color: rgb(190, 205, 205);")
 
-        self.verticalLayout_6.addWidget(self.Tetrode_Header_label, 0, Qt.AlignHCenter)
+        self.verticalLayout_23.addWidget(self.Tetrode_Header_label)
+
+
+        self.horizontalLayout_10.addWidget(self.Tetrode_Header_label_frame, 0, Qt.AlignHCenter)
+
+        self.Tetrode_Close_pushButton_frame = QFrame(self.Tetrode_Header_widget)
+        self.Tetrode_Close_pushButton_frame.setObjectName(u"Tetrode_Close_pushButton_frame")
+        self.Tetrode_Close_pushButton_frame.setFrameShape(QFrame.StyledPanel)
+        self.Tetrode_Close_pushButton_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_15 = QHBoxLayout(self.Tetrode_Close_pushButton_frame)
+        self.horizontalLayout_15.setSpacing(0)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.horizontalLayout_15.setContentsMargins(0, 0, 10, 0)
+        self.Tetrode_Close_pushButton = QPushButton(self.Tetrode_Close_pushButton_frame)
+        self.Tetrode_Close_pushButton.setObjectName(u"Tetrode_Close_pushButton")
+        self.Tetrode_Close_pushButton.setMinimumSize(QSize(30, 30))
+        self.Tetrode_Close_pushButton.setMaximumSize(QSize(30, 16777215))
+        self.Tetrode_Close_pushButton.setStyleSheet(u"background-color: rgb(0, 30, 38);")
+        icon = QIcon()
+        icon.addFile(u":/resources/resources/Exit.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Tetrode_Close_pushButton.setIcon(icon)
+        self.Tetrode_Close_pushButton.setIconSize(QSize(24, 24))
+
+        self.horizontalLayout_15.addWidget(self.Tetrode_Close_pushButton)
+
+
+        self.horizontalLayout_10.addWidget(self.Tetrode_Close_pushButton_frame, 0, Qt.AlignRight)
 
 
         self.verticalLayout_3.addWidget(self.Tetrode_Header_widget)
@@ -448,7 +493,7 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setDecimals(1)
         self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setMinimum(-500.000000000000000)
         self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setMaximum(500.000000000000000)
-        self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setValue(10.000000000000000)
+        self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setValue(50.000000000000000)
 
         self.horizontalLayout_5.addWidget(self.Tetrode_Parameters_Electrode_z_doubleSpinBox)
 
@@ -556,7 +601,7 @@ class Ui_Tetrode(object):
         self.verticalLayout_16 = QVBoxLayout(self.Tetrode_Parameters_View_groupBox)
         self.verticalLayout_16.setSpacing(20)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.verticalLayout_16.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_16.setContentsMargins(10, 0, 10, 10)
         self.Tetrode_Parameters_View_label_frame = QFrame(self.Tetrode_Parameters_View_groupBox)
         self.Tetrode_Parameters_View_label_frame.setObjectName(u"Tetrode_Parameters_View_label_frame")
         self.Tetrode_Parameters_View_label_frame.setFrameShape(QFrame.StyledPanel)
@@ -656,14 +701,6 @@ class Ui_Tetrode(object):
 
         self.verticalLayout_5.addWidget(self.Tetrode_Parameters_View_groupBox)
 
-        self.line_3 = QFrame(self.Tetrode_Parameters_frame)
-        self.line_3.setObjectName(u"line_3")
-        self.line_3.setStyleSheet(u"background-color: rgb(0, 43, 54);")
-        self.line_3.setFrameShape(QFrame.Shape.HLine)
-        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_5.addWidget(self.line_3)
-
 
         self.horizontalLayout.addWidget(self.Tetrode_Parameters_frame)
 
@@ -677,53 +714,30 @@ class Ui_Tetrode(object):
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.Tetrode_graphicsView = GeometryView(self.Tetrode_Graphic_frame)
         self.Tetrode_graphicsView.setObjectName(u"Tetrode_graphicsView")
-        self.Tetrode_graphicsView.setMinimumSize(QSize(800, 600))
+        self.Tetrode_graphicsView.setMinimumSize(QSize(800, 450))
 
         self.verticalLayout_4.addWidget(self.Tetrode_graphicsView)
 
-
-        self.horizontalLayout.addWidget(self.Tetrode_Graphic_frame)
-
-
-        self.verticalLayout_3.addWidget(self.Tetrode_Center_frame)
-
-        self.Tetrode_Bottom_frame = QFrame(self.Tetrode_Main_frame)
+        self.Tetrode_Bottom_frame = QFrame(self.Tetrode_Graphic_frame)
         self.Tetrode_Bottom_frame.setObjectName(u"Tetrode_Bottom_frame")
-        self.Tetrode_Bottom_frame.setMinimumSize(QSize(0, 75))
+        self.Tetrode_Bottom_frame.setMinimumSize(QSize(0, 100))
         self.Tetrode_Bottom_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Bottom_frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_18 = QHBoxLayout(self.Tetrode_Bottom_frame)
         self.horizontalLayout_18.setSpacing(0)
         self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
         self.horizontalLayout_18.setContentsMargins(0, 0, 0, 0)
-        self.Tetrode_Save_frame = QFrame(self.Tetrode_Bottom_frame)
-        self.Tetrode_Save_frame.setObjectName(u"Tetrode_Save_frame")
-        self.Tetrode_Save_frame.setFrameShape(QFrame.StyledPanel)
-        self.Tetrode_Save_frame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_19 = QHBoxLayout(self.Tetrode_Save_frame)
-        self.horizontalLayout_19.setSpacing(25)
-        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
-        self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
-        self.Tetrode_Save_pushButton = QPushButton(self.Tetrode_Save_frame)
-        self.Tetrode_Save_pushButton.setObjectName(u"Tetrode_Save_pushButton")
-        self.Tetrode_Save_pushButton.setMinimumSize(QSize(150, 0))
-        self.Tetrode_Save_pushButton.setMaximumSize(QSize(16777215, 16777215))
-        self.Tetrode_Save_pushButton.setFont(font1)
+        self.line_3 = QFrame(self.Tetrode_Bottom_frame)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setStyleSheet(u"background-color: rgb(0, 43, 54);")
+        self.line_3.setFrameShape(QFrame.Shape.VLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_19.addWidget(self.Tetrode_Save_pushButton)
-
-        self.Tetrode_Close_pushButton = QPushButton(self.Tetrode_Save_frame)
-        self.Tetrode_Close_pushButton.setObjectName(u"Tetrode_Close_pushButton")
-        self.Tetrode_Close_pushButton.setMinimumSize(QSize(150, 0))
-        self.Tetrode_Close_pushButton.setFont(font1)
-
-        self.horizontalLayout_19.addWidget(self.Tetrode_Close_pushButton)
-
-
-        self.horizontalLayout_18.addWidget(self.Tetrode_Save_frame, 0, Qt.AlignHCenter)
+        self.horizontalLayout_18.addWidget(self.line_3)
 
         self.Tetrode_Parameters_Readout_frame = QFrame(self.Tetrode_Bottom_frame)
         self.Tetrode_Parameters_Readout_frame.setObjectName(u"Tetrode_Parameters_Readout_frame")
+        self.Tetrode_Parameters_Readout_frame.setMinimumSize(QSize(0, 0))
         self.Tetrode_Parameters_Readout_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Parameters_Readout_frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_19 = QVBoxLayout(self.Tetrode_Parameters_Readout_frame)
@@ -811,7 +825,13 @@ class Ui_Tetrode(object):
         self.horizontalLayout_18.addWidget(self.Tetrode_Distance_Readout_frame)
 
 
-        self.verticalLayout_3.addWidget(self.Tetrode_Bottom_frame)
+        self.verticalLayout_4.addWidget(self.Tetrode_Bottom_frame)
+
+
+        self.horizontalLayout.addWidget(self.Tetrode_Graphic_frame)
+
+
+        self.verticalLayout_3.addWidget(self.Tetrode_Center_frame)
 
 
         self.horizontalLayout_9.addWidget(self.Tetrode_Main_frame)
@@ -826,6 +846,7 @@ class Ui_Tetrode(object):
     def retranslateUi(self, Tetrode):
         Tetrode.setWindowTitle(QCoreApplication.translate("Tetrode", u"MainWindow", None))
         self.Tetrode_Header_label.setText(QCoreApplication.translate("Tetrode", u"Extracellular Geometry view", None))
+        self.Tetrode_Close_pushButton.setText("")
         self.Tetrode_Parameters_Spikeling1_label.setText(QCoreApplication.translate("Tetrode", u"Main Neuron", None))
         self.Tetrode_Parameters_Spikeling1_x_label.setText(QCoreApplication.translate("Tetrode", u"X", None))
         self.Tetrode_Parameters_Spikeling1_x_doubleSpinBox.setSuffix(QCoreApplication.translate("Tetrode", u" \u00b5m", None))
@@ -871,7 +892,5 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_View_SnaToGrid_checkBox.setText(QCoreApplication.translate("Tetrode", u"Snap to Grid", None))
         self.Tetrode_Parameters_View_Center_pushButton.setText(QCoreApplication.translate("Tetrode", u"Center on Electrode", None))
         self.Tetrode_Parameters_View_RFeset_pushButton.setText(QCoreApplication.translate("Tetrode", u"Reset", None))
-        self.Tetrode_Save_pushButton.setText(QCoreApplication.translate("Tetrode", u"Save", None))
-        self.Tetrode_Close_pushButton.setText(QCoreApplication.translate("Tetrode", u"Close", None))
     # retranslateUi
 

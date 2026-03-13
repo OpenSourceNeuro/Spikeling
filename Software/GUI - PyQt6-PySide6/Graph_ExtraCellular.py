@@ -359,8 +359,6 @@ class ExtraCellularGraph(QObject):
 
         self._use_saved_tetrode_geometry = bool(self.tetrode_distance_matrix_um)
 
-        print("ExtraCellularGraph: tetrode geometry received")
-        print(self.tetrode_distance_matrix_um)
 
     # -------------------------------------------------------------------------
     # Connect / Disconnect
