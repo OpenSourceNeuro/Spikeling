@@ -996,8 +996,8 @@ QPushButton{
                   </layout>
                  </widget>
                 </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QFrame" name="Tetrode_Parameters_Electrode_Spacing_frame">
+                <item>
+                 <widget class="QFrame" name="Tetrode_Parameters_Electrode_Position_frame">
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
                   </property>
@@ -1006,7 +1006,7 @@ QPushButton{
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_7">
                    <property name="spacing">
-                    <number>10</number>
+                    <number>20</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -1020,30 +1020,94 @@ QPushButton{
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
-                   <item>
-                    <widget class="QLabel" name="Tetrode_Parameters_Electrode_Spacing_label">
-                     <property name="text">
-                      <string>Contact spacing</string>
+                   <item alignment="Qt::AlignLeft">
+                    <widget class="QFrame" name="Tetrode_Parameters_Electrode_Spacing_frame">
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
                      </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_16">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="Tetrode_Parameters_Electrode_Spacing_label">
+                        <property name="text">
+                         <string>Contact spacing</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QDoubleSpinBox" name="Tetrode_Parameters_Electrode_Spacing_doubleSpinBox">
+                        <property name="suffix">
+                         <string> µm</string>
+                        </property>
+                        <property name="decimals">
+                         <number>1</number>
+                        </property>
+                        <property name="minimum">
+                         <double>1.000000000000000</double>
+                        </property>
+                        <property name="maximum">
+                         <double>50.000000000000000</double>
+                        </property>
+                        <property name="value">
+                         <double>25.000000000000000</double>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QDoubleSpinBox" name="Tetrode_Parameters_Electrode_Spacing_doubleSpinBox">
-                     <property name="suffix">
-                      <string> µm</string>
+                    <widget class="QFrame" name="Tetrode_Parameters_View_SnaToGrid_frame">
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
                      </property>
-                     <property name="decimals">
-                      <number>1</number>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
                      </property>
-                     <property name="minimum">
-                      <double>1.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>50.000000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>25.000000000000000</double>
-                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_17">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QPushButton" name="Tetrode_Parameters_View_SnaToGrid_pushButton">
+                        <property name="text">
+                         <string>Snap to Grid</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>
@@ -1116,8 +1180,11 @@ QPushButton{
                         <property name="suffix">
                          <string> °</string>
                         </property>
+                        <property name="minimum">
+                         <number>-90</number>
+                        </property>
                         <property name="maximum">
-                         <number>180</number>
+                         <number>90</number>
                         </property>
                        </widget>
                       </item>
@@ -1132,6 +1199,9 @@ QPushButton{
                        <widget class="QSpinBox" name="Tetrode_Parameters_Electrode_Roty_spinBox">
                         <property name="suffix">
                          <string> °</string>
+                        </property>
+                        <property name="minimum">
+                         <number>-90</number>
                         </property>
                         <property name="maximum">
                          <number>90</number>
@@ -1150,8 +1220,14 @@ QPushButton{
                         <property name="suffix">
                          <string> °</string>
                         </property>
+                        <property name="minimum">
+                         <number>-90</number>
+                        </property>
                         <property name="maximum">
                          <number>90</number>
+                        </property>
+                        <property name="stepType">
+                         <enum>QAbstractSpinBox::DefaultStepType</enum>
                         </property>
                        </widget>
                       </item>
@@ -1321,13 +1397,6 @@ QPushButton{
                     <widget class="QCheckBox" name="Tetrode_Parameters_View_ShowDistance_checkBox">
                      <property name="text">
                       <string>Show Distance Lines</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QCheckBox" name="Tetrode_Parameters_View_SnaToGrid_checkBox">
-                     <property name="text">
-                      <string>Snap to Grid</string>
                      </property>
                     </widget>
                    </item>
@@ -1596,14 +1665,14 @@ QPushButton{
                  </widget>
                 </item>
                 <item>
-                 <widget class="QFrame" name="Tetrode_Distance_Readout_frame">
+                 <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron1_frame">
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
                   </property>
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_18">
+                  <layout class="QVBoxLayout" name="verticalLayout_22">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -1619,87 +1688,60 @@ QPushButton{
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
-                   <item>
-                    <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron1_frame">
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_20">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron2_frame">
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_21">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron3_frame">
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_22">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                     </layout>
-                    </widget>
-                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron2_frame">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_21">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="Tetrode_Distance_Readout_Neuron3_frame">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_20">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
                   </layout>
                  </widget>
                 </item>

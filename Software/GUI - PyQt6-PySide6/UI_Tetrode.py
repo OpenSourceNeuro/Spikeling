@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
-    QGroupBox, QHBoxLayout, QLabel, QMainWindow,
-    QPushButton, QSizePolicy, QSpinBox, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QDoubleSpinBox,
+    QFrame, QGroupBox, QHBoxLayout, QLabel,
+    QMainWindow, QPushButton, QSizePolicy, QSpinBox,
+    QVBoxLayout, QWidget)
 
 from geometry_view import GeometryView
 import resources_rc
@@ -500,18 +500,26 @@ class Ui_Tetrode(object):
 
         self.verticalLayout_13.addWidget(self.Tetrode_Parameters_Electrode_Coordinate_frame)
 
-        self.Tetrode_Parameters_Electrode_Spacing_frame = QFrame(self.Tetrode_Parameters_Electrode_groupBox)
+        self.Tetrode_Parameters_Electrode_Position_frame = QFrame(self.Tetrode_Parameters_Electrode_groupBox)
+        self.Tetrode_Parameters_Electrode_Position_frame.setObjectName(u"Tetrode_Parameters_Electrode_Position_frame")
+        self.Tetrode_Parameters_Electrode_Position_frame.setFrameShape(QFrame.StyledPanel)
+        self.Tetrode_Parameters_Electrode_Position_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.Tetrode_Parameters_Electrode_Position_frame)
+        self.horizontalLayout_7.setSpacing(20)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(0, 10, 0, 0)
+        self.Tetrode_Parameters_Electrode_Spacing_frame = QFrame(self.Tetrode_Parameters_Electrode_Position_frame)
         self.Tetrode_Parameters_Electrode_Spacing_frame.setObjectName(u"Tetrode_Parameters_Electrode_Spacing_frame")
         self.Tetrode_Parameters_Electrode_Spacing_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Parameters_Electrode_Spacing_frame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_7 = QHBoxLayout(self.Tetrode_Parameters_Electrode_Spacing_frame)
-        self.horizontalLayout_7.setSpacing(10)
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalLayout_7.setContentsMargins(0, 10, 0, 0)
+        self.horizontalLayout_16 = QHBoxLayout(self.Tetrode_Parameters_Electrode_Spacing_frame)
+        self.horizontalLayout_16.setSpacing(0)
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
         self.Tetrode_Parameters_Electrode_Spacing_label = QLabel(self.Tetrode_Parameters_Electrode_Spacing_frame)
         self.Tetrode_Parameters_Electrode_Spacing_label.setObjectName(u"Tetrode_Parameters_Electrode_Spacing_label")
 
-        self.horizontalLayout_7.addWidget(self.Tetrode_Parameters_Electrode_Spacing_label)
+        self.horizontalLayout_16.addWidget(self.Tetrode_Parameters_Electrode_Spacing_label)
 
         self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox = QDoubleSpinBox(self.Tetrode_Parameters_Electrode_Spacing_frame)
         self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setObjectName(u"Tetrode_Parameters_Electrode_Spacing_doubleSpinBox")
@@ -520,10 +528,30 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setMaximum(50.000000000000000)
         self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setValue(25.000000000000000)
 
-        self.horizontalLayout_7.addWidget(self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox)
+        self.horizontalLayout_16.addWidget(self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox)
 
 
-        self.verticalLayout_13.addWidget(self.Tetrode_Parameters_Electrode_Spacing_frame, 0, Qt.AlignHCenter)
+        self.horizontalLayout_7.addWidget(self.Tetrode_Parameters_Electrode_Spacing_frame, 0, Qt.AlignLeft)
+
+        self.Tetrode_Parameters_View_SnaToGrid_frame = QFrame(self.Tetrode_Parameters_Electrode_Position_frame)
+        self.Tetrode_Parameters_View_SnaToGrid_frame.setObjectName(u"Tetrode_Parameters_View_SnaToGrid_frame")
+        self.Tetrode_Parameters_View_SnaToGrid_frame.setFrameShape(QFrame.StyledPanel)
+        self.Tetrode_Parameters_View_SnaToGrid_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_17 = QHBoxLayout(self.Tetrode_Parameters_View_SnaToGrid_frame)
+        self.horizontalLayout_17.setSpacing(0)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.Tetrode_Parameters_View_SnaToGrid_pushButton = QPushButton(self.Tetrode_Parameters_View_SnaToGrid_frame)
+        self.Tetrode_Parameters_View_SnaToGrid_pushButton.setObjectName(u"Tetrode_Parameters_View_SnaToGrid_pushButton")
+        self.Tetrode_Parameters_View_SnaToGrid_pushButton.setCheckable(False)
+
+        self.horizontalLayout_17.addWidget(self.Tetrode_Parameters_View_SnaToGrid_pushButton)
+
+
+        self.horizontalLayout_7.addWidget(self.Tetrode_Parameters_View_SnaToGrid_frame)
+
+
+        self.verticalLayout_13.addWidget(self.Tetrode_Parameters_Electrode_Position_frame)
 
         self.Tetrode_Parameters_Electrode_Rot_frame = QFrame(self.Tetrode_Parameters_Electrode_groupBox)
         self.Tetrode_Parameters_Electrode_Rot_frame.setObjectName(u"Tetrode_Parameters_Electrode_Rot_frame")
@@ -553,7 +581,8 @@ class Ui_Tetrode(object):
 
         self.Tetrode_Parameters_Electrode_Rotx_spinBox = QSpinBox(self.Tetrode_Parameters_Electrode_RotCoordinate_frame)
         self.Tetrode_Parameters_Electrode_Rotx_spinBox.setObjectName(u"Tetrode_Parameters_Electrode_Rotx_spinBox")
-        self.Tetrode_Parameters_Electrode_Rotx_spinBox.setMaximum(180)
+        self.Tetrode_Parameters_Electrode_Rotx_spinBox.setMinimum(-90)
+        self.Tetrode_Parameters_Electrode_Rotx_spinBox.setMaximum(90)
 
         self.horizontalLayout_6.addWidget(self.Tetrode_Parameters_Electrode_Rotx_spinBox)
 
@@ -564,6 +593,7 @@ class Ui_Tetrode(object):
 
         self.Tetrode_Parameters_Electrode_Roty_spinBox = QSpinBox(self.Tetrode_Parameters_Electrode_RotCoordinate_frame)
         self.Tetrode_Parameters_Electrode_Roty_spinBox.setObjectName(u"Tetrode_Parameters_Electrode_Roty_spinBox")
+        self.Tetrode_Parameters_Electrode_Roty_spinBox.setMinimum(-90)
         self.Tetrode_Parameters_Electrode_Roty_spinBox.setMaximum(90)
 
         self.horizontalLayout_6.addWidget(self.Tetrode_Parameters_Electrode_Roty_spinBox)
@@ -575,7 +605,9 @@ class Ui_Tetrode(object):
 
         self.Tetrode_Parameters_Electrode_Rotz_spinBox = QSpinBox(self.Tetrode_Parameters_Electrode_RotCoordinate_frame)
         self.Tetrode_Parameters_Electrode_Rotz_spinBox.setObjectName(u"Tetrode_Parameters_Electrode_Rotz_spinBox")
+        self.Tetrode_Parameters_Electrode_Rotz_spinBox.setMinimum(-90)
         self.Tetrode_Parameters_Electrode_Rotz_spinBox.setMaximum(90)
+        self.Tetrode_Parameters_Electrode_Rotz_spinBox.setStepType(QAbstractSpinBox.DefaultStepType)
 
         self.horizontalLayout_6.addWidget(self.Tetrode_Parameters_Electrode_Rotz_spinBox)
 
@@ -661,11 +693,6 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_View_ShowDistance_checkBox.setObjectName(u"Tetrode_Parameters_View_ShowDistance_checkBox")
 
         self.verticalLayout.addWidget(self.Tetrode_Parameters_View_ShowDistance_checkBox)
-
-        self.Tetrode_Parameters_View_SnaToGrid_checkBox = QCheckBox(self.Tetrode_Parameters_View_Options_frame)
-        self.Tetrode_Parameters_View_SnaToGrid_checkBox.setObjectName(u"Tetrode_Parameters_View_SnaToGrid_checkBox")
-
-        self.verticalLayout.addWidget(self.Tetrode_Parameters_View_SnaToGrid_checkBox)
 
 
         self.verticalLayout_16.addWidget(self.Tetrode_Parameters_View_Options_frame)
@@ -780,26 +807,18 @@ class Ui_Tetrode(object):
 
         self.horizontalLayout_18.addWidget(self.Tetrode_Parameters_Readout_frame)
 
-        self.Tetrode_Distance_Readout_frame = QFrame(self.Tetrode_Bottom_frame)
-        self.Tetrode_Distance_Readout_frame.setObjectName(u"Tetrode_Distance_Readout_frame")
-        self.Tetrode_Distance_Readout_frame.setFrameShape(QFrame.StyledPanel)
-        self.Tetrode_Distance_Readout_frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_18 = QVBoxLayout(self.Tetrode_Distance_Readout_frame)
-        self.verticalLayout_18.setSpacing(0)
-        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
-        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
-        self.Tetrode_Distance_Readout_Neuron1_frame = QFrame(self.Tetrode_Distance_Readout_frame)
+        self.Tetrode_Distance_Readout_Neuron1_frame = QFrame(self.Tetrode_Bottom_frame)
         self.Tetrode_Distance_Readout_Neuron1_frame.setObjectName(u"Tetrode_Distance_Readout_Neuron1_frame")
         self.Tetrode_Distance_Readout_Neuron1_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Distance_Readout_Neuron1_frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_20 = QVBoxLayout(self.Tetrode_Distance_Readout_Neuron1_frame)
-        self.verticalLayout_20.setSpacing(0)
-        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
-        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_22 = QVBoxLayout(self.Tetrode_Distance_Readout_Neuron1_frame)
+        self.verticalLayout_22.setSpacing(0)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron1_frame)
+        self.horizontalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron1_frame)
 
-        self.Tetrode_Distance_Readout_Neuron2_frame = QFrame(self.Tetrode_Distance_Readout_frame)
+        self.Tetrode_Distance_Readout_Neuron2_frame = QFrame(self.Tetrode_Bottom_frame)
         self.Tetrode_Distance_Readout_Neuron2_frame.setObjectName(u"Tetrode_Distance_Readout_Neuron2_frame")
         self.Tetrode_Distance_Readout_Neuron2_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Distance_Readout_Neuron2_frame.setFrameShadow(QFrame.Raised)
@@ -808,21 +827,18 @@ class Ui_Tetrode(object):
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.verticalLayout_21.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron2_frame)
+        self.horizontalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron2_frame)
 
-        self.Tetrode_Distance_Readout_Neuron3_frame = QFrame(self.Tetrode_Distance_Readout_frame)
+        self.Tetrode_Distance_Readout_Neuron3_frame = QFrame(self.Tetrode_Bottom_frame)
         self.Tetrode_Distance_Readout_Neuron3_frame.setObjectName(u"Tetrode_Distance_Readout_Neuron3_frame")
         self.Tetrode_Distance_Readout_Neuron3_frame.setFrameShape(QFrame.StyledPanel)
         self.Tetrode_Distance_Readout_Neuron3_frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_22 = QVBoxLayout(self.Tetrode_Distance_Readout_Neuron3_frame)
-        self.verticalLayout_22.setSpacing(0)
-        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
-        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_20 = QVBoxLayout(self.Tetrode_Distance_Readout_Neuron3_frame)
+        self.verticalLayout_20.setSpacing(0)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron3_frame)
-
-
-        self.horizontalLayout_18.addWidget(self.Tetrode_Distance_Readout_frame)
+        self.horizontalLayout_18.addWidget(self.Tetrode_Distance_Readout_Neuron3_frame)
 
 
         self.verticalLayout_4.addWidget(self.Tetrode_Bottom_frame)
@@ -877,6 +893,7 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_Electrode_z_doubleSpinBox.setSuffix(QCoreApplication.translate("Tetrode", u" \u00b5m ", None))
         self.Tetrode_Parameters_Electrode_Spacing_label.setText(QCoreApplication.translate("Tetrode", u"Contact spacing", None))
         self.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setSuffix(QCoreApplication.translate("Tetrode", u" \u00b5m", None))
+        self.Tetrode_Parameters_View_SnaToGrid_pushButton.setText(QCoreApplication.translate("Tetrode", u"Snap to Grid", None))
         self.Tetrode_Parameters_Electrode_Rot_label.setText(QCoreApplication.translate("Tetrode", u"Rotation", None))
         self.Tetrode_Parameters_Electrode_Rotx_label.setText(QCoreApplication.translate("Tetrode", u"X", None))
         self.Tetrode_Parameters_Electrode_Rotx_spinBox.setSuffix(QCoreApplication.translate("Tetrode", u" \u00b0", None))
@@ -889,7 +906,6 @@ class Ui_Tetrode(object):
         self.Tetrode_Parameters_View_GridSize_doubleSpinBox.setSuffix(QCoreApplication.translate("Tetrode", u" \u00b5m", None))
         self.Tetrode_Parameters_View_ShowLabels_checkBox.setText(QCoreApplication.translate("Tetrode", u"Show Labels", None))
         self.Tetrode_Parameters_View_ShowDistance_checkBox.setText(QCoreApplication.translate("Tetrode", u"Show Distance Lines", None))
-        self.Tetrode_Parameters_View_SnaToGrid_checkBox.setText(QCoreApplication.translate("Tetrode", u"Snap to Grid", None))
         self.Tetrode_Parameters_View_Center_pushButton.setText(QCoreApplication.translate("Tetrode", u"Center on Electrode", None))
         self.Tetrode_Parameters_View_RFeset_pushButton.setText(QCoreApplication.translate("Tetrode", u"Reset", None))
     # retranslateUi

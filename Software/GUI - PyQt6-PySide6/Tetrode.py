@@ -6,8 +6,8 @@ import types
 from dataclasses import dataclass
 
 from PySide6.QtCore import QObject, QPoint, QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QPixmap
-from PySide6.QtWidgets import (QApplication, QWidget, QGraphicsDropShadowEffect, QFrame, QGraphicsItem, QGraphicsObject, QGraphicsScene, QGraphicsView, QLabel, QMainWindow, QVBoxLayout,)
+from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QPainterPath, QPixmap
+from PySide6.QtWidgets import QApplication, QWidget, QGraphicsDropShadowEffect, QFrame, QGraphicsItem, QGraphicsObject, QGraphicsScene, QGraphicsView, QLabel, QMainWindow, QVBoxLayout
 
 
 # ---------------------------------------------------------------------
@@ -348,6 +348,8 @@ class TetrodeItem(QGraphicsObject):
         self.show_label = True
         self.snap_to_grid = False
         self.grid_size = 20.0
+        self.rot_x_deg = 0.0
+        self.rot_y_deg = 0.0
         self.contact_colors = [
             QColor(38, 139, 210),  # E1
             QColor(42, 161, 152),  # E2
@@ -374,14 +376,82 @@ class TetrodeItem(QGraphicsObject):
         extra_bottom = 26.0 if self.show_label else 8.0
         return QRectF(-r, -r, 2 * r, 2 * r + extra_bottom)
 
+    @staticmethod
+    def _rotate_xyz(local_xyz: tuple[float, float, float], rx_deg: float, ry_deg: float) -> tuple[float, float, float]:
+        x, y, z = local_xyz
+
+        rx = math.radians(rx_deg)
+        ry = math.radians(ry_deg)
+
+        # Rx
+        cx = math.cos(rx)
+        sx = math.sin(rx)
+        y, z = (y * cx - z * sx), (y * sx + z * cx)
+
+        # Ry
+        cy = math.cos(ry)
+        sy = math.sin(ry)
+        x, z = (x * cy + z * sy), (-x * sy + z * cy)
+
+        return x, y, z
+
+    def set_tilt_angles(self, rx_deg: float, ry_deg: float) -> None:
+        self.rot_x_deg = float(rx_deg)
+        self.rot_y_deg = float(ry_deg)
+        self.update()
+
+    def _projected_basis_xy(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        """
+        Return the projected local X and Y unit vectors after applying Rx then Ry.
+        Z rotation is not applied here; the QGraphicsItem rotation handles RotZ.
+        """
+        ex = self._rotate_xyz((1.0, 0.0, 0.0), self.rot_x_deg, self.rot_y_deg)
+        ey = self._rotate_xyz((0.0, 1.0, 0.0), self.rot_x_deg, self.rot_y_deg)
+        return (ex[0], ex[1]), (ey[0], ey[1])
+
+    def _projected_ring_path_local(self, radius: float, samples: int = 96) -> QPainterPath:
+        """
+        Orthographic projection of a tilted circle in the tetrode local frame.
+        This becomes the dashed guide ellipse in the 2D scene.
+        """
+        ex2d, ey2d = self._projected_basis_xy()
+
+        path = QPainterPath()
+        for i in range(samples + 1):
+            t = 2.0 * math.pi * i / samples
+            x = radius * (ex2d[0] * math.cos(t) + ey2d[0] * math.sin(t))
+            y = radius * (ex2d[1] * math.cos(t) + ey2d[1] * math.sin(t))
+
+            if i == 0:
+                path.moveTo(x, y)
+            else:
+                path.lineTo(x, y)
+
+        path.closeSubpath()
+        return path
+
     def site_positions_local(self) -> list[tuple[float, float]]:
+        """
+        Contact positions after applying X/Y tilt in 3D and projecting back to XY.
+        RotZ is still handled by the QGraphicsItem rotation.
+        """
         r = self.contact_radius_from_center()
-        return [
-            (0.0, -r),   # top
-            (r, 0.0),    # right
-            (0.0, r),    # bottom
-            (-r, 0.0),   # left
+        ex2d, ey2d = self._projected_basis_xy()
+
+        local_contacts = [
+            (0.0, -1.0),  # E1
+            (1.0, 0.0),  # E2
+            (0.0, 1.0),  # E3
+            (-1.0, 0.0),  # E4
         ]
+
+        out = []
+        for ux, uy in local_contacts:
+            x = r * (ux * ex2d[0] + uy * ey2d[0])
+            y = r * (ux * ex2d[1] + uy * ey2d[1])
+            out.append((x, y))
+
+        return out
 
     def site_positions_scene(self) -> list[QPointF]:
         return [self.mapToScene(QPointF(x, y)) for x, y in self.site_positions_local()]
@@ -415,16 +485,24 @@ class TetrodeItem(QGraphicsObject):
 
         r = self.contact_radius_from_center()
 
-        # Crosshair
+        ex2d, ey2d = self._projected_basis_xy()
+
+        # Projected crosshair
         painter.setPen(QPen(QColor(238, 232, 213), 2))
         cross = max(10.0, r * 0.5)
-        painter.drawLine(QPointF(-cross, 0.0), QPointF(cross, 0.0))
-        painter.drawLine(QPointF(0.0, -cross), QPointF(0.0, cross))
+        painter.drawLine(
+            QPointF(-cross * ex2d[0], -cross * ex2d[1]),
+            QPointF(cross * ex2d[0], cross * ex2d[1]),
+        )
+        painter.drawLine(
+            QPointF(-cross * ey2d[0], -cross * ey2d[1]),
+            QPointF(cross * ey2d[0], cross * ey2d[1]),
+        )
 
-        # Dashed guide ring
+        # Dashed projected guide ellipse
         painter.setPen(QPen(QColor(190, 205, 205, 130), 2.5, Qt.DashLine))
         painter.setBrush(Qt.NoBrush)
-        painter.drawEllipse(QPointF(0.0, 0.0), r, r)
+        painter.drawPath(self._projected_ring_path_local(r))
 
         # Contact sites
         for i, (px, py) in enumerate(self.site_positions_local()):
@@ -439,7 +517,7 @@ class TetrodeItem(QGraphicsObject):
         if self.isSelected():
             painter.setPen(QPen(QColor(181, 137, 0), 1.5, Qt.DashLine))
             painter.setBrush(Qt.NoBrush)
-            painter.drawEllipse(QPointF(0.0, 0.0), r + 8.0, r + 8.0)
+            painter.drawPath(self._projected_ring_path_local(r + 8.0))
 
         # Label
         if self.show_label:
@@ -877,7 +955,7 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self.ui.Tetrode_Parameters_View_ShowLabels_checkBox.toggled.connect(self._apply_view_options)
         self.ui.Tetrode_Parameters_View_ShowDistance_checkBox.toggled.connect(self._apply_view_options)
-        self.ui.Tetrode_Parameters_View_SnaToGrid_checkBox.toggled.connect(self._apply_view_options)
+        self.ui.Tetrode_Parameters_View_SnaToGrid_pushButton.clicked.connect(self._snap_all_to_grid)
         self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.valueChanged.connect(self._apply_view_options)
 
         self.ui.Tetrode_Parameters_View_Center_pushButton.clicked.connect(self._center_on_electrode)
@@ -908,7 +986,7 @@ class TetrodeGeometryWindow(QMainWindow):
             self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].y/10)
             self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].z/10)
 
-            self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setValue(25.0)
+            self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setValue(20.0)
             self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.setValue(0)
             self.ui.Tetrode_Parameters_Electrode_Roty_spinBox.setValue(0)
             self.ui.Tetrode_Parameters_Electrode_Rotz_spinBox.setValue(0)
@@ -958,10 +1036,23 @@ class TetrodeGeometryWindow(QMainWindow):
                 self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox.value()*10,
                 self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.value()*10,
             )
-            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value()*10)
-            self.tetrode_item.set_contact_spacing(self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value()*10)
+            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value() * 10)
+            self.tetrode_item.set_contact_spacing(
+                self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value() * 10)
+            self.tetrode_item.set_tilt_angles(
+                self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.value(),
+                self.ui.Tetrode_Parameters_Electrode_Roty_spinBox.value(),
+            )
 
-            # For now only RotZ affects the 2D drawing.
+            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value() * 10)
+            self.tetrode_item.set_contact_spacing(
+                self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value() * 10)
+            self.tetrode_item.set_tilt_angles(
+                self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.value(),
+                self.ui.Tetrode_Parameters_Electrode_Roty_spinBox.value(),
+            )
+
+            # RotZ remains a pure 2D rotation of the already projected layout.
             self.tetrode_item.setRotation(self.ui.Tetrode_Parameters_Electrode_Rotz_spinBox.value())
         finally:
             self._syncing_controls = False
@@ -991,22 +1082,65 @@ class TetrodeGeometryWindow(QMainWindow):
         grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * 10
         show_labels = self.ui.Tetrode_Parameters_View_ShowLabels_checkBox.isChecked()
         show_distance = self.ui.Tetrode_Parameters_View_ShowDistance_checkBox.isChecked()
-        snap_to_grid = self.ui.Tetrode_Parameters_View_SnaToGrid_checkBox.isChecked()
 
         self.scene.set_grid_size(grid_size)
 
         for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
             item.grid_size = grid_size
-            item.snap_to_grid = snap_to_grid
+            item.snap_to_grid = False
             item.set_show_label(show_labels)
-
-            if snap_to_grid:
-                self._snap_item_now(item)
 
         self._refresh_distance_lines(force_show=show_distance)
         self._update_distance_readout()
         self._update_grid_scale_overlay()
         self._update_scale_bar_overlay()
+
+    def _snap_value_to_grid(self, value: float, grid_size: float) -> float:
+        if grid_size <= 0:
+            return value
+        return round(value / grid_size) * grid_size
+
+    def _snap_item_now(self, item) -> None:
+        grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * 10.0
+        if grid_size <= 0:
+            return
+
+        x = self._snap_value_to_grid(item.x(), grid_size)
+        y = self._snap_value_to_grid(item.y(), grid_size)
+        item.setPos(x, y)
+
+    def _snap_all_to_grid(self) -> None:
+        for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
+            self._snap_item_now(item)
+
+        self._sync_item_to_spinboxes(
+            self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox,
+            self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox,
+            self.neuron_main.x() / 10.0,
+            self.neuron_main.y() / 10.0,
+        )
+        self._sync_item_to_spinboxes(
+            self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox,
+            self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox,
+            self.neuron_aux1.x() / 10.0,
+            self.neuron_aux1.y() / 10.0,
+        )
+        self._sync_item_to_spinboxes(
+            self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox,
+            self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox,
+            self.neuron_aux2.x() / 10.0,
+            self.neuron_aux2.y() / 10.0,
+        )
+        self._sync_item_to_spinboxes(
+            self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox,
+            self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox,
+            self.tetrode_item.x() / 10.0,
+            self.tetrode_item.y() / 10.0,
+        )
+
+        self._refresh_distance_lines()
+        self._update_distance_readout()
+        self._emit_geometry_changed()
 
     def _refresh_distance_lines(self, force_show: bool | None = None) -> None:
         for line_item in self._distance_lines:
@@ -1021,19 +1155,44 @@ class TetrodeGeometryWindow(QMainWindow):
         if not show:
             return
 
-        pen = QPen(DISTANCE, 5, Qt.DashLine)
-        probe_center = self.tetrode_item.scenePos()
+        # Real tetrode contact positions in world coordinates (µm)
+        contacts_um = self.get_contact_positions_um()
 
-        for neuron in (self.neuron_main, self.neuron_aux1, self.neuron_aux2):
-            line = self.scene.addLine(
-                probe_center.x(),
-                probe_center.y(),
-                neuron.scenePos().x(),
-                neuron.scenePos().y(),
-                pen,
-            )
-            line.setZValue(-10)
-            self._distance_lines.append(line)
+        # Scene uses 10 px per 1 µm
+        scene_scale = 10.0
+
+        neurons = [
+            self.neuron_main,
+            self.neuron_aux1,
+            self.neuron_aux2,
+        ]
+
+        # Use the same channel colors as the tetrode contacts / extracellular channels
+        contact_colors = getattr(self.tetrode_item, "contact_colors", [
+            QColor(38, 139, 210),  # E1
+            QColor(42, 161, 152),  # E2
+            QColor(133, 153, 0),  # E3
+            QColor(108, 113, 196),  # E4
+        ])
+
+        for contact_index, contact in enumerate(contacts_um):
+            color = contact_colors[contact_index] if contact_index < len(contact_colors) else DISTANCE
+            pen = QPen(color, 1, Qt.DashLine)
+            pen.setCosmetic(True)
+
+            cx = contact["x_um"] * scene_scale
+            cy = contact["y_um"] * scene_scale
+
+            for neuron in neurons:
+                line = self.scene.addLine(
+                    cx,
+                    cy,
+                    neuron.scenePos().x(),
+                    neuron.scenePos().y(),
+                    pen,
+                )
+                line.setZValue(-10)
+                self._distance_lines.append(line)
 
     # -------------------------------------------------------------
     # Sync dragged item -> controls
@@ -1068,24 +1227,28 @@ class TetrodeGeometryWindow(QMainWindow):
         self.readout_selected.setText(f"Selected: {name}")
 
     def _update_distance_readout(self) -> None:
-        ex = self.tetrode_item.x()
-        ey = self.tetrode_item.y()
-        ez = self.tetrode_item.depth_z
+        matrix = self.get_distance_matrix_um()
 
-        def distance_to(neuron) -> float:
-            dx = neuron.x() - ex
-            dy = neuron.y() - ey
-            dz = neuron.depth_z - ez
-            return math.sqrt(dx * dx + dy * dy + dz * dz)
+        colors = {
+            "E1": "#268BD2",
+            "E2": "#2AA198",
+            "E3": "#859900",
+            "E4": "#6C71C4",
+        }
 
-        d1 = distance_to(self.neuron_main)
-        d2 = distance_to(self.neuron_aux1)
-        d3 = distance_to(self.neuron_aux2)
+        def fmt_block(title: str, neuron_key: str) -> str:
+            per_contact = matrix.get(neuron_key, {})
+            lines = [f"<b>{title}</b>"]
+            for electrode in ("E1", "E2", "E3", "E4"):
+                value = per_contact.get(electrode, 0.0)
+                lines.append(
+                    f'<span style="color:{colors[electrode]};"><b>{electrode}</b></span>: {value:.1f} µm'
+                )
+            return "<br>".join(lines)
 
-        self.readout_distance_n1.setText(f"Main Neuron  ↔ Electrode: {d1/10:.1f} µm")
-        self.readout_distance_n2.setText(f"Aux Neuron 1 ↔ Electrode: {d2/10:.1f} µm")
-        self.readout_distance_n3.setText(f"Aux Neuron 2 ↔ Electrode: {d3/10:.1f} µm")
-
+        self.readout_distance_n1.setText(fmt_block("Main Neuron ↔ Contacts", "main"))
+        self.readout_distance_n2.setText(fmt_block("Aux Neuron 1 ↔ Contacts", "aux1"))
+        self.readout_distance_n3.setText(fmt_block("Aux Neuron 2 ↔ Contacts", "aux2"))
     # -------------------------------------------------------------
     # Geometry export for extracellular model
     # -------------------------------------------------------------

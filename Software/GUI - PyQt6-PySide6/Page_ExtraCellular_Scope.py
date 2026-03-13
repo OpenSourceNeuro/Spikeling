@@ -66,7 +66,6 @@ class Scope():
         if hasattr(eg, "apply_tetrode_geometry"):
             eg.apply_tetrode_geometry(payload)
 
-        print("Extracellular tetrode geometry updated.")
 
     # ------------------------------------------------------------------
     # Data Recording Functions

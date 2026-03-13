@@ -377,7 +377,7 @@ class Emulator():
     def _set_izhikevich_emulator_from_index(self, idx_zero_based: int) -> None:
         """idx_zero_based is 0-based index into IzhikevichNeurons."""
         if 0 <= idx_zero_based < len(IzhikevichNeurons):
-            a, b, c, d = IzhikevichNeurons[idx_zero_based]
+            a, b, c, d, v, n = IzhikevichNeurons[idx_zero_based]
             self.ui.Emulator_a = float(a)
             self.ui.Emulator_b = float(b)
             self.ui.Emulator_c = float(c)
@@ -406,7 +406,7 @@ class Emulator():
             if 1 <= idx <= 20:
                 zero_based = idx - 1
                 # Set a, b, c, d from IzhikevichNeurons
-                self._set_izhikevich_emulator_from_index(zero_based)
+                Emulator._set_izhikevich_emulator_from_index(self, zero_based)
 
                 # Reset PR + synapse sliders to default "off" values
                 # Photodiode
@@ -721,7 +721,7 @@ class EmulatorSyn1 ():
         # --- Built-in neurons: indices 0..20 (combo indices 1..20) ---
         if idx_zero_based < 20:
             try:
-                a, b, c, d = IzhikevichNeurons[idx_zero_based]
+                a, b, c, d, v, n = IzhikevichNeurons[idx_zero_based]
             except IndexError:
                 return
 
@@ -789,7 +789,7 @@ class EmulatorSyn1 ():
             return
 
         idx_zero_based = self.EmulatorSyn1_neuron_mode_index - 1
-        self._set_izhikevich_syn1_from_index(idx_zero_based)
+        EmulatorSyn1._set_izhikevich_syn1_from_index(self, idx_zero_based)
 
 
 
@@ -1011,7 +1011,7 @@ class EmulatorSyn2 ():
         # --- Built-in neurons: indices 0..19 (combo indices 1..20) ---
         if idx_zero_based < 20:
             try:
-                a, b, c, d = IzhikevichNeurons[idx_zero_based]
+                a, b, c, d, v, n = IzhikevichNeurons[idx_zero_based]
             except IndexError:
                 return
 
@@ -1079,7 +1079,7 @@ class EmulatorSyn2 ():
             return
 
         idx_zero_based = self.EmulatorSyn2_neuron_mode_index - 1
-        self._set_izhikevich_syn2_from_index(idx_zero_based)
+        EmulatorSyn2._set_izhikevich_syn2_from_index(self, idx_zero_based)
 
 
 
