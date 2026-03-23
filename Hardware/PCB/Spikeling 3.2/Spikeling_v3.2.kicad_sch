@@ -879,8 +879,8 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "D"
-				(at 0 9.398 0)
+			(property "Reference" "D9"
+				(at -4.445 -6.35 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -895,7 +895,7 @@
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "LED_THT:LED_D5.0mm-4_RGB_Wide_Pins"
 				(at 0 -1.27 0)
 				(effects
 					(font
@@ -914,6 +914,249 @@
 				)
 			)
 			(property "Description" "RGB LED, blue/green/cathode/red"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "CURRENT CONSUMPTION" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Continuous Drain Current (Id)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "DRIVER CIRCUITRY" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Drain Source On Resistance (RDS(on)@Vgs,Id)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Drain Source Voltage (Vdss)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "FORWARD VOLTAGE (VF@IF)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Gate Threshold Voltage (Vgs(th)@Id)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "HEIGHT" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Input Capacitance (Ciss@Vds)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LENGTH" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "POLARITY" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Power Dissipation (Pd)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "RECTIFIED CURRENT" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "REVERSE VOLTAGE (VR)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "SOUND PRESSURE LEVEL(SPL)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "TECHNOLOGY" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Total Gate Charge (Qg@Vgs)" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "WIDTH" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Dropout Voltage" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Feature" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Field13" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Number Of Outputs" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Output Current" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Output Polarity" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Output Type" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Output Voltage" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Power Supply Rejection Ratio (Psrr)" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -1309,7 +1552,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1327,7 +1570,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1345,7 +1588,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1363,7 +1606,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -20578,16 +20821,6 @@
 	)
 	(wire
 		(pts
-			(xy 373.38 172.72) (xy 373.38 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1ac63a9b-5b27-477f-9362-01697d88fde0")
-	)
-	(wire
-		(pts
 			(xy 225.806 177.8) (xy 223.52 177.8)
 		)
 		(stroke
@@ -21238,7 +21471,7 @@
 	)
 	(wire
 		(pts
-			(xy 367.538 163.068) (xy 370.84 163.068)
+			(xy 350.52 168.91) (xy 363.982 168.91)
 		)
 		(stroke
 			(width 0)
@@ -21348,6 +21581,16 @@
 	)
 	(wire
 		(pts
+			(xy 359.41 177.8) (xy 350.52 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "320917c9-0f08-403c-907d-a2b2d4da2b67")
+	)
+	(wire
+		(pts
 			(xy 208.28 36.322) (xy 208.28 37.084)
 		)
 		(stroke
@@ -21358,7 +21601,7 @@
 	)
 	(wire
 		(pts
-			(xy 390.144 164.338) (xy 388.62 164.338)
+			(xy 390.144 170.18) (xy 381.762 170.18)
 		)
 		(stroke
 			(width 0)
@@ -22418,7 +22661,7 @@
 	)
 	(wire
 		(pts
-			(xy 391.668 177.8) (xy 391.668 161.798)
+			(xy 391.668 177.8) (xy 391.668 167.64)
 		)
 		(stroke
 			(width 0)
@@ -23798,7 +24041,7 @@
 	)
 	(wire
 		(pts
-			(xy 381 172.72) (xy 373.38 172.72)
+			(xy 367.03 177.8) (xy 373.38 177.8)
 		)
 		(stroke
 			(width 0)
@@ -25558,7 +25801,7 @@
 	)
 	(wire
 		(pts
-			(xy 391.668 161.798) (xy 388.62 161.798)
+			(xy 391.668 167.64) (xy 381.762 167.64)
 		)
 		(stroke
 			(width 0)
@@ -26648,16 +26891,6 @@
 	)
 	(wire
 		(pts
-			(xy 398.78 172.72) (xy 388.62 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f3d92d0d-9618-4e07-b4ab-707e174bb310")
-	)
-	(wire
-		(pts
 			(xy 57.15 190.5) (xy 59.944 190.5)
 		)
 		(stroke
@@ -26688,7 +26921,7 @@
 	)
 	(wire
 		(pts
-			(xy 390.144 180.34) (xy 390.144 164.338)
+			(xy 390.144 180.34) (xy 390.144 170.18)
 		)
 		(stroke
 			(width 0)
@@ -28853,7 +29086,7 @@
 	)
 	(global_label "Stim_BLED"
 		(shape input)
-		(at 233.68 162.56 180)
+		(at 233.68 160.02 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -28863,7 +29096,7 @@
 		)
 		(uuid "c5158ea6-3984-4884-bce4-e2053ba607e0")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 221.431 162.56 0)
+			(at 221.431 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -29491,7 +29724,7 @@
 	)
 	(global_label "Stim_GLED"
 		(shape input)
-		(at 233.68 160.02 180)
+		(at 233.68 162.56 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -29501,7 +29734,7 @@
 		)
 		(uuid "fd508351-a3a0-499c-8c66-7b5563de3da2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 221.431 160.02 0)
+			(at 221.431 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35296,7 +35529,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "Maxime:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "Maxime:AUDIO-SMD_HX-PJ-320A-3P-DIP"
 			(at 397.002 229.362 0)
 			(effects
 				(font
@@ -36104,8 +36337,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3VA")
-		(at 398.78 172.72 270)
-		(mirror x)
+		(at 350.52 177.8 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -36113,7 +36345,7 @@
 		(dnp no)
 		(uuid "10e85788-957c-4373-adf9-89882b9b2297")
 		(property "Reference" "#PWR099"
-			(at 394.97 172.72 0)
+			(at 354.33 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -36122,7 +36354,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 400.431 171.577 90)
+			(at 348.869 176.657 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -36131,7 +36363,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 398.78 172.72 0)
+			(at 350.52 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -36140,7 +36372,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 398.78 172.72 0)
+			(at 350.52 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -36149,7 +36381,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3VA\""
-			(at 398.78 172.72 0)
+			(at 350.52 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -45956,7 +46188,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "Maxime:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "Maxime:AUDIO-SMD_HX-PJ-320A-3P-DIP"
 			(at 398.018 182.88 0)
 			(effects
 				(font
@@ -52763,7 +52995,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDA")
-		(at 367.538 163.068 270)
+		(at 350.52 168.91 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -52772,7 +53004,7 @@
 		(dnp no)
 		(uuid "433d165e-0e5d-4993-b852-02768c23d90a")
 		(property "Reference" "#PWR085"
-			(at 361.188 163.068 0)
+			(at 344.17 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -52781,7 +53013,7 @@
 			)
 		)
 		(property "Value" "GNDA"
-			(at 364.744 163.195 90)
+			(at 347.726 169.037 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -52790,7 +53022,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 367.538 163.068 0)
+			(at 350.52 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -52799,7 +53031,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 367.538 163.068 0)
+			(at 350.52 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -52808,7 +53040,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GNDA\" , analog ground"
-			(at 367.538 163.068 0)
+			(at 350.52 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53291,7 +53523,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "Maxime:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "Maxime:AUDIO-SMD_HX-PJ-320A-3P-DIP"
 			(at 22.86 267.97 0)
 			(effects
 				(font
@@ -59107,7 +59339,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_THT:LED_D5.0mm-4_RGB_Wide_Pins"
+		(property "Footprint" "LED_SMD:LED_Kingbright_APFA3010_3x1.5mm_Horizontal"
 			(at 370.84 242.57 0)
 			(effects
 				(font
@@ -80518,7 +80750,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "Maxime:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "Maxime:AUDIO-SMD_HX-PJ-320A-3P-DIP"
 			(at 30.48 223.266 0)
 			(effects
 				(font
@@ -96051,7 +96283,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "Maxime:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "Maxime:AUDIO-SMD_HX-PJ-320A-3P-DIP"
 			(at 30.48 171.45 0)
 			(effects
 				(font
@@ -113314,7 +113546,8 @@
 	)
 	(symbol
 		(lib_id "PCM_JLCPCB-Resistors:0603,10kΩ")
-		(at 384.81 172.72 270)
+		(at 363.22 177.8 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -113322,7 +113555,7 @@
 		(dnp no)
 		(uuid "f7160352-8414-48e0-ad69-44bbfb64c4d0")
 		(property "Reference" "R71"
-			(at 382.905 170.18 90)
+			(at 365.125 175.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113331,7 +113564,7 @@
 			)
 		)
 		(property "Value" "10kΩ"
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(do_not_autoplace yes)
 			(effects
 				(font
@@ -113340,7 +113573,7 @@
 			)
 		)
 		(property "Footprint" "PCM_JLCPCB:R_0603"
-			(at 384.81 170.942 90)
+			(at 363.22 176.022 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113349,7 +113582,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0603WAF1002T5E_C25804.pdf"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113358,7 +113591,7 @@
 			)
 		)
 		(property "Description" "100mW Thick Film Resistors 75V ±100ppm/°C ±1% 10kΩ 0603 Chip Resistor - Surface Mount ROHS"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113367,7 +113600,7 @@
 			)
 		)
 		(property "LCSC" "C25804"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113376,7 +113609,7 @@
 			)
 		)
 		(property "Stock" "51181774"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113385,7 +113618,7 @@
 			)
 		)
 		(property "Price" "0.004USD"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113394,7 +113627,7 @@
 			)
 		)
 		(property "Process" "SMT"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113403,7 +113636,7 @@
 			)
 		)
 		(property "Minimum Qty" "20"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113412,7 +113645,7 @@
 			)
 		)
 		(property "Attrition Qty" "10"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113421,7 +113654,7 @@
 			)
 		)
 		(property "Class" "Basic Component"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113430,7 +113663,7 @@
 			)
 		)
 		(property "Category" "Resistors,Chip Resistor - Surface Mount"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113439,7 +113672,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113448,7 +113681,7 @@
 			)
 		)
 		(property "Part" "0603WAF1002T5E"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113457,7 +113690,7 @@
 			)
 		)
 		(property "Resistance" "10kΩ"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113466,7 +113699,7 @@
 			)
 		)
 		(property "Power(Watts)" "100mW"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113475,7 +113708,7 @@
 			)
 		)
 		(property "Type" "Thick Film Resistors"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113484,7 +113717,7 @@
 			)
 		)
 		(property "Overload Voltage (Max)" "75V"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113493,7 +113726,7 @@
 			)
 		)
 		(property "Operating Temperature Range" "-55°C~+155°C"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113502,7 +113735,7 @@
 			)
 		)
 		(property "Tolerance" "±1%"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113511,7 +113744,7 @@
 			)
 		)
 		(property "Temperature Coefficient" "±100ppm/°C"
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113520,7 +113753,7 @@
 			)
 		)
 		(property "CURRENT CONSUMPTION" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113529,7 +113762,7 @@
 			)
 		)
 		(property "Continuous Drain Current (Id)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113538,7 +113771,7 @@
 			)
 		)
 		(property "DRIVER CIRCUITRY" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113547,7 +113780,7 @@
 			)
 		)
 		(property "Drain Source On Resistance (RDS(on)@Vgs,Id)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113556,7 +113789,7 @@
 			)
 		)
 		(property "Drain Source Voltage (Vdss)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113565,7 +113798,7 @@
 			)
 		)
 		(property "FORWARD VOLTAGE (VF@IF)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113574,7 +113807,7 @@
 			)
 		)
 		(property "Gate Threshold Voltage (Vgs(th)@Id)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113583,7 +113816,7 @@
 			)
 		)
 		(property "HEIGHT" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113592,7 +113825,7 @@
 			)
 		)
 		(property "Input Capacitance (Ciss@Vds)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113601,7 +113834,7 @@
 			)
 		)
 		(property "LENGTH" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113610,7 +113843,7 @@
 			)
 		)
 		(property "POLARITY" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113619,7 +113852,7 @@
 			)
 		)
 		(property "Power Dissipation (Pd)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113628,7 +113861,7 @@
 			)
 		)
 		(property "RECTIFIED CURRENT" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113637,7 +113870,7 @@
 			)
 		)
 		(property "REVERSE VOLTAGE (VR)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113646,7 +113879,7 @@
 			)
 		)
 		(property "SOUND PRESSURE LEVEL(SPL)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113655,7 +113888,7 @@
 			)
 		)
 		(property "TECHNOLOGY" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113664,7 +113897,7 @@
 			)
 		)
 		(property "Total Gate Charge (Qg@Vgs)" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113673,7 +113906,7 @@
 			)
 		)
 		(property "WIDTH" ""
-			(at 384.81 172.72 0)
+			(at 363.22 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113682,7 +113915,7 @@
 			)
 		)
 		(property "Dropout Voltage" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113691,7 +113924,7 @@
 			)
 		)
 		(property "Feature" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113700,7 +113933,7 @@
 			)
 		)
 		(property "Field13" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113709,7 +113942,7 @@
 			)
 		)
 		(property "Number Of Outputs" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113718,7 +113951,7 @@
 			)
 		)
 		(property "Output Current" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113727,7 +113960,7 @@
 			)
 		)
 		(property "Output Polarity" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113736,7 +113969,7 @@
 			)
 		)
 		(property "Output Type" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113745,7 +113978,7 @@
 			)
 		)
 		(property "Output Voltage" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113754,7 +113987,7 @@
 			)
 		)
 		(property "Power Supply Rejection Ratio (Psrr)" ""
-			(at 384.81 172.72 90)
+			(at 363.22 177.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114284,7 +114517,7 @@
 	)
 	(symbol
 		(lib_id "Spikeling_V2.5-altium-import:root_0_TPD2E2U06DCKR_")
-		(at 379.73 163.068 0)
+		(at 372.872 168.91 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -114293,7 +114526,7 @@
 		(dnp no)
 		(uuid "f8c20736-dccd-4e9d-bc0e-2d440f1a241a")
 		(property "Reference" "D11"
-			(at 381.762 165.354 0)
+			(at 374.904 171.196 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114302,7 +114535,7 @@
 			)
 		)
 		(property "Value" "TPD2E2U06DCKR"
-			(at 388.239 168.783 0)
+			(at 381.381 174.625 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114311,7 +114544,7 @@
 			)
 		)
 		(property "Footprint" "Maxime:SC-70-3_L2.0-W1.3-P0.65-LS2.1-BL"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114320,7 +114553,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114329,7 +114562,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114338,7 +114571,7 @@
 			)
 		)
 		(property "SYMBOL" "TPD2E2U06DCKR"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114348,7 +114581,7 @@
 			)
 		)
 		(property "DEVICE" "TPD2E2U06DCKR"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114358,7 +114591,7 @@
 			)
 		)
 		(property "LCSC PART NAME" "TPD2E2U06DCKR"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114368,7 +114601,7 @@
 			)
 		)
 		(property "SUPPLIER PART" "C1855726"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114378,7 +114611,7 @@
 			)
 		)
 		(property "MANUFACTURER" "TI(德州仪器)"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114388,7 +114621,7 @@
 			)
 		)
 		(property "MANUFACTURER PART" "TPD2E2U06DCKR"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114398,7 +114631,7 @@
 			)
 		)
 		(property "SUPPLIER FOOTPRINT" "SC-70-3"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114408,7 +114641,7 @@
 			)
 		)
 		(property "JLCPCB PART CLASS" "Extended Part"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114418,7 +114651,7 @@
 			)
 		)
 		(property "DATASHEET" "https://www.ti.com/cn/lit/gpn/tpd2e2u06"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114428,7 +114661,7 @@
 			)
 		)
 		(property "SUPPLIER" "LCSC"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114438,7 +114671,7 @@
 			)
 		)
 		(property "ADD INTO BOM" "yes"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114448,7 +114681,7 @@
 			)
 		)
 		(property "CONVERT TO PCB" "yes"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114458,7 +114691,7 @@
 			)
 		)
 		(property "REVERSE STAND-OFF VOLTAGE (VRWM)" "5.5V"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114468,7 +114701,7 @@
 			)
 		)
 		(property "MAXIMUM CLAMPING VOLTAGE" "12.4V"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114478,7 +114711,7 @@
 			)
 		)
 		(property "PEAK PULSE CURRENT (IPP)" "5.5A@8/20us"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114488,7 +114721,7 @@
 			)
 		)
 		(property "PEAK PULSE POWER DISSIPATION (PPP)" "75W"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114498,7 +114731,7 @@
 			)
 		)
 		(property "BREAKDOWN VOLTAGE" "6.5V"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114508,7 +114741,7 @@
 			)
 		)
 		(property "NUMBER OF LINES" "Dual channel"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114518,7 +114751,7 @@
 			)
 		)
 		(property "OPERATING TEMPERATURE" "-40℃~+125℃@(Ta)"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114528,7 +114761,7 @@
 			)
 		)
 		(property "TYPE" "ESD"
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114538,7 +114771,7 @@
 			)
 		)
 		(property "Dropout Voltage" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114547,7 +114780,7 @@
 			)
 		)
 		(property "Feature" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114556,7 +114789,7 @@
 			)
 		)
 		(property "Field13" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114565,7 +114798,7 @@
 			)
 		)
 		(property "Number Of Outputs" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114574,7 +114807,7 @@
 			)
 		)
 		(property "Output Current" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114583,7 +114816,7 @@
 			)
 		)
 		(property "Output Polarity" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114592,7 +114825,7 @@
 			)
 		)
 		(property "Output Type" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114601,7 +114834,7 @@
 			)
 		)
 		(property "Output Voltage" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -114610,7 +114843,7 @@
 			)
 		)
 		(property "Power Supply Rejection Ratio (Psrr)" ""
-			(at 379.73 163.068 0)
+			(at 372.872 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
