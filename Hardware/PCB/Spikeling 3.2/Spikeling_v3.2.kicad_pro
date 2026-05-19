@@ -3,6 +3,8 @@
     "3dviewports": [],
     "design_settings": {
       "defaults": {
+        "apply_defaults_to_fp_barcodes": false,
+        "apply_defaults_to_fp_dimensions": false,
         "apply_defaults_to_fp_fields": false,
         "apply_defaults_to_fp_shapes": false,
         "apply_defaults_to_fp_text": false,
@@ -49,245 +51,21 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.0
+          "min_clearance": 0.508
         }
       },
       "diff_pair_dimensions": [],
       "drc_exclusions": [
         [
-          "hole_clearance|157050000|55550000|7fba5e21-25bb-41c1-bd2e-8ee3a4c527c5|6a062182-be08-4ca5-b2b8-c915e4ef3943",
+          "hole_clearance|157050000|55550000|6a062182-be08-4ca5-b2b8-c915e4ef3943|7fba5e21-25bb-41c1-bd2e-8ee3a4c527c5",
           ""
         ],
         [
-          "hole_clearance|162950000|55550000|a419e81e-4456-4941-8f8e-610869b396ed|33395c54-49ab-4758-9e12-7a463c00c7d6",
+          "hole_clearance|162950000|55550000|33395c54-49ab-4758-9e12-7a463c00c7d6|a419e81e-4456-4941-8f8e-610869b396ed",
           ""
         ],
         [
-          "silk_edge_clearance|100000000|53100000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|0e664515-54a0-4fff-a399-384cdd8bc94b",
-          ""
-        ],
-        [
-          "silk_edge_clearance|100000000|59100000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|a77a48f9-f48f-4d68-a51b-61379a239b06",
-          ""
-        ],
-        [
-          "silk_edge_clearance|100000000|81000000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|d6e6bf61-923f-45ac-9a0a-b4b1358b4187",
-          ""
-        ],
-        [
-          "silk_edge_clearance|100000000|87000000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|509bad40-c208-4cbd-a40c-2d716f8d9a1b",
-          ""
-        ],
-        [
-          "silk_edge_clearance|103000000|130000000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|31c34937-fbc3-4eaf-90a3-acc04c9d2f3f",
-          ""
-        ],
-        [
-          "silk_edge_clearance|103000000|130085500|145fa4cf-ecaf-42e6-8673-ad7e81039be6|5d5ebd60-82e3-40e8-aa92-24639445f36a",
-          ""
-        ],
-        [
-          "silk_edge_clearance|103500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|529fa751-249a-432b-a12e-1195e443e7a3",
-          ""
-        ],
-        [
-          "silk_edge_clearance|108500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|2eb8ce25-ce41-4360-9d4a-df647c4cb13d",
-          ""
-        ],
-        [
-          "silk_edge_clearance|108500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|9429b432-4321-475e-8769-b41c025b5989",
-          ""
-        ],
-        [
-          "silk_edge_clearance|109000000|130000000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|a24fc2aa-3a47-4ccf-96ea-8323a414dd90",
-          ""
-        ],
-        [
-          "silk_edge_clearance|126008236|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|5fb06a7e-789f-4f81-8564-c9159f92b0b2",
-          ""
-        ],
-        [
-          "silk_edge_clearance|128008236|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|72108a5e-1055-4d37-8b31-4b759a4bfaf9",
-          ""
-        ],
-        [
-          "silk_edge_clearance|138222000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|0ee48f9a-4980-450f-bb8f-f66801b81109",
-          ""
-        ],
-        [
-          "silk_edge_clearance|141666000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|b346c4d1-73ac-4e01-b1c4-47fc42b62e0b",
-          ""
-        ],
-        [
-          "silk_edge_clearance|178222000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|5cf440bf-6fa6-48b8-8dfe-66d5a7936c6f",
-          ""
-        ],
-        [
-          "silk_edge_clearance|181666000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|434c9ec0-378f-48de-817f-91c1331dcdbd",
-          ""
-        ],
-        [
-          "silk_edge_clearance|193222000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|62734c77-8ee7-44b9-a30e-bbd95cf5ab00",
-          ""
-        ],
-        [
-          "silk_edge_clearance|196666000|50000000|7079c837-bbf4-438e-9da4-c6bf5915b04e|7ae95d82-d932-43cf-b2ca-83f74125af00",
-          ""
-        ],
-        [
-          "silk_edge_clearance|211000000|130000000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|2fdad82e-f97a-41d8-90bc-85826157e8e5",
-          ""
-        ],
-        [
-          "silk_edge_clearance|211000000|130085500|145fa4cf-ecaf-42e6-8673-ad7e81039be6|f2df63ff-45d4-4bfd-a69e-b3ca59442277",
-          ""
-        ],
-        [
-          "silk_edge_clearance|211500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|c4691957-edcc-4e73-862b-fdab5fd36d75",
-          ""
-        ],
-        [
-          "silk_edge_clearance|216500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|708d829a-14bb-43f4-9392-6adb57c68e14",
-          ""
-        ],
-        [
-          "silk_edge_clearance|216500000|130100000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|a9671953-dade-4c9b-b061-4b43b780adcc",
-          ""
-        ],
-        [
-          "silk_edge_clearance|217000000|130000000|145fa4cf-ecaf-42e6-8673-ad7e81039be6|34b49356-cbd2-4bfb-aabf-86b07c457ed1",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220000000|61000000|b9b918f9-d778-469a-b2a2-5973c62aa843|e3f56fc4-b67d-4143-8643-217c8e8e8e50",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220000000|67000000|b9b918f9-d778-469a-b2a2-5973c62aa843|e7983f6b-1945-4eab-9b57-6bb01139d654",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220085500|67000000|b9b918f9-d778-469a-b2a2-5973c62aa843|1ff2063b-c740-46f2-a595-92e15befc104",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220100000|61500000|b9b918f9-d778-469a-b2a2-5973c62aa843|b8fff332-e38f-47f0-9aae-ca8c69d8f393",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220100000|61500000|b9b918f9-d778-469a-b2a2-5973c62aa843|c4387a97-6612-4bec-9320-01462d6329fd",
-          ""
-        ],
-        [
-          "silk_edge_clearance|220100000|66500000|b9b918f9-d778-469a-b2a2-5973c62aa843|2b2b3dc7-875c-40c7-987b-ee09435d7ddc",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|53600000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|4bb74c0d-eb42-414f-b2ca-9706bd99cf53",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|58600000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|288ca6ac-f706-428e-98e3-872b3541f2cd",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|58600000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|a23f0c76-4f34-4e23-ae0d-7b3b970c4cc5",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|81500000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|1ce0ae1c-a9a8-4bbb-bf3e-aa603967b6ac",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|86500000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|616a1dd6-ec81-4886-a504-b817ae26f456",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99900000|86500000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|aeb09304-34ec-46fd-850e-88b9b545c35e",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99914500|53100000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|c5273dfa-568c-42e9-a8af-b9048ebbff5f",
-          ""
-        ],
-        [
-          "silk_edge_clearance|99914500|81000000|bb57cf24-f987-48e8-9e4f-01cbba2f7988|58a76011-1b49-4abf-960b-423d24dc8f9f",
-          ""
-        ],
-        [
-          "silk_over_copper|102365826|59000000|a77a48f9-f48f-4d68-a51b-61379a239b06|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|102365826|86900000|509bad40-c208-4cbd-a40c-2d716f8d9a1b|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|103100000|126365826|31c34937-fbc3-4eaf-90a3-acc04c9d2f3f|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|103634174|53200000|0e664515-54a0-4fff-a399-384cdd8bc94b|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|103634174|81100000|d6e6bf61-923f-45ac-9a0a-b4b1358b4187|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|108900000|127634174|a24fc2aa-3a47-4ccf-96ea-8323a414dd90|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|144407981|74863705|4f44f1f4-6250-490b-933f-4ee7aec3bfff|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|179100000|61430000|07acec2e-d681-4cc2-a248-3189a123a9ff|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|185247773|102612929|13bf3661-c9d4-4e5a-a817-94fc81ac753b|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|185247773|102612929|c360fe3c-3cbf-469b-9c3b-a1245c2d45df|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|201575032|66688193|5be676f8-c0d2-4858-a25c-1dd1e7fa6ab8|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|211100000|126365826|2fdad82e-f97a-41d8-90bc-85826157e8e5|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|216365826|66900000|e7983f6b-1945-4eab-9b57-6bb01139d654|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|216900000|127634174|34b49356-cbd2-4bfb-aabf-86b07c457ed1|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_over_copper|217634174|61100000|e3f56fc4-b67d-4143-8643-217c8e8e8e50|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "silk_overlap|166718393|66531598|5f100aab-0a35-4b6c-ba46-a5802a42bf08|6f0e0849-de07-4fee-af91-d3c070dd3bad",
-          ""
-        ],
-        [
-          "silk_overlap|185243819|102657872|13bf3661-c9d4-4e5a-a817-94fc81ac753b|7b47a168-5e3d-43da-99b0-0d84b92d9a06",
-          ""
-        ],
-        [
-          "silk_overlap|185243819|102657872|7b47a168-5e3d-43da-99b0-0d84b92d9a06|c360fe3c-3cbf-469b-9c3b-a1245c2d45df",
-          ""
-        ],
-        [
-          "text_height|118961894|62474771|6d33134e-09db-45b9-b83a-3695480e2af3|00000000-0000-0000-0000-000000000000",
+          "lib_footprint_mismatch|170860389|54974361|ea1f4b6e-a478-498c-be7a-8eb18c19dcb1|00000000-0000-0000-0000-000000000000",
           ""
         ],
         [
@@ -296,10 +74,6 @@
         ],
         [
           "text_height|125254770|60681437|8739c527-038b-4f34-96f8-74b7a75213e3|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "text_height|127164834|62457126|ec6ecbae-156f-411f-b5ca-b522443f39b8|00000000-0000-0000-0000-000000000000",
           ""
         ],
         [
@@ -343,19 +117,7 @@
           ""
         ],
         [
-          "text_height|166200130|52036570|5e3ab7b6-88f7-4cd0-8add-cd36b603f61b|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "text_height|168160197|68298529|f556aef7-f99a-4dca-9ccf-ec2b58a98e79|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
           "text_height|180476849|80684805|e7e39001-472a-4121-9646-a8218cc70537|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "text_height|180781481|58679255|a7effaad-ee1f-4808-b8cf-0325deb2f1a9|00000000-0000-0000-0000-000000000000",
           ""
         ],
         [
@@ -363,27 +125,7 @@
           ""
         ],
         [
-          "text_height|188681481|60109255|0b1891d2-e184-4db3-97dd-a487e42036d5|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
           "text_height|196092793|101776322|e995d8c7-792d-4d5e-9879-4806c517e87d|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "text_height|199141481|60109255|5fca5605-5b44-4823-89e7-5dfbdce95c2d|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "unconnected_items|102600000|70400000|F.Cu|4|66ff3ab4-babb-455c-ad0c-0db14c931c6e|bd485dea-8245-4f81-96ff-17f2a9f6faa6",
-          ""
-        ],
-        [
-          "unconnected_items|190600000|124000000|F.Cu|4|cd16a3fd-474e-419e-ad9d-65622d8a82a5|4580f018-8b79-4933-b858-25b0f951d3e7",
-          ""
-        ],
-        [
-          "unconnected_items|198600000|55250000|F.Cu|4|82d227ba-d72f-4fce-b595-72a9abd7d947|fa87319e-29b4-4297-869f-14e4efc53f22",
           ""
         ]
       ],
@@ -405,6 +147,7 @@
         "extra_footprint": "warning",
         "footprint": "error",
         "footprint_filters_mismatch": "ignore",
+        "footprint_symbol_field_mismatch": "warning",
         "footprint_symbol_mismatch": "warning",
         "footprint_type_mismatch": "error",
         "hole_clearance": "error",
@@ -423,15 +166,16 @@
         "mirrored_text_on_front_layer": "warning",
         "missing_courtyard": "ignore",
         "missing_footprint": "warning",
+        "missing_tuning_profile": "warning",
         "net_conflict": "warning",
         "nonmirrored_text_on_back_layer": "warning",
         "npth_inside_courtyard": "ignore",
         "padstack": "error",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
-        "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_edge_clearance": "ignore",
+        "silk_over_copper": "ignore",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
@@ -442,10 +186,13 @@
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
+        "track_not_centered_on_via": "ignore",
+        "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "unconnected_items": "error",
+        "tuning_profile_track_geometries": "ignore",
+        "unconnected_items": "ignore",
         "unresolved_variable": "error",
         "via_dangling": "warning",
         "zone_has_empty_net": "error",
@@ -552,17 +299,28 @@
       "zones_use_no_outline": true
     },
     "ipc2581": {
+      "bom_rev": "",
       "dist": "",
       "distpn": "",
       "internal_id": "",
       "mfg": "",
-      "mpn": ""
+      "mpn": "",
+      "sch_revision": ""
     },
     "layer_pairs": [],
     "layer_presets": [],
     "viewports": []
   },
   "boards": [],
+  "component_class_settings": {
+    "assignments": [],
+    "meta": {
+      "version": 0
+    },
+    "sheet_component_classes": {
+      "enabled": false
+    }
+  },
   "cvpcb": {
     "equivalence_files": []
   },
@@ -753,11 +511,14 @@
       "duplicate_sheet_names": "error",
       "endpoint_off_grid": "warning",
       "extra_units": "error",
+      "field_name_whitespace": "warning",
       "footprint_filter": "ignore",
       "footprint_link_issues": "warning",
       "four_way_junction": "ignore",
       "global_label_dangling": "warning",
+      "ground_pin_not_ground": "warning",
       "hier_label_mismatch": "error",
+      "isolated_pin_label": "warning",
       "label_dangling": "error",
       "label_multiple_wires": "warning",
       "lib_symbol_issues": "warning",
@@ -780,6 +541,7 @@
       "similar_power": "warning",
       "simulation_model_issue": "ignore",
       "single_global_label": "ignore",
+      "stacked_pin_name": "warning",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
       "undefined_netclass": "error",
@@ -812,13 +574,14 @@
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.25,
+        "tuning_profile": "",
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
       }
     ],
     "meta": {
-      "version": 4
+      "version": 5
     },
     "net_colors": null,
     "netclass_assignments": null,
@@ -840,6 +603,10 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "annotation": {
+      "method": 0,
+      "sort_order": 0
+    },
     "bom_export_filename": "${PROJECTNAME}.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
@@ -899,9 +666,9 @@
         },
         {
           "group_by": false,
-          "label": "Datasheet",
+          "label": "DATASHEET",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -923,12 +690,6 @@
         },
         {
           "group_by": false,
-          "label": "Actuator Style",
-          "name": "Actuator Style",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "Actuator/Cap Color",
           "name": "Actuator/Cap Color",
           "show": false
@@ -941,7 +702,7 @@
         },
         {
           "group_by": false,
-          "label": "CIRCUIT",
+          "label": "Circuit",
           "name": "CIRCUIT",
           "show": false
         },
@@ -965,7 +726,7 @@
         },
         {
           "group_by": false,
-          "label": "CONTACT CURRENT",
+          "label": "Contact Current",
           "name": "CONTACT CURRENT",
           "show": false
         },
@@ -1013,26 +774,8 @@
         },
         {
           "group_by": false,
-          "label": "Circuit",
-          "name": "Circuit",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "Class",
           "name": "Class",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Contact Current",
-          "name": "Contact Current",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "DATASHEET",
-          "name": "DATASHEET",
           "show": false
         },
         {
@@ -1067,20 +810,8 @@
         },
         {
           "group_by": false,
-          "label": "Dropout Voltage",
-          "name": "Dropout Voltage",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "FORWARD VOLTAGE (VF@IF)",
           "name": "FORWARD VOLTAGE (VF@IF)",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Feature",
-          "name": "Feature",
           "show": false
         },
         {
@@ -1145,7 +876,7 @@
         },
         {
           "group_by": false,
-          "label": "MANUFACTURER",
+          "label": "Manufacturer",
           "name": "MANUFACTURER",
           "show": false
         },
@@ -1157,38 +888,20 @@
         },
         {
           "group_by": false,
-          "label": "MECHANICAL LIFE",
+          "label": "Mechanical Life",
           "name": "MECHANICAL LIFE",
           "show": false
         },
         {
           "group_by": false,
-          "label": "MOUNTING STYLE",
+          "label": "Mounting Style",
           "name": "MOUNTING STYLE",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Manufacturer",
-          "name": "Manufacturer",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Mechanical Life",
-          "name": "Mechanical Life",
           "show": false
         },
         {
           "group_by": false,
           "label": "Minimum Qty",
           "name": "Minimum Qty",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Mounting Style",
-          "name": "Mounting Style",
           "show": false
         },
         {
@@ -1205,13 +918,7 @@
         },
         {
           "group_by": false,
-          "label": "Number Of Outputs",
-          "name": "Number Of Outputs",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "OPERATING TEMPERATURE",
+          "label": "Operating Temperature",
           "name": "OPERATING TEMPERATURE",
           "show": false
         },
@@ -1219,48 +926,6 @@
           "group_by": false,
           "label": "Operating Force",
           "name": "Operating Force",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Operating Temperature",
-          "name": "Operating Temperature",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Operating Temperature Range",
-          "name": "Operating Temperature Range",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Output Current",
-          "name": "Output Current",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Output Polarity",
-          "name": "Output Polarity",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Output Type",
-          "name": "Output Type",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Output Voltage",
-          "name": "Output Voltage",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Overload Voltage (Max)",
-          "name": "Overload Voltage (Max)",
           "show": false
         },
         {
@@ -1283,7 +948,7 @@
         },
         {
           "group_by": false,
-          "label": "POWER(WATTS)",
+          "label": "Power(Watts)",
           "name": "POWER(WATTS)",
           "show": false
         },
@@ -1303,12 +968,6 @@
           "group_by": false,
           "label": "Power Supply Rejection Ratio (Psrr)",
           "name": "Power Supply Rejection Ratio (Psrr)",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Power(Watts)",
-          "name": "Power(Watts)",
           "show": false
         },
         {
@@ -1397,19 +1056,19 @@
         },
         {
           "group_by": false,
-          "label": "SWITCH HEIGHT",
+          "label": "Switch Height",
           "name": "SWITCH HEIGHT",
           "show": false
         },
         {
           "group_by": false,
-          "label": "SWITCH LENGTH",
+          "label": "Switch Length",
           "name": "SWITCH LENGTH",
           "show": false
         },
         {
           "group_by": false,
-          "label": "SWITCH WIDTH",
+          "label": "Switch Width",
           "name": "SWITCH WIDTH",
           "show": false
         },
@@ -1433,56 +1092,20 @@
         },
         {
           "group_by": false,
-          "label": "Switch Height",
-          "name": "Switch Height",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Switch Length",
-          "name": "Switch Length",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Switch Width",
-          "name": "Switch Width",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "TECHNOLOGY",
           "name": "TECHNOLOGY",
           "show": false
         },
         {
           "group_by": false,
-          "label": "TOLERANCE",
+          "label": "Tolerance",
           "name": "TOLERANCE",
           "show": false
         },
         {
           "group_by": false,
-          "label": "TYPE",
-          "name": "TYPE",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Temperature Coefficient",
-          "name": "Temperature Coefficient",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Tolerance",
-          "name": "Tolerance",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "Type",
-          "name": "Type",
+          "name": "TYPE",
           "show": false
         },
         {
@@ -1505,7 +1128,7 @@
         },
         {
           "group_by": false,
-          "label": "VOLTAGE RATING (DC)",
+          "label": "Voltage Rating (Dc)",
           "name": "VOLTAGE RATING (DC)",
           "show": false
         },
@@ -1517,32 +1140,14 @@
         },
         {
           "group_by": false,
-          "label": "Voltage Rated",
-          "name": "Voltage Rated",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Voltage Rating (Dc)",
-          "name": "Voltage Rating (Dc)",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "WIDTH",
           "name": "WIDTH",
           "show": false
         },
         {
           "group_by": false,
-          "label": "WITH LAMP",
-          "name": "WITH LAMP",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "With Lamp",
-          "name": "With Lamp",
+          "name": "WITH LAMP",
           "show": false
         },
         {
@@ -1685,12 +1290,6 @@
         },
         {
           "group_by": false,
-          "label": "Gate Threshold Voltage (Vgs(th)@Id)",
-          "name": "Gate Threshold Voltage (Vgs(th)@Id)",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "Power Dissipation (Pd)",
           "name": "Power Dissipation (Pd)",
           "show": false
@@ -1727,7 +1326,7 @@
         },
         {
           "group_by": false,
-          "label": "REVERSE TRANSFER CAPACITANCE (CRSS@VDS)",
+          "label": "Reverse Transfer Capacitance (Crss@Vds)",
           "name": "REVERSE TRANSFER CAPACITANCE (CRSS@VDS)",
           "show": false
         },
@@ -2015,12 +1614,6 @@
         },
         {
           "group_by": false,
-          "label": "Reverse Transfer Capacitance (Crss@Vds)",
-          "name": "Reverse Transfer Capacitance (Crss@Vds)",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "NOISE DENSITY(EN)",
           "name": "NOISE DENSITY(EN)",
           "show": false
@@ -2114,6 +1707,72 @@
           "label": "STANDBY CURRENT",
           "name": "STANDBY CURRENT",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "CURRENT - RECTIFIED",
+          "name": "CURRENT - RECTIFIED",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "ACTUATOR COLOR",
+          "name": "ACTUATOR COLOR",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "VOLTAGE - FORWARD(VF@IF)",
+          "name": "VOLTAGE - FORWARD(VF@IF)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "DIODE CONFIGURATION",
+          "name": "DIODE CONFIGURATION",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Voltage Rated",
+          "name": "VOLTAGE RATED",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "VOLTAGE - DC REVERSE(VR)",
+          "name": "VOLTAGE - DC REVERSE(VR)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MOUNTING TYPE",
+          "name": "MOUNTING TYPE",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "NON-REPETITIVE PEAK FORWARD SURGE CURRENT",
+          "name": "NON-REPETITIVE PEAK FORWARD SURGE CURRENT",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "INPUT VOLTAGE NOISE DENSITY",
+          "name": "INPUT VOLTAGE NOISE DENSITY",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LIFE",
+          "name": "LIFE",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "TERMINATION STYLE",
+          "name": "TERMINATION STYLE",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -2123,6 +1782,7 @@
       "sort_asc": true,
       "sort_field": "Reference"
     },
+    "bus_aliases": {},
     "connection_grid_size": 50.0,
     "drawing": {
       "dashed_lines_dash_length_ratio": 12.0,
@@ -2130,6 +1790,7 @@
       "default_line_thickness": 6.0,
       "default_text_size": 50.0,
       "field_names": [],
+      "hop_over_size_choice": 0,
       "intersheets_ref_own_page": false,
       "intersheets_ref_prefix": "",
       "intersheets_ref_short": false,
@@ -2162,6 +1823,7 @@
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
+    "reuse_designators": true,
     "space_save_all_events": true,
     "spice_adjust_passive_values": false,
     "spice_current_sheet_as_root": false,
@@ -2171,13 +1833,28 @@
     "spice_save_all_dissipations": false,
     "spice_save_all_voltages": false,
     "subpart_first_id": 65,
-    "subpart_id_separator": 0
+    "subpart_id_separator": 0,
+    "top_level_sheets": [
+      {
+        "filename": "Spikeling_v3.2.kicad_sch",
+        "name": "Spikeling_v3.2",
+        "uuid": "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55"
+      }
+    ],
+    "used_designators": "C64",
+    "variants": []
   },
   "sheets": [
     [
       "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55",
-      "Root"
+      "Spikeling_v3.2"
     ]
   ],
-  "text_variables": {}
+  "text_variables": {},
+  "tuning_profiles": {
+    "meta": {
+      "version": 0
+    },
+    "tuning_profiles_impedance_geometric": []
+  }
 }

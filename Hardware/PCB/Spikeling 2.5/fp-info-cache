@@ -1,4 +1,4 @@
-26745992523504954
+26754888387775355
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -69146,6 +69146,13 @@ Yellow 5381 Series LED
 2
 2
 Maxime
+AUDIO-SMD_HX-PJ-320A-3P-DIP
+
+
+0
+3
+3
+Maxime
 AUDIO-SMD_PJ-320B
 
 
@@ -69184,6 +69191,13 @@ Maxime
 FUSE_65600001009_LTF
 
 65600001009 
+0
+2
+2
+Maxime
+IND-SMD_L3.0-W3.0_XFL3012
+
+
 0
 2
 2
@@ -69236,6 +69250,13 @@ RES-TH_RK09D1130C2P
 0
 5
 5
+Maxime
+SC-70-3_L2.0-W1.3-P0.65-LS2.1-BL
+
+
+0
+3
+3
 Maxime
 SC-70-6_L2.0-W1.3-P0.65-LS2.1-BL
 
@@ -69292,6 +69313,13 @@ SOIC-16_L9.9-W3.9-P1.27-LS6.0-BL
 0
 16
 16
+Maxime
+SOT-23-5_L2.9-W1.6-P0.95-LS2.8-BR
+
+
+0
+5
+5
 Maxime
 SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR
 
@@ -69411,6 +69439,13 @@ WSON-6_L1.5-W1.5-P0.50-TL
 0
 6
 6
+Maxime
+WSON-8_L2.0-W2.0-P0.50-TL-EP
+
+
+0
+9
+9
 Maxime
 maxi_DPDT_Angled
 CuK sub miniature slide switch, JS series, DPDT, right angle, http://www.ckswitches.com/media/1422/js.pdf

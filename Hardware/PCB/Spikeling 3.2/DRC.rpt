@@ -1,0 +1,83 @@
+** Drc report for Spikeling_v3.2.kicad_pcb **
+** Created on 2026-04-28T22:35:06 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 18 DRC violations **
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2036 mm)
+    Rule: board setup constraints hole; error (excluded)
+    @(163.2000 mm, 56.2500 mm): Pad B12A1 [GNDD] of J1 on F.Cu
+    @(162.8900 mm, 55.0500 mm): NPTH pad of J1
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2036 mm)
+    Rule: board setup constraints hole; error (excluded)
+    @(156.8000 mm, 56.2500 mm): Pad A12B1 [GNDD] of J1 on F.Cu
+    @(157.1100 mm, 55.0500 mm): NPTH pad of J1
+[lib_footprint_mismatch]: Footprint 'AUDIO-SMD_PJ-320B' does not match copy in library 'Maxime'
+    Local override; warning (excluded)
+    @(170.8604 mm, 56.5741 mm): Footprint J7
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.5000 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(125.2548 mm, 60.6814 mm): PCB text 'Bat' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.5000 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(128.5282 mm, 60.6814 mm): PCB text '5V
+' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.5000 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(131.3193 mm, 60.6814 mm): PCB text '3.3V
+' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.5000 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(134.0400 mm, 60.6900 mm): PCB text '3.3VA' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(146.7300 mm, 54.0200 mm): PCB text 'Bat' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(150.7600 mm, 53.6200 mm): PCB text '3.3V
+' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(154.7700 mm, 53.6100 mm): PCB text '3.3VA
+' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(124.5510 mm, 77.7596 mm): PCB text 'Analog to Digital Converter  1' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(137.0528 mm, 128.0033 mm): PCB text 'Photo-Receptor' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(143.7900 mm, 81.6900 mm): PCB text 'Boot' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(144.9533 mm, 62.4689 mm): PCB text 'Battery Protection' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(156.5414 mm, 62.4744 mm): PCB text 'Battery Charger' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(180.4768 mm, 80.6848 mm): PCB text 'Analog to Digital Converter 2' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(183.3967 mm, 98.1958 mm): PCB text 'Digital to Analog Converter' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning (excluded)
+    @(196.0928 mm, 101.7763 mm): PCB text 'Stimulus LED Driver' on F.Silkscreen
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Missing connection between items
+    - Silkscreen clearance
+    - Silkscreen clipped by solder mask
+    - Silkscreen clipped by board edge
+    - PTH inside courtyard
+    - NPTH inside courtyard
+
+** End of Report **
