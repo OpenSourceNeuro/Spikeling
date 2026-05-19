@@ -220,19 +220,19 @@ inline const HardwarePins pins = {
     .cs_dac  = 3
   },
   .adc1 = {                                               // MCP3208 #1 (ADC1) channels 
-    .syn1_a          = 0,                                   // CH0 
-    .syn1_pot        = 1,                                   // CH1
-    .syn2_a          = 2,                                   // CH2
-    .syn2_pot        = 3,                                   // CH3
-    .current_in      = 4,                                   // CH4
-    .current_in_pot  = 5,                                   // CH5  
-    .pd              = 6,                                   // CH6
-    .pd_pot          = 7                                    // CH7
+    .syn1_a          = 1,                                   // CH0 
+    .syn1_pot        = 0,                                   // CH1
+    .syn2_a          = 3,                                   // CH2
+    .syn2_pot        = 2,                                   // CH3
+    .current_in      = 7,                                   // CH4
+    .current_in_pot  = 6,                                   // CH5  
+    .pd              = 5,                                   // CH6
+    .pd_pot          = 4                                    // CH7
   },
   .adc2 = {                                               // MCP3208 #2 (ADC2) channels 
     .stim_freq_pot       = 1,//0,                              // CH0
     .stim_str_pot        = 2,//1,                              // CH1
-    .noise_pot           = 4//2,                               // CH2
+    .noise_pot           = 0//2,                               // CH2
   },
   .dac = {                                                // MCP4922 (DAC) channels 
     .axon_a = 0,                                            // CH0
@@ -241,15 +241,15 @@ inline const HardwarePins pins = {
   .gpio = {                                               // ESP32-S3 GPIO pins 
     .syn1_d        = 38,                                    // GPIO 38
     .syn2_d        = 39,                                    // GPIO 39
-    .axon_d        = 46, // 16                                    // GPIO 16
-    .stim_d        = 1,                                     // GPIO 01
+    .axon_d        = 16,                                    // GPIO 16
+    .stim_d        = 15,                                    // GPIO 15
     .spike         = 18,                                    // GPIO 18
     .led_r         = 21,                                    // GPIO 21
     .led_g         = 14,                                    // GPIO 14
     .led_b         = 47,                                    // GPIO 47
-    .led_stim_r    = 7,                                     // GPIO 7
-    .led_stim_g    = 6,                                     // GPIO 6
-    .led_stim_b    = 5,                                     // GPIO 5
+    .led_stim_r    = 5,                                     // GPIO 5
+    .led_stim_g    = 7,                                     // GPIO 7
+    .led_stim_b    = 6,                                     // GPIO 6
     .buzzer_button = 8,                                     // GPIO 8
     .led_button    = 17                                     // GPIO 17
   }
@@ -801,6 +801,7 @@ inline Axon axon{
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                         Spike parameters                          */
  
+ 
 struct Spike {
   // --- Gain mapping from Vm range to PWM range
   float    led_Vm;                                          // [PWM counts per mV] scaling factor for red LED Vm encoding
@@ -832,13 +833,83 @@ inline Spike spike{
   .LED_enable      = true,
 };
 
+// // // // // // // // // // // // // // // // // // // // // // // //
+/*                      RGB Vm LED colour palette                    */
 
+// Change only this variable to select the Vm LED colour.
+// The spike event itself will still override the LED to white.
+enum class VmLedColour : uint8_t {
+  Red,
+  Orange,
+  Amber,
+  Yellow,
+  Lime,
+  Green,
+  Cyan,
+  SkyBlue,
+  Blue,
+  Violet,
+  Magenta,
+  Pink
+};
+
+inline constexpr VmLedColour VM_LED_COLOUR = VmLedColour::Green;
+
+
+// RGB colour coefficients.
+// Each channel is expressed from 0 to 255.
+// The actual PWM output is scaled later against the current Vm duty,
+// whose maximum is spike.ledc_Max.
+struct LedRgb8 {
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+};
+
+inline constexpr LedRgb8 VM_LED_PALETTE[] = {
+  {255,   0,   0},   // Red
+  {255,  55,   0},   // Orange
+  {255, 110,   0},   // Amber
+  {255, 180,   0},   // Yellow
+  {120, 255,   0},   // Lime
+  {  0, 255,   0},   // Green
+  {  0, 180, 255},   // Cyan
+  {  0,  90, 255},   // SkyBlue
+  {  0,   0, 255},   // Blue
+  {110,   0, 255},   // Violet
+  {255,   0, 180},   // Magenta
+  {255,  40, 120}    // Pink
+};
 
 inline void setLedc(uint8_t pin, uint16_t value, uint16_t &last) {
   if (value != last) {
     last = value;
     ledcWrite(pin, value);
   }
+}
+
+inline uint16_t scaleLedChannel(uint16_t vmDuty, uint8_t channel255) {
+  return (uint16_t)(((uint32_t)vmDuty * (uint32_t)channel255 + 127U) / 255U);
+}
+
+
+inline void setVmRgbLed(uint16_t vmDuty) {
+  const LedRgb8 colour = VM_LED_PALETTE[(uint8_t)VM_LED_COLOUR];
+
+  const uint16_t r = scaleLedChannel(vmDuty, colour.r);
+  const uint16_t g = scaleLedChannel(vmDuty, colour.g);
+  const uint16_t b = scaleLedChannel(vmDuty, colour.b);
+
+  setLedc(pins.gpio.led_r, r, spike.led_r_last);
+  setLedc(pins.gpio.led_g, g, spike.led_g_last);
+  setLedc(pins.gpio.led_b, b, spike.led_b_last);
+}
+
+
+inline void setSpikeRgbLedWhite() {
+  setLedc(pins.gpio.led_r, spike.ledc_Max, spike.led_r_last);
+  setLedc(pins.gpio.led_g, spike.ledc_Max, spike.led_g_last);
+  setLedc(pins.gpio.led_b, spike.ledc_Max, spike.led_b_last);
 }
 
 

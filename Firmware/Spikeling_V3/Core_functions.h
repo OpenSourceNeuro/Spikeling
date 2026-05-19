@@ -474,16 +474,17 @@ inline void update_StimulusStatusLED() {
     return;                                                                    
   }
 
-  const bool stimPositive = (stim.sign > 0.0f);                                               // Use stim.sign (+1 / -1 / 0)
+  const bool stimPositive = (stim.sign > 0.0f);
 
-  if (stimPositive) {                                                                         // If stimulus polarity is positive:
-    ledcWrite(pins.gpio.led_stim_r, duty);                                                      // Red brightness encodes intensity
-    ledcWrite(pins.gpio.led_stim_g, 0);                                                         // Green OFF
-  } else {                                                                                    // If stimulus polarity is negative:
-    ledcWrite(pins.gpio.led_stim_r, 0);                                                         // Red OFF
-    ledcWrite(pins.gpio.led_stim_g, duty);                                                      // Green brightness encodes intensity
+  if (stimPositive) {                         // Positive stimulus
+    ledcWrite(pins.gpio.led_stim_r, duty/10);    // Red ON
+    ledcWrite(pins.gpio.led_stim_g, 0);       // Green OFF
+    ledcWrite(pins.gpio.led_stim_b, 0);       // Blue OFF
+  } else {                                    // Negative stimulus
+    ledcWrite(pins.gpio.led_stim_r, 0);       // Red OFF
+    ledcWrite(pins.gpio.led_stim_g, 0);       // Green OFF
+    ledcWrite(pins.gpio.led_stim_b, duty);    // Blue ON
   }
-  ledcWrite(pins.gpio.led_stim_b, 0);                                                         // Blue unused for now (kept OFF)
 }
 
 
@@ -612,11 +613,10 @@ inline void update_Spike() {
     digitalWrite(pins.gpio.spike, LOW);                                                           // Force the spike-indicator GPIO LOW (typically drives a LED / buzzer logic). Avoid “false spike” signals during voltage clamp.
 
     if (spike.LED_enable) {                                                                             // If GUI LED bool is enabled
-      spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                            // Convert Vm (in model units, typically mV) into a PWM command
-      spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(bits10)));                    // Constrain the computed duty cycle to the valid PWM range and quantize to integer counts
-      setLedc(pins.gpio.led_b, spike.led_Vm_pwm, spike.led_r_last);                                 // Apply PWM to the Red LED, encodes Vm
-      setLedc(pins.gpio.led_g, 0, spike.led_g_last);                                                // Set Green LED off
-      setLedc(pins.gpio.led_r, 0, spike.led_b_last);                                                // Set Blue LED off
+      spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                              // Convert Vm into a PWM command
+      spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));              // Constrain to the configured LED PWM maximum
+
+      setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                                        // Display Vm using the selected RGB colour
     }
   }
   else{                                                                                         // If we are in Voltage Clamp mode. 
@@ -625,9 +625,7 @@ inline void update_Spike() {
       digitalWrite(axon.pin_digital, HIGH);                                                         // Sends digital output through the Axon digital pin
       
       if (spike.LED_enable) {                                                                       // If GUI LED bool is enabled
-        setLedc(pins.gpio.led_b, spike.ledc_Max, spike.led_r_last);                                   // set red LED to HIGH
-        setLedc(pins.gpio.led_g, spike.ledc_Max, spike.led_g_last);                                   // set green LED to HIGH
-        setLedc(pins.gpio.led_r, spike.ledc_Max, spike.led_b_last);                                   // set blue LED to HIGH
+        setSpikeRgbLedWhite();                                                                       // Spike event is always displayed as white
       }
       if (spike.Buzzer_enable) {                                                                        // If GUI buzzer bool is enabled
         digitalWrite(pins.gpio.spike, HIGH);                                                        // Activate buzzer
@@ -639,12 +637,11 @@ inline void update_Spike() {
       digitalWrite(pins.gpio.spike, LOW);                                                           // Keep the buzzer silent
                                                                                         
       if (spike.LED_enable) {                                                                       // If GUI LED bool is enabled
-        spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                            // Convert Vm (in model units, typically mV) into a PWM command
-        spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(bits10)));                    // Constrain the computed duty cycle to the valid PWM range and quantize to integer counts
-        setLedc(pins.gpio.led_b, spike.led_Vm_pwm, spike.led_r_last);                                 // Apply PWM to the Red LED, encodes Vm
-        setLedc(pins.gpio.led_g, 0, spike.led_g_last);                                                // Set Green LED off
-        setLedc(pins.gpio.led_r, 0, spike.led_b_last);                                                // Set Blue LED off
-      }                                                   
+        spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                            // Convert Vm into a PWM command
+        spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));             // Constrain to the configured LED PWM maximum
+
+        setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                                      // Display Vm using the selected RGB colour
+      }                                                  
     } 
   }
   axon.norm = (neuron.v_out - neuron.Vm_min) * axon.Vm_range;                                   // Normalize v_out into a 0..1 range relative to the model's allowed Vm bounds
