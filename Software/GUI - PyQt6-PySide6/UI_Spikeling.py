@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFrame, QGroupBox, QHBoxLayout, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QRadioButton,
-    QSizePolicy, QSlider, QSpacerItem, QStackedWidget,
-    QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGroupBox, QHBoxLayout, QLabel, QLineEdit,
+    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
+    QSlider, QSpacerItem, QStackedWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import resources_rc
@@ -653,7 +653,7 @@ class Ui_Spikeling(object):
         self.reduce_pushButton = QPushButton(self.app_frame)
         self.reduce_pushButton.setObjectName(u"reduce_pushButton")
         icon1 = QIcon()
-        icon1.addFile(u":/resources/resources/Artboard 1.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/resources/resources/Hide.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.reduce_pushButton.setIcon(icon1)
         self.reduce_pushButton.setIconSize(QSize(24, 24))
 
@@ -13911,11 +13911,6 @@ class Ui_Spikeling(object):
 
 
         self.verticalLayout_98.addWidget(self.ExtraCellular_Tetrode_frame)
-
-        self.doubleSpinBox = QDoubleSpinBox(self.ExtraCellular_Scope_parameter_frame)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-
-        self.verticalLayout_98.addWidget(self.doubleSpinBox)
 
         self.ExtraCellular_SignalMode_frame = QFrame(self.ExtraCellular_Scope_parameter_frame)
         self.ExtraCellular_SignalMode_frame.setObjectName(u"ExtraCellular_SignalMode_frame")

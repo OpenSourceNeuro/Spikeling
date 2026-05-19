@@ -339,7 +339,6 @@ class SpikelingGraph(QObject):
                               'curve0', 'curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6',
                              'databuffer0', 'databuffer1', 'databuffer2', 'databuffer3', 'databuffer4', 'databuffer5', 'databuffer6']
 
-
             # Plot on the main plot
             if self.ui.Spikeling_VmCheckbox.isChecked():
                 self.y0[:] = self.databuffer0
