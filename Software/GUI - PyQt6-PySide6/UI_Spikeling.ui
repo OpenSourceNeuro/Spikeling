@@ -1965,7 +1965,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>8</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="page_000">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -40727,6 +40727,7 @@ p, li { white-space: pre-wrap; }
  </customwidgets>
  <resources>
   <include location="resources.qrc"/>
+  <include location="../../../../../.designer/backup/resources.qrc"/>
  </resources>
  <connections/>
  <designerdata>

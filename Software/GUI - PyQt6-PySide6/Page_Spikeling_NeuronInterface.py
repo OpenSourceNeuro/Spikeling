@@ -619,9 +619,9 @@ class Spikeling():
             serial_port.write('SD11 ' + str(self.Syn1Decay) + '\n')
 
             self.Syn2Gain = self.ui.ImportNeuron[import_idx][9]
-            serial_port.write('SG12 ' + str(self.Syn2Gain) + '\n')
+            serial_port.write('SG21 ' + str(self.Syn2Gain) + '\n')
             self.Syn2Decay = self.ui.ImportNeuron[import_idx][10]
-            serial_port.write('SD12 ' + str(self.Syn2Decay) + '\n')
+            serial_port.write('SD21 ' + str(self.Syn2Decay) + '\n')
 
 
 
