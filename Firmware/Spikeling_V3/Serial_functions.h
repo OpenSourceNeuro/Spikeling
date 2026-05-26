@@ -51,6 +51,51 @@ inline void SetRefreshRate(){
 }
 
 
+inline void applyNeuronParameters(float a, float b, float c, float d, float v_rest) {
+  neuron.a = a;
+  neuron.b = b;
+  neuron.c = c;
+  neuron.d = d;
+  neuron.v_rest = v_rest;
+
+  // Reset dynamic state cleanly
+  neuron.v = neuron.v_rest;
+  neuron.u = neuron.b * neuron.v;
+  neuron.v_out = neuron.v;
+  neuron.total_current = 0.0f;
+  neuron.spike = false;
+
+  // Reset clamp-related state as well, otherwise an old V-clamp / current state
+  // can make it look as if the model immediately reverted or became unstable.
+  patch.e_int = 0.0f;
+  patch.I_clamp = 0.0f;
+
+  if (clampMode == ClampMode::VoltageClamp) {
+    patch.v_hold = constrain(neuron.v_rest, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_cmd  = patch.v_hold;
+    patch.v_step = 0.0f;
+  }
+}
+
+inline void NeuronPreset() {
+  int idx;
+  // Read preset index from command:
+  if (!readNextInt(idx)) {
+    return;
+  }
+  // Safety check before indexing izhikevich[]
+  if (idx < 0 || idx >= (int)IzhikevichModelCount) {
+    return;
+  }
+
+  const IzhikevichParams &p =
+    getIzhikevichParams(static_cast<IzhikevichModel>(idx));
+
+  applyNeuronParameters(p.a, p.b, p.c, p.d, p.v_rest);
+
+  neuron.selected_model = idx;
+  neuron.custom_model = false;
+}
 
 inline void NeuronCustom() {
   float a, b, c, d; 
@@ -59,15 +104,16 @@ inline void NeuronCustom() {
   if (!readNextFloat(b)) return;
   if (!readNextFloat(c)) return;
   if (!readNextFloat(d)) return;
-  // Apply custom parameters
-  neuron.a = a;
-  neuron.b = b;
-  neuron.c = c;
-  neuron.d = d;
+  // Imported/custom neurons currently provide only a,b,c,d.
+  // Keep the existing v_rest unless you later add v_rest to the CSV.
+  applyNeuronParameters(a, b, c, d, neuron.v_rest);
 
-  // Reset neuron state to a consistent initial condition
-  neuron.v = neuron.v_rest;
-  neuron.u = neuron.b * neuron.v;              
+  neuron.selected_model = -1;
+  neuron.custom_model = true;
+
+  // // Reset neuron state to a consistent initial condition
+  // neuron.v = neuron.v_rest;
+  // neuron.u = neuron.b * neuron.v;              
 }
 
 
@@ -292,6 +338,7 @@ inline void Unrecognized(const char *cmd) {
 
 inline void SerialFunctions(){
   SCmd.addCommand("DT",SetRefreshRate);
+  SCmd.addCommand("NEU", NeuronPreset); 
   SCmd.addCommand("NE", NeuronCustom); 
   SCmd.addCommand("FR1",StimFre_on);
   SCmd.addCommand("FR0",StimFre_off);

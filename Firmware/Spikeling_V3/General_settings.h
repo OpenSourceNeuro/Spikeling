@@ -66,6 +66,11 @@ constexpr int bits10     = 1023;
 constexpr int bits12     = 4095;
 constexpr int dac_bits   = 12;
 constexpr uint16_t  dac_max    = 4095;
+constexpr uint16_t stim_dac_zero = (dac_max + 1) / 2;        // 2048 = zero-current DAC code
+constexpr uint16_t stim_dac_span = dac_max - stim_dac_zero;  // 2047 usable counts above/below zero
+constexpr uint16_t current_in_rail_margin   = 80;  // ADC values near 0 or 4095 are not accepted as autozero
+constexpr uint16_t current_in_stable_delta  = 8;   // Max ADC-count movement considered stable
+constexpr uint16_t current_in_arm_samples   = 50;  // 50 loops × 2 ms = ~100 ms with your current timing
    
 inline MCP3208 ADC1;                                        // First MCP3208 12-bit SPI ADC
 inline MCP3208 ADC2;                                        // Second MCP3208 12-bit SPI ADC
@@ -311,6 +316,9 @@ struct NeuronModel {
   // Spike 
   bool    spike;                                            // Boolean used for registrating spike events
   uint8_t pin_spike;                                        // Hardware pin used to signal spikes (buzzer, etc.)
+  // Selected model tracking
+  int16_t selected_model;     // 0..19 for built-in presets, -1 for custom
+  bool    custom_model;       // true when using NE a b c d
 };
 
 // Default neuron model preset
@@ -333,7 +341,9 @@ inline NeuronModel neuron = {
   .v_out         = 0.0f,
   .total_current = 0.0f,
   .spike         = false,  
-  .pin_spike     = pins.gpio.spike
+  .pin_spike     = pins.gpio.spike,
+  .selected_model = static_cast<int16_t>(defaultModel),
+  .custom_model   = false
 };
 
 
@@ -369,6 +379,10 @@ struct PatchClamp{
   float    current_clamp;                                   // Command injected current (a.u.) from knob or host (I-clamp style)
   float    i_current;                                       // Final injected current
   float    current_in_zero;                                 // Baseline estimate of Current-In ADC (counts). Updated slowly when stimulus output is OFF.
+  bool     current_in_ready;           // True only after Current-In has acquired a valid zero level
+  uint16_t current_in_stable_count;    // Counts stable samples during autozero acquisition
+  uint16_t current_in_prev_value;      // Previous filtered Current-In ADC value
+  float    current_in_candidate_zero;  // Candidate zero during autozero acquisition
   // --- Voltage clamp command (V-clamp style)
   float    v_hold;                                          // Holding potential command (mV) (baseline)
   float    v_cmd;                                           // Total command voltage (mV): typically v_cmd = v_hold + v_step
@@ -391,7 +405,7 @@ inline PatchClamp patch{
   .pin                = pins.adc1.current_in,
   .input_value_raw    = 0,
   .input_value        = 0,   
-  .input_value_f      = bits12 * 0.5f,
+  .input_value_f      = 0.0f,
   .alpha_in           = 0.25f,                     
   .input_scaling      = 0.1f,
   .current_input      = 0.0f,
@@ -404,7 +418,11 @@ inline PatchClamp patch{
   .frac               = 0.0f,
   .current_clamp      = 0.0f,
   .i_current          = 0.0f,
-  .current_in_zero    = bits12 * 0.5f,
+  .current_in_zero           = 0.0f,
+  .current_in_ready          = false,
+  .current_in_stable_count   = 0,
+  .current_in_prev_value     = 0,
+  .current_in_candidate_zero = 0.0f,
   .v_hold             = -70.0f,
   .v_cmd              = defaultParams.v_rest,             
   .v_cmd_span         = 70.0f,                             
@@ -754,7 +772,7 @@ inline Stimulus stim{
   .value_digital        = 0,                              
   .value_analog         = 0,                              
   .value_custom         = 0,
-  .current_scaling      = (float)dac_max / 100.0f,   // 4095/100 = 40.95 : maps 0..100% -> 0..4095 DAC codes
+  .current_scaling      = (float)stim_dac_span / 100.0f,
   .amp                  = 0,                     
   .counter              = 0,                              
   .steps                = 0,                              
@@ -1075,6 +1093,7 @@ inline void HardwareSettings(){
   ADC1.begin(pins.spi.cs_adc1);                             // Initialize external ADC #1 with its chip-select pin
   ADC2.begin(pins.spi.cs_adc2);                             // Initialize external ADC #2 with its chip-select pin
   DAC.begin(pins.spi.cs_dac);                               // Initialize external DAC with its chip-select pin
+  DAC.write(stim_dac_zero, stim.pin_stim_current);          // zero-current output at boot
 
   
 }
