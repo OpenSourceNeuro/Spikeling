@@ -1,7 +1,7 @@
 #pragma once     
 
 #include "General_settings.h"
-#include "Mode_LEDS.h"
+#include "Mode_LEDs.h"
 #include <math.h>
 
 
@@ -50,16 +50,35 @@ inline void SetRefreshRate(){
   }
 }
 
+
+inline void applyNeuronParameters(float a, float b, float c, float d, float v_rest) {
+  neuron.a = a;
+  neuron.b = b;
+  neuron.c = c;
+  neuron.d = d;
+  neuron.v_rest = v_rest;
+
+  neuron.v = neuron.v_rest;
+  neuron.u = neuron.b * neuron.v;
+  neuron.v_out = neuron.v;
+  neuron.total_current = 0.0f;
+  neuron.spike = false;
+
+  patch.e_int = 0.0f;
+  patch.I_clamp = 0.0f;
+
+  if (clampMode == ClampMode::VoltageClamp) {
+    patch.v_hold = constrain(neuron.v_rest, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_cmd  = patch.v_hold;
+    patch.v_step = 0.0f;
+  }
+}
+
+
 inline void SetNeuronModel(IzhikevichModel model) {
   currentModel = model;
   const auto &p = getIzhikevichParams(model);
-  neuron.a      = p.a;
-  neuron.b      = p.b;
-  neuron.c      = p.c;
-  neuron.d      = p.d;
-  neuron.v_rest = p.v_rest;
-  neuron.v      = neuron.v_rest;
-  neuron.u      = neuron.b * neuron.v;
+  applyNeuronParameters(p.a, p.b, p.c, p.d, p.v_rest);
 }
 
 inline void ApplyNeuronModeIndex(int idx) {
@@ -288,19 +307,28 @@ inline void Buzzer_off(){
 inline void LED_on(){
   spike.LED_enable = true;
 }
-inline void LED_off(){
+inline void LED_off() {
   spike.LED_enable = false;
-  ledcWrite(pins.gpio.led_r, 0);
-  ledcWrite(pins.gpio.led_g, 0);
-  ledcWrite(pins.gpio.led_b, 0);
+  setRgbLedOff();
 }
 
 
-inline void Connected(){
-  digitalWrite(pins.gpio.led_r,HIGH);delay(5);
-  digitalWrite(pins.gpio.led_g,HIGH);digitalWrite(pins.gpio.led_r,LOW);delay(5);
-  digitalWrite(pins.gpio.led_b,HIGH);digitalWrite(pins.gpio.led_g,LOW);delay(5);
-  digitalWrite(pins.gpio.led_b,LOW);delay(5);
+inline void Connected() {
+  // Short safe connection blink using the faulty-board LED helpers.
+  // First red, then white, then off.
+  setRgbLedOff();
+  delay(20);
+
+  setVmRgbLed(spike.ledc_Max / 3);
+  delay(80);
+
+  setRgbLedOff();
+  delay(40);
+
+  setSpikeRgbLedWhite();
+  delay(80);
+
+  setRgbLedOff();
 }
 
 

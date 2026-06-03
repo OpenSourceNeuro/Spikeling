@@ -65,6 +65,12 @@ constexpr int bits10     = 1023;
 constexpr int bits12     = 4095;
 constexpr int dac_bits   = 8;
 constexpr int dac_max    = (1 << dac_bits) - 1;
+constexpr uint8_t stim_dac_zero = (dac_max + 1) / 2;  // 128
+constexpr uint8_t stim_dac_span = dac_max - stim_dac_zero; // 127
+constexpr uint16_t current_in_rail_margin   = 80;  // ADC values near 0 or 4095 are not accepted as autozero
+constexpr uint16_t current_in_stable_delta  = 8;   // Max ADC-count movement considered stable
+constexpr uint16_t current_in_arm_samples   = 50;  // 50 loops × 2 ms = ~100 ms with your current timing
+   
      
 inline MCP3208 ADC1;                                      // First MCP3208 12-bit SPI ADC
 inline MCP3208 ADC2;                                      // Second MCP3208 12-bit SPI ADC
@@ -185,9 +191,9 @@ struct GPIO_pins {
   uint8_t stim_a;                                         // Output Analog pin for the stimulating Current Input pin
   uint8_t stim_d;                                         // Output Digital pin for the stimulating LED   
   uint8_t spike;                                          // Buzzer
-  uint8_t led_r;                                          // Red Vm LED
-  uint8_t led_g;                                          // Green Vm LED
-  uint8_t led_b;                                          // Blue Vm LED
+  uint8_t led_r;                                          // RGB common anode / LED power, active HIGH, PWM
+  uint8_t led_g;                                          // Green cathode, active LOW
+  uint8_t led_b;                                          // Blue cathode, active LOW
   uint8_t mode;                                           // Neuron mode button
   uint8_t pinCP1;                                         // Charlie Plexing LED1
   uint8_t pinCP2;                                         // Charlie Plexing LED2
@@ -233,9 +239,9 @@ inline const HardwarePins pins = {
     .stim_a = 26,                                           // GPIO 26
     .stim_d = 22,                                           // GPIO 22
     .spike  = 13,                                           // GPIO 13
-    .led_r  = 27,                                           // GPIO 27
-    .led_g  = 14,                                           // GPIO 14
-    .led_b  = 12,                                           // GPIO 12
+    .led_r  = 27,                                           // GPIO 27: RGB common anode / LED power, active HIGH PWM
+    .led_g  = 14,                                           // GPIO 14: green cathode, active LOW
+    .led_b  = 12,                                           // GPIO 12: blue cathode, active LOW
     .mode   = 39,                                           // GPIO 39
     .pinCP1 = 2,                                            // GPIO 2
     .pinCP2 = 5,                                            // GPIO 5
@@ -367,6 +373,10 @@ struct PatchClamp{
   float    current_clamp;                                 // Command injected current (a.u.) from knob or host (I-clamp style)
   float    i_current;                                     // Final injected current
   float    current_in_zero;                               // Baseline estimate of Current-In ADC (counts). Updated slowly when stimulus output is OFF.
+  bool     current_in_ready;
+  uint16_t current_in_stable_count;
+  uint16_t current_in_prev_value;
+  float    current_in_candidate_zero;
   // --- Voltage clamp command (V-clamp style)
   float    v_hold;                                        // Holding potential command (mV) (baseline)
   float    v_cmd;                                         // Total command voltage (mV): typically v_cmd = v_hold + v_step
@@ -391,7 +401,7 @@ inline PatchClamp patch{
   .input_value        = 0,   
   .input_value_f      = bits12 * 0.5f,
   .alpha_in           = 0.25f,                     
-  .input_scaling      = 0.1f,
+  .input_scaling      = 100.0f / ((float)((bits12 + 1) / 2) - (float)(bits12 / 15)),
   .current_input      = 0.0f,
   .pot_pin            = pins.adc1.current_in_pot,
   .pot_centered       = 0.0f, 
@@ -402,7 +412,11 @@ inline PatchClamp patch{
   .frac               = 0.0f,
   .current_clamp      = 0.0f,
   .i_current          = 0.0f,
-  .current_in_zero    = bits12 * 0.5f,
+  .current_in_zero           = 0.0f,
+  .current_in_ready          = false,
+  .current_in_stable_count   = 0,
+  .current_in_prev_value     = 0,
+  .current_in_candidate_zero = 0.0f,
   .v_hold             = -70.0f,
   .v_cmd              = defaultParams.v_rest,             
   .v_cmd_span         = 70.0f,                             
@@ -532,13 +546,7 @@ struct Photodiode {
   int32_t  sum;                                             // Sum of samples currently in ring buffer
   float    average;                                         // Moving-average photodiode reading
   // --- Current generation
-    // --- Current generation (Option B: explicit normalization)
-  float    dark_counts;                                     // Baseline (dark) ADC level in counts (measured at boot)
-  float    full_counts;                                     // Counts above dark that correspond to "full light" (normalization denominator)
-  float    I_full;                                          // Injected current at full light when gain=1 and amp=1 (model current units)
-  float    eff;                                             // Effective light signal in ADC counts after removing the dark baseline.
-  float    norm;                                            // Normalized light level in the range 0…1.
-  float    denom;                                           // Normalization denominator
+  float    I_per_count;                                     // Model current per ADC count when gain=1 and amp=1
   float    current;                                         // Photodiode-driven injected current added into I_total
   // --- Adaptation dynamics
   float    decay;                                           // Decay rate for amp per tick
@@ -553,7 +561,7 @@ inline Photodiode PD = {
     .pin             = pins.adc2.pd,
     .pot_pin         = pins.adc1.pd_pot,
     .pot_value       = 0,
-    .pot_scaling     = 1 / (bits12/25.0f),                      
+    .pot_scaling     = 1 / (bits12/50.0f),                      
     .gain            = 0.0f,
     .amp             = 1.0f,
     .raw             = 0,
@@ -564,12 +572,7 @@ inline Photodiode PD = {
     .invWindowN      = 0.1f,     
     .sum             = 0,
     .average         = 0.0f,
-    .dark_counts     = 0.0f,                               // Will be calibrated in setup()
-    .full_counts     = 400.0f,                             // Set to (bright_counts - dark_counts) for your "100% light" reference
-    .I_full          = 10.0f,                              // Injected current at full light (gain=1, amp=1). Tune this.
-    .eff             = 0.0f,
-    .norm            = 0.0f,
-    .denom           = 0.0f,
+    .I_per_count     = 0.25f,                           
     .current         = 0.0f,
     .decay           = 0.001f,
     .ampMin          = 0.0f,                              
@@ -722,8 +725,8 @@ struct Stimulus {
 inline Stimulus stim{
   .pin_stim_light       = pins.gpio.stim_d,
   .pin_stim_current     = pins.gpio.stim_a,
-  .pin_strPot           = pins.adc2.stim_str_pot,
-  .pin_freqPot          = pins.adc2.stim_freq_pot,
+  .pin_strPot           = pins.adc1.stim_str_pot,
+  .pin_freqPot          = pins.adc1.stim_freq_pot,
   .strPot_raw           = 0,
   .strPot               = 0,
   .strPot_f             = bits12 * 0.5f,
@@ -754,7 +757,7 @@ inline Stimulus stim{
   .value_digital        = 0,                              
   .value_analog         = 0,                              
   .value_custom         = 0,
-  .current_scaling      = (float)dac_max / 100.0f,   // 4095/100 = 40.95 : maps 0..100% -> 0..4095 DAC codes
+  .current_scaling = (float)stim_dac_span / 100.0f,
   .amp                  = 0,                     
   .counter              = 0,                              
   .steps                = 0,                              
@@ -834,15 +837,89 @@ inline Spike spike{
 };
 
 
+// -----------------------------------------------------------------------------
+// Fault-wired RGB Vm / spike LED helpers
+// -----------------------------------------------------------------------------
+//
+// Physical wiring mistake on V2.5 board:
+//
+//   GPIO27 = RGB common anode / LED power, active HIGH, PWM
+//   GPIO14 = green cathode, active LOW
+//   GPIO12 = blue cathode, active LOW
+//   red cathode = permanently connected to GND through resistor
+//
+// Consequence:
+//   - red brightness is controlled only by PWM on GPIO27
+//   - green and blue can only be added by pulling their cathodes LOW
+//   - Vm display must therefore be red-only
+//   - spike flash is made by turning power fully ON and pulling green/blue LOW
+//
 
-inline void setLedc(uint8_t pin, uint16_t value, uint16_t &last) {
-  if (value != last) {
-    last = value;
-    ledcWrite(pin, value);
-  }
+inline void writeFaultRgbLed(uint16_t powerDuty, bool greenOn, bool blueOn) {
+  powerDuty = constrain(powerDuty, 0, spike.ledc_Max);
+
+  // Cache logical display state.
+  // led_r_last = common-anode power PWM duty.
+  // led_g_last / led_b_last = logical brightness cache only.
+  spike.led_r_last = powerDuty;
+  spike.led_g_last = greenOn ? spike.ledc_Max : 0;
+  spike.led_b_last = blueOn  ? spike.ledc_Max : 0;
+
+  // GPIO27 controls the common anode / LED power.
+  // Higher duty = brighter red, because red cathode is hardwired to GND.
+  ledcWrite(pins.gpio.led_r, powerDuty);
+
+  // Green and blue are cathodes, active LOW.
+  digitalWrite(pins.gpio.led_g, greenOn ? LOW : HIGH);
+  digitalWrite(pins.gpio.led_b, blueOn  ? LOW : HIGH);
 }
 
 
+inline void setVmRgbLed(uint16_t vmDuty) {
+  // Vm display: red only.
+  // Green and blue must stay OFF, otherwise Vm colour will not be red.
+  writeFaultRgbLed(vmDuty, false, false);
+}
+
+
+inline void setSpikeRgbLedWhite() {
+  // Spike display: full power + green/blue cathodes pulled LOW.
+  // Red is automatically ON because its cathode is permanently connected to GND.
+  writeFaultRgbLed(spike.ledc_Max, true, true);
+}
+
+
+inline void setRgbLedOff() {
+  // Power OFF and active-low cathodes released HIGH.
+  writeFaultRgbLed(0, false, false);
+}
+
+inline void calibrate_StimulusCurrentInZero() {
+
+  const int n = 256;
+  uint32_t acc = 0;
+
+  for (int i = 0; i < n; i++) {
+    acc += ADC2.read(patch.pin);
+    delayMicroseconds(200);
+  }
+
+  patch.current_in_zero = (float)acc / (float)n;
+  patch.input_value_f   = patch.current_in_zero;
+  patch.input_value     = (uint16_t)lroundf(patch.current_in_zero);
+}
+
+inline void neutralise_StimulusCurrentIn() {
+
+  patch.pot_centered  = 0.0f;
+  patch.pot_adj       = 0.0f;
+  patch.current_input = 0.0f;
+
+  if (clampMode == ClampMode::VoltageClamp) {
+    patch.v_step = 0.0f;
+    patch.v_cmd  = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);
+  }
+}
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 /*                         Hardware Settings                         */
@@ -885,7 +962,7 @@ inline void init_PotFilters() {
 
 inline void HardwareSettings(){
 
-  delay(500);                                               // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
+  delay(500);                                               // Give USB/Serial a moment after reset (ESP32 can enumerate slowly)
   Serial.begin(BaudRate);                                   // Start UART for CLI + streaming at the configured baud rate
   delay(500);                                               // Extra settle time so the host opens the port before first prints
 
@@ -895,18 +972,18 @@ inline void HardwareSettings(){
   pinMode(pins.gpio.axon_d, OUTPUT);                        // Axon digital output (TTL spike output to BNC / header)
   pinMode(pins.gpio.stim_d, OUTPUT);                        // Stimulus digital output (TTL stim gate / square-wave output)
   
-  pinMode(pins.gpio.led_r,  OUTPUT);                        // RGB LED (neuron state) - Red channel GPIO
-  pinMode(pins.gpio.led_g,  OUTPUT);                        // RGB LED (neuron state) - Green channel GPIO
-  pinMode(pins.gpio.led_b,  OUTPUT);                        // RGB LED (neuron state) - Blue channel GPIO
+  pinMode(pins.gpio.led_r,  OUTPUT);                        // RGB common anode / LED power, active HIGH PWM
+  pinMode(pins.gpio.led_g,  OUTPUT);                        // Green cathode, active LOW
+  pinMode(pins.gpio.led_b,  OUTPUT);                        // Blue cathode, active LOW
   
   pinMode(pins.gpio.syn1_d, INPUT);                         // Synapse 1 digital input (external trigger / synapse gate)
   pinMode(pins.gpio.syn2_d, INPUT);                         // Synapse 2 digital input (external trigger / synapse gate)
 
   pinMode(pins.gpio.mode,   INPUT_PULLDOWN);                // Mode button: pulled-down, pressed = HIGH 
 
-  ledcAttach(pins.gpio.led_r, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Red pin (hardware PWM)
-  ledcAttach(pins.gpio.led_g, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Green pin
-  ledcAttach(pins.gpio.led_b, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to neuron RGB Blue pin
+
+  // Only GPIO27 uses PWM, GPIO14 and GPIO12 are active-low digital cathode switches.
+  ledcAttach(pins.gpio.led_r, spike.ledc_Freq, spike.ledc_Resolution);
 
   ledcAttach(pins.gpio.stim_d, spike.ledc_Freq, spike.ledc_Resolution); // Attach LEDC PWM to stim TTL pin (for analog-ish PWM output)
 
@@ -916,30 +993,22 @@ inline void HardwareSettings(){
   digitalWrite(pins.gpio.axon_d, LOW);                      // Force axon TTL LOW at boot (avoid false spike on connected devices)
   digitalWrite(pins.gpio.stim_d, LOW);                      // Force stim TTL LOW at boot (avoid unintended stimulus)
 
-  digitalWrite(pins.gpio.led_r,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
-  digitalWrite(pins.gpio.led_g,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
-  digitalWrite(pins.gpio.led_b,  LOW);                      // Force RGB neuron LED channels LOW before PWM attach
+  // Safe LED-off state for the faulty RGB wiring.
+  // GPIO27 power OFF, green/blue active-low cathodes released HIGH.
+  digitalWrite(pins.gpio.led_r, LOW);
+  digitalWrite(pins.gpio.led_g, HIGH);
+  digitalWrite(pins.gpio.led_b, HIGH);
 
   ledcWrite(pins.gpio.led_r,     0);                        // Start PWM duty at 0 (LED fully off)
-  ledcWrite(pins.gpio.led_g,     0);                        // Start PWM duty at 0 (LED fully off)
-  ledcWrite(pins.gpio.led_b,     0);                        // Start PWM duty at 0 (LED fully off)
 
   ledcWrite(pins.gpio.stim_d, 0);                           // Start stim PWM duty at 0 (no stimulus output)
-
-
+  dacWrite(pins.gpio.stim_a, stim_dac_zero);
+  dacWrite(pins.gpio.axon_a, axon.dacVal);
 
   modeBtn.lastStable = modeBtn.lastRaw = digitalRead(pins.gpio.mode); // Seed debouncer with current level (prevents boot toggle)
 
-
-
-  init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
+  randomSeed(esp_random());                                 // Seed pseudo-RNG using ESP32 hardware RNG (used for noise, etc.)
   
-
-
-  randomSeed(esp_random());                                 // Seed pseudo-RNG using ESP32-S3 hardware RNG (used for noise, etc.)
-  
-
-
   // Put all SPI chip-selects in a safe inactive state
   pinMode(pins.spi.cs_adc1, OUTPUT); digitalWrite(pins.spi.cs_adc1, HIGH);
   pinMode(pins.spi.cs_adc2, OUTPUT); digitalWrite(pins.spi.cs_adc2, HIGH);
@@ -947,7 +1016,11 @@ inline void HardwareSettings(){
   SPI.begin(pins.spi.sck, pins.spi.miso, pins.spi.mosi, -1);// Start SPI bus (explicit SCK/MISO/MOSI; no HW CS pin used here)
   // Initialise devices (library-specific)
   ADC1.begin(pins.spi.cs_adc1);                             // Initialize external ADC #1 with its chip-select pin
-  ADC2.begin(pins.spi.cs_adc2);                             // Initialize external ADC #2 with its chip-select pin
+  ADC2.begin(pins.spi.cs_adc2);                             // Initialize external ADC #2 with its chip-select pin  
+
+  calibrate_StimulusCurrentInZero();
+  
+  init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
 }
 
 
