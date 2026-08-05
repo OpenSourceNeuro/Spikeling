@@ -18638,12 +18638,6 @@
 		(uuid "9e13cb23-f38b-47aa-bc23-0975f73c7b0f")
 	)
 	(junction
-		(at 416.56 114.3)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9e675cc9-3f3e-464d-874c-1c327c072491")
-	)
-	(junction
 		(at 50.8 210.82)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -20234,16 +20228,6 @@
 			(type default)
 		)
 		(uuid "228a50b8-4fdf-4a22-8bd2-ebed65ea09db")
-	)
-	(wire
-		(pts
-			(xy 419.1 116.84) (xy 416.56 116.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "22b3cb08-0e50-4028-b121-301a3dff29c7")
 	)
 	(wire
 		(pts
@@ -22747,16 +22731,6 @@
 	)
 	(wire
 		(pts
-			(xy 416.56 114.3) (xy 419.1 114.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6e1e8e22-693f-4adc-a619-42459b7040b3")
-	)
-	(wire
-		(pts
 			(xy 50.8 223.52) (xy 58.42 223.52)
 		)
 		(stroke
@@ -22807,7 +22781,7 @@
 	)
 	(wire
 		(pts
-			(xy 416.56 114.3) (xy 414.02 114.3)
+			(xy 414.02 114.3) (xy 419.1 114.3)
 		)
 		(stroke
 			(width 0)
@@ -25324,16 +25298,6 @@
 			(type default)
 		)
 		(uuid "c4713673-6fc6-4c9b-972d-e122f194c43f")
-	)
-	(wire
-		(pts
-			(xy 416.56 116.84) (xy 416.56 114.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c500235b-2220-4ca3-be2e-ccf98e64a2aa")
 	)
 	(wire
 		(pts
@@ -28322,7 +28286,7 @@
 			)
 		)
 	)
-	(global_label "Pack+"
+	(global_label "Cell+"
 		(shape input)
 		(at 408.94 58.42 0)
 		(fields_autoplaced yes)
@@ -28334,7 +28298,7 @@
 		)
 		(uuid "7222a74f-01d1-43a3-ada3-f8e5eeaa0484")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 417.3791 58.42 0)
+			(at 416.5324 58.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28583,30 +28547,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-	)
-	(global_label "Pack+"
-		(shape input)
-		(at 419.1 114.3 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "7de7d7eb-a014-4d81-bbaa-62514b178205")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 427.5391 114.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 	)
@@ -29354,7 +29294,7 @@
 			)
 		)
 	)
-	(global_label "Pack+"
+	(global_label "Cell+"
 		(shape input)
 		(at 167.64 152.4 180)
 		(fields_autoplaced yes)
@@ -29366,7 +29306,7 @@
 		)
 		(uuid "c9c9e082-d9c0-467d-a2ca-af7573bcfd0c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 159.2009 152.4 0)
+			(at 160.0476 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29522,7 +29462,7 @@
 			)
 		)
 	)
-	(global_label "Pack+"
+	(global_label "Cell+"
 		(shape input)
 		(at 441.96 63.5 180)
 		(fields_autoplaced yes)
@@ -29534,7 +29474,7 @@
 		)
 		(uuid "d17f0fa9-28d9-4730-bad0-ffc6b7d7301c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 433.5209 63.5 0)
+			(at 434.3676 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29548,7 +29488,7 @@
 	)
 	(global_label "Cell+"
 		(shape input)
-		(at 419.1 116.84 0)
+		(at 419.1 114.3 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -29558,7 +29498,7 @@
 		)
 		(uuid "d25e0f51-6e19-4f32-936c-18f05f0b3891")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 426.6924 116.84 0)
+			(at 426.6924 114.3 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30975,6 +30915,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 210.82 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 210.82 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -32501,6 +32452,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 270.51 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 270.51 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -36783,6 +36745,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 147.32 391.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "56813746-f7a1-4bfb-a59a-25f66458d7de")
 		)
@@ -38095,7 +38068,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 497.84 266.7 90)
 			(hide yes)
 			(show_name no)
@@ -38491,7 +38464,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C107696"
+		(property "LCSC Part #" "C22962"
 			(at 243.84 226.06 0)
 			(hide yes)
 			(show_name no)
@@ -41218,6 +41191,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "90"
+			(at 422.91 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "16"
 			(uuid "7b4b412c-f672-4404-b48f-28ba0fc10b63")
 		)
@@ -41456,7 +41440,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 195.58 180.34 90)
 			(hide yes)
 			(show_name no)
@@ -42904,6 +42888,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 43.18 323.85 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 43.18 323.85 90)
 			(hide yes)
 			(show_name no)
@@ -45343,6 +45338,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 526.034 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 526.034 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -47871,7 +47877,6 @@
 		)
 		(property "Capacitance" ""
 			(at 43.18 403.86 90)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -47958,6 +47963,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 43.18 403.86 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 43.18 403.86 90)
 			(hide yes)
 			(show_name no)
@@ -51578,7 +51594,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 236.22 215.9 0)
 			(hide yes)
 			(show_name no)
@@ -52800,7 +52816,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 345.44 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -53572,6 +53588,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 364.49 383.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 364.49 383.54 0)
 			(hide yes)
 			(show_name no)
@@ -64179,6 +64206,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "90"
+			(at 220.98 227.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "d1f554a5-cdfc-4b29-a3fb-30c406c32b71")
 		)
@@ -66003,6 +66041,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 43.18 314.96 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e2619022-6e6a-420f-9bb5-9ab039e01a5f")
 		)
@@ -67209,6 +67258,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 294.64 294.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "1b42b1f0-b7d6-423e-a553-35d8daeb806e")
 		)
@@ -67333,7 +67393,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 360.68 116.84 90)
 			(hide yes)
 			(show_name no)
@@ -68558,7 +68618,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C107696"
+		(property "LCSC Part #" "C22962"
 			(at 198.12 223.52 0)
 			(hide yes)
 			(show_name no)
@@ -71572,6 +71632,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 170.18 393.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "5953a11c-0524-4332-a4dd-d1ec2c4386aa")
 		)
@@ -72975,7 +73046,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 180.34 104.14 90)
 			(hide yes)
 			(show_name no)
@@ -74105,6 +74176,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 43.18 233.68 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 43.18 233.68 90)
 			(hide yes)
 			(show_name no)
@@ -76952,6 +77034,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 43.18 242.57 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "9a1bc9f5-b45b-4ba7-847b-31b71a15c2bf")
 		)
@@ -78738,7 +78831,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C380364"
+		(property "LCSC Part #" "C2171160"
 			(at 472.44 113.03 0)
 			(hide yes)
 			(show_name no)
@@ -79959,7 +80052,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 360.68 114.3 90)
 			(hide yes)
 			(show_name no)
@@ -88871,7 +88964,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 203.2 64.77 0)
 			(hide yes)
 			(show_name no)
@@ -89831,6 +89924,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 546.1 65.786 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "460ed23b-37e5-4a7f-a708-b4bfb7363733")
 		)
@@ -90028,7 +90132,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 497.84 256.54 90)
 			(hide yes)
 			(show_name no)
@@ -92050,6 +92154,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 526.034 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 526.034 185.42 0)
 			(hide yes)
 			(show_name no)
@@ -96738,7 +96853,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C23263"
+		(property "LCSC Part #" "C2907075"
 			(at 490.22 58.42 90)
 			(hide yes)
 			(show_name no)
@@ -99639,6 +99754,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 391.16 287.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "cc24d234-39d9-4a1b-b297-010784993d20")
 		)
@@ -100819,7 +100945,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 535.94 350.52 90)
 			(hide yes)
 			(show_name no)
@@ -102526,7 +102652,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C380364"
+		(property "LCSC Part #" "C2171160"
 			(at 246.38 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -103805,7 +103931,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 142.24 378.46 0)
 			(hide yes)
 			(show_name no)
@@ -105607,7 +105733,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 535.94 355.6 90)
 			(hide yes)
 			(show_name no)
@@ -106571,6 +106697,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 378.46 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "7155a8a2-3121-45f8-8b9a-b4167c4a06bd")
 		)
@@ -106698,7 +106835,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 294.64 113.03 0)
 			(hide yes)
 			(show_name no)
@@ -107420,7 +107557,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 345.44 393.7 0)
 			(hide yes)
 			(show_name no)
@@ -111792,7 +111929,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 195.58 182.88 90)
 			(hide yes)
 			(show_name no)
@@ -113503,6 +113640,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 381 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 381 139.7 0)
 			(hide yes)
 			(show_name no)
@@ -115230,6 +115378,17 @@
 				)
 			)
 		)
+		(property "FT Rotation Offset" "180"
+			(at 533.4 299.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "71b423ec-c74b-482e-9655-ce889bc0cab7")
 		)
@@ -116471,7 +116630,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 152.4 215.9 0)
 			(hide yes)
 			(show_name no)
@@ -119603,7 +119762,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 292.1 264.16 90)
 			(hide yes)
 			(show_name no)
@@ -122213,6 +122372,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 173.99 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "-90"
 			(at 173.99 194.31 0)
 			(hide yes)
 			(show_name no)
@@ -125067,6 +125237,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 49.53 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "180"
 			(at 49.53 143.51 0)
 			(hide yes)
 			(show_name no)
@@ -132390,7 +132571,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 403.86 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -133499,7 +133680,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 345.44 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -134350,6 +134531,17 @@
 			)
 		)
 		(property "SUPPLIER PART" ""
+			(at 323.85 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "FT Rotation Offset" "90"
 			(at 323.85 207.01 0)
 			(hide yes)
 			(show_name no)
@@ -135478,7 +135670,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "LCSC Part #" "C560882"
+		(property "LCSC Part #" "C694229"
 			(at 444.5 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -136633,7 +136825,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 535.94 360.68 90)
 			(hide yes)
 			(show_name no)
@@ -137106,7 +137298,7 @@
 				(justify right bottom)
 			)
 		)
-		(property "LCSC Part #" "C105588"
+		(property "LCSC Part #" "C115420"
 			(at 497.84 261.62 90)
 			(hide yes)
 			(show_name no)

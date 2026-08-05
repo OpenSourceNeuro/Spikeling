@@ -2,7 +2,7 @@
 	(version "E")
 	(design
 		(source "C:\\Users\\mjyzi\\Documents\\GitHub\\Spikeling-V2\\Hardware\\PCB\\Spikeling 3.2\\Spikeling_v3.2.kicad_sch")
-		(date "2026-04-28T22:35:26")
+		(date "2026-06-28T14:14:36")
 		(tool "Eeschema 10.0.1")
 		(sheet
 			(number "1")
@@ -571,6 +571,8 @@
 				(field
 					(name "LCSC PART NAME") "1nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100040")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB102")
@@ -616,8 +618,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100040")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -647,6 +647,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100040")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -721,10 +725,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C100040")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -776,6 +776,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -819,8 +821,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -850,6 +850,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -922,10 +926,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -979,6 +979,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -1022,8 +1024,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -1053,6 +1053,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -1125,10 +1129,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -1182,6 +1182,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -1225,8 +1227,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -1256,6 +1256,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -1328,10 +1332,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -1385,6 +1385,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -1428,8 +1430,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -1459,6 +1459,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -1531,10 +1535,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -1588,6 +1588,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -1631,8 +1633,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -1662,6 +1662,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -1734,10 +1738,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -1791,6 +1791,8 @@
 				(field
 					(name "LCSC PART NAME") "10uF ±10% 25V")
 				(field
+					(name "LCSC Part #") "C2171160")
+				(field
 					(name "MANUFACTURER") "CCTC(三环)")
 				(field
 					(name "MANUFACTURER PART") "TCC1206X7R106K250HT")
@@ -1834,8 +1836,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C380364")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -1865,6 +1865,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10uF ±10% 25V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2171160")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -1937,10 +1941,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C380364")
 			)
 			(property
 				(name "LCSC")
@@ -1994,6 +1994,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -2037,8 +2039,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -2068,6 +2068,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -2140,10 +2144,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -2197,6 +2197,8 @@
 				(field
 					(name "LCSC PART NAME") "22uF ±10% 25V")
 				(field
+					(name "LCSC Part #") "C12891")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL31A226KAHNNNE")
@@ -2240,8 +2242,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C12891")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -2271,6 +2271,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "22uF ±10% 25V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C12891")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -2343,10 +2347,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C12891")
 			)
 			(property
 				(name "LCSC")
@@ -2400,6 +2400,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -2443,8 +2445,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -2474,6 +2474,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -2546,10 +2550,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -2603,6 +2603,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -2646,8 +2648,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -2677,6 +2677,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -2749,10 +2753,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -2806,6 +2806,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -2849,8 +2851,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -2880,6 +2880,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -2952,10 +2956,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -3009,6 +3009,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -3052,8 +3054,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -3083,6 +3083,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -3157,10 +3161,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -3212,6 +3212,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -3255,8 +3257,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -3286,6 +3286,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -3360,10 +3364,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C28323")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -3415,6 +3415,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -3458,8 +3460,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -3489,6 +3489,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -3561,10 +3565,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -3618,6 +3618,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -3661,8 +3663,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -3692,6 +3692,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -3764,10 +3768,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -3821,6 +3821,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -3864,8 +3866,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -3895,6 +3895,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -3969,10 +3973,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C560882")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -4024,6 +4024,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -4067,8 +4069,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -4098,6 +4098,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -4170,10 +4174,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -4227,6 +4227,8 @@
 				(field
 					(name "LCSC PART NAME") "22uF ±10% 25V")
 				(field
+					(name "LCSC Part #") "C12891")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL31A226KAHNNNE")
@@ -4270,8 +4272,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C12891")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -4301,6 +4301,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "22uF ±10% 25V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C12891")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -4373,10 +4377,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C12891")
 			)
 			(property
 				(name "LCSC")
@@ -4430,6 +4430,8 @@
 				(field
 					(name "LCSC PART NAME") "22uF ±10% 25V")
 				(field
+					(name "LCSC Part #") "C12891")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL31A226KAHNNNE")
@@ -4473,8 +4475,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C12891")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -4504,6 +4504,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "22uF ±10% 25V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C12891")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -4578,10 +4582,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C12891")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -4633,6 +4633,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -4676,8 +4678,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -4707,6 +4707,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -4781,10 +4785,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -4836,6 +4836,8 @@
 				(field
 					(name "LCSC PART NAME") "10uF ±10% 25V")
 				(field
+					(name "LCSC Part #") "C2171160")
+				(field
 					(name "MANUFACTURER") "CCTC(三环)")
 				(field
 					(name "MANUFACTURER PART") "TCC1206X7R106K250HT")
@@ -4879,8 +4881,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C380364")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -4910,6 +4910,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10uF ±10% 25V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2171160")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -4984,10 +4988,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C380364")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -5039,6 +5039,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -5082,8 +5084,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -5113,6 +5113,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -5185,10 +5189,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -5242,6 +5242,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -5285,8 +5287,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -5316,6 +5316,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -5388,10 +5392,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -5445,6 +5445,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -5488,8 +5490,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -5519,6 +5519,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -5591,10 +5595,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -5648,6 +5648,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -5691,8 +5693,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -5722,6 +5722,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -5794,10 +5798,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C28323")
 			)
 			(property
 				(name "LCSC")
@@ -5851,6 +5851,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -5894,8 +5896,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -5925,6 +5925,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -5997,10 +6001,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -6054,6 +6054,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -6097,8 +6099,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -6128,6 +6128,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -6200,10 +6204,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -6257,6 +6257,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -6300,8 +6302,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -6331,6 +6331,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -6403,10 +6407,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -6460,6 +6460,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -6503,8 +6505,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -6534,6 +6534,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -6606,10 +6610,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -6663,6 +6663,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -6706,8 +6708,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -6737,6 +6737,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -6809,10 +6813,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -6866,6 +6866,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -6909,8 +6911,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -6940,6 +6940,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -7012,10 +7016,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -7069,6 +7069,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -7112,8 +7114,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -7143,6 +7143,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -7215,10 +7219,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -7272,6 +7272,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -7315,8 +7317,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -7346,6 +7346,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -7418,10 +7422,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C560882")
 			)
 			(property
 				(name "LCSC")
@@ -7475,6 +7475,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -7518,8 +7520,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -7549,6 +7549,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -7623,10 +7627,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -7678,6 +7678,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -7721,8 +7723,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -7752,6 +7752,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -7826,10 +7830,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C28323")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -7881,6 +7881,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -7924,8 +7926,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -7955,6 +7955,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -8029,10 +8033,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -8084,6 +8084,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -8127,8 +8129,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -8158,6 +8158,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -8232,10 +8236,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C560882")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -8287,6 +8287,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -8330,8 +8332,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -8361,6 +8361,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -8435,10 +8439,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -8490,6 +8490,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -8533,8 +8535,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -8564,6 +8564,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -8638,10 +8642,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C28323")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -8693,6 +8693,8 @@
 				(field
 					(name "LCSC PART NAME") "10uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C2932476")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21A106KBYQNNE")
@@ -8736,8 +8738,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2932476")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -8767,6 +8767,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2932476")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -8841,10 +8845,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2932476")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -8896,6 +8896,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -8939,8 +8941,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -8970,6 +8970,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -9044,10 +9048,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -9099,6 +9099,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C53987")
+				(field
 					(name "MANUFACTURER") "FH(风华)")
 				(field
 					(name "MANUFACTURER PART") "0603B472K500NT")
@@ -9142,8 +9144,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C53987")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -9173,6 +9173,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C53987")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -9247,10 +9251,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C53987")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -9302,6 +9302,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -9345,8 +9347,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -9376,6 +9376,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -9448,10 +9452,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -9505,6 +9505,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -9548,8 +9550,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -9579,6 +9579,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -9651,10 +9655,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -9708,6 +9708,8 @@
 				(field
 					(name "LCSC PART NAME") "10nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100042")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB103")
@@ -9751,8 +9753,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100042")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -9782,6 +9782,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100042")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -9854,10 +9858,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C100042")
 			)
 			(property
 				(name "LCSC")
@@ -9911,6 +9911,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -9954,8 +9956,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -9985,6 +9985,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -10057,10 +10061,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -10114,6 +10114,8 @@
 				(field
 					(name "LCSC PART NAME") "10nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100042")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB103")
@@ -10157,8 +10159,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100042")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -10188,6 +10188,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100042")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -10260,10 +10264,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C100042")
 			)
 			(property
 				(name "LCSC")
@@ -10317,6 +10317,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -10360,8 +10362,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -10391,6 +10391,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -10465,10 +10469,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -10520,6 +10520,8 @@
 				(field
 					(name "LCSC PART NAME") "10nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100042")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB103")
@@ -10563,8 +10565,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100042")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -10594,6 +10594,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100042")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -10668,10 +10672,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C100042")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -10723,6 +10723,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -10766,8 +10768,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -10797,6 +10797,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -10871,10 +10875,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -10926,6 +10926,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -10969,8 +10971,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -11000,6 +11000,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -11074,10 +11078,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C560882")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -11129,6 +11129,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -11172,8 +11174,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -11203,6 +11203,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -11277,10 +11281,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -11332,6 +11332,8 @@
 				(field
 					(name "LCSC PART NAME") "10pF ±5% 50V")
 				(field
+					(name "LCSC Part #") "C91367")
+				(field
 					(name "MANUFACTURER") "FH(风华)")
 				(field
 					(name "MANUFACTURER PART") "0603CG100J500NT")
@@ -11375,8 +11377,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C91367")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -11406,6 +11406,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10pF ±5% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C91367")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -11480,10 +11484,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C91367")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -11535,6 +11535,8 @@
 				(field
 					(name "LCSC PART NAME") "1nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100040")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB102")
@@ -11580,8 +11582,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100040")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -11611,6 +11611,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100040")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -11685,10 +11689,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C100040")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -11740,6 +11740,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -11783,8 +11785,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -11814,6 +11814,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -11886,10 +11890,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -11943,6 +11943,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -11986,8 +11988,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -12017,6 +12017,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -12089,10 +12093,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1591")
 			)
 			(property
 				(name "LCSC")
@@ -12146,6 +12146,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -12189,8 +12191,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -12220,6 +12220,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -12294,10 +12298,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -12349,6 +12349,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7uF ±10% 35V")
 				(field
+					(name "LCSC Part #") "C694229")
+				(field
 					(name "MANUFACTURER") "SAMWHA(三和)")
 				(field
 					(name "MANUFACTURER PART") "CS2012X7R475K350NRE")
@@ -12392,8 +12394,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C560882")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -12423,6 +12423,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7uF ±10% 35V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C694229")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -12497,10 +12501,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C560882")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -12552,6 +12552,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -12595,8 +12597,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -12626,6 +12626,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -12700,10 +12704,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -12755,6 +12755,8 @@
 				(field
 					(name "LCSC PART NAME") "1uF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C28323")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL21B105KBFNNNE")
@@ -12798,8 +12800,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C28323")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -12829,6 +12829,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1uF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C28323")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -12903,10 +12907,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C28323")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -12958,6 +12958,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -13001,8 +13003,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -13032,6 +13032,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -13106,10 +13110,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -13161,6 +13161,8 @@
 				(field
 					(name "LCSC PART NAME") "10nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C100042")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "CC0603KRX7R9BB103")
@@ -13204,8 +13206,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C100042")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -13235,6 +13235,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C100042")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -13309,10 +13313,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C100042")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -13364,6 +13364,8 @@
 				(field
 					(name "LCSC PART NAME") "100nF ±10% 50V")
 				(field
+					(name "LCSC Part #") "C1591")
+				(field
 					(name "MANUFACTURER") "SAMSUNG(三星)")
 				(field
 					(name "MANUFACTURER PART") "CL10B104KB8NNNC")
@@ -13407,8 +13409,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1591")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -13438,6 +13438,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "100nF ±10% 50V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1591")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -13512,10 +13516,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1591")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -13566,6 +13566,8 @@
 					(name "DEVICE") "SMF6.0A_C178260")
 				(field
 					(name "LCSC PART NAME") "单向TVS 6V截止 峰值浪涌电流：19.4A@10/1000us")
+				(field
+					(name "LCSC Part #") "C178260")
 				(field
 					(name "MANUFACTURER") "晶导微电子")
 				(field
@@ -13623,8 +13625,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C178260")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -13651,6 +13651,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "单向TVS 6V截止 峰值浪涌电流：19.4A@10/1000us")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C178260")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -13747,10 +13751,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C178260")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -14395,6 +14395,8 @@
 			(description "25mA 100mcd~220mcd Colorless transparent lens 586nm~595nm -30°C~+85°C Yellow 130° 65mW 1.6V~2.6V 0603 LED Indication - Discrete ROHS")
 			(fields
 				(field
+					(name "LCSC Part #") "C89811")
+				(field
 					(name "Stock") "109176")
 				(field
 					(name "Price") "0.021USD")
@@ -14454,8 +14456,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C89811")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -14472,6 +14472,10 @@
 				(lib "PCM_JLCPCB-Diodes")
 				(part "LED,0603,Yellow")
 				(description "25mA 100mcd~220mcd Colorless transparent lens 586nm~595nm -30°C~+85°C Yellow 130° 65mW 1.6V~2.6V 0603 LED Indication - Discrete ROHS")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C89811")
 			)
 			(property
 				(name "Stock")
@@ -14574,10 +14578,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C89811")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -14628,6 +14628,8 @@
 					(name "DEVICE") "TPD2E2U06DCKR")
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
+				(field
+					(name "LCSC Part #") "C1855726")
 				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
@@ -14686,8 +14688,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -14717,6 +14717,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -14813,10 +14817,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1855726")
 			)
 			(property
 				(name "LCSC")
@@ -14873,6 +14873,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -14920,13 +14922,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR")
 				(field
@@ -14951,6 +14953,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -15033,16 +15039,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C916425")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -15091,6 +15097,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -15138,8 +15146,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -15169,6 +15175,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -15249,10 +15259,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C916425")
 			)
 			(property
 				(name "LCSC")
@@ -15309,6 +15315,8 @@
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
 				(field
+					(name "LCSC Part #") "C1855726")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TPD2E2U06DCKR")
@@ -15366,8 +15374,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -15397,6 +15403,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -15493,10 +15503,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1855726")
 			)
 			(property
 				(name "LCSC")
@@ -15553,6 +15559,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -15600,13 +15608,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR")
 				(field
@@ -15631,6 +15639,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -15713,16 +15725,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C916425")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -15771,6 +15783,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -15818,13 +15832,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR")
 				(field
@@ -15849,6 +15863,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -15931,16 +15949,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C916425")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -15988,6 +16006,8 @@
 					(name "DEVICE") "TPD2E2U06DCKR")
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
+				(field
+					(name "LCSC Part #") "C1855726")
 				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
@@ -16046,8 +16066,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -16077,6 +16095,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -16175,10 +16197,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1855726")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -16233,6 +16251,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -16280,13 +16300,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR")
 				(field
@@ -16311,6 +16331,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -16393,16 +16417,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C916425")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -16562,6 +16586,8 @@
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "Maxime:SENSOR-TH_BPW34S-Z")
 				(field
@@ -16756,6 +16782,10 @@
 				(value "")
 			)
 			(property
+				(name "FT Rotation Offset")
+				(value "180")
+			)
+			(property
 				(name "Sheetname")
 				(value "Spikeling_v3.2")
 			)
@@ -16798,6 +16828,8 @@
 					(name "DEVICE") "TPD2E2U06DCKR")
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
+				(field
+					(name "LCSC Part #") "C1855726")
 				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
@@ -16856,8 +16888,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -16887,6 +16917,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -16983,10 +17017,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1855726")
 			)
 			(property
 				(name "LCSC")
@@ -17597,6 +17627,8 @@
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
 				(field
+					(name "LCSC Part #") "C1855726")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TPD2E2U06DCKR")
@@ -17654,8 +17686,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -17685,6 +17715,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -17781,10 +17815,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C1855726")
 			)
 			(property
 				(name "LCSC")
@@ -17841,6 +17871,8 @@
 				(field
 					(name "LCSC PART NAME") "TPD2E2U06DCKR")
 				(field
+					(name "LCSC Part #") "C1855726")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TPD2E2U06DCKR")
@@ -17898,8 +17930,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C1855726")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -17929,6 +17959,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TPD2E2U06DCKR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C1855726")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -18027,10 +18061,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C1855726")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -18085,6 +18115,8 @@
 				(field
 					(name "LCSC PART NAME") "电压:30V 电流:200mA")
 				(field
+					(name "LCSC Part #") "C916425")
+				(field
 					(name "MANUFACTURER") "JSMSEMI(杰盛微)")
 				(field
 					(name "MANUFACTURER PART") "BAT54S")
@@ -18132,13 +18164,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C916425")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR")
 				(field
@@ -18163,6 +18195,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "电压:30V 电流:200mA")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C916425")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -18245,16 +18281,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C916425")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -19112,6 +19148,8 @@
 				(field
 					(name "LCSC PART NAME") "3.5mm耳机座")
 				(field
+					(name "LCSC Part #") "C19189087")
+				(field
 					(name "MANUFACTURER") "hanxia(韩下)")
 				(field
 					(name "MANUFACTURER PART") "HX PJ-320A-3P DIP")
@@ -19155,8 +19193,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C19189087")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -19186,6 +19222,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "3.5mm耳机座")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C19189087")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -19258,10 +19298,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C19189087")
 			)
 			(property
 				(name "LCSC")
@@ -19318,6 +19354,8 @@
 				(field
 					(name "LCSC PART NAME") "3.5mm耳机座")
 				(field
+					(name "LCSC Part #") "C19189087")
+				(field
 					(name "MANUFACTURER") "hanxia(韩下)")
 				(field
 					(name "MANUFACTURER PART") "HX PJ-320A-3P DIP")
@@ -19361,8 +19399,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C19189087")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -19392,6 +19428,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "3.5mm耳机座")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C19189087")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -19464,10 +19504,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C19189087")
 			)
 			(property
 				(name "LCSC")
@@ -19524,6 +19560,8 @@
 				(field
 					(name "LCSC PART NAME") "3.5mm耳机座")
 				(field
+					(name "LCSC Part #") "C19189087")
+				(field
 					(name "MANUFACTURER") "hanxia(韩下)")
 				(field
 					(name "MANUFACTURER PART") "HX PJ-320A-3P DIP")
@@ -19567,8 +19605,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C19189087")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -19598,6 +19634,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "3.5mm耳机座")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C19189087")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -19670,10 +19710,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C19189087")
 			)
 			(property
 				(name "LCSC")
@@ -19730,6 +19766,8 @@
 				(field
 					(name "LCSC PART NAME") "3.5mm耳机座")
 				(field
+					(name "LCSC Part #") "C19189087")
+				(field
 					(name "MANUFACTURER") "hanxia(韩下)")
 				(field
 					(name "MANUFACTURER PART") "HX PJ-320A-3P DIP")
@@ -19773,8 +19811,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C19189087")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -19804,6 +19840,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "3.5mm耳机座")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C19189087")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -19876,10 +19916,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C19189087")
 			)
 			(property
 				(name "LCSC")
@@ -19936,6 +19972,8 @@
 				(field
 					(name "LCSC PART NAME") "3.5mm耳机座")
 				(field
+					(name "LCSC Part #") "C19189087")
+				(field
 					(name "MANUFACTURER") "hanxia(韩下)")
 				(field
 					(name "MANUFACTURER PART") "HX PJ-320A-3P DIP")
@@ -19979,8 +20017,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C19189087")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -20010,6 +20046,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "3.5mm耳机座")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C19189087")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -20082,10 +20122,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C19189087")
 			)
 			(property
 				(name "LCSC")
@@ -20817,6 +20853,8 @@
 				(field
 					(name "LCSC PART NAME") "2.2uH ±20% 1.6A")
 				(field
+					(name "LCSC Part #") "C3911432")
+				(field
 					(name "MANUFACTURER") "Coilcraft(线艺)")
 				(field
 					(name "MANUFACTURER PART") "XFL3012-222MEC")
@@ -20872,8 +20910,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C3911432")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -20903,6 +20939,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "2.2uH ±20% 1.6A")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C3911432")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -20997,10 +21037,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C3911432")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -21051,6 +21087,8 @@
 					(name "DEVICE") "MPZ2012S601AT000")
 				(field
 					(name "LCSC PART NAME") "单路 0805磁珠 阻抗600Ω@100MHz")
+				(field
+					(name "LCSC Part #") "C21519")
 				(field
 					(name "MANUFACTURER") "TDK")
 				(field
@@ -21105,8 +21143,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C21519")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -21136,6 +21172,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "单路 0805磁珠 阻抗600Ω@100MHz")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C21519")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -21226,10 +21266,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C21519")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -21281,6 +21317,8 @@
 				(field
 					(name "LCSC PART NAME") "2.2uH ±20% 5A")
 				(field
+					(name "LCSC Part #") "C5349665")
+				(field
 					(name "MANUFACTURER") "APV(爱普微)")
 				(field
 					(name "MANUFACTURER PART") "APH0420T2R2M")
@@ -21330,8 +21368,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C5349665")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -21361,6 +21397,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "2.2uH ±20% 5A")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C5349665")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -21445,10 +21485,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C5349665")
 			)
 			(property
 				(name "LCSC")
@@ -21965,6 +22001,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "180")
+				(field
 					(name "Footprint") "Maxime:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR")
 				(field
 					(name "Datasheet") "https://atta.szlcsc.com/upload/public/pdf/source/20201027/C908265_C6F1A5E0FB14735EF799FEF607A99450.pdf")
@@ -22174,6 +22212,10 @@
 				(value "")
 			)
 			(property
+				(name "FT Rotation Offset")
+				(value "180")
+			)
+			(property
 				(name "Sheetname")
 				(value "Spikeling_v3.2")
 			)
@@ -22224,6 +22266,8 @@
 			(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
 			(fields
 				(field
+					(name "LCSC Part #") "C8545")
+				(field
 					(name "Stock") "1078050")
 				(field
 					(name "Price") "0.019USD")
@@ -22277,13 +22321,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C8545")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:Q_SOT-23")
 				(field
@@ -22295,6 +22339,10 @@
 				(lib "PCM_JLCPCB-Transistors")
 				(part "NMOS,2N7002")
 				(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C8545")
 			)
 			(property
 				(name "Stock")
@@ -22385,16 +22433,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C8545")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -22438,6 +22486,8 @@
 			(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
 			(fields
 				(field
+					(name "LCSC Part #") "C8545")
+				(field
 					(name "Stock") "1078050")
 				(field
 					(name "Price") "0.019USD")
@@ -22491,13 +22541,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C8545")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:Q_SOT-23")
 				(field
@@ -22509,6 +22559,10 @@
 				(lib "PCM_JLCPCB-Transistors")
 				(part "NMOS,2N7002")
 				(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C8545")
 			)
 			(property
 				(name "Stock")
@@ -22599,16 +22653,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C8545")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -22652,6 +22706,8 @@
 			(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
 			(fields
 				(field
+					(name "LCSC Part #") "C8545")
+				(field
 					(name "Stock") "1078050")
 				(field
 					(name "Price") "0.019USD")
@@ -22705,13 +22761,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C8545")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:Q_SOT-23")
 				(field
@@ -22723,6 +22779,10 @@
 				(lib "PCM_JLCPCB-Transistors")
 				(part "NMOS,2N7002")
 				(description "60V 115mA 200mW 7.5Ω@10V,500mA 2.5V@250uA 1 N-Channel SOT-23 MOSFETs ROHS")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C8545")
 			)
 			(property
 				(name "Stock")
@@ -22813,16 +22873,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C8545")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -22870,6 +22930,8 @@
 					(name "DEVICE") "RC0603FR-071ML")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 1MΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C105578")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -22922,8 +22984,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105578")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -22953,6 +23013,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C105578")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -23039,10 +23103,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105578")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -23094,6 +23154,8 @@
 				(field
 					(name "LCSC PART NAME") "5.1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23186")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF5101T5E")
@@ -23143,8 +23205,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23186")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -23174,6 +23234,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "5.1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23186")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -23258,10 +23322,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23186")
 			)
 			(property
 				(name "LCSC")
@@ -23315,6 +23375,8 @@
 				(field
 					(name "LCSC PART NAME") "5.1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23186")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF5101T5E")
@@ -23364,8 +23426,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23186")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -23395,6 +23455,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "5.1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23186")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -23479,10 +23543,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23186")
 			)
 			(property
 				(name "LCSC")
@@ -23536,6 +23596,8 @@
 				(field
 					(name "LCSC PART NAME") "5.1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23186")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF5101T5E")
@@ -23585,8 +23647,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23186")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -23616,6 +23676,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "5.1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23186")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -23700,10 +23764,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23186")
 			)
 			(property
 				(name "LCSC")
@@ -23757,6 +23817,8 @@
 				(field
 					(name "LCSC PART NAME") "5.1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23186")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF5101T5E")
@@ -23806,8 +23868,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23186")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -23837,6 +23897,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "5.1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23186")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -23923,10 +23987,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23186")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -23978,6 +24038,8 @@
 				(field
 					(name "LCSC PART NAME") "0Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C21189")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF0000T5E")
@@ -24027,8 +24089,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C21189")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -24058,6 +24118,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "0Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C21189")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -24144,10 +24208,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C21189")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -24199,6 +24259,8 @@
 				(field
 					(name "LCSC PART NAME") "4.7kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23162")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF4701T5E")
@@ -24248,8 +24310,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23162")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -24279,6 +24339,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "4.7kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23162")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -24365,10 +24429,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23162")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -24420,6 +24480,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 5.1MΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C227984")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "AC0603FR-075M1L")
@@ -24469,8 +24531,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C227984")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -24500,6 +24560,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 5.1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C227984")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -24584,10 +24648,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C227984")
 			)
 			(property
 				(name "LCSC")
@@ -24641,6 +24701,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -24692,8 +24754,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -24723,6 +24783,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -24809,10 +24873,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105588")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -24864,6 +24924,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 5.1MΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C227984")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "AC0603FR-075M1L")
@@ -24913,8 +24975,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C227984")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -24944,6 +25004,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 5.1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C227984")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -25030,10 +25094,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C227984")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -25084,6 +25144,8 @@
 					(name "DEVICE") "RC0603FR-07100RL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C115420")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -25136,8 +25198,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -25167,6 +25227,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -25253,10 +25317,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105588")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -25307,6 +25367,8 @@
 					(name "DEVICE") "0603WAF2201T5E_C4190")
 				(field
 					(name "LCSC PART NAME") "2.2kΩ ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C4190")
 				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
@@ -25359,8 +25421,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C4190")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -25390,6 +25450,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "2.2kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C4190")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -25476,10 +25540,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C4190")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -25530,6 +25590,8 @@
 					(name "DEVICE") "0603WAF3300T5E")
 				(field
 					(name "LCSC PART NAME") "330Ω ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C23138")
 				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
@@ -25582,8 +25644,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23138")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -25613,6 +25673,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "330Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23138")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -25699,10 +25763,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23138")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -25753,6 +25813,8 @@
 					(name "DEVICE") "0603WAF9103T5E")
 				(field
 					(name "LCSC PART NAME") "910kΩ ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C2907075")
 				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
@@ -25805,8 +25867,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23263")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -25836,6 +25896,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "910kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907075")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -25922,10 +25986,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23263")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -25976,6 +26036,8 @@
 					(name "DEVICE") "RC0603FR-07100KL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C14675")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -26028,8 +26090,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -26059,6 +26119,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -26143,10 +26207,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -26200,6 +26260,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 1MΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C105578")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-071ML")
@@ -26251,8 +26313,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105578")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -26282,6 +26342,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C105578")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -26366,10 +26430,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105578")
 			)
 			(property
 				(name "LCSC")
@@ -26423,6 +26483,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -26474,8 +26536,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -26505,6 +26565,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -26591,10 +26655,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -26645,6 +26705,8 @@
 					(name "DEVICE") "RC0603FR-071ML")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 1MΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C105578")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -26697,8 +26759,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105578")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -26728,6 +26788,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C105578")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -26814,10 +26878,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105578")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -26868,6 +26928,8 @@
 					(name "DEVICE") "RC0603FR-07100KL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C14675")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -26920,8 +26982,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -26951,6 +27011,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -27035,10 +27099,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -27092,6 +27152,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -27143,8 +27205,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -27174,6 +27234,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -27258,10 +27322,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -27315,6 +27375,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -27366,8 +27428,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -27397,6 +27457,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -27483,10 +27547,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -27538,6 +27598,8 @@
 				(field
 					(name "LCSC PART NAME") "5.1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23186")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF5101T5E")
@@ -27587,8 +27649,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C23186")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -27618,6 +27678,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "5.1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23186")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -27704,10 +27768,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23186")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -27758,6 +27818,8 @@
 					(name "DEVICE") "RC0603FR-07100RL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C115420")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -27810,8 +27872,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -27841,6 +27901,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -27925,10 +27989,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -27982,6 +28042,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 1MΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C105578")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-071ML")
@@ -28033,8 +28095,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105578")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -28064,6 +28124,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C105578")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -28150,10 +28214,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105578")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -28204,6 +28264,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -28253,8 +28315,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -28285,6 +28345,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -28369,10 +28433,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2906982")
 			)
 			(property
 				(name "LCSC")
@@ -28426,6 +28486,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -28477,8 +28539,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -28508,6 +28568,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -28592,10 +28656,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -28649,6 +28709,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -28700,8 +28762,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -28731,6 +28791,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -28815,10 +28879,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -28872,6 +28932,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 220Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C22962")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07220RL")
@@ -28921,8 +28983,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C107696")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -28952,6 +29012,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 220Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C22962")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -29036,10 +29100,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C107696")
 			)
 			(property
 				(name "LCSC")
@@ -29093,6 +29153,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 220Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C22962")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07220RL")
@@ -29142,8 +29204,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C107696")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -29173,6 +29233,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 220Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C22962")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -29259,10 +29323,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C107696")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -29313,6 +29373,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -29362,8 +29424,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -29394,6 +29454,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -29478,10 +29542,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2906982")
 			)
 			(property
 				(name "LCSC")
@@ -29535,6 +29595,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -29586,8 +29648,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -29617,6 +29677,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -29701,10 +29765,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -29758,6 +29818,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -29809,8 +29871,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -29840,6 +29900,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -29924,10 +29988,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -29981,6 +30041,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -30032,8 +30094,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -30063,6 +30123,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -30147,10 +30211,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -30204,6 +30264,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -30255,8 +30317,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -30286,6 +30346,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -30372,10 +30436,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -30426,6 +30486,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -30475,8 +30537,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -30507,6 +30567,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -30591,10 +30655,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2906982")
 			)
 			(property
 				(name "LCSC")
@@ -30648,6 +30708,8 @@
 				(field
 					(name "LCSC PART NAME") "22Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23345")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF220JT5E")
@@ -30702,8 +30764,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23345")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -30730,6 +30790,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "22Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23345")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -30818,10 +30882,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23345")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -30871,6 +30931,8 @@
 				(field
 					(name "LCSC PART NAME") "22Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23345")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF220JT5E")
@@ -30925,8 +30987,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23345")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -30953,6 +31013,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "22Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23345")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -31043,10 +31107,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23345")
-			)
-			(property
 				(name "SUPPLIER PART")
 				(value "")
 			)
@@ -31093,6 +31153,8 @@
 					(name "DEVICE") "0603WAF470JT5E")
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C23182")
 				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
@@ -31146,8 +31208,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -31174,6 +31234,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -31262,10 +31326,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23182")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -31315,6 +31375,8 @@
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23182")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF470JT5E")
@@ -31367,8 +31429,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -31395,6 +31455,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -31483,10 +31547,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23182")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -31536,6 +31596,8 @@
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23182")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF470JT5E")
@@ -31588,8 +31650,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -31616,6 +31676,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -31704,10 +31768,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23182")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -31757,6 +31817,8 @@
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23182")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF470JT5E")
@@ -31809,8 +31871,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -31837,6 +31897,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -31925,10 +31989,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23182")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -31978,6 +32038,8 @@
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23182")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF470JT5E")
@@ -32030,8 +32092,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -32058,6 +32118,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -32146,10 +32210,6 @@
 			(property
 				(name "LCSC")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C23182")
 			)
 			(property
 				(name "SUPPLIER PART")
@@ -32199,6 +32259,8 @@
 				(field
 					(name "LCSC PART NAME") "47Ω ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C23182")
+				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
 					(name "MANUFACTURER PART") "0603WAF470JT5E")
@@ -32251,8 +32313,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C23182")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -32279,6 +32339,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "47Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C23182")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -32369,10 +32433,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C23182")
-			)
-			(property
 				(name "SUPPLIER PART")
 				(value "")
 			)
@@ -32418,6 +32478,8 @@
 					(name "DEVICE") "FRC0603F1002TS")
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C2906982")
 				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
@@ -32471,8 +32533,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -32500,6 +32560,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -32590,10 +32654,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2906982")
-			)
-			(property
 				(name "SUPPLIER PART")
 				(value "")
 			)
@@ -32640,6 +32700,8 @@
 					(name "DEVICE") "RC0603FR-07100RL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C115420")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -32695,8 +32757,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -32723,6 +32783,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -32813,10 +32877,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105588")
-			)
-			(property
 				(name "SUPPLIER PART")
 				(value "")
 			)
@@ -32862,6 +32922,8 @@
 					(name "DEVICE") "FRC0603F1002TS")
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C2906982")
 				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
@@ -32915,8 +32977,6 @@
 					(name "LCSC")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "SUPPLIER PART")
 				)
 				(field
@@ -32944,6 +33004,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -33034,10 +33098,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2906982")
-			)
-			(property
 				(name "SUPPLIER PART")
 				(value "")
 			)
@@ -33083,6 +33143,8 @@
 					(name "DEVICE") "FRC0603F1001TS")
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C2907002")
 				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
@@ -33133,8 +33195,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -33165,6 +33225,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -33249,10 +33313,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -33306,6 +33366,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -33357,8 +33419,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -33388,6 +33448,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -33472,10 +33536,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -33529,6 +33589,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -33580,8 +33642,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -33611,6 +33671,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -33697,10 +33761,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -33751,6 +33811,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -33800,8 +33862,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -33832,6 +33892,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -33916,10 +33980,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -33972,6 +34032,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -34021,8 +34083,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -34053,6 +34113,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -34137,10 +34201,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -34193,6 +34253,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -34242,8 +34304,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -34274,6 +34334,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -34358,10 +34422,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -34415,6 +34475,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -34466,8 +34528,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -34497,6 +34557,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -34581,10 +34645,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -34638,6 +34698,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -34689,8 +34751,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -34720,6 +34780,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -34806,10 +34870,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -34860,6 +34920,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -34909,8 +34971,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -34941,6 +35001,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -35025,10 +35089,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -35081,6 +35141,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -35130,8 +35192,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -35162,6 +35222,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -35246,10 +35310,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -35302,6 +35362,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -35351,8 +35413,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -35383,6 +35443,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -35467,10 +35531,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -35523,6 +35583,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -35572,8 +35634,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -35604,6 +35664,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -35688,10 +35752,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -35745,6 +35805,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -35796,8 +35858,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -35827,6 +35887,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -35913,10 +35977,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -35967,6 +36027,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -36016,8 +36078,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -36048,6 +36108,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -36134,10 +36198,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2907002")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -36188,6 +36248,8 @@
 					(name "DEVICE") "RC0603FR-071ML")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 1MΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C105578")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -36240,8 +36302,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105578")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -36271,6 +36331,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 1MΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C105578")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -36357,10 +36421,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105578")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -36411,6 +36471,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -36460,8 +36522,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -36492,6 +36552,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -36576,10 +36640,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -36632,6 +36692,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -36681,8 +36743,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -36713,6 +36773,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -36797,10 +36861,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -36853,6 +36913,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -36902,8 +36964,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -36934,6 +36994,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -37018,10 +37082,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -37074,6 +37134,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -37123,8 +37185,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -37155,6 +37215,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -37241,10 +37305,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2907002")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -37295,6 +37355,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -37344,8 +37406,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -37376,6 +37436,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -37462,10 +37526,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2906982")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -37516,6 +37576,8 @@
 					(name "DEVICE") "RC0603FR-07100KL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C14675")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -37568,8 +37630,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -37599,6 +37659,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -37685,10 +37749,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -37739,6 +37799,8 @@
 					(name "DEVICE") "0603WAF1500T5E")
 				(field
 					(name "LCSC PART NAME") "150Ω ±1% 100mW 厚膜电阻")
+				(field
+					(name "LCSC Part #") "C22808")
 				(field
 					(name "MANUFACTURER") "UNI-ROYAL(厚声)")
 				(field
@@ -37791,8 +37853,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C22808")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -37822,6 +37882,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "150Ω ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C22808")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -37908,10 +37972,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C22808")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -37962,6 +38022,8 @@
 					(name "DEVICE") "RC0603FR-07100RL")
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
+				(field
+					(name "LCSC Part #") "C115420")
 				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
@@ -38014,8 +38076,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -38045,6 +38105,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -38129,10 +38193,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -38186,6 +38246,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -38237,8 +38299,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -38268,6 +38328,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -38352,10 +38416,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -38409,6 +38469,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -38460,8 +38522,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -38491,6 +38551,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -38575,10 +38639,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -38632,6 +38692,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -38683,8 +38745,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -38714,6 +38774,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -38798,10 +38862,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -38855,6 +38915,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -38906,8 +38968,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -38937,6 +38997,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -39021,10 +39085,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C105588")
 			)
 			(property
 				(name "LCSC")
@@ -39078,6 +39138,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100Ω ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C115420")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100RL")
@@ -39129,8 +39191,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C105588")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -39160,6 +39220,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100Ω ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C115420")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -39246,10 +39310,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C105588")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -39300,6 +39360,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -39349,8 +39411,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -39381,6 +39441,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -39467,10 +39531,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2906982")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -39521,6 +39581,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -39570,8 +39632,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -39602,6 +39662,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -39686,10 +39750,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2907002")
 			)
 			(property
 				(name "LCSC")
@@ -39743,6 +39803,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -39794,8 +39856,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -39825,6 +39885,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -39911,10 +39975,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -39965,6 +40025,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -40014,8 +40076,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -40046,6 +40106,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -40130,10 +40194,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2906982")
 			)
 			(property
 				(name "LCSC")
@@ -40186,6 +40246,8 @@
 				(field
 					(name "LCSC PART NAME") "10kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2906982")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1002TS")
@@ -40235,8 +40297,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2906982")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -40267,6 +40327,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "10kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2906982")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -40351,10 +40415,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C2906982")
 			)
 			(property
 				(name "LCSC")
@@ -40408,6 +40468,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -40459,8 +40521,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -40490,6 +40550,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -40574,10 +40638,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C14675")
 			)
 			(property
 				(name "LCSC")
@@ -40631,6 +40691,8 @@
 				(field
 					(name "LCSC PART NAME") "厚膜电阻 100kΩ ±1% 100mW")
 				(field
+					(name "LCSC Part #") "C14675")
+				(field
 					(name "MANUFACTURER") "YAGEO(国巨)")
 				(field
 					(name "MANUFACTURER PART") "RC0603FR-07100KL")
@@ -40682,8 +40744,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C14675")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -40713,6 +40773,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "厚膜电阻 100kΩ ±1% 100mW")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C14675")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -40799,10 +40863,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C14675")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -40853,6 +40913,8 @@
 				(field
 					(name "LCSC PART NAME") "1kΩ ±1% 100mW 厚膜电阻")
 				(field
+					(name "LCSC Part #") "C2907002")
+				(field
 					(name "MANUFACTURER") "FOJAN(富捷)")
 				(field
 					(name "MANUFACTURER PART") "FRC0603F1001TS")
@@ -40902,8 +40964,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2907002")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -40934,6 +40994,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1kΩ ±1% 100mW 厚膜电阻")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2907002")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -41020,10 +41084,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2907002")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -41074,6 +41134,8 @@
 					(name "DEVICE") "K3-1260D-L1")
 				(field
 					(name "LCSC PART NAME") "卧插双档 滑动开关")
+				(field
+					(name "LCSC Part #") "C92657")
 				(field
 					(name "MANUFACTURER") "韩国韩荣")
 				(field
@@ -41134,8 +41196,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C92657")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -41165,6 +41225,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "卧插双档 滑动开关")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C92657")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -41269,10 +41333,6 @@
 			(property
 				(name "Resistance")
 				(value "")
-			)
-			(property
-				(name "LCSC Part #")
-				(value "C92657")
 			)
 			(property
 				(name "LCSC")
@@ -41779,6 +41839,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "180")
+				(field
 					(name "Footprint") "Maxime:KEY-TH_4P-L7.5-W6.8-P4.50-LS7.2")
 				(field
 					(name "Datasheet") "https://atta.szlcsc.com/upload/public/pdf/source/20170428/1493376810933.pdf")
@@ -41986,6 +42048,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -42157,6 +42223,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "180")
+				(field
 					(name "Footprint") "Maxime:KEY-TH_4P-L7.5-W6.8-P4.50-LS7.2")
 				(field
 					(name "Datasheet") "https://atta.szlcsc.com/upload/public/pdf/source/20170428/1493376810933.pdf")
@@ -42364,6 +42432,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -42535,6 +42607,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "180")
+				(field
 					(name "Footprint") "Maxime:KEY-TH_4P-L7.5-W6.8-P4.50-LS7.2")
 				(field
 					(name "Datasheet") "https://atta.szlcsc.com/upload/public/pdf/source/20170428/1493376810933.pdf")
@@ -42742,6 +42816,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -43901,6 +43979,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "180")
+				(field
 					(name "Footprint") "JLCPCB:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR")
 				(field
 					(name "Datasheet") "https://item.szlcsc.com/datasheet/SRV05-4-P-T7/86537.html")
@@ -44108,6 +44188,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -44849,6 +44933,8 @@
 				(field
 					(name "LCSC PART NAME") "降压型 1A 3V~17V")
 				(field
+					(name "LCSC Part #") "C40256")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TPS62162DSGR")
@@ -44914,8 +45000,6 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C40256")
-				(field
 					(name "LCSC")
 				)
 				(field
@@ -44945,6 +45029,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "降压型 1A 3V~17V")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C40256")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -45059,10 +45147,6 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C40256")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
@@ -45135,6 +45219,8 @@
 				(field
 					(name "LCSC PART NAME") "具有高 PSRR 的 300mA、超低噪声、低 IQ、低压降 (LDO) 线性稳压器")
 				(field
+					(name "LCSC Part #") "C2862740")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TPS7A2033PDBVR")
@@ -45196,13 +45282,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C2862740")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "Maxime:SOT-23-5_L2.9-W1.6-P0.95-LS2.8-BR")
 				(field
@@ -45227,6 +45313,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "具有高 PSRR 的 300mA、超低噪声、低 IQ、低压降 (LDO) 线性稳压器")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C2862740")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -45333,16 +45423,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C2862740")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -45510,6 +45600,8 @@
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "Maxime:SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR")
 				(field
@@ -45706,6 +45798,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -46867,6 +46963,8 @@
 				(field
 					(name "LCSC PART NAME") "MCP4922-E/SL")
 				(field
+					(name "LCSC Part #") "C39851")
+				(field
 					(name "MANUFACTURER") "MICROCHIP(美国微芯)")
 				(field
 					(name "MANUFACTURER PART") "MCP4922-E/SL")
@@ -46981,13 +47079,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C39851")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "-90")
 				(field
 					(name "Footprint") "Maxime:SOIC-14_L8.7-W3.9-P1.27-LS6.0-BL")
 				(field
@@ -47012,6 +47110,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "MCP4922-E/SL")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C39851")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -47190,16 +47292,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C39851")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "-90")
 			)
 			(property
 				(name "Sheetname")
@@ -47396,6 +47498,8 @@
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "-90")
 				(field
 					(name "Footprint") "Maxime:SOIC-16_L9.9-W3.9-P1.27-LS6.0-BL")
 				(field
@@ -47596,6 +47700,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "-90")
 			)
 			(property
 				(name "Sheetname")
@@ -47799,6 +47907,8 @@
 					(name "SUPPLIER PART")
 				)
 				(field
+					(name "FT Rotation Offset") "-90")
+				(field
 					(name "Footprint") "Maxime:SOIC-16_L9.9-W3.9-P1.27-LS6.0-BL")
 				(field
 					(name "Datasheet") "https://atta.szlcsc.com/upload/public/pdf/source/20140724/1457707162058.pdf")
@@ -47998,6 +48108,10 @@
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "-90")
 			)
 			(property
 				(name "Sheetname")
@@ -48856,6 +48970,8 @@
 				(field
 					(name "LCSC PART NAME") "TLV9001IDBVR")
 				(field
+					(name "LCSC Part #") "C398363")
+				(field
 					(name "MANUFACTURER") "TI(德州仪器)")
 				(field
 					(name "MANUFACTURER PART") "TLV9001IDBVR")
@@ -48931,13 +49047,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C398363")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "180")
 				(field
 					(name "Footprint") "JLCPCB:SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR")
 				(field
@@ -48962,6 +49078,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "TLV9001IDBVR")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C398363")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -49096,16 +49216,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C398363")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "180")
 			)
 			(property
 				(name "Sheetname")
@@ -49159,6 +49279,8 @@
 					(name "DEVICE") "MCP6002T-I/SN")
 				(field
 					(name "LCSC PART NAME") "1 MHz 低功耗运算放大器")
+				(field
+					(name "LCSC Part #") "C7377")
 				(field
 					(name "MANUFACTURER") "MICROCHIP(美国微芯)")
 				(field
@@ -49229,13 +49351,13 @@
 					(name "Resistance")
 				)
 				(field
-					(name "LCSC Part #") "C7377")
-				(field
 					(name "LCSC")
 				)
 				(field
 					(name "SUPPLIER PART")
 				)
+				(field
+					(name "FT Rotation Offset") "-90")
 				(field
 					(name "Footprint") "JLCPCB:SOIC-8_L4.9-W3.9-P1.27-LS6.0-BL")
 				(field
@@ -49260,6 +49382,10 @@
 			(property
 				(name "LCSC PART NAME")
 				(value "1 MHz 低功耗运算放大器")
+			)
+			(property
+				(name "LCSC Part #")
+				(value "C7377")
 			)
 			(property
 				(name "MANUFACTURER")
@@ -49386,16 +49512,16 @@
 				(value "")
 			)
 			(property
-				(name "LCSC Part #")
-				(value "C7377")
-			)
-			(property
 				(name "LCSC")
 				(value "")
 			)
 			(property
 				(name "SUPPLIER PART")
 				(value "")
+			)
+			(property
+				(name "FT Rotation Offset")
+				(value "-90")
 			)
 			(property
 				(name "Sheetname")
