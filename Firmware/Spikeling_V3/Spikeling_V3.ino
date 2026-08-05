@@ -52,9 +52,6 @@
   #include "Core_functions.h"
   #include "Serial_functions.h"
 
-  #include "USB.h"
-  #include "USBCDC.h"
-
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                             Setup                                                     */ 
@@ -65,9 +62,6 @@ void setup() {
   SerialFunctions();                                                                            // Initialise Serial commands
   //setupWifiAP();
   //Mode_opening();
-
-  USB.manufacturerName("Open Source Neuro");
-  USB.productName("Spikeling v3.2");
 }
 
 

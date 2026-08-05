@@ -1,0 +1,3 @@
+-DUSB_MANUFACTURER=\"Open\ Source\ Neuro\"
+-DUSB_PRODUCT=\"Spikeling\"
+-DUSB_SERIAL=\"__MAC__\"

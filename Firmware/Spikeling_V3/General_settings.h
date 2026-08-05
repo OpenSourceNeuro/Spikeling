@@ -871,7 +871,7 @@ enum class VmLedColour : uint8_t {
   Pink
 };
 
-inline constexpr VmLedColour VM_LED_COLOUR = VmLedColour::Green;
+inline constexpr VmLedColour VM_LED_COLOUR = VmLedColour::Violet;
 
 
 // RGB colour coefficients.
@@ -1074,14 +1074,8 @@ inline void HardwareSettings(){
   ledButton.lastStable    = ledButton.lastRaw    = digitalRead(pins.gpio.led_button);    // Seed debouncer with current level (prevents boot toggle)
 
 
-
-  init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
-  
-
-
   randomSeed(esp_random());                                 // Seed pseudo-RNG using ESP32-S3 hardware RNG (used for noise, etc.)
   
-
 
   // Put all SPI chip-selects in a safe inactive state
   pinMode(pins.spi.cs_adc1, OUTPUT); digitalWrite(pins.spi.cs_adc1, HIGH);
@@ -1095,7 +1089,7 @@ inline void HardwareSettings(){
   DAC.begin(pins.spi.cs_dac);                               // Initialize external DAC with its chip-select pin
   DAC.write(stim_dac_zero, stim.pin_stim_current);          // zero-current output at boot
 
-  
+  init_PotFilters();                                        // Seed all pot filters so first readings are stable (reduces startup jitter)
 }
 
 
