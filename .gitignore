@@ -8,3 +8,13 @@ __pycache__/
 # Build / packaging artifacts (scoped to GUI folder)
 build/
 dist/
+
+# Local editor history
+**/.history/
+
+# Python-generated files
+**/__pycache__/
+*.py[cod]
+
+# Local Python virtual environments
+**/.venv/

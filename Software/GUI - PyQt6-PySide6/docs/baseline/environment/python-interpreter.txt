@@ -1,0 +1,1 @@
+﻿C:\Users\mjyzi\Documents\GitHub\Spikeling-V2\Software\GUI - PyQt6-PySide6\.venv\Scripts\python.exe
