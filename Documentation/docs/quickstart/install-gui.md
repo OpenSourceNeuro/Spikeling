@@ -18,7 +18,9 @@ There are two common ways to install the GUI:
 
 If you have a packaged GUI release (installer or pre-built application):
 
-1. Download the GUI release for your operating system.
+Use **[Latest GUI release](https://github.com/OpenSourceNeuro/Spikeling/releases/latest)** to find GitHub's most recently published release, or browse **[All GUI releases](https://github.com/OpenSourceNeuro/Spikeling/releases)** to select a specific version. "Latest" means newest publication; it does not by itself confirm compatibility with your hardware and firmware. For managed teaching deployments, use the version approved for your equipment.
+
+1. Download the clearly versioned asset for your operating system.
 2. Extract / install it.
 3. Launch the application.
 
