@@ -4,64 +4,6 @@
 {% block announce %}
 <div class="spk-announce">
   <a class="spk-buy-announce" href="https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/" target="_blank" rel="noopener">
-    Buy one Spikeling unit
-  </a>
-</div>
-{% endblock %}
-
-{# Sidebar (left nav) call-to-action placed under the nav tree #}
-{% block site_nav %}
-  <!-- Navigation -->
-  {% if nav %}
-    {% if page.meta and page.meta.hide %}
-      {% set hidden = "hidden" if "navigation" in page.meta.hide %}
-    {% endif %}
-    <div
-      class="md-sidebar md-sidebar--primary"
-      data-md-component="sidebar"
-      data-md-type="navigation"
-      {{ hidden }}
-    >
-      <div class="md-sidebar__scrollwrap">
-        <div class="md-sidebar__inner">
-          {% include "partials/nav.html" %}
-
-          <div class="spk-buy">
-            <a class="spk-buy__btn" href="https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/" target="_blank" rel="noopener">
-              Buy one Spikeling unit
-            </a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  <!-- Table of contents -->
-  {% if "toc.integrate" not in features %}
-    {% if page.meta and page.meta.hide %}
-      {% set hidden = "hidden" if "toc" in page.meta.hide %}
-    {% endif %}
-    <div
-      class="md-sidebar md-sidebar--secondary"
-      data-md-component="sidebar"
-      data-md-type="toc"
-      {{ hidden }}
-    >
-      <div class="md-sidebar__scrollwrap">
-        <div class="md-sidebar__inner">
-          {% include "partials/toc.html" %}
-        </div>
-      </div>
-    </div>
-  {% endif %}
-{% endblock %}
-{% extends "base.html" %}
-
-{# Optional: “header bar” call-to-action (behaves like a header element) #}
-{% block announce %}
-<div class="spk-announce">
-  <a class="spk-buy-announce" href="https://www.opensourceneuro.com/index.php/buy_spikeling/" target="_blank" rel="noopener">
     Purchase a Spikeling unit directly
   </a>
 </div>
@@ -85,8 +27,8 @@
           {% include "partials/nav.html" %}
 
           <div class="spk-buy">
-            <a class="spk-buy__btn" href="https://www.opensourceneuro.com/index.php/buy_spikeling/" target="_blank" rel="noopener">
-              Buy Spikeling units
+            <a class="spk-buy__btn" href="https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/" target="_blank" rel="noopener">
+              Buy one Spikeling unit units
             </a>
           </div>
 
