@@ -178,8 +178,8 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/OpenSourceNeuro/Spikeling
     - icon: fontawesome/solid/cart-shopping
-      link: https://www.opensourceneuro.com/index.php/buy_spikeling/
-      name: Buy Spikeling
+      link: https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/
+      name: Buy one Spikeling unit
 
 extra_css:
   - stylesheets/solarized.css
