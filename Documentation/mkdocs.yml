@@ -183,3 +183,188 @@ extra:
 
 extra_css:
   - stylesheets/solarized.css
+https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/site_name: Spikeling Documentation
+site_description: A hardware implementation of spiking neurons for neuroscience teaching and outreach
+site_url: https://opensourceneuro.github.io/Spikeling
+repo_url: https://github.com/OpenSourceNeuro/Spikeling
+
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/images/SpikyLogo.png
+  favicon: assets/favicon.png
+  features:
+    - navigation.instant
+    - navigation.tracking
+
+  palette:
+    # Default: Solarized Dark
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Optional: Solarized Light
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+
+markdown_extensions:
+  - admonition
+  - def_list
+  - attr_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_signature: true
+  - mkdocs-jupyter:
+      execute: false
+  - mermaid2
+  - glightbox
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+
+nav:
+  - Home: index.md
+
+  - About:
+      - Overview: about/index.md
+      - Changelog: about/changelog.md
+      - Roadmap: about/roadmap.md
+
+  - Quickstart:
+      - Overview: quickstart/index.md
+      - What you need: quickstart/what-you-need.md
+      - Hardware setup: quickstart/hardware-setup.md
+      - Install the GUI: quickstart/install-gui.md
+      - Flash firmware: quickstart/flash-firmware.md
+      - First experiment: quickstart/first-experiment.md
+      - Troubleshooting: quickstart/troubleshooting.md
+
+  - User guide:
+      - Overview: user-guide/index.md
+      - Concepts: user-guide/concepts.md
+      - Device overview: user-guide/device-overview.md
+      - Controls and I/O: user-guide/controls-and-io.md
+      - GUI overview: user-guide/gui-overview.md
+      - Recording and export: user-guide/recording-and-export.md
+      - Emulator mode: user-guide/emulator-mode.md
+      - Fluorescence imaging simulation: user-guide/fluorescence-imaging-sim.md
+      - Common workflows: user-guide/common-workflows.md
+
+  - Experiments:
+      - Overview: experiments/index.md
+      - Patch-clamp-style labs: experiments/patch-clamp-style-labs.md
+      - Excitability and threshold: experiments/excitability-and-threshold.md
+      - Adaptation and firing patterns: experiments/adaptation-and-firing-patterns.md
+      - Synapses and inputs: experiments/synapses-and-inputs.md
+      - Network with two units: experiments/network-two-units.md
+      - Stimulus recipes: experiments/stimulus-recipes.md
+
+  - Teaching hub:
+      - Overview: teaching-hub/index.md
+      - Course module outlines: teaching-hub/course-module-outlines.md
+      - Lab handouts:
+          - Lab 1 — Getting started: teaching-hub/lab-handouts/lab-01-getting-started.md
+          - Lab 2 — F–I curves: teaching-hub/lab-handouts/lab-02-f-i-curves.md
+          - Lab 3 — Synapses: teaching-hub/lab-handouts/lab-03-synapses.md
+          - Lab 4 — Imaging: teaching-hub/lab-handouts/lab-04-imaging.md
+      - Assessment rubrics: teaching-hub/assessment-rubrics.md
+      - Classroom setup: teaching-hub/classroom-setup.md
+      - Troubleshooting at scale: teaching-hub/troubleshooting-at-scale.md
+
+  - Hardware:
+      - Overview: hardware/index.md
+      - Bill of materials: hardware/bom.md
+      - Assembly: hardware/assembly.md
+      - Calibration: hardware/calibration.md
+      - Mechanical mounting: hardware/mechanical-mounting.md
+      - Revisions: hardware/revisions.md
+      - Known hardware issues: hardware/known-hardware-issues.md
+      - Safety and handling: hardware/safety-and-handling.md
+
+  - Firmware:
+      - Overview: firmware/index.md
+      - Getting source and toolchain: firmware/getting-source-and-toolchain.md
+      - Build and flash: firmware/build-and-flash.md
+      - Serial protocol: firmware/serial-protocol.md
+      - Modes and features: firmware/modes-and-features.md
+      - Configuration: firmware/configuration.md
+      - Troubleshooting: firmware/troubleshooting.md
+      - Changelog: firmware/changelog.md
+
+  - GUI (Python):
+      - Overview: gui/index.md
+      - Install: gui/install.md
+      - Features: gui/features.md
+      - Settings (theme, language): gui/settings-themes-language.md
+      - Performance tips: gui/performance-tips.md
+      - Packaging: gui/packaging.md
+      - Developer notes: gui/developer-notes.md
+
+  - Data analysis:
+      - Overview: data-analysis/index.md
+      - CSV format: data-analysis/csv-format.md
+      - Python quickstart: data-analysis/python-quickstart.md
+      - Example notebooks: data-analysis/example-notebooks.md
+      - Spike detection: data-analysis/spike-detection.md
+      - Fluorescence analysis: data-analysis/fluorescence-analysis.md
+
+  - Extending:
+      - Overview: extending/index.md
+      - Add a new stimulus: extending/add-new-stimulus.md
+      - Add a new neuron model: extending/add-new-neuron-model.md
+      - Multi-unit networking: extending/multi-unit-networking.md
+      - Custom sensors: extending/custom-sensors.md
+
+  - Reference:
+      - Overview: reference/index.md
+      - Glossary: reference/glossary.md
+      - Specs: reference/specs.md
+      - Pinout and connectors: reference/pinout-and-connectors.md
+      - GUI controls: reference/gui-controls-reference.md
+      - FAQ: reference/faq.md
+
+  - Community:
+      - Overview: community/index.md
+      - How to contribute: community/contribute.md
+      - Issue reporting: community/issue-templates.md
+      - Docs style guide: community/documentation-style-guide.md
+      - License: community/license.md
+
+extra:
+  version:
+    provider: mike
+    default: latest
+    alias: true
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/OpenSourceNeuro/Spikeling
+    - icon: fontawesome/solid/cart-shopping
+      link: https://www.opensourceneuro.com/index.php/product/spikeling-v3-2-unit/
+      name: Buy one Spikeling unit
+
+extra_css:
+  - stylesheets/solarized.css
