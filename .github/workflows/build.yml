@@ -17,11 +17,11 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref }}
           persist-credentials: false
 
       - name: Set up Python
@@ -72,11 +72,11 @@ jobs:
     needs: build-macos
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref }}
           persist-credentials: false
 
       - name: Set up Python
@@ -127,11 +127,11 @@ jobs:
     needs: build-linux
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref }}
           persist-credentials: false
 
       - name: Set up Python
