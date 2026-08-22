@@ -3,6 +3,7 @@
 import {
   DESKTOP_STEPS_PER_UPDATE,
   EmulatorSource,
+  SpikelingMainControls,
   SpikelingOscilloscope,
   getSimulationSpeed,
 } from "../src/index.ts";
@@ -16,6 +17,7 @@ function requiredElement<T extends HTMLElement>(id: string): T {
 }
 
 const host = requiredElement<HTMLElement>("oscilloscope");
+const controlsHost = requiredElement<HTMLElement>("controls");
 const speed = requiredElement<HTMLSelectElement>("speed");
 const error = requiredElement<HTMLElement>("error");
 
@@ -24,22 +26,21 @@ for (const [index] of DESKTOP_STEPS_PER_UPDATE.entries()) {
   const option = document.createElement("option");
   option.value = String(index);
   option.textContent = setting.realtimeMultiplier + "× real time";
-  option.selected = index === 5;
+  option.selected = index === 2;
   speed.append(option);
 }
 
 const source = new EmulatorSource({
-  speedIndex: 5,
+  speedIndex: 2,
   simulation: {
     seed: 123456,
-    controls: {
-      main: { patchCurrent: 18, directCurrentEnabled: true },
-      stimulus: { strength: 25, frequencySlider: 35 },
-    },
   },
 });
 
 const oscilloscope = new SpikelingOscilloscope(host, source);
+const controls = new SpikelingMainControls(controlsHost, source, {
+  devicePixelRatio: () => window.devicePixelRatio,
+});
 source.subscribeErrors((failure) => {
   error.textContent = failure.message;
 });
@@ -52,6 +53,7 @@ speed.addEventListener("change", () => source.setSpeed(Number(speed.value)));
 
 window.addEventListener("pagehide", () => {
   oscilloscope.dispose();
+  controls.dispose();
   void source.disconnect();
 });
 

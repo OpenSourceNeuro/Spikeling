@@ -21,8 +21,17 @@ export class FakeElement {
   readonly children: FakeElement[] = [];
   readonly listeners = new Map<string, Set<FakeListener>>();
   parent: FakeElement | undefined;
+  id = "";
   type = "";
+  value = "";
+  min = "";
+  max = "";
+  step = "";
+  accept = "";
+  htmlFor = "";
+  disabled = false;
   checked = false;
+  files: Array<{ name: string; size: number; text(): Promise<string> }> | undefined;
   readonly ownerDocument: FakeDocument;
   readonly tagName: string;
 
@@ -40,6 +49,14 @@ export class FakeElement {
       element.parent = this;
       this.children.push(element);
     }
+  }
+
+  replaceChildren(...elements: FakeElement[]): void {
+    for (const child of this.children) {
+      child.parent = undefined;
+    }
+    this.children.length = 0;
+    this.append(...elements);
   }
 
   remove(): void {

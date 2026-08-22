@@ -16,6 +16,45 @@ export {
   SequenceRandomSource,
 } from "./model/random.ts";
 export { SpikelingModel } from "./model/simulation.ts";
+export {
+  CUSTOM_STIMULUS_LIMITS,
+  SpikelingMainControls,
+} from "./controls/main-controls.ts";
+export type { MainNeuronControlsOptions } from "./controls/main-controls.ts";
+export {
+  MAIN_CONTROL_SPECIFICATIONS,
+  formatMainControlValue,
+  gaussianNoiseStandardDeviation,
+  getMainControlSpecification,
+  photoreceptorDecayRate,
+  photoreceptorRecoveryRate,
+  stimulusFrequencyHz,
+  validateMainControlValue,
+} from "./controls/specifications.ts";
+export type {
+  ControlAccent,
+  DesktopControlSpecification,
+  MainControlId,
+} from "./controls/specifications.ts";
+export {
+  CustomStimulusError,
+  MAX_CUSTOM_STIMULUS_BYTES,
+  MAX_CUSTOM_STIMULUS_SAMPLES,
+  REQUIRED_STIMULUS_COLUMN,
+  parseCustomStimulusCsv,
+  parseCustomStimulusFile,
+} from "./stimulus/custom-csv.ts";
+export type {
+  CustomStimulusErrorCode,
+  CustomStimulusOptions,
+  LocalStimulusFile,
+  ParsedCustomStimulus,
+} from "./stimulus/custom-csv.ts";
+export { renderStimulusPreview } from "./stimulus/preview.ts";
+export type {
+  StimulusPreviewStatistics,
+  StimulusPreviewSurface,
+} from "./stimulus/preview.ts";
 export { EmulatorSource } from "./data-source/EmulatorSource.ts";
 export type {
   DataSource,

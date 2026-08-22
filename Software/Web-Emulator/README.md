@@ -1,12 +1,13 @@
 # Spikeling Web Emulator
 
-Phases 1–3 implement the numerically validated, worker-based simulation engine
-and scientific oscilloscope for the Open Source Neuro Spikeling emulator. The
-package includes the browser-independent model, a dedicated worker,
-desktop-equivalent timing, bounded full-precision histories, a UI-independent
-data-source interface and a responsive dual-axis rolling oscilloscope. It does
-not yet add full neuron/synapse control panels, WordPress integration, serial
-support or deployment configuration.
+Phases 1–4 implement the numerically validated, worker-based simulation engine,
+scientific oscilloscope and desktop-faithful main-neuron controls for the Open
+Source Neuro Spikeling emulator. The package includes the browser-independent
+model, a dedicated worker, desktop-equivalent timing, bounded full-precision
+histories, a UI-independent data-source interface, a responsive dual-axis
+rolling oscilloscope and validated local custom-stimulus import. It does not yet
+add synapse control panels, WordPress integration, serial support or deployment
+configuration.
 
 ## Requirements
 
@@ -26,8 +27,8 @@ From Software/Web-Emulator:
 
 The first command regenerates committed Python desktop-reference fixtures. The
 second checks that those fixtures still match the pinned desktop source and then
-runs the TypeScript model, cross-language parity, engine, worker, oscilloscope
-and performance tests.
+runs the TypeScript model, cross-language parity, engine, worker, oscilloscope,
+main-neuron controls, custom-stimulus and performance tests.
 
 Run individual groups with:
 
@@ -37,6 +38,7 @@ Run individual groups with:
     npm run test:worker
     npm run test:performance
     npm run test:visualisation
+    npm run test:controls
 
 ## Run the local oscilloscope preview
 
@@ -47,8 +49,12 @@ From Software/Web-Emulator:
 Open the printed local address, normally http://127.0.0.1:4173/, and select
 Start. The standalone preview runs the actual dedicated worker, displays
 desktop-matched membrane-voltage, stimulus and current traces, and exposes the
-existing start/pause/stop/reset and speed controls. The seven trace checkboxes
-use semantic, keyboard-operable native inputs.
+existing start/pause/stop/reset and speed controls beside the complete
+main-neuron control panel. It starts with the desktop's disabled control
+defaults and speed position 2. Enable Injected current and adjust its slider to
+elicit activity, or enable Direct current stimulation and Stimulus strength to
+apply the internal waveform. All trace checkboxes, routing toggles, sliders and
+the neuron selector use semantic, keyboard-operable native controls.
 
 The local server strips Node-supported erasable TypeScript syntax on demand and
 serves native browser modules with their correct MIME types. It requires no
@@ -228,6 +234,98 @@ not requested when the simulation is paused, stopped or the browser tab is
 hidden. ResizeObserver updates Canvas geometry without changing the simulation
 timestep, history or axis ranges.
 
+## Desktop-faithful main-neuron controls
+
+Mount the main-neuron controls against the same DataSource used by the
+oscilloscope; the component never imports, resets or directly owns a model or
+worker:
+
+    const source = new EmulatorSource({ simulation: { seed: 123456 } });
+    const scope = new SpikelingOscilloscope(scopeContainer, source);
+    const panel = new SpikelingMainControls(controlContainer, source, {
+      devicePixelRatio: () => window.devicePixelRatio,
+    });
+
+    await source.connect();
+    source.start();
+    panel.setControlEnabled("injectedCurrent", true);
+    panel.setControlValue("injectedCurrent", 18);
+    panel.selectPreset(11);
+
+    panel.dispose();
+    scope.dispose();
+    await source.disconnect();
+
+Load both src/styles/oscilloscope.css and src/styles/controls.css. Control styles
+and Solarized custom properties are scoped to .spk-controls and do not change
+WordPress, Elementor or other host-page styling.
+
+All 20 audited Python-source neuron presets appear in the native selector. The
+display immediately updates the actual selected a, b, c, d and resting
+potential, with appropriate millivolt units. Changing a preset retains existing
+membrane voltage, recovery state, simulation time, injected current and synapse
+settings; only the main photoreceptor controls return to their desktop defaults.
+
+Every slider is initially disabled with a separate keyboard-native on/off
+toggle. Switching a control off restores its source-pinned desktop default.
+Direct current stimulation and Light stimulation are independent routing
+checkboxes.
+
+| Control | Raw slider range | Desktop default/off value | Scientifically labelled display |
+| --- | ---: | ---: | --- |
+| Stimulus frequency | −100 to +100 | 0 | Nonlinear frequency, approximately 10 to 1,000 Hz |
+| Stimulus strength | −100 to +100 | 0 | Signed percentage |
+| Injected current | −100 to +100 | 0 | Signed arbitrary units |
+| Noise level | 0 to 100 | 0 | Percentage and Gaussian standard deviation in arbitrary units |
+| Photo-gain | −100 to +100 | 0 | Signed percentage |
+| Photo decay λ | 10 to 125 | 100 | Actual coefficient, slider / 100,000 ms⁻¹ |
+| Photo recovery λ | 1 to 100 | 25 | Actual coefficient, slider / 1,000 ms⁻¹ |
+
+The desktop frequency display is round(10000 / (510 − 5 × slider)) Hz. Thus raw
+slider values −100, 0 and +100 display 10, 20 and 1,000 Hz respectively; the
+signed raw slider value is sent to the model without incorrectly substituting
+the displayed frequency. As in the original model, the first internal-waveform
+period remains 1,000 samples before the next rollover applies a changed period.
+
+Gaussian noise displays its genuine σ = noise slider / 4 a.u. Photoreceptor
+decay and recovery display the coefficients actually used by the numerical
+model, not raw unlabeled slider values. Parameter changes are forwarded through
+the existing worker protocol without changing the 0.1 ms integration timestep,
+resetting simulation state or bypassing the source-matched one-sample current
+delay.
+
+## Local custom-stimulus CSV files
+
+The desktop's bundled custom stimuli contain an exact, case-sensitive Stim
+column and optionally a Trigger column:
+
+    Stim,Trigger
+    12.5,1
+    0,0
+    -8.25,0
+
+Trigger values are retained as format metadata only: scientific trigger timing
+comes from the model's source-matched first-sample and rollover behaviour. Each
+Stim row is played at exactly 0.1 ms, with full Float64 precision, signed
+values and automatic looping. An optional Time (ms), timeMs or time_ms column
+is accepted only when adjacent timestamps are precisely 0.1 ms apart.
+
+Selecting a file reads it exclusively through the browser's local File.text()
+API. No upload, fetch request, server storage, third-party parsing service or
+network transfer is performed. Invalid extensions, duplicate/missing columns,
+malformed quotes, uneven rows, missing/non-finite samples, incompatible
+timestamps, files exceeding 8 MiB and inputs exceeding 250,000 samples are
+rejected before the model is changed. Both limits are configurable downwards or
+upwards through MainNeuronControlsOptions.
+
+After a valid import, the panel shows its filename, exact sample count, 0.1 ms
+sample interval, total duration and a small native-Canvas waveform preview. The
+preview retains each pixel bucket's actual signed minima and maxima without
+inventing or modifying scientific values. Custom playback is enabled explicitly;
+while enabled, only the internal frequency/strength controls are temporarily
+disabled, and their original values return unchanged when playback switches
+back to the internal waveform.
+
 ## Desktop numerical contract
 
 The reference is pinned to commit
@@ -272,10 +370,11 @@ range instead of the desktop slider's erroneous 0..100 range.
 
 ## Next phase
 
-Phase 4 will introduce the main-neuron controls: the neuron selector, stimulus,
-injected current, noise, photoreceptor controls, custom stimulus and appropriate
-parameter displays. The Phase 1 scientific contract, Phase 2 worker/data-source
-boundary and Phase 3 truthful rolling oscilloscope should remain unchanged.
+Phase 5 can introduce the two source-faithful auxiliary-neuron/synapse control
+panels, including signed patch current, synaptic gain and independently selected
+decay, while preserving the Phase 1 scientific contract, Phase 2 worker/data-
+source boundary, Phase 3 truthful rolling oscilloscope and Phase 4 main-neuron
+controls.
 
 ## Licence
 
