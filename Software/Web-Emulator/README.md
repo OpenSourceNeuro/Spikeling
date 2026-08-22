@@ -1,8 +1,11 @@
 # Spikeling Web Emulator
 
-Phase 1 implements the browser-independent numerical core of the Open Source
-Neuro Spikeling emulator. It does not add a user interface, Web Worker,
-WordPress integration, serial support, or deployment configuration.
+Phases 1 and 2 implement the numerically validated, worker-based simulation
+engine for the Open Source Neuro Spikeling emulator. The package includes the
+browser-independent model, a dedicated worker, desktop-equivalent timing,
+bounded full-precision histories and a UI-independent data-source interface. It
+does not yet add an oscilloscope, user interface, WordPress integration, serial
+support or deployment configuration.
 
 ## Requirements
 
@@ -11,7 +14,7 @@ WordPress integration, serial support, or deployment configuration.
 - A complete checkout of the Spikeling repository, including the existing
   desktop emulator under Software/GUI - PyQt6-PySide6.
 
-There are no third-party runtime or test dependencies in Phase 1.
+There are no third-party runtime or test dependencies.
 
 ## Run the checks
 
@@ -22,12 +25,16 @@ From Software/Web-Emulator:
 
 The first command regenerates committed Python desktop-reference fixtures. The
 second checks that those fixtures still match the pinned desktop source and then
-runs the TypeScript model and cross-language parity tests.
+runs the TypeScript model, cross-language parity, engine, worker and performance
+tests.
 
 Run individual groups with:
 
     npm run test:model
     npm run test:parity
+    npm run test:engine
+    npm run test:worker
+    npm run test:performance
 
 ## Public model API
 
@@ -48,6 +55,100 @@ Import SpikelingModel and the 20 NEURON_PRESETS from src/index.ts:
 The model exposes a 0.1 ms fixed timestep; main and auxiliary-neuron recovery
 states; internal and custom stimuli; deterministic Gaussian noise; a recovering
 photoreceptor; and two signed, decaying synaptic inputs.
+
+## Worker-backed data source
+
+Browser rendering and controls should depend on the DataSource boundary instead
+of importing the model or managing a worker directly:
+
+    const source = new EmulatorSource({
+      simulation: {
+        seed: 123456,
+        controls: { main: { presetId: 1, patchCurrent: 18 } },
+      },
+      speedIndex: 5,
+    });
+
+    source.subscribe((fullResolutionSamples) => {
+      // Supply scientific samples to a future recorder or visualisation.
+    });
+
+    source.subscribeState((state) => {
+      // Observe run state, true speed, retained history and background drops.
+    });
+
+    await source.connect();
+    source.start();
+    source.updateControls({ main: { patchCurrent: 24 } });
+    source.setSpeed(6);
+    source.pause();
+    source.start();
+    source.reset();
+    source.stop();
+    await source.disconnect();
+
+EmulatorSource creates a dedicated ES-module Web Worker. Its worker core owns
+the scientific model, scheduler and bounded history. Each bounded simulation
+slice is packed into a transferable Float64Array; the browser-side source
+maintains a second bounded history for future charting and provides complete
+0.1 ms samples to subscribers. No scientific value is downsampled or converted
+to Float32.
+
+The DataSource interface deliberately permits a later physical-hardware source
+without making the oscilloscope depend on emulator implementation details. Web
+Serial is not implemented and is not required for this phase.
+
+## Timing and simulation speed
+
+Numerical integration always uses the existing fixed 0.1 ms timestep. The
+desktop-equivalent scheduler ticks every 50 wall-clock milliseconds, independently
+of monitor refresh or a future visualisation/render loop. Desktop speed positions
+have the following audited meanings:
+
+| Slider | Steps / 50 ms | Scientific samples / s | True real-time speed | Legacy desktop label |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 10 | 200 | 0.02× | 0.001× |
+| 1 | 20 | 400 | 0.04× | 0.002× |
+| 2 | 50 | 1,000 | 0.10× | 0.005× |
+| 3 | 100 | 2,000 | 0.20× | 0.010× |
+| 4 | 200 | 4,000 | 0.40× | 0.020× |
+| 5 | 500 | 10,000 | 1.00× | 0.050× |
+| 6 | 1,000 | 20,000 | 2.00× | 0.100× |
+| 7 | 2,000 | 40,000 | 4.00× | 0.200× |
+| 8 | 5,000 | 100,000 | 10.00× | 0.500× |
+| 9 | 10,000 | 200,000 | 20.00× | 1.000× |
+
+The desktop label describes a normalised slider position, not a physical
+real-time multiplier. getSimulationSpeed exposes both values explicitly to
+prevent a future UI from presenting the legacy label as a scientific timing
+measurement.
+
+By default, a simulation slice contains at most 250 model steps before the
+worker yields. Therefore stop, pause, reset, speed changes and parameter changes
+can be handled between slices, even at the maximum speed setting. A late or
+background-throttled tick catches up at most four desktop intervals; additional
+work is discarded deliberately and is visible in the droppedSteps diagnostic.
+
+Pause preserves scientific state; start after pause resumes that state. Stop
+clears history and restores the model's initial state without discarding chosen
+controls. Reset clears history and reproducibly restarts the seeded model;
+resetting an already-running engine keeps it running.
+
+## Bounded scientific history
+
+The default desktop-sized history retains 50,000 full-resolution samples, or
+5,000 ms at the fixed 0.1 ms timestep. Its 12 preallocated Float64 columns use
+exactly 4,800,000 bytes per ring buffer; the browser and worker each own one
+independent bounded ring. A future oscilloscope can request the desktop-sized
+visible window of 5,000 samples, corresponding to 500 ms.
+
+When the ring fills, the oldest samples are overwritten in chronological order.
+Display decimation, if introduced in Phase 3, must be applied only to rendering
+and must not change the values delivered to scientific consumers or recording.
+
+The performance tests verify maximum-speed slicing, 10,000-sample scientific
+parity, 70,000-sample bounded-history runs and a simulated one-minute background
+suspension. They emit measured sample throughput and allocated-history size.
 
 ## Desktop numerical contract
 
@@ -93,9 +194,10 @@ range instead of the desktop slider's erroneous 0..100 range.
 
 ## Next phase
 
-Phase 2 will add the worker-based simulation clock, bounded ring buffers,
-simulation-speed controls, start/pause/reset coordination, and a DataSource
-boundary. It must retain the Phase 1 model and golden checks unchanged.
+Phase 3 will introduce the rolling oscilloscope, membrane-voltage and stimulus /
+current traces, axes and the refresh-rate-independent visual rendering loop.
+The Phase 1 scientific contract and the Phase 2 bounded worker/data-source
+boundary should remain unchanged.
 
 ## Licence
 

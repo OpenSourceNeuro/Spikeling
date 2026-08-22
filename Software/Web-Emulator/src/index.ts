@@ -16,6 +16,51 @@ export {
   SequenceRandomSource,
 } from "./model/random.ts";
 export { SpikelingModel } from "./model/simulation.ts";
+export { EmulatorSource } from "./data-source/EmulatorSource.ts";
+export type {
+  DataSource,
+  ErrorListener,
+  SampleListener,
+  StateListener,
+  Unsubscribe,
+} from "./data-source/DataSource.ts";
+export type {
+  EmulatorSourceOptions,
+  EmulatorSourceWorker,
+} from "./data-source/EmulatorSource.ts";
+export { SimulationEngine } from "./simulation/clock.ts";
+export type {
+  SimulationEngineOptions,
+  SimulationScheduler,
+} from "./simulation/clock.ts";
+export type {
+  EngineSnapshot,
+  MainToWorkerMessage,
+  SimulationLifecycle,
+  TransferableSimulationOptions,
+  WorkerToMainMessage,
+} from "./simulation/protocol.ts";
+export {
+  DEFAULT_HISTORY_CAPACITY,
+  DEFAULT_VISIBLE_SAMPLES,
+  SAMPLE_COLUMNS,
+  SAMPLE_WIDTH,
+  SampleRingBuffer,
+  packSamples,
+  unpackSamples,
+} from "./simulation/ring-buffer.ts";
+export {
+  DEFAULT_SPEED_INDEX,
+  DESKTOP_STEPS_PER_UPDATE,
+  DESKTOP_UPDATE_INTERVAL_MS,
+  getSimulationSpeed,
+} from "./simulation/speed.ts";
+export type { SimulationSpeed } from "./simulation/speed.ts";
+export { createEmulatorWorkerRuntime } from "./worker/emulator-runtime.ts";
+export type {
+  EmulatorWorkerRuntime,
+  EmulatorWorkerRuntimeOptions,
+} from "./worker/emulator-runtime.ts";
 export {
   INITIAL_STIMULUS_PERIOD_STEPS,
   MINIMUM_STIMULUS_PERIOD_OFFSET,
