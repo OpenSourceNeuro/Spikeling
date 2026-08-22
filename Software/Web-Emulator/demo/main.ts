@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+import {
+  DESKTOP_STEPS_PER_UPDATE,
+  EmulatorSource,
+  SpikelingOscilloscope,
+  getSimulationSpeed,
+} from "../src/index.ts";
+
+function requiredElement<T extends HTMLElement>(id: string): T {
+  const element = document.getElementById(id);
+  if (element === null) {
+    throw new Error("Missing local-preview element: " + id);
+  }
+  return element as T;
+}
+
+const host = requiredElement<HTMLElement>("oscilloscope");
+const speed = requiredElement<HTMLSelectElement>("speed");
+const error = requiredElement<HTMLElement>("error");
+
+for (const [index] of DESKTOP_STEPS_PER_UPDATE.entries()) {
+  const setting = getSimulationSpeed(index);
+  const option = document.createElement("option");
+  option.value = String(index);
+  option.textContent = setting.realtimeMultiplier + "× real time";
+  option.selected = index === 5;
+  speed.append(option);
+}
+
+const source = new EmulatorSource({
+  speedIndex: 5,
+  simulation: {
+    seed: 123456,
+    controls: {
+      main: { patchCurrent: 18, directCurrentEnabled: true },
+      stimulus: { strength: 25, frequencySlider: 35 },
+    },
+  },
+});
+
+const oscilloscope = new SpikelingOscilloscope(host, source);
+source.subscribeErrors((failure) => {
+  error.textContent = failure.message;
+});
+
+requiredElement<HTMLButtonElement>("start").addEventListener("click", () => source.start());
+requiredElement<HTMLButtonElement>("pause").addEventListener("click", () => source.pause());
+requiredElement<HTMLButtonElement>("stop").addEventListener("click", () => source.stop());
+requiredElement<HTMLButtonElement>("reset").addEventListener("click", () => source.reset());
+speed.addEventListener("change", () => source.setSpeed(Number(speed.value)));
+
+window.addEventListener("pagehide", () => {
+  oscilloscope.dispose();
+  void source.disconnect();
+});
+
+try {
+  await source.connect();
+} catch (failure) {
+  error.textContent =
+    failure instanceof Error ? failure.message : "Unable to initialise the emulator worker.";
+}

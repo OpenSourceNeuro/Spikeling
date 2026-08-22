@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Local development preview of the scientifically validated Spikeling neuronal oscilloscope."
+    />
+    <title>Spikeling neuronal oscilloscope — local preview</title>
+    <link rel="stylesheet" href="/src/styles/oscilloscope.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #f7f7f2;
+        color: #073642;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .spk-preview {
+        width: min(calc(100% - 2rem), 1120px);
+        margin: clamp(1rem, 5vw, 4rem) auto;
+      }
+
+      .spk-preview__heading {
+        margin-bottom: 0.375rem;
+      }
+
+      .spk-preview__description {
+        max-width: 46rem;
+        line-height: 1.55;
+      }
+
+      .spk-preview__toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 0.75rem;
+        margin: 1.5rem 0;
+      }
+
+      .spk-preview__button,
+      .spk-preview__speed {
+        min-height: 2.75rem;
+        padding: 0.5rem 0.875rem;
+        border: 1px solid #073642;
+        border-radius: 0.5rem;
+        background: #fff;
+        color: #073642;
+        font: inherit;
+      }
+
+      .spk-preview__button--primary {
+        background: #073642;
+        color: #fff;
+      }
+
+      .spk-preview__speed-label {
+        display: grid;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+      }
+
+      .spk-preview__error {
+        color: #a5221e;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="spk-preview">
+      <h1 class="spk-preview__heading">Spikeling neuronal oscilloscope</h1>
+      <p class="spk-preview__description">
+        Local Phase 3 preview: a real-time Izhikevich educational model and
+        interface, not a biological preparation or a research-grade
+        electrophysiology recorder.
+      </p>
+
+      <div class="spk-preview__toolbar" aria-label="Simulation transport controls">
+        <button class="spk-preview__button spk-preview__button--primary" id="start" type="button">
+          Start
+        </button>
+        <button class="spk-preview__button" id="pause" type="button">Pause</button>
+        <button class="spk-preview__button" id="stop" type="button">Stop</button>
+        <button class="spk-preview__button" id="reset" type="button">Reset</button>
+        <label class="spk-preview__speed-label" for="speed">
+          Simulation speed
+          <select class="spk-preview__speed" id="speed"></select>
+        </label>
+      </div>
+
+      <div id="oscilloscope"></div>
+      <p class="spk-preview__error" id="error" role="alert"></p>
+    </main>
+
+    <script type="module" src="/demo/main.ts"></script>
+  </body>
+</html>

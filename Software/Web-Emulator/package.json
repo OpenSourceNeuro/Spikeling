@@ -2,7 +2,7 @@
   "name": "@opensource-neuro/spikeling-web-emulator",
   "version": "0.1.0",
   "private": true,
-  "description": "Numerically validated worker-based browser simulation engine for the Open Source Neuro Spikeling emulator.",
+  "description": "Numerically validated worker-based browser emulator and scientific oscilloscope for Open Source Neuro Spikeling.",
   "type": "module",
   "license": "GPL-3.0-or-later",
   "engines": {
@@ -11,12 +11,14 @@
   "scripts": {
     "fixtures": "python3 tools/reference/generate_desktop_golden.py",
     "fixtures:check": "python3 tools/reference/generate_desktop_golden.py --check",
+    "dev": "node tools/serve.mjs",
     "test": "node --test tests/*.test.ts",
     "test:model": "node --test tests/model.test.ts",
     "test:parity": "node --test tests/parity.test.ts",
     "test:engine": "node --test tests/engine.test.ts",
     "test:worker": "node --test tests/worker.test.ts",
     "test:performance": "node --test tests/performance.test.ts",
+    "test:visualisation": "node --test tests/visualisation.test.ts tests/oscilloscope.test.ts",
     "verify": "npm run fixtures:check && npm test"
   },
   "keywords": [

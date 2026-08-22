@@ -56,6 +56,59 @@ export {
   getSimulationSpeed,
 } from "./simulation/speed.ts";
 export type { SimulationSpeed } from "./simulation/speed.ts";
+export {
+  DESKTOP_CURRENT_MAX,
+  DESKTOP_CURRENT_MIN,
+  DESKTOP_CURRENT_RANGE,
+  DESKTOP_TRACE_WIDTH_PX,
+  DESKTOP_VISIBLE_WINDOW_MS,
+  DESKTOP_VOLTAGE_MAX_MV,
+  DESKTOP_VOLTAGE_MIN_MV,
+  DESKTOP_VOLTAGE_RANGE,
+  buildAxisTicks,
+  calculatePlotLayout,
+  formatAxisValue,
+  projectX,
+  projectY,
+} from "./visualisation/axes.ts";
+export type { AxisRange, PlotLayout } from "./visualisation/axes.ts";
+export { OscilloscopeCanvasRenderer } from "./visualisation/canvas-renderer.ts";
+export type {
+  CanvasRenderingSurface,
+  OscilloscopeRendererOptions,
+  RenderStatistics,
+} from "./visualisation/canvas-renderer.ts";
+export { decimateTrace } from "./visualisation/decimation.ts";
+export type {
+  TraceDecimationOptions,
+  TracePoint,
+} from "./visualisation/decimation.ts";
+export { SpikelingOscilloscope } from "./visualisation/oscilloscope.ts";
+export type {
+  OscilloscopeOptions,
+  ResizeObserverAdapter,
+} from "./visualisation/oscilloscope.ts";
+export { OscilloscopeRenderLoop } from "./visualisation/render-loop.ts";
+export type {
+  AnimationFrameScheduler,
+  OscilloscopeRenderLoopOptions,
+  PageVisibilitySource,
+} from "./visualisation/render-loop.ts";
+export {
+  DEFAULT_OSCILLOSCOPE_THEME,
+  SPIKELING_PALETTE,
+} from "./visualisation/theme.ts";
+export type { OscilloscopeTheme } from "./visualisation/theme.ts";
+export {
+  OSCILLOSCOPE_TRACES,
+  defaultVisibleTraces,
+  getOscilloscopeTrace,
+} from "./visualisation/traces.ts";
+export type {
+  OscilloscopeTrace,
+  TraceAxis,
+  TraceField,
+} from "./visualisation/traces.ts";
 export { createEmulatorWorkerRuntime } from "./worker/emulator-runtime.ts";
 export type {
   EmulatorWorkerRuntime,

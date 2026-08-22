@@ -5,10 +5,13 @@ import test from "node:test";
 
 import {
   SAMPLE_WIDTH,
+  OscilloscopeCanvasRenderer,
   SimulationEngine,
   SpikelingModel,
+  defaultVisibleTraces,
   getSimulationSpeed,
 } from "../src/index.ts";
+import { RecordingCanvas } from "./helpers/fake-canvas.ts";
 import { ManualScheduler } from "./helpers/manual-scheduler.ts";
 
 test("maximum desktop speed remains interruptible and preserves full-resolution parity", (context) => {
@@ -108,4 +111,41 @@ test("background suspension cannot queue unbounded scientific catch-up work", ()
   scheduler.flush();
   assert.equal(engine.getSnapshot().stepIndex, 20_000);
   assert.equal(scheduler.pending, 1);
+});
+
+test("desktop-sized oscilloscope frames remain bounded and preserve source samples", (context) => {
+  const samples = new SpikelingModel({
+    controls: {
+      main: { patchCurrent: 18, directCurrentEnabled: true },
+      stimulus: { strength: 25 },
+    },
+  }).run(5_000);
+  const canvas = new RecordingCanvas(800, 400);
+  const renderer = new OscilloscopeCanvasRenderer(canvas);
+  const originalLast = samples.at(-1);
+
+  const started = performance.now();
+  let last;
+  for (let frame = 0; frame < 20; frame += 1) {
+    last = renderer.render(samples, defaultVisibleTraces());
+  }
+  const elapsed = performance.now() - started;
+
+  assert.ok(last);
+  assert.equal(last.sourceSamples, 5_000);
+  assert.equal(last.enabledTraces, 3);
+  assert.ok(last.displayedPoints <= renderer.getLayout().plotWidth * 4 * 3);
+  assert.equal(samples.length, 5_000);
+  assert.deepEqual(samples.at(-1), originalLast);
+  assert.ok(elapsed < 5_000, "20 scientific oscilloscope frames took " + elapsed + " ms");
+
+  context.diagnostic(
+    "Oscilloscope: 20 full-window frames in " +
+      elapsed.toFixed(1) +
+      " ms; " +
+      (elapsed / 20).toFixed(2) +
+      " ms/frame; " +
+      last.displayedPoints.toLocaleString("en-GB") +
+      " displayed points across three scientifically faithful traces.",
+  );
 });

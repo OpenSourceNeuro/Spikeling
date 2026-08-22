@@ -1,0 +1,151 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-oscilloscope {
+  --spk-bg-deep: #001e26;
+  --spk-bg: #002b36;
+  --spk-panel: #073642;
+  --spk-muted: #586e75;
+  --spk-secondary: #93a1a1;
+  --spk-text: #becdcd;
+  --spk-light: #fdf6e3;
+  --spk-membrane: #dc322f;
+  --spk-cell: #859900;
+  --spk-stimulus: #268bd2;
+  --spk-syn1-voltage: #cb4b16;
+  --spk-syn1: #2aa198;
+  --spk-syn2-voltage: #b58900;
+  --spk-syn2: #d33682;
+
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.875rem;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  border: 1px solid var(--spk-panel);
+  border-radius: 1rem;
+  background: var(--spk-bg);
+  color: var(--spk-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.spk-oscilloscope *,
+.spk-oscilloscope *::before,
+.spk-oscilloscope *::after {
+  box-sizing: border-box;
+}
+
+.spk-oscilloscope__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spk-oscilloscope__title {
+  margin: 0;
+  color: var(--spk-light);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+}
+
+.spk-oscilloscope__status {
+  min-width: 5.5rem;
+  color: var(--spk-secondary);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.spk-oscilloscope__status[data-state="running"] {
+  color: var(--spk-cell);
+}
+
+.spk-oscilloscope__status[data-state="paused"] {
+  color: var(--spk-syn2-voltage);
+}
+
+.spk-oscilloscope__canvas {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 46vw, 440px);
+  border: 1px solid var(--spk-panel);
+  border-radius: 0.5rem;
+  background: var(--spk-bg-deep);
+}
+
+.spk-oscilloscope__readings {
+  margin: 0;
+  color: var(--spk-secondary);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spk-oscilloscope__traces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.875rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.625rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--spk-panel);
+}
+
+.spk-oscilloscope__legend {
+  padding: 0 0.5rem 0 0;
+  color: var(--spk-secondary);
+  font-size: 0.75rem;
+}
+
+.spk-oscilloscope__trace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  gap: 0.375rem;
+  color: var(--spk-text);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.spk-oscilloscope__trace-input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--spk-trace-colour);
+}
+
+.spk-oscilloscope__trace-input:focus-visible {
+  outline: 2px solid var(--spk-light);
+  outline-offset: 3px;
+}
+
+.spk-oscilloscope__trace-input:not(:checked) + .spk-oscilloscope__trace-label {
+  color: var(--spk-secondary);
+}
+
+@media (max-width: 540px) {
+  .spk-oscilloscope {
+    border-radius: 0.75rem;
+  }
+
+  .spk-oscilloscope__canvas {
+    height: 300px;
+  }
+
+  .spk-oscilloscope__readings {
+    line-height: 1.6;
+  }
+
+  .spk-oscilloscope__trace {
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spk-oscilloscope *,
+  .spk-oscilloscope *::before,
+  .spk-oscilloscope *::after {
+    scroll-behavior: auto;
+  }
+}
