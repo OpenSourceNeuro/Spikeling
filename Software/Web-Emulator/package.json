@@ -12,6 +12,7 @@
     "fixtures": "python3 tools/reference/generate_desktop_golden.py",
     "fixtures:check": "python3 tools/reference/generate_desktop_golden.py --check",
     "dev": "node tools/serve.mjs",
+    "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.ts",
     "test:model": "node --test tests/model.test.ts",
     "test:parity": "node --test tests/parity.test.ts",
@@ -23,6 +24,7 @@
     "test:synapses": "node --test tests/synapses.test.ts",
     "test:recording": "node --test tests/recording-csv.test.ts tests/recording.test.ts",
     "test:accessibility": "node --test tests/accessibility.test.ts tests/interface.test.ts",
+    "test:wordpress": "node --test tests/wordpress.test.ts tests/production-build.test.ts",
     "verify": "npm run fixtures:check && npm test"
   },
   "keywords": [

@@ -1,6 +1,6 @@
 # Spikeling Web Emulator
 
-Phases 1–7 implement the numerically validated, worker-based simulation engine,
+Phases 1–8 implement the numerically validated, worker-based simulation engine,
 scientific oscilloscope, desktop-faithful main-neuron controls and two complete
 virtual presynaptic neurons, private full-resolution scientific recording and an
 accessible responsive application shell for the Open Source Neuro Spikeling
@@ -10,8 +10,11 @@ desktop-equivalent timing, bounded full-precision histories, a UI-independent
 data-source interface, a responsive dual-axis rolling oscilloscope, two signed
 synaptic input channels, validated local custom-stimulus import, exact
 desktop-compatible recording CSV import/export and keyboard-native
-desktop/tablet/mobile interaction. It does not yet add WordPress integration,
-serial support or deployment configuration.
+desktop/tablet/mobile interaction and an isolated, production-ready WordPress
+shortcode integration. The integration is packaged for an explicitly approved,
+unpublished draft; committing these assets does not install a plugin, publish a
+page or modify any existing website. Physical-hardware serial support is not
+implemented.
 
 ## Requirements
 
@@ -47,6 +50,65 @@ Run individual groups with:
     npm run test:synapses
     npm run test:recording
     npm run test:accessibility
+    npm run test:wordpress
+
+## Reproducible production WordPress assets
+
+Build the complete installable plugin payload from Software/Web-Emulator:
+
+    npm run build
+
+The dependency-free Node build writes a content-hashed application module,
+separate dedicated scientific worker, six concatenated root-scoped stylesheets
+and a SHA-256 manifest under wordpress/spikeling-emulator/assets/. Identical
+source inputs produce identical filenames, bytes and manifest versions; there
+is no framework runtime, third-party package installation, external asset
+request or CDN. Typical compressed transfer sizes are approximately 35 KB for
+the application, 9.5 KB for the worker and 3.8 KB for the stylesheet.
+
+The production worker executes the same fixed 0.1 ms model and Float64 sample
+transport as the development build. Regression tests execute the generated
+worker itself and compare its complete scientific output against the validated
+unbundled model. The PHP plugin verifies the content-hashed asset names before
+enqueueing them and gives WordPress the deterministic manifest version.
+
+## Minimal, isolated WordPress integration
+
+The complete plugin lives under wordpress/spikeling-emulator/ and registers one
+shortcode:
+
+    [osn_spikeling_emulator speed="2" seed="123456" max_samples="250000"]
+
+Speed is restricted to desktop positions 0–9, random seeds to 1–4,294,967,295
+and local scientific-recording capacity to at most 1,000,000 samples. Defaults
+match the approved desktop-equivalent demonstration. Every generated root has
+a unique identifier, validated data attributes and escaped accessible markup.
+
+Assets load only on singular pages that contain this shortcode in ordinary
+WordPress post content or Elementor's stored widget content. Shortcode render
+provides a narrow defensive enqueue fallback; unrelated pages and scripts remain
+untouched. A dedicated observer safely supports late Elementor rendering,
+deduplicates repeated frontend initialisation and releases workers/listeners on
+page exit. All emulator and OSN outer-page styling remains under explicit
+.spk-emulator or .osn-spikeling-emulator root selectors. The plugin creates no
+database tables, options, global CSS variables, REST endpoints, activation
+hooks, analytics, network requests or physical-hardware integrations.
+
+### Draft-only installation and editorial workflow
+
+Installing or activating the plugin requires an authenticated WordPress
+administrator and explicit deployment approval. After approval, install only
+the wordpress/spikeling-emulator/ directory, including its manifest and the
+three manifest-referenced content-hashed files. Create a new unpublished page
+and insert the approved block content from wordpress/draft-page.html, or place
+the shortcode in one isolated Elementor Shortcode widget. Save only as Draft.
+
+Do not publish the page, change an existing Spikeling page, modify an Elementor
+global template or alter production navigation without separate approval. A
+GitHub feature-branch commit is not a WordPress deployment. Where the local
+environment does not provide PHP, the test suite validates PHP integration
+contracts statically; authenticated WordPress/PHP runtime and editor checks
+remain explicit deployment/integration-QA steps.
 
 ## Run the local oscilloscope preview
 
@@ -69,8 +131,9 @@ Use Start recording and Stop recording independently of simulation transport,
 then select Download CSV to save the captured values locally. Existing desktop
 recordings can be loaded with Import desktop-compatible recording CSV.
 
-The complete interface is intentionally standalone: no WordPress page, live
-website, Elementor template or production deployment is changed by this phase.
+The standalone preview does not require WordPress. Building or committing the
+optional WordPress integration does not modify a live website, Elementor
+template, unpublished page or production deployment.
 
 The local server strips Node-supported erasable TypeScript syntax on demand and
 serves native browser modules with their correct MIME types. It requires no

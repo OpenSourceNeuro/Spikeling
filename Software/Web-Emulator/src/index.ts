@@ -112,6 +112,21 @@ export type {
   MediaQueryAdapter,
 } from "./interface/emulator.ts";
 export {
+  DEFAULT_WORDPRESS_SEED,
+  MAX_WORDPRESS_RECORDING_SAMPLES,
+  WORDPRESS_EMULATOR_SELECTOR,
+  initialiseWordPressEmulators,
+  mountWordPressEmulator,
+  parseWordPressConfiguration,
+} from "./integration/wordpress.ts";
+export type {
+  WordPressConfiguration,
+  WordPressIntegrationController,
+  WordPressIntegrationOptions,
+  WordPressMountedEmulator,
+  WordPressObserver,
+} from "./integration/wordpress.ts";
+export {
   DEFAULT_RECORDING_MAX_SAMPLES,
   DESKTOP_RECORDING_COLUMNS,
   MAX_RECORDING_FILE_BYTES,

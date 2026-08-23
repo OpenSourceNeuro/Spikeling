@@ -1,0 +1,61 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.osn-spikeling-emulator-page {
+  --osn-spikeling-core: #073642;
+  --osn-spikeling-canvas: #f7f7f2;
+  --osn-spikeling-muted: #586e75;
+  --osn-spikeling-border: #e1e2d8;
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  width: min(100%, 1240px);
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--osn-spikeling-core);
+}
+
+.osn-spikeling-emulator-page__eyebrow {
+  margin: 0;
+  color: var(--osn-spikeling-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.osn-spikeling-emulator-page__title {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--osn-spikeling-core);
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.08;
+}
+
+.osn-spikeling-emulator-page__lead,
+.osn-spikeling-emulator-page__scope {
+  max-width: 72ch;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.osn-spikeling-emulator-page__scope {
+  color: var(--osn-spikeling-muted);
+  font-size: 0.875rem;
+}
+
+.osn-spikeling-emulator {
+  width: 100%;
+  min-width: 0;
+}
+
+.osn-spikeling-emulator__error {
+  padding: 0.875rem;
+  border: 1px solid #a5221e;
+  border-radius: 0.5rem;
+  color: #a5221e;
+}
+
+@media (max-width: 767px) {
+  .osn-spikeling-emulator-page__title {
+    max-width: none;
+  }
+}

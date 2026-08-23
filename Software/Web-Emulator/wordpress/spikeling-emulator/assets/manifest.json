@@ -1,0 +1,30 @@
+{
+  "version": "f61d5db0a99b18ff",
+  "application": {
+    "file": "spikeling-emulator.12f0853277b2.js",
+    "bytes": 174943,
+    "gzipBytes": 35439,
+    "sha256": "12f0853277b2de871fc9218f415512cc03d640afa91eea7efddc8c2ed93a5099"
+  },
+  "worker": {
+    "file": "spikeling-worker.16720edf3f20.js",
+    "bytes": 42013,
+    "gzipBytes": 9464,
+    "sha256": "16720edf3f20dee0bbbaec8959e76052b01d97bb71c2aafe5b4963d57ac53e0b"
+  },
+  "stylesheet": {
+    "file": "spikeling-emulator.85f53bae1686.css",
+    "bytes": 21046,
+    "gzipBytes": 3757,
+    "sha256": "85f53bae16861812120d00da751105baa30552c80c1df08de77267b5d9d16f34"
+  },
+  "sourceStylesheets": [
+    "src/styles/oscilloscope.css",
+    "src/styles/controls.css",
+    "src/styles/synapses.css",
+    "src/styles/recording.css",
+    "src/styles/emulator.css",
+    "src/styles/wordpress.css"
+  ],
+  "licence": "GPL-3.0-or-later"
+}

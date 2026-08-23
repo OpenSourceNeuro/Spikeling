@@ -58,7 +58,7 @@ function node<K extends keyof HTMLElementTagNameMap>(
   return created;
 }
 
-/** Standalone, future-embeddable instrument; WordPress integration is Phase 8. */
+/** Reusable standalone and isolated WordPress-embeddable instrument. */
 export class SpikelingEmulator {
   readonly element: HTMLElement;
   readonly oscilloscope: SpikelingOscilloscope;
