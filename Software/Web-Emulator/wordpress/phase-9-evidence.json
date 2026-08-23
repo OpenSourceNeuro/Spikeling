@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-08-23T00:00:00+08:00",
+  "pageId": 1196,
+  "pageStatus": "draft",
+  "pluginActive": true,
+  "desktopReferenceScenarios": 33,
+  "neuronPresetCount": 20,
+  "speedCount": 10,
+  "verifiedBrowsers": ["Chrome"],
+  "realViewports": ["large-desktop"],
+  "automatedViewports": ["large-desktop", "laptop", "tablet", "mobile"],
+  "elementorEditorVerified": false,
+  "anonymousFrontendVerified": false,
+  "noSiteConsoleErrors": true,
+  "assetIsolationVerified": true,
+  "ctas": [
+    {
+      "label": "Try the emulator",
+      "href": "https://github.com/OpenSourceNeuro/Spikeling/releases/latest"
+    },
+    {
+      "label": "Try the emulator",
+      "href": "https://github.com/OpenSourceNeuro/Spikeling/releases/latest"
+    }
+  ],
+  "finalPublicUrl": null,
+  "publishingApproved": false
+}

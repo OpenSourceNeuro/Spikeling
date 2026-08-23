@@ -1,6 +1,6 @@
 # Spikeling Web Emulator
 
-Phases 1–8 implement the numerically validated, worker-based simulation engine,
+Phases 1–9 implement the numerically validated, worker-based simulation engine,
 scientific oscilloscope, desktop-faithful main-neuron controls and two complete
 virtual presynaptic neurons, private full-resolution scientific recording and an
 accessible responsive application shell for the Open Source Neuro Spikeling
@@ -30,11 +30,16 @@ There are no third-party runtime or test dependencies.
 From Software/Web-Emulator:
 
     npm run fixtures
+    npm run qa:integration
     npm run verify
 
 The first command regenerates committed Python desktop-reference fixtures. The
-second checks that those fixtures still match the pinned desktop source and then
-runs the TypeScript model, cross-language parity, engine, worker, oscilloscope,
+integration audit verifies the actual SHA-256-pinned production assets, payload
+budgets, responsive/accessibility contracts, isolated WordPress plugin, pinned
+scientific fixtures and the honestly recorded browser/editor/publication gates.
+The final command checks that those fixtures still match the pinned desktop source,
+repeats the integration audit and then runs the TypeScript model, cross-language
+parity, engine, worker, oscilloscope,
 main-neuron controls, dual-synapse, custom-stimulus, scientific-recording,
 accessibility, responsive-interface and performance tests.
 
@@ -51,6 +56,30 @@ Run individual groups with:
     npm run test:recording
     npm run test:accessibility
     npm run test:wordpress
+    npm run test:integration
+
+## Phase 9 integration QA and launch readiness
+
+The complete release matrix and remaining genuine production blockers are in
+`LAUNCH-CHECKLIST.md`. `wordpress/phase-9-evidence.json` records observed,
+date-stamped evidence from the active WordPress plugin and unpublished page
+1196; it is a captured observation, not an assertion that the script can probe
+a live private website. `npm run qa:integration` deliberately distinguishes a
+successful local structural audit from production publication permission.
+
+Chrome and the live desktop draft were exercised end to end. Edge, Firefox,
+Safari, real tablet/mobile devices, a genuine Elementor editing session and an
+anonymous frontend remain explicitly pending until the relevant environment is
+available. Automated responsive and scientific coverage does not impersonate a
+physical-browser sign-off. The existing published Spikeling redesign contains
+exactly two emulator buttons that still link to the desktop release;
+`wordpress/CTA-INTEGRATION.md` specifies their safe future migration without
+editing either existing page during Phase 9.
+
+Publishing the draft, changing live navigation or retargeting those existing
+buttons always requires separate, explicit owner approval. The checked-in
+readiness evidence sets `publishingApproved` to `false`; running a local QA
+command cannot grant that approval.
 
 ## Reproducible production WordPress assets
 

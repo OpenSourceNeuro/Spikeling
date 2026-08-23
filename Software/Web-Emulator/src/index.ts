@@ -127,6 +127,28 @@ export type {
   WordPressObserver,
 } from "./integration/wordpress.ts";
 export {
+  APPROVED_WEBSITE_ORIGIN,
+  EXISTING_DESKTOP_RELEASE_URL,
+  EXPECTED_EMULATOR_CTA_COUNT,
+  REQUIRED_RELEASE_BROWSERS,
+  REQUIRED_RELEASE_VIEWPORTS,
+  assessBrowserCoverage,
+  assessEmulatorCallsToAction,
+  assessLaunchReadiness,
+  assessViewportCoverage,
+} from "./integration/launch-readiness.ts";
+export type {
+  CoverageEntry,
+  CoverageEvidence,
+  LaunchEvidence,
+  LaunchGate,
+  LaunchGateStatus,
+  LaunchReadiness,
+  ReleaseBrowser,
+  ReleaseViewport,
+  SpikelingCallToAction,
+} from "./integration/launch-readiness.ts";
+export {
   DEFAULT_RECORDING_MAX_SAMPLES,
   DESKTOP_RECORDING_COLUMNS,
   MAX_RECORDING_FILE_BYTES,

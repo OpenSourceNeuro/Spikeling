@@ -25,7 +25,9 @@
     "test:recording": "node --test tests/recording-csv.test.ts tests/recording.test.ts",
     "test:accessibility": "node --test tests/accessibility.test.ts tests/interface.test.ts",
     "test:wordpress": "node --test tests/wordpress.test.ts tests/production-build.test.ts",
-    "verify": "npm run fixtures:check && npm test"
+    "test:integration": "node --test tests/integration-qa.test.ts",
+    "qa:integration": "node tools/integration-qa.mjs",
+    "verify": "npm run fixtures:check && npm run qa:integration && npm test"
   },
   "keywords": [
     "izhikevich",
