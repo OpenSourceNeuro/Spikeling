@@ -21,6 +21,27 @@ export {
   SpikelingMainControls,
 } from "./controls/main-controls.ts";
 export type { MainNeuronControlsOptions } from "./controls/main-controls.ts";
+export { SpikelingSynapseControls } from "./controls/synapse-controls.ts";
+export type {
+  SynapseControlsOptions,
+  SynapseTraceController,
+} from "./controls/synapse-controls.ts";
+export {
+  SYNAPSE_CONTROL_SPECIFICATIONS,
+  SYNAPSE_IDS,
+  formatSynapseControlValue,
+  getSynapseControlSpecification,
+  synapticRetentionFactor,
+  synapticTimeConstantMs,
+  validateSynapseControlValue,
+  validateSynapseId,
+} from "./controls/synapse-specifications.ts";
+export type {
+  SynapseControlAccent,
+  SynapseControlId,
+  SynapseControlSpecification,
+  SynapseId,
+} from "./controls/synapse-specifications.ts";
 export {
   MAIN_CONTROL_SPECIFICATIONS,
   formatMainControlValue,

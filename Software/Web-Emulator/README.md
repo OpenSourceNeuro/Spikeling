@@ -1,12 +1,13 @@
 # Spikeling Web Emulator
 
-Phases 1–4 implement the numerically validated, worker-based simulation engine,
-scientific oscilloscope and desktop-faithful main-neuron controls for the Open
-Source Neuro Spikeling emulator. The package includes the browser-independent
-model, a dedicated worker, desktop-equivalent timing, bounded full-precision
-histories, a UI-independent data-source interface, a responsive dual-axis
-rolling oscilloscope and validated local custom-stimulus import. It does not yet
-add synapse control panels, WordPress integration, serial support or deployment
+Phases 1–5 implement the numerically validated, worker-based simulation engine,
+scientific oscilloscope, desktop-faithful main-neuron controls and two complete
+virtual presynaptic neurons for the Open Source Neuro Spikeling emulator. The
+package includes the browser-independent model, a dedicated worker,
+desktop-equivalent timing, bounded full-precision histories, a UI-independent
+data-source interface, a responsive dual-axis rolling oscilloscope, two signed
+synaptic input channels and validated local custom-stimulus import. It does not
+yet add recording/export, WordPress integration, serial support or deployment
 configuration.
 
 ## Requirements
@@ -28,7 +29,7 @@ From Software/Web-Emulator:
 The first command regenerates committed Python desktop-reference fixtures. The
 second checks that those fixtures still match the pinned desktop source and then
 runs the TypeScript model, cross-language parity, engine, worker, oscilloscope,
-main-neuron controls, custom-stimulus and performance tests.
+main-neuron controls, dual-synapse, custom-stimulus and performance tests.
 
 Run individual groups with:
 
@@ -39,6 +40,7 @@ Run individual groups with:
     npm run test:performance
     npm run test:visualisation
     npm run test:controls
+    npm run test:synapses
 
 ## Run the local oscilloscope preview
 
@@ -50,11 +52,13 @@ Open the printed local address, normally http://127.0.0.1:4173/, and select
 Start. The standalone preview runs the actual dedicated worker, displays
 desktop-matched membrane-voltage, stimulus and current traces, and exposes the
 existing start/pause/stop/reset and speed controls beside the complete
-main-neuron control panel. It starts with the desktop's disabled control
-defaults and speed position 2. Enable Injected current and adjust its slider to
-elicit activity, or enable Direct current stimulation and Stimulus strength to
-apply the internal waveform. All trace checkboxes, routing toggles, sliders and
-the neuron selector use semantic, keyboard-operable native controls.
+main-neuron control panel and two independently configurable presynaptic
+neurons. It starts with the desktop's disabled control defaults and speed
+position 2. Enable Injected current and adjust its slider to elicit main-neuron
+activity, or enable a synapse, its auxiliary Injected current and its Synaptic
+gain to observe excitatory or inhibitory input. Relevant auxiliary voltage and
+current traces appear automatically. All trace checkboxes, routing toggles,
+sliders and neuron selectors use semantic, keyboard-operable native controls.
 
 The local server strips Node-supported erasable TypeScript syntax on demand and
 serves native browser modules with their correct MIME types. It requires no
@@ -326,6 +330,100 @@ while enabled, only the internal frequency/strength controls are temporarily
 disabled, and their original values return unchanged when playback switches
 back to the internal waveform.
 
+## Two independently configurable virtual synapses
+
+Mount the synapse component against the same DataSource as the oscilloscope and
+main-neuron panel. Supplying the optional oscilloscope reference automatically
+reveals the matching presynaptic membrane-voltage and input-current traces when
+a channel is enabled:
+
+    const source = new EmulatorSource({ simulation: { seed: 123456 } });
+    const scope = new SpikelingOscilloscope(scopeContainer, source);
+    const main = new SpikelingMainControls(mainContainer, source);
+    const synapses = new SpikelingSynapseControls(synapseContainer, source, {
+      oscilloscope: scope,
+    });
+
+    await source.connect();
+    source.start();
+
+    synapses.setSynapseEnabled("synapse1", true);
+    synapses.selectPreset("synapse1", 3);
+    synapses.setControlEnabled("synapse1", "injectedCurrent", true);
+    synapses.setControlValue("synapse1", "injectedCurrent", 45);
+    synapses.setControlEnabled("synapse1", "gain", true);
+    synapses.setControlValue("synapse1", "gain", 30);
+
+    synapses.setSynapseEnabled("synapse2", true);
+    synapses.setControlEnabled("synapse2", "injectedCurrent", true);
+    synapses.setControlValue("synapse2", "injectedCurrent", 43);
+    synapses.setControlEnabled("synapse2", "gain", true);
+    synapses.setControlValue("synapse2", "gain", -25);
+    synapses.setControlEnabled("synapse2", "decay", true);
+    synapses.setControlValue("synapse2", "decay", 980);
+
+    // When removing the complete instrument:
+    synapses.dispose();
+    main.dispose();
+    scope.dispose();
+    await source.disconnect();
+
+Load src/styles/synapses.css after src/styles/oscilloscope.css and
+src/styles/controls.css. Synapse 1 uses the desktop's cyan #2AA198; Synapse 2
+uses its magenta #D33682. Shared auxiliary cell-input, noise and photoreceptor
+controls remain green, and direct stimulus routing remains blue. All additional
+styles are scoped to .spk-synapses.
+
+Each auxiliary neuron independently exposes all 20 audited presets, a/b/c/d and
+resting-voltage displays, signed injected current, deterministic Gaussian noise,
+direct-current stimulation, light stimulation and three recovering
+photoreceptor controls:
+
+| Per-synapse control | Raw slider range | Synapse 1 default | Synapse 2 default | Scientific interpretation |
+| --- | ---: | ---: | ---: | --- |
+| Synaptic gain | −100 to +100 | 0 | 0 | Positive excitation or negative inhibition |
+| Synaptic decay | 975 to 1,000 | 995 | 990 | Current-retention factor slider / 1,000 per 0.1 ms step |
+| Injected current | −50 to +50 | 0 | 0 | Signed auxiliary-neuron current in arbitrary units |
+| Noise level | 0 to 100 | 0 | 0 | Gaussian σ = slider / 4 arbitrary units |
+| Photo-gain | −100 to +100 | 0 | 0 | Signed photoreceptor response |
+| Photo decay λ | 10 to 125 | 100 | 100 | Coefficient slider / 100,000 ms⁻¹ |
+| Photo recovery λ | 1 to 100 | 25 | 25 | Coefficient slider / 1,000 ms⁻¹ |
+
+Synaptic gain and decay are independently configurable even while their
+presynaptic neuron is inactive, matching the desktop's separate connection
+controls. Auxiliary injected-current/noise/routing controls become available
+only when that neuron is enabled. Its photoreceptor controls become available
+only after its own Light stimulation switch is enabled; disabling light resets
+gain/decay/recovery to the desktop defaults without affecting the other channel.
+
+Changing a presynaptic preset resets only that cell's photoreceptor settings. It
+does not reset membrane voltage, recovery state, simulation time, synaptic gain,
+decay, the main neuron or the other auxiliary neuron. Disabling a channel clears
+its visible synaptic current while preserving its hidden membrane-voltage and
+recovery state, matching the source-pinned desktop simulation contract.
+
+The desktop labels synaptic decay with a misleading rate-like unit, but its
+simulation actually multiplies existing current by slider / 1,000 after every
+0.1 ms integration step. The browser therefore labels 995 truthfully as
+"0.995 / step" and additionally exposes its equivalent exponential time
+constant τ = −0.1 / ln(0.995) ≈ 19.95 ms. A value of 1,000 means no decay.
+Synapse 2 always uses its own chosen multiplier; it does not reproduce the
+desktop's accidental hard-coded 0.995 unless legacy compatibility is explicitly
+requested in the underlying scientific model.
+
+The generated Qt auxiliary-current widgets expose 0–100 because their minimum
+was never set, even though their visible labels promise −50 to +50. Both browser
+controls deliberately implement the intended signed −50 to +50 range already
+validated by the scientific model. Synapse 2's generated widget initially shows
+995, while its controller's off/reset path and the validated model use 990; the
+browser consistently preserves the controller/model default of 990.
+
+Each panel includes a live, non-intrusive readout of its actual presynaptic
+membrane voltage and signed synaptic current. Existing main-neuron total current
+remains the algebraic sum of its own inputs plus both independently decaying
+synaptic contributions. Set autoShowTraces: false if the host page should retain
+exclusive manual ownership of oscilloscope trace visibility.
+
 ## Desktop numerical contract
 
 The reference is pinned to commit
@@ -370,11 +468,10 @@ range instead of the desktop slider's erroneous 0..100 range.
 
 ## Next phase
 
-Phase 5 can introduce the two source-faithful auxiliary-neuron/synapse control
-panels, including signed patch current, synaptic gain and independently selected
-decay, while preserving the Phase 1 scientific contract, Phase 2 worker/data-
-source boundary, Phase 3 truthful rolling oscilloscope and Phase 4 main-neuron
-controls.
+Phase 6 can introduce full scientific recording, start/stop capture, validated
+data handling and CSV export while preserving the Phase 1 scientific contract,
+Phase 2 worker/data-source boundary, Phase 3 truthful rolling oscilloscope,
+Phase 4 main-neuron controls and Phase 5 independently configured synapses.
 
 ## Licence
 

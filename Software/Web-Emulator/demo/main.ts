@@ -5,6 +5,7 @@ import {
   EmulatorSource,
   SpikelingMainControls,
   SpikelingOscilloscope,
+  SpikelingSynapseControls,
   getSimulationSpeed,
 } from "../src/index.ts";
 
@@ -18,6 +19,7 @@ function requiredElement<T extends HTMLElement>(id: string): T {
 
 const host = requiredElement<HTMLElement>("oscilloscope");
 const controlsHost = requiredElement<HTMLElement>("controls");
+const synapsesHost = requiredElement<HTMLElement>("synapses");
 const speed = requiredElement<HTMLSelectElement>("speed");
 const error = requiredElement<HTMLElement>("error");
 
@@ -41,6 +43,9 @@ const oscilloscope = new SpikelingOscilloscope(host, source);
 const controls = new SpikelingMainControls(controlsHost, source, {
   devicePixelRatio: () => window.devicePixelRatio,
 });
+const synapses = new SpikelingSynapseControls(synapsesHost, source, {
+  oscilloscope,
+});
 source.subscribeErrors((failure) => {
   error.textContent = failure.message;
 });
@@ -54,6 +59,7 @@ speed.addEventListener("change", () => source.setSpeed(Number(speed.value)));
 window.addEventListener("pagehide", () => {
   oscilloscope.dispose();
   controls.dispose();
+  synapses.dispose();
   void source.disconnect();
 });
 

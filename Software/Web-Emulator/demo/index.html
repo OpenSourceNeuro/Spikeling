@@ -10,6 +10,7 @@
     <title>Spikeling neuronal oscilloscope — local preview</title>
     <link rel="stylesheet" href="/src/styles/oscilloscope.css" />
     <link rel="stylesheet" href="/src/styles/controls.css" />
+    <link rel="stylesheet" href="/src/styles/synapses.css" />
     <style>
       body {
         margin: 0;
@@ -73,6 +74,11 @@
         gap: 1rem;
       }
 
+      .spk-preview__instrument {
+        display: grid;
+        gap: 1rem;
+      }
+
       @media (max-width: 980px) {
         .spk-preview__workspace {
           grid-template-columns: minmax(0, 1fr);
@@ -84,10 +90,11 @@
     <main class="spk-preview">
       <h1 class="spk-preview__heading">Spikeling neuronal oscilloscope</h1>
       <p class="spk-preview__description">
-        Local Phase 4 preview: a real-time Izhikevich educational model with
-        desktop-faithful main-neuron and local custom-stimulus controls; an
-        interface, not a biological preparation or a research-grade
-        electrophysiology recorder.
+        Local Phase 5 preview: a real-time Izhikevich educational model with
+        desktop-faithful main-neuron controls, two virtual presynaptic neurons
+        and private local custom stimuli; an educational model and interface,
+        not a biological preparation or a research-grade electrophysiology
+        recorder.
       </p>
 
       <div class="spk-preview__toolbar" aria-label="Simulation transport controls">
@@ -104,7 +111,10 @@
       </div>
 
       <div class="spk-preview__workspace">
-        <div id="oscilloscope"></div>
+        <div class="spk-preview__instrument">
+          <div id="oscilloscope"></div>
+          <div id="synapses"></div>
+        </div>
         <aside id="controls" aria-label="Main neuron control panel"></aside>
       </div>
       <p class="spk-preview__error" id="error" role="alert"></p>

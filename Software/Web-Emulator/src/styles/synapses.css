@@ -1,0 +1,101 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-synapses {
+  --spk-synapse1: #2aa198;
+  --spk-synapse2: #d33682;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.spk-synapses__channel {
+  min-width: 0;
+  gap: 0.625rem;
+  align-content: start;
+}
+
+.spk-synapses__channel[data-synapse="synapse1"] {
+  --spk-channel-accent: var(--spk-synapse1);
+}
+
+.spk-synapses__channel[data-synapse="synapse2"] {
+  --spk-channel-accent: var(--spk-synapse2);
+}
+
+.spk-synapses__channel[data-active="true"] {
+  border-color: var(--spk-channel-accent);
+}
+
+.spk-synapses__heading {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spk-synapses__title {
+  margin: 0;
+  color: var(--spk-channel-accent);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.spk-synapses__activation {
+  --spk-accent: var(--spk-channel-accent);
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.spk-synapses__activation-label {
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+}
+
+.spk-synapses__subgroup {
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--spk-surface);
+}
+
+.spk-synapses__subheading {
+  margin: 0;
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading {
+  color: var(--spk-channel-accent);
+}
+
+.spk-synapses .spk-controls__control[data-accent="synapse1"] {
+  --spk-accent: var(--spk-synapse1);
+}
+
+.spk-synapses .spk-controls__control[data-accent="synapse2"] {
+  --spk-accent: var(--spk-synapse2);
+}
+
+.spk-synapses__reading {
+  min-height: 2.5rem;
+  margin: 0;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--spk-surface);
+  color: var(--spk-channel-accent);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.spk-synapses__error {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .spk-synapses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
