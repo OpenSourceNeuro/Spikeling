@@ -151,9 +151,9 @@ test("generated production worker executes exact source-equivalent Float64 scien
   const actual: SimulationSample[] = messages.flatMap((message) =>
     message.type === "samples" ? unpackSamples(new Float64Array(message.buffer)) : [],
   );
-  assert.equal(actual.length, 10);
-  assert.deepEqual(actual, new SpikelingModel(options).run(10));
-  assert.deepEqual(messages.filter((message) => message.type === "samples").map((message) => message.count), [4, 4, 2]);
+  assert.equal(actual.length, 12);
+  assert.deepEqual(actual, new SpikelingModel(options).run(12));
+  assert.deepEqual(messages.filter((message) => message.type === "samples").map((message) => message.count), [4, 4, 4]);
   receive({ data: { type: "dispose" } });
   assert.equal(scheduler.pending, 0);
 });

@@ -14,7 +14,7 @@ import {
 import { RecordingCanvas } from "./helpers/fake-canvas.ts";
 import { ManualScheduler } from "./helpers/manual-scheduler.ts";
 
-test("maximum desktop speed remains interruptible and preserves full-resolution parity", (context) => {
+test("maximum real-time speed remains interruptible and preserves full-resolution parity", (context) => {
   const scheduler = new ManualScheduler();
   const slices: number[] = [];
   const options = {
@@ -27,7 +27,7 @@ test("maximum desktop speed remains interruptible and preserves full-resolution 
   };
   const engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     maxStepsPerSlice: 250,
     modelOptions: options,
     onSamples: (samples) => slices.push(samples.length),
@@ -35,7 +35,7 @@ test("maximum desktop speed remains interruptible and preserves full-resolution 
 
   engine.start();
   const started = performance.now();
-  scheduler.advance(50);
+  for (let tick = 0; tick < 20; tick += 1) scheduler.advance(50);
   const elapsed = performance.now() - started;
   const expected = new SpikelingModel(options).run(10_000);
 
@@ -53,7 +53,7 @@ test("maximum desktop speed remains interruptible and preserves full-resolution 
       " ms; " +
       Math.round(10_000 / (elapsed / 1_000)).toLocaleString("en-GB") +
       " samples/s; 40 interruptible slices; target " +
-      getSimulationSpeed(9).stepsPerSecond.toLocaleString("en-GB") +
+      getSimulationSpeed(5).stepsPerSecond.toLocaleString("en-GB") +
       " samples/s.",
   );
 });
@@ -62,14 +62,14 @@ test("extended maximum-speed simulation keeps memory and history strictly bounde
   const scheduler = new ManualScheduler();
   const engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     historyCapacity: 5_000,
     maxStepsPerSlice: 250,
   });
   engine.start();
 
   const started = performance.now();
-  for (let tick = 0; tick < 7; tick += 1) {
+  for (let tick = 0; tick < 140; tick += 1) {
     scheduler.advance(50);
   }
   const elapsed = performance.now() - started;
@@ -96,7 +96,7 @@ test("background suspension cannot queue unbounded scientific catch-up work", ()
   const scheduler = new ManualScheduler();
   const engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     maxCatchUpTicks: 2,
     maxStepsPerSlice: 250,
   });
@@ -106,10 +106,10 @@ test("background suspension cannot queue unbounded scientific catch-up work", ()
   scheduler.runNext();
   const firstSlice = engine.getSnapshot();
   assert.equal(firstSlice.stepIndex, 250);
-  assert.equal(firstSlice.pendingSteps, 19_750);
-  assert.equal(firstSlice.droppedSteps, 11_980_000);
+  assert.equal(firstSlice.pendingSteps, 750);
+  assert.equal(firstSlice.droppedSteps, 599_000);
   scheduler.flush();
-  assert.equal(engine.getSnapshot().stepIndex, 20_000);
+  assert.equal(engine.getSnapshot().stepIndex, 1_000);
   assert.equal(scheduler.pending, 1);
 });
 

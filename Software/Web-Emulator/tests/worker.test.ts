@@ -139,13 +139,13 @@ test("the worker emits state changes and transferable full-resolution batches", 
   const batches = messages.filter((message) => message.type === "samples");
   assert.deepEqual(
     batches.map((message) => (message.type === "samples" ? message.count : 0)),
-    [7, 7, 6],
+    [7, 7, 7, 4],
   );
 
   const expected = new SpikelingModel({
     seed: 919,
     controls: { main: { patchCurrent: 22 } },
-  }).run(20);
+  }).run(25);
   const actual = batches.flatMap((message) =>
     message.type === "samples"
       ? unpackSamples(new Float64Array(message.buffer))
@@ -154,12 +154,12 @@ test("the worker emits state changes and transferable full-resolution batches", 
   assert.deepEqual(actual, expected);
   assert.equal(
     transfers.filter((transfer) => transfer.length === 1).length,
-    3,
+    4,
   );
   const last = batches.at(-1);
   assert.ok(last && last.type === "samples");
-  assert.equal(last.firstTimeMs, 1.4000000000000001);
-  assert.equal(last.lastTimeMs, 1.9000000000000001);
+  assert.equal(last.firstTimeMs, 2.1);
+  assert.equal(last.lastTimeMs, 2.4000000000000004);
 
   runtime.dispose();
   assert.equal(scheduler.pending, 0);
@@ -181,7 +181,7 @@ test("worker control, speed, snapshot, pause, reset, stop and reinitialise work"
   runtime.handleMessage({ type: "snapshot" });
   const snapshot = messages.at(-1);
   assert.ok(snapshot && snapshot.type === "snapshot");
-  assert.equal(snapshot.snapshot.stepIndex, 20);
+  assert.equal(snapshot.snapshot.stepIndex, 25);
   assert.equal(snapshot.snapshot.controls.main.patchCurrent, 31);
 
   runtime.handleMessage({ type: "pause" });
@@ -236,9 +236,9 @@ test("EmulatorSource connects once and exposes batches through the DataSource se
 
   source.start();
   worker.scheduler.advance(50);
-  assert.deepEqual(batches.map((samples) => samples.length), [8, 8, 4]);
+  assert.deepEqual(batches.map((samples) => samples.length), [8, 8, 8, 1]);
   assert.equal(source.history.length, 15);
-  assert.equal(source.latest()[0].timeMs, 0.5);
+  assert.equal(source.latest()[0].timeMs, 1);
   assert.equal(source.latest(2).length, 2);
 
   source.updateControls({ main: { patchCurrent: 45 } });
@@ -254,7 +254,7 @@ test("EmulatorSource connects once and exposes batches through the DataSource se
   assert.equal(source.history.length, 0);
   source.start();
   worker.scheduler.advance(50);
-  assert.equal(source.history.length, 10);
+  assert.equal(source.history.length, 12);
   source.stop();
   assert.equal(source.history.length, 0);
   assert.equal(source.getSnapshot()?.lifecycle, "stopped");
@@ -325,7 +325,7 @@ test("source connection rejects worker initialisation errors", async () => {
   const worker = new InProcessWorker();
   const source = new EmulatorSource({ workerFactory: () => worker, speedIndex: 99 });
 
-  await assert.rejects(source.connect(), /between 0 and 9/);
+  await assert.rejects(source.connect(), /between 0 and 5/);
   await source.disconnect();
 });
 
@@ -349,13 +349,13 @@ test("the production browser-worker entry runs in a real isolated worker thread"
   worker.postMessage({ type: "start" } satisfies MainToWorkerMessage);
   const batch = await samplePromise;
   assert.ok(batch.type === "samples");
-  assert.equal(batch.count, 10);
-  assert.equal(batch.buffer.byteLength, 10 * SAMPLE_WIDTH * 8);
+  assert.equal(batch.count, 12);
+  assert.equal(batch.buffer.byteLength, 12 * SAMPLE_WIDTH * 8);
 
   const expected = new SpikelingModel({
     seed: 876,
     controls: { main: { patchCurrent: 19 } },
-  }).run(10);
+  }).run(12);
   assert.deepEqual(unpackSamples(new Float64Array(batch.buffer)), expected);
 
   const pausePromise = workerMessage(
@@ -365,5 +365,5 @@ test("the production browser-worker entry runs in a real isolated worker thread"
   worker.postMessage({ type: "pause" } satisfies MainToWorkerMessage);
   const paused = await pausePromise;
   assert.ok(paused.type === "state");
-  assert.equal(paused.snapshot.stepIndex, 10);
+  assert.equal(paused.snapshot.stepIndex, 12);
 });

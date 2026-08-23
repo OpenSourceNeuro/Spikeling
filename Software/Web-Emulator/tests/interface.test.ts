@@ -265,7 +265,7 @@ test("scientific scope clearly distinguishes educational simulation from biologi
   assert.match(scope.textContent, /not a research-grade|research-grade electrophysiology recorder/);
 });
 
-test("simulation transport contains genuinely labelled native buttons and ten truthful speeds", () => {
+test("simulation transport contains genuinely labelled native buttons and six truthful speeds", () => {
   const { host } = mount();
   for (const name of ["start", "pause", "stop", "reset"]) {
     const button = transport(host, name);
@@ -275,9 +275,15 @@ test("simulation transport contains genuinely labelled native buttons and ten tr
   }
   const speed = byClass(host, "spk-emulator__speed");
   assert.equal(speed.tagName, "select");
-  assert.equal(speed.children.length, 10);
-  assert.match(speed.children[0].textContent, /0\.02× real time · 200 samples\/s/);
-  assert.match(speed.children[9].textContent, /20× real time · 200,000 samples\/s/);
+  assert.equal(speed.children.length, 6);
+  assert.deepEqual(speed.children.map((option) => option.textContent), [
+    "0.025× real time · 250 samples/s",
+    "0.05× real time · 500 samples/s",
+    "0.1× real time · 1,000 samples/s",
+    "0.25× real time · 2,500 samples/s",
+    "0.5× real time · 5,000 samples/s",
+    "1× real time · 10,000 samples/s",
+  ]);
   assert.equal(speed.attributes.get("aria-describedby"), byClass(host, "spk-emulator__scope").id);
 });
 
@@ -589,7 +595,7 @@ test("actual transferable worker batches drive the entire responsive shell end t
   transport(host, "start").dispatch("click");
   worker.scheduler.advance(50);
   frames.advance();
-  assert.equal(emulator.recorder.getSnapshot().sampleCount, 20);
+  assert.equal(emulator.recorder.getSnapshot().sampleCount, 25);
   assert.equal(source.latest().length, 10);
   assert.equal(emulator.recorder.samples()[0].mainVm, new SpikelingModel({ seed: 500, controls: { main: { patchCurrent: 19 } } }).step().mainVm);
   emulator.dispose();

@@ -1,16 +1,16 @@
 {
-  "version": "7b182d7d36824eaa",
+  "version": "8e9b133f93be85b5",
   "application": {
-    "file": "spikeling-emulator.e0da70d73145.js",
-    "bytes": 177143,
-    "gzipBytes": 35879,
-    "sha256": "e0da70d7314552d4f5f5037b6cc546995912f3423338a95dafb48bda2be3a361"
+    "file": "spikeling-emulator.35c04812be57.js",
+    "bytes": 177180,
+    "gzipBytes": 35882,
+    "sha256": "35c04812be57844f31926c42abcb9844c17b22391f05ee2b8879d7e78245d965"
   },
   "worker": {
-    "file": "spikeling-worker.16720edf3f20.js",
-    "bytes": 42013,
-    "gzipBytes": 9464,
-    "sha256": "16720edf3f20dee0bbbaec8959e76052b01d97bb71c2aafe5b4963d57ac53e0b"
+    "file": "spikeling-worker.e60975b9f106.js",
+    "bytes": 42631,
+    "gzipBytes": 9580,
+    "sha256": "e60975b9f10609a31bd1e20cd20bbe960553eef8a63db7c5e23f4b3d456c6c2b"
   },
   "stylesheet": {
     "file": "spikeling-emulator.50ec0e524f42.css",

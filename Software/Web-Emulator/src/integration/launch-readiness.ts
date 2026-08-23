@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+import { DESKTOP_STEPS_PER_UPDATE } from "../simulation/speed.ts";
+
 /** Release decisions must distinguish real browser evidence from emulation. */
 export const REQUIRED_RELEASE_BROWSERS = ["Chrome", "Edge", "Firefox", "Safari"] as const;
 export const REQUIRED_RELEASE_VIEWPORTS = [
@@ -170,7 +172,8 @@ export function assessLaunchReadiness(evidence: LaunchEvidence): LaunchReadiness
   const viewports = assessViewportCoverage(evidence.realViewports, evidence.automatedViewports);
   const prematurePublication = evidence.pageStatus === "published" && !evidence.publishingApproved;
   const scenariosValid = evidence.desktopReferenceScenarios >= 33
-    && evidence.neuronPresetCount === 20 && evidence.speedCount === 10;
+    && evidence.neuronPresetCount === 20
+    && evidence.speedCount === DESKTOP_STEPS_PER_UPDATE.length;
 
   const gates: LaunchGate[] = [
     {

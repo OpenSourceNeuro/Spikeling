@@ -29,14 +29,14 @@ pure launch-readiness decision engine.
 | --- | --- | --- |
 | Desktop scientific parity | 33 pinned desktop-reference scenarios; fixed 0.1 ms timestep; exact model/worker regression suites. | Pass |
 | Neuronal behaviour | All 20 desktop neuronal presets present in the main selector and both presynaptic selectors. | Pass |
-| Scientific speeds | Ten source-matched positions spanning 200–200,000 wall-clock samples/s. | Pass |
+| Scientific speeds | Six approved positions spanning 250–10,000 wall-clock samples/s; 0.1× default. | Pass |
 | Main stimulation | Positive and negative injected-current extrema exercised on the deployed draft. | Pass |
 | Stimulus, noise and light | Stimulus frequency/strength, noise, photoreceptor gain and both routing paths exercised on the deployed draft. | Pass |
 | Dual synapses | Both synapses active simultaneously; +100 and −100 gains; positive/negative auxiliary currents; independent presets; all auxiliary traces visible. | Pass |
 | Transport | Start, pause and live fixed-timestep scientific sampling verified against the real production worker. | Pass |
 | Scientific recording | Real production browser recorded 2,550 full-resolution samples; stopping enabled local CSV export. | Pass |
 | Custom stimulus and CSV interoperability | Dedicated import/validation and byte-compatible desktop recording regression suites pass. | Pass |
-| Maximum-speed and bounded operation | Performance suite verifies 10,000-step slices, 70,000-step bounded runs, catch-up limits and bounded scientific graph frames. | Pass |
+| Maximum-speed and bounded operation | Performance suite verifies 10,000-step scientific parity, 70,000-step bounded runs, catch-up limits and bounded scientific graph frames. | Pass |
 
 ## Accessibility, responsiveness and browser matrix
 
@@ -64,7 +64,7 @@ constitute a claim that a physical browser or device was actually exercised.
 | --- | --- | --- |
 | Real WordPress/PHP runtime | Active plugin rendered the actual scientific emulator on draft page 1196. | Pass |
 | Shortcode and unique root | One isolated shortcode root initialised one production worker without duplicate initialisation. | Pass |
-| Production asset integrity | Manifest pins one application, one dedicated worker and one scoped stylesheet; combined compressed payload 49,378 bytes. | Pass |
+| Production asset integrity | Manifest pins one application, one dedicated worker and one scoped stylesheet; combined compressed payload 49,497 bytes. | Pass |
 | Existing-page isolation | Original and redesigned published Spikeling pages contain zero emulator roots and load zero emulator JS/CSS assets. | Pass |
 | Site console | No site-origin JavaScript errors observed; an unrelated browser-extension error is excluded. | Pass |
 | Elementor storage/frontend contracts | Conditional `_elementor_data` lookup, dynamic shortcode fallback and duplicate-initialisation regressions pass. | Pass |

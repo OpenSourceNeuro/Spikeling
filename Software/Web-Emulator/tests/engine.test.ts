@@ -22,9 +22,9 @@ import {
 import type { EngineSnapshot, SimulationSample } from "../src/index.ts";
 import { ManualScheduler } from "./helpers/manual-scheduler.ts";
 
-test("all ten source-audited desktop speed settings expose honest wall-clock ratios", () => {
+test("all six requested simulation speeds expose honest wall-clock ratios", () => {
   assert.deepEqual(DESKTOP_STEPS_PER_UPDATE, [
-    10, 20, 50, 100, 200, 500, 1_000, 2_000, 5_000, 10_000,
+    12.5, 25, 50, 125, 250, 500,
   ]);
   assert.equal(DESKTOP_UPDATE_INTERVAL_MS, 50);
   assert.equal(DEFAULT_SPEED_INDEX, 2);
@@ -32,13 +32,14 @@ test("all ten source-audited desktop speed settings expose honest wall-clock rat
   const multipliers = DESKTOP_STEPS_PER_UPDATE.map(
     (_, index) => getSimulationSpeed(index).realtimeMultiplier,
   );
-  assert.deepEqual(multipliers, [0.02, 0.04, 0.1, 0.2, 0.4, 1, 2, 4, 10, 20]);
+  assert.deepEqual(multipliers, [0.025, 0.05, 0.1, 0.25, 0.5, 1]);
   assert.equal(getSimulationSpeed(5).stepsPerSecond, 10_000);
   assert.equal(getSimulationSpeed(5).simulatedMillisecondsPerUpdate, 50);
-  assert.equal(getSimulationSpeed(0).desktopLabelMultiplier, 0.001);
-  assert.equal(getSimulationSpeed(9).desktopLabelMultiplier, 1);
+  assert.equal(getSimulationSpeed(0).stepsPerSecond, 250);
+  assert.equal(getSimulationSpeed(0).desktopLabelMultiplier, 0.00125);
+  assert.equal(getSimulationSpeed(5).desktopLabelMultiplier, 0.05);
 
-  for (const invalid of [-1, 10, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+  for (const invalid of [-1, 6, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
     assert.throws(() => getSimulationSpeed(invalid), RangeError);
   }
 });
@@ -143,15 +144,34 @@ test("simulation waits for its fixed tick and advances independently of renderin
   assert.equal(emitted.length, 100);
 });
 
-test("each desktop speed produces exactly its documented fixed-tick sample count", () => {
+test("each simulation speed produces its documented fixed-tick sample count", () => {
   for (const [index, expected] of DESKTOP_STEPS_PER_UPDATE.entries()) {
     const scheduler = new ManualScheduler();
     const engine = new SimulationEngine({ scheduler, speedIndex: index });
     engine.start();
     scheduler.advance(DESKTOP_UPDATE_INTERVAL_MS);
-    assert.equal(engine.getSnapshot().stepIndex, expected, "speed index " + index);
+    assert.equal(engine.getSnapshot().stepIndex, Math.floor(expected), "speed index " + index);
     engine.dispose();
   }
+});
+
+test("the 0.025× speed alternates whole integration steps without long-term timing drift", () => {
+  const scheduler = new ManualScheduler();
+  const batches: number[] = [];
+  const engine = new SimulationEngine({
+    scheduler,
+    speedIndex: 0,
+    onSamples: (samples) => batches.push(samples.length),
+  });
+
+  engine.start();
+  for (let tick = 0; tick < 20; tick += 1) scheduler.advance(50);
+
+  assert.deepEqual(batches, Array.from({ length: 20 }, (_, index) => index % 2 === 0 ? 12 : 13));
+  assert.equal(engine.getSnapshot().stepIndex, 250);
+  assert.equal(engine.getSnapshot().pendingSteps, 0);
+  assert.equal(engine.getSnapshot().droppedSteps, 0);
+  assert.equal(engine.getSnapshot().speed.realtimeMultiplier, 0.025);
 });
 
 test("large model updates yield in bounded slices and accept controls between them", () => {
@@ -159,7 +179,7 @@ test("large model updates yield in bounded slices and accept controls between th
   const slices: number[] = [];
   const engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     maxStepsPerSlice: 125,
     onSamples: (samples) => slices.push(samples.length),
   });
@@ -168,7 +188,7 @@ test("large model updates yield in bounded slices and accept controls between th
   scheduler.elapse(50);
   assert.equal(scheduler.runNext(), true);
   assert.deepEqual(slices, [125]);
-  assert.equal(engine.getSnapshot().pendingSteps, 9_875);
+  assert.equal(engine.getSnapshot().pendingSteps, 375);
 
   engine.updateControls({ main: { patchCurrent: 42 } });
   assert.equal(engine.getSnapshot().controls.main.patchCurrent, 42);
@@ -176,8 +196,8 @@ test("large model updates yield in bounded slices and accept controls between th
   assert.equal(engine.history.at(-1)?.totalCurrent, 42);
 
   scheduler.flush();
-  assert.equal(engine.getSnapshot().stepIndex, 10_000);
-  assert.equal(slices.length, 80);
+  assert.equal(engine.getSnapshot().stepIndex, 500);
+  assert.equal(slices.length, 4);
   assert.ok(slices.every((length) => length <= 125));
 });
 
@@ -185,7 +205,7 @@ test("pause cancels pending slices and resumes without losing scientific state",
   const scheduler = new ManualScheduler();
   const engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     maxStepsPerSlice: 200,
   });
 
@@ -205,8 +225,8 @@ test("pause cancels pending slices and resumes without losing scientific state",
   engine.setSpeed(0);
   engine.start();
   scheduler.advance(50);
-  assert.equal(engine.getSnapshot().stepIndex, 210);
-  assert.equal(engine.history.at(-1)?.timeMs, 209 * TIMESTEP_MS);
+  assert.equal(engine.getSnapshot().stepIndex, 212);
+  assert.equal(engine.history.at(-1)?.timeMs, 211 * TIMESTEP_MS);
 });
 
 test("stop cancels work and resets the model, history and pending scheduler", () => {
@@ -262,12 +282,12 @@ test("changing speed while running takes effect at the next simulation tick", ()
   const engine = new SimulationEngine({ scheduler, speedIndex: 0 });
   engine.start();
   scheduler.advance(50);
-  assert.equal(engine.history.length, 10);
+  assert.equal(engine.history.length, 12);
   engine.setSpeed(5);
   scheduler.advance(50);
-  assert.equal(engine.history.length, 510);
+  assert.equal(engine.history.length, 512);
   assert.equal(engine.getSnapshot().speed.realtimeMultiplier, 1);
-  assert.throws(() => engine.setSpeed(10), RangeError);
+  assert.throws(() => engine.setSpeed(6), RangeError);
 });
 
 test("background-tab catch-up is capped and reports explicitly discarded work", () => {
@@ -280,11 +300,11 @@ test("background-tab catch-up is capped and reports explicitly discarded work", 
   engine.start();
   scheduler.advance(500);
 
-  assert.equal(engine.getSnapshot().stepIndex, 60);
-  assert.equal(engine.getSnapshot().droppedSteps, 140);
+  assert.equal(engine.getSnapshot().stepIndex, 75);
+  assert.equal(engine.getSnapshot().droppedSteps, 175);
   assert.equal(engine.getSnapshot().pendingSteps, 0);
   scheduler.advance(50);
-  assert.equal(engine.getSnapshot().stepIndex, 80);
+  assert.equal(engine.getSnapshot().stepIndex, 100);
 });
 
 test("callbacks can pause an active slice without scheduling additional work", () => {
@@ -292,7 +312,7 @@ test("callbacks can pause an active slice without scheduling additional work", (
   let engine: SimulationEngine;
   engine = new SimulationEngine({
     scheduler,
-    speedIndex: 9,
+    speedIndex: 5,
     maxStepsPerSlice: 10,
     onSamples: () => engine.pause(),
   });

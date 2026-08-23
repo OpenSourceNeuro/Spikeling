@@ -71,6 +71,7 @@ export class SimulationEngine {
   private nextTickAt = 0;
   private pendingSteps = 0;
   private droppedSteps = 0;
+  private fractionalSteps = 0;
 
   constructor(options: SimulationEngineOptions = {}) {
     if (options.model !== undefined && options.modelOptions !== undefined) {
@@ -137,6 +138,7 @@ export class SimulationEngine {
     this.cancelScheduledWork();
     this.pendingSteps = 0;
     this.droppedSteps = 0;
+    this.fractionalSteps = 0;
     this.model.reset();
     this.history.clear();
     this.lifecycle = "stopped";
@@ -150,6 +152,7 @@ export class SimulationEngine {
     this.cancelScheduledWork();
     this.pendingSteps = 0;
     this.droppedSteps = 0;
+    this.fractionalSteps = 0;
     this.model.reset(options);
     this.history.clear();
     this.lifecycle = wasRunning ? "running" : "idle";
@@ -164,6 +167,7 @@ export class SimulationEngine {
 
   setSpeed(index: number): void {
     getSimulationSpeed(index);
+    if (index !== this.speedIndex) this.fractionalSteps = 0;
     this.speedIndex = index;
     this.publishState();
   }
@@ -176,6 +180,7 @@ export class SimulationEngine {
   dispose(): void {
     this.cancelScheduledWork();
     this.pendingSteps = 0;
+    this.fractionalSteps = 0;
     this.lifecycle = "stopped";
   }
 
@@ -213,8 +218,15 @@ export class SimulationEngine {
           Math.floor((now - this.nextTickAt) / DESKTOP_UPDATE_INTERVAL_MS) + 1;
         const retainedTicks = Math.min(elapsedTicks, this.maxCatchUpTicks);
         const stepsPerUpdate = getSimulationSpeed(this.speedIndex).stepsPerUpdate;
-        this.pendingSteps += retainedTicks * stepsPerUpdate;
-        this.droppedSteps += (elapsedTicks - retainedTicks) * stepsPerUpdate;
+        const retainedSteps = retainedTicks * stepsPerUpdate + this.fractionalSteps;
+        const wholeRetainedSteps = Math.floor(retainedSteps);
+        this.pendingSteps += wholeRetainedSteps;
+        this.fractionalSteps = retainedSteps - wholeRetainedSteps;
+
+        const omittedSteps = (elapsedTicks - retainedTicks) * stepsPerUpdate + this.fractionalSteps;
+        const wholeOmittedSteps = Math.floor(omittedSteps);
+        this.droppedSteps += wholeOmittedSteps;
+        this.fractionalSteps = omittedSteps - wholeOmittedSteps;
         this.nextTickAt += elapsedTicks * DESKTOP_UPDATE_INTERVAL_MS;
       }
 

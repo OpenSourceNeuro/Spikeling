@@ -165,9 +165,9 @@ test("WordPress mount selector and safe scientific defaults are source-pinned", 
 });
 
 test("shortcode data attributes preserve explicit speed, random seed and recording capacity", () => {
-  const { root } = documentAndRoot({ spikelingSpeed: "9", spikelingSeed: "4294967295", spikelingMaxSamples: "1000000" });
+  const { root } = documentAndRoot({ spikelingSpeed: "5", spikelingSeed: "4294967295", spikelingMaxSamples: "1000000" });
   assert.deepEqual(parseWordPressConfiguration(root as unknown as HTMLElement), {
-    speedIndex: 9,
+    speedIndex: 5,
     seed: 4_294_967_295,
     maxSamples: 1_000_000,
   });
@@ -178,7 +178,7 @@ test("shortcode data attributes preserve explicit speed, random seed and recordi
 test("unsafe shortcode configuration cannot bypass model or browser-memory bounds", () => {
   const checks: Array<[string, string, RegExp]> = [
     ["spikelingSpeed", "-1", /positive integer/],
-    ["spikelingSpeed", "10", /between 0 and 9/],
+    ["spikelingSpeed", "6", /between 0 and 5/],
     ["spikelingSpeed", "2.5", /positive integer/],
     ["spikelingSeed", "0", /between 1 and 4294967295/],
     ["spikelingSeed", "4294967296", /between 1 and 4294967295/],
@@ -222,7 +222,7 @@ test("configuration failures appear as accessible root-local errors before a wor
   let created = false;
   await assert.rejects(mountWordPressEmulator(root as unknown as HTMLElement, {
     sourceFactory: () => { created = true; return new WordPressSource(); },
-  }), /between 0 and 9/);
+  }), /between 0 and 5/);
   assert.equal(created, false);
   assert.equal(root.dataset.spikelingState, "error");
   const alert = root.findAll((element) => element.attributes.get("role") === "alert").at(-1);
@@ -448,9 +448,9 @@ test("WordPress-mounted instrument retains full fixed-timestep scientific record
   source.start();
   source.scheduler.advance(100);
   const state: RecordingSnapshot = mounted.emulator.recorder.getSnapshot();
-  assert.equal(state.sampleCount, 40);
+  assert.equal(state.sampleCount, 50);
   assert.equal(state.recordingSampleRateHz, 10_000);
-  assert.equal(state.wallClockStepsPerSecond, 400);
+  assert.equal(state.wallClockStepsPerSecond, 500);
   await mounted.dispose();
 });
 

@@ -588,7 +588,7 @@ test("main-neuron controls drive the real worker protocol and retain full-resolu
 
   assert.equal(source.getSnapshot()?.controls.main.presetId, 11);
   assert.equal(source.getSnapshot()?.controls.main.patchCurrent, 18);
-  assert.equal(source.history.length, 10);
+  assert.equal(source.history.length, 12);
   assert.deepEqual(source.latest(4).map((sample) => sample.stimulus), [7.125, -2.75, 7.125, -2.75]);
   assert.deepEqual(source.latest(4).map((sample) => sample.trigger), [1, 0, 1, 0]);
 

@@ -302,10 +302,10 @@ test("real EmulatorSource batches feed the oscilloscope without simulator coupli
   source.start();
   simulationScheduler.advance(50);
 
-  assert.equal(source.history.length, 20);
+  assert.equal(source.history.length, 25);
   assert.equal(frames.pending, 1);
   frames.advance();
-  assert.equal(instrument.getStatistics()?.sourceSamples, 20);
+  assert.equal(instrument.getStatistics()?.sourceSamples, 25);
   assert.equal(source.latest(1)[0].totalCurrent, 22);
 
   instrument.dispose();

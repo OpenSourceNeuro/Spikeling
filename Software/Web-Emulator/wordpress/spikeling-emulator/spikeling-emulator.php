@@ -72,7 +72,7 @@ final class OSN_Spikeling_Emulator {
 			self::SHORTCODE
 		);
 
-		$speed = self::bounded_integer( $attributes['speed'], 2, 0, 9 );
+		$speed = self::bounded_integer( $attributes['speed'], 2, 0, 5 );
 		$seed  = self::bounded_integer( $attributes['seed'], 123456, 1, 4294967295 );
 		$limit = self::bounded_integer( $attributes['max_samples'], 250000, 1, self::MAX_SAMPLES );
 		$id    = wp_unique_id( 'osn-spikeling-emulator-' );

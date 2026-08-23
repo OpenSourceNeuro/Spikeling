@@ -32,6 +32,7 @@ const publicUrl = APPROVED_WEBSITE_ORIGIN + "/index.php/spikeling-web-emulator/"
 function approvedEvidence(): LaunchEvidence {
   return {
     ...captured,
+    speedCount: 6,
     verifiedBrowsers: [...REQUIRED_RELEASE_BROWSERS],
     realViewports: [...REQUIRED_RELEASE_VIEWPORTS],
     elementorEditorVerified: true,
@@ -200,7 +201,7 @@ test("missing scientific presets, speeds or pinned desktop scenarios block relea
   for (const patch of [
     { desktopReferenceScenarios: 32 },
     { neuronPresetCount: 19 },
-    { speedCount: 9 },
+    { speedCount: 5 },
   ]) {
     assert.equal(gate({ ...approvedEvidence(), ...patch }, "scientific-regressions").status, "blocked");
   }
@@ -266,7 +267,7 @@ test("the complete integration gate combines pinned artefacts with honest draft-
   const report = await runIntegrationQa();
   assert.equal(report.referenceScenarios, 33);
   assert.equal(report.presetCount, 20);
-  assert.equal(report.speedCount, 10);
+  assert.equal(report.speedCount, 6);
   assert.equal(
     report.compressedBytes,
     manifest.application.gzipBytes + manifest.worker.gzipBytes + manifest.stylesheet.gzipBytes,
@@ -284,7 +285,7 @@ test("integration evidence drifting from committed scientific inventories fails 
     /no longer matches the neuronal preset inventory/,
   );
   await assert.rejects(
-    runIntegrationQa({ evidence: { ...captured, speedCount: 9 } }),
+    runIntegrationQa({ evidence: { ...captured, speedCount: 5 } }),
     /no longer matches the simulation speed inventory/,
   );
 });

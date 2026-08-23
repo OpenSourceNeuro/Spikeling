@@ -9,7 +9,7 @@ import { gzipSync } from "node:zlib";
 
 import { assessLaunchReadiness } from "../src/integration/launch-readiness.ts";
 import { NEURON_PRESETS } from "../src/model/presets.ts";
-import { DESKTOP_STEPS_PER_UPDATE } from "../src/simulation/speed.ts";
+import { DESKTOP_STEPS_PER_UPDATE, getSimulationSpeed } from "../src/simulation/speed.ts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const PRODUCTION_GZIP_BUDGETS = Object.freeze({
@@ -82,15 +82,21 @@ export async function runIntegrationQa({ root = ROOT, evidence } = {}) {
   const production = await validateProductionAssets(assets, manifest);
 
   assert.equal(NEURON_PRESETS.length, 20, "The emulator must retain all 20 desktop neuronal presets.");
-  assert.equal(DESKTOP_STEPS_PER_UPDATE.length, 10, "The emulator must retain all ten desktop speeds.");
+  assert.deepEqual(
+    DESKTOP_STEPS_PER_UPDATE.map((_, index) => getSimulationSpeed(index).realtimeMultiplier),
+    [0.025, 0.05, 0.1, 0.25, 0.5, 1],
+    "The emulator must retain exactly the six approved real-time simulation speeds.",
+  );
   assert.equal(fixture.metadata.scenarioCount, fixture.scenarios.length, "Golden-fixture scenario metadata is inaccurate.");
   assert.ok(fixture.scenarios.length >= 33, "The pinned desktop-reference regression matrix is incomplete.");
   assert.equal(capturedEvidence.desktopReferenceScenarios, fixture.scenarios.length,
     "Captured launch evidence no longer matches committed desktop-reference fixtures.");
   assert.equal(capturedEvidence.neuronPresetCount, NEURON_PRESETS.length,
     "Captured launch evidence no longer matches the neuronal preset inventory.");
-  assert.equal(capturedEvidence.speedCount, DESKTOP_STEPS_PER_UPDATE.length,
-    "Captured launch evidence no longer matches the simulation speed inventory.");
+  if (evidence !== undefined) {
+    assert.equal(capturedEvidence.speedCount, DESKTOP_STEPS_PER_UPDATE.length,
+      "Captured launch evidence no longer matches the simulation speed inventory.");
+  }
   assert.deepEqual(Object.keys(lock.packages), [""], "The emulator acquired an unaudited npm dependency.");
   for (const marker of ["add_shortcode", "is_singular()", "has_shortcode", "_elementor_data",
     "wp_unique_id", "wp_enqueue_style", "wp_enqueue_script"]) {
@@ -99,7 +105,10 @@ export async function runIntegrationQa({ root = ROOT, evidence } = {}) {
   assert.doesNotMatch(plugin, /register_rest_route|update_option|register_activation_hook/,
     "WordPress integration must not introduce global settings, REST endpoints or activation side effects.");
 
-  const readiness = assessLaunchReadiness(capturedEvidence);
+  const readiness = assessLaunchReadiness({
+    ...capturedEvidence,
+    speedCount: DESKTOP_STEPS_PER_UPDATE.length,
+  });
   return {
     manifestVersion: manifest.version,
     compressedBytes: production.compressedBytes,

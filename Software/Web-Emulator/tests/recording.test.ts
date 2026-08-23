@@ -430,7 +430,7 @@ test("real worker-backed transferable batches record every sample regardless of 
   source.start();
   worker.scheduler.advance(100);
   recorder.stop();
-  const expected = new SpikelingModel({ seed: 3030, controls: { main: { patchCurrent: 22, noiseLevel: 9 } } }).run(40);
+  const expected = new SpikelingModel({ seed: 3030, controls: { main: { patchCurrent: 22, noiseLevel: 9 } } }).run(50);
   assert.equal(source.latest().length, 7);
   assert.deepEqual(recorder.samples(), expected.map((sample) => recorded(sample)));
   assert.deepEqual(parseRecordingCsv(recorder.exportCsv()).samples, recorder.samples());

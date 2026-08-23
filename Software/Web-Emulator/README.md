@@ -108,7 +108,7 @@ shortcode:
 
     [osn_spikeling_emulator speed="2" seed="123456" max_samples="250000"]
 
-Speed is restricted to desktop positions 0–9, random seeds to 1–4,294,967,295
+Speed is restricted to approved positions 0–5, random seeds to 1–4,294,967,295
 and local scientific-recording capacity to at most 1,000,000 samples. Defaults
 match the approved desktop-equivalent demonstration. Every generated root has
 a unique identifier, validated data attributes and escaped accessible markup.
@@ -329,26 +329,23 @@ Serial is not implemented and is not required for this phase.
 
 Numerical integration always uses the existing fixed 0.1 ms timestep. The
 desktop-equivalent scheduler ticks every 50 wall-clock milliseconds, independently
-of monitor refresh or the oscilloscope visualisation/render loop. Desktop speed
-positions have the following audited meanings:
+of monitor refresh or the oscilloscope visualisation/render loop. The six
+approved simulation-speed positions have the following audited meanings:
 
-| Slider | Steps / 50 ms | Scientific samples / s | True real-time speed | Legacy desktop label |
-| --- | ---: | ---: | ---: | ---: |
-| 0 | 10 | 200 | 0.02× | 0.001× |
-| 1 | 20 | 400 | 0.04× | 0.002× |
-| 2 | 50 | 1,000 | 0.10× | 0.005× |
-| 3 | 100 | 2,000 | 0.20× | 0.010× |
-| 4 | 200 | 4,000 | 0.40× | 0.020× |
-| 5 | 500 | 10,000 | 1.00× | 0.050× |
-| 6 | 1,000 | 20,000 | 2.00× | 0.100× |
-| 7 | 2,000 | 40,000 | 4.00× | 0.200× |
-| 8 | 5,000 | 100,000 | 10.00× | 0.500× |
-| 9 | 10,000 | 200,000 | 20.00× | 1.000× |
+| Slider | Steps / 50 ms | Scientific samples / s | True real-time speed |
+| --- | ---: | ---: | ---: |
+| 0 | 12.5 average | 250 | 0.025× |
+| 1 | 25 | 500 | 0.05× |
+| 2 | 50 | 1,000 | 0.1× |
+| 3 | 125 | 2,500 | 0.25× |
+| 4 | 250 | 5,000 | 0.5× |
+| 5 | 500 | 10,000 | 1× |
 
-The desktop label describes a normalised slider position, not a physical
-real-time multiplier. getSimulationSpeed exposes both values explicitly to
-prevent a future UI from presenting the legacy label as a scientific timing
-measurement.
+At 0.025×, the scheduler alternates 12 and 13 genuine integration steps per
+50 ms tick, yielding exactly 250 model steps per real-world second without
+changing the 0.1 ms scientific timestep. Position 2 remains the 0.1× default.
+The legacy desktop-label multiplier remains available for compatibility but is
+never presented as a physical real-time measurement.
 
 By default, a simulation slice contains at most 250 model steps before the
 worker yields. Therefore stop, pause, reset, speed changes and parameter changes
@@ -690,8 +687,8 @@ applied.
 
 - Scientific integration and recording always capture one sample per 0.1 ms of
   simulation time: exactly 10,000 samples per simulated second.
-- Wall-clock simulation throughput depends on the existing speed slider: from
-  200 to 200,000 model samples per real-world second under normal scheduling.
+- Wall-clock simulation throughput depends on the selected speed: from 250 to
+  10,000 model samples per real-world second under normal scheduling.
   The recording panel exposes the current target without presenting it as the
   scientific sampling frequency.
 - Display rendering uses an independent, coalesced animation-frame loop. Paint
