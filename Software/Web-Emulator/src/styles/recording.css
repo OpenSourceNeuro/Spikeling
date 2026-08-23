@@ -1,0 +1,75 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-recording {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.spk-recording__heading,
+.spk-recording__status,
+.spk-recording__statistics,
+.spk-recording__rates,
+.spk-recording__error {
+  margin: 0;
+}
+
+.spk-recording__heading {
+  color: var(--spk-stimulus, #268bd2);
+  font-size: 0.95rem;
+}
+
+.spk-recording__status,
+.spk-recording__statistics,
+.spk-recording__rates,
+.spk-recording__import {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.spk-recording__transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spk-recording__button,
+.spk-recording__file {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--spk-grid, #93a1a1);
+  border-radius: 0.375rem;
+  background: var(--spk-background, #fdf6e3);
+  color: var(--spk-foreground, #073642);
+  font: inherit;
+}
+
+.spk-recording__button[data-action="start"] {
+  border-color: var(--spk-cell, #859900);
+}
+
+.spk-recording__button:disabled,
+.spk-recording__file:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.spk-recording__import {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.spk-recording__progress {
+  width: 100%;
+  height: 0.75rem;
+  accent-color: var(--spk-stimulus, #268bd2);
+}
+
+.spk-recording__rates {
+  color: var(--spk-muted, #586e75);
+}
+
+.spk-recording__error {
+  color: var(--spk-neuron, #dc322f);
+  font-size: 0.8125rem;
+}

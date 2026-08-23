@@ -602,7 +602,7 @@ test("local development preview serves scoped Phase 4 controls and dependency-fr
   const module = await readDevelopmentAsset("/src/controls/main-controls.ts");
 
   assert.equal(page.status, 200);
-  assert.match(page.content, /Local Phase 5 preview/);
+  assert.match(page.content, /Local Phase 6 preview/);
   assert.match(page.content, /src\/styles\/controls\.css/);
   assert.match(page.content, /id="controls"/);
   assert.equal(css.status, 200);

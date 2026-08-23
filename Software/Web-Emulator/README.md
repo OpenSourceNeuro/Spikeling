@@ -1,14 +1,15 @@
 # Spikeling Web Emulator
 
-Phases 1–5 implement the numerically validated, worker-based simulation engine,
+Phases 1–6 implement the numerically validated, worker-based simulation engine,
 scientific oscilloscope, desktop-faithful main-neuron controls and two complete
-virtual presynaptic neurons for the Open Source Neuro Spikeling emulator. The
+virtual presynaptic neurons and private full-resolution scientific recording for
+the Open Source Neuro Spikeling emulator. The
 package includes the browser-independent model, a dedicated worker,
 desktop-equivalent timing, bounded full-precision histories, a UI-independent
 data-source interface, a responsive dual-axis rolling oscilloscope, two signed
-synaptic input channels and validated local custom-stimulus import. It does not
-yet add recording/export, WordPress integration, serial support or deployment
-configuration.
+synaptic input channels, validated local custom-stimulus import and exact
+desktop-compatible recording CSV import/export. It does not yet add WordPress
+integration, serial support or deployment configuration.
 
 ## Requirements
 
@@ -29,7 +30,8 @@ From Software/Web-Emulator:
 The first command regenerates committed Python desktop-reference fixtures. The
 second checks that those fixtures still match the pinned desktop source and then
 runs the TypeScript model, cross-language parity, engine, worker, oscilloscope,
-main-neuron controls, dual-synapse, custom-stimulus and performance tests.
+main-neuron controls, dual-synapse, custom-stimulus, scientific-recording and
+performance tests.
 
 Run individual groups with:
 
@@ -41,6 +43,7 @@ Run individual groups with:
     npm run test:visualisation
     npm run test:controls
     npm run test:synapses
+    npm run test:recording
 
 ## Run the local oscilloscope preview
 
@@ -52,13 +55,16 @@ Open the printed local address, normally http://127.0.0.1:4173/, and select
 Start. The standalone preview runs the actual dedicated worker, displays
 desktop-matched membrane-voltage, stimulus and current traces, and exposes the
 existing start/pause/stop/reset and speed controls beside the complete
-main-neuron control panel and two independently configurable presynaptic
-neurons. It starts with the desktop's disabled control defaults and speed
+main-neuron control panel, two independently configurable presynaptic neurons
+and accessible local recording controls. It starts with the desktop's disabled control defaults and speed
 position 2. Enable Injected current and adjust its slider to elicit main-neuron
 activity, or enable a synapse, its auxiliary Injected current and its Synaptic
 gain to observe excitatory or inhibitory input. Relevant auxiliary voltage and
 current traces appear automatically. All trace checkboxes, routing toggles,
 sliders and neuron selectors use semantic, keyboard-operable native controls.
+Use Start recording and Stop recording independently of simulation transport,
+then select Download CSV to save the captured values locally. Existing desktop
+recordings can be loaded with Import desktop-compatible recording CSV.
 
 The local server strips Node-supported erasable TypeScript syntax on demand and
 serves native browser modules with their correct MIME types. It requires no
@@ -99,7 +105,7 @@ of importing the model or managing a worker directly:
     });
 
     source.subscribe((fullResolutionSamples) => {
-      // Supply scientific samples to a future recorder or visualisation.
+      // Supply every scientific sample to a recorder or visualisation.
     });
 
     source.subscribeState((state) => {
@@ -173,7 +179,7 @@ window of approximately 5,000 samples, corresponding to 500 ms.
 
 When the ring fills, the oldest samples are overwritten in chronological order.
 Display decimation is applied only to rendering and does not change the values
-delivered to scientific consumers or future recording.
+delivered to scientific consumers or full-resolution recording.
 
 The performance tests verify maximum-speed slicing, 10,000-sample scientific
 parity, 70,000-sample bounded-history runs and a simulated one-minute background
@@ -423,6 +429,108 @@ membrane voltage and signed synaptic current. Existing main-neuron total current
 remains the algebraic sum of its own inputs plus both independently decaying
 synaptic contributions. Set autoShowTraces: false if the host page should retain
 exclusive manual ownership of oscilloscope trace visibility.
+
+## Desktop-compatible full-resolution scientific recording
+
+Recording subscribes to the same DataSource as the oscilloscope and controls;
+it never samples rendered pixels, reads the rolling display history or owns a
+simulation worker:
+
+    const source = new EmulatorSource({ simulation: { seed: 123456 } });
+    const recorder = new SpikelingRecorder(source, {
+      maxSamples: 250_000,
+    });
+    const panel = new SpikelingRecordingControls(recordingContainer, recorder);
+
+    await source.connect();
+    source.start();
+    recorder.start();
+    // Every complete worker-delivered model sample is retained at Float64 precision.
+    recorder.stop();
+
+    const csv = recorder.exportCsv();
+    const scientificSamples = recorder.samples();
+    const state = recorder.getSnapshot();
+
+    // Existing desktop files are validated before replacing the prior recording.
+    recorder.importCsv(existingDesktopCsv, "original-desktop-export.csv");
+
+    panel.dispose();
+    recorder.dispose();
+    await source.disconnect();
+
+Load src/styles/recording.css after src/styles/controls.css. Every selector is
+scoped to .spk-recording, so WordPress, Elementor and unrelated host-page styles
+remain unchanged. Start recording, Stop recording, Download CSV, Clear
+recording, the local file picker and capacity progress use semantic native
+controls and accessible live status/error messages.
+
+### Exact desktop CSV schema
+
+Graph_Emulator.py SavePlotData at pinned desktop commit
+4d5dbf8d5c14c6e9f95d4f2f2e8307ed3d164918 emits the following exact nine names
+in this exact order. The browser exporter preserves all nine names, units and
+order without adding hidden recovery-state columns that would break existing
+desktop-analysis workflows:
+
+| CSV column | Scientific source | Units |
+| --- | --- | --- |
+| Time (ms) | Recording-local sample time, starting at zero | Milliseconds |
+| Spikeling Vm (mV) | Main-neuron membrane potential | Millivolts |
+| Stimulus (%) | Signed model stimulus | Percentage |
+| Total Current Input (a.u.) | Main-neuron total input current | Arbitrary units |
+| Synapse 1 Vm (mV) | First auxiliary-neuron membrane potential | Millivolts |
+| Synapse 1 Input (a.u.) | First signed synaptic current | Arbitrary units |
+| Synapse 2 Vm (mV) | Second auxiliary-neuron membrane potential | Millivolts |
+| Synapse 2 Input (a.u.) | Second signed synaptic current | Arbitrary units |
+| Trigger | Source-matched binary model trigger | Zero or one |
+
+As in the original desktop implementation, recording-local time begins at zero
+even when capture starts after the simulation has advanced. Subsequent samples
+are exactly index × 0.1 ms. All other values are copied directly from the
+full-resolution worker batch; JavaScript's shortest round-trip numeric
+representation retains the complete original Float64 value, including
+scientific notation and signed synaptic currents. No fixed-decimal rounding,
+Float32 conversion, interpolation, display decimation or artificial samples are
+applied.
+
+### Three independent timing measurements
+
+- Scientific integration and recording always capture one sample per 0.1 ms of
+  simulation time: exactly 10,000 samples per simulated second.
+- Wall-clock simulation throughput depends on the existing speed slider: from
+  200 to 200,000 model samples per real-world second under normal scheduling.
+  The recording panel exposes the current target without presenting it as the
+  scientific sampling frequency.
+- Display rendering uses an independent, coalesced animation-frame loop. Paint
+  rate never determines recording frequency, even when the display drops frames
+  or its bounded history overwrites older values.
+
+Pause leaves a recording armed without adding samples; resume continues the
+existing 0.1 ms sequence. Simulation stop or reset safely stops recording while
+preserving captured data. A discontinuous worker sample stream or worker error
+also stops recording explicitly instead of inventing missing values or mixing
+two scientific timelines.
+
+### Bounded memory and local-only file handling
+
+The default 250,000-sample maximum retains 25 seconds of scientific simulation
+time. Nine Float64 columns are allocated lazily in chunks of 1,024 samples,
+with a strict maximum of 18,000,000 bytes of numerical recording storage.
+Unlike the display ring buffer, recording never overwrites an earlier sample:
+the recorder automatically stops and reports its full state when capacity is
+reached. Choose a different maxSamples or chunkSamples when embedding the
+instrument; clear releases every allocated chunk.
+
+CSV imports accept only the exact nine desktop names, with reordered or quoted
+headers permitted. Duplicate/missing/unknown columns, uneven rows, malformed
+quotes, empty or non-finite values, non-binary triggers, negative timestamps,
+timestamps not spaced by exactly 0.1 ms, invalid extensions, files larger than
+64 MiB and recordings longer than the configured sample limit are rejected.
+Validation completes before an existing recording is replaced. Input is read
+exclusively with the local browser File.text() API; export uses a local Blob
+download. No backend, fetch request, server upload, analytics transfer or
+third-party parsing service receives scientific samples.
 
 ## Desktop numerical contract
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/src/styles/oscilloscope.css" />
     <link rel="stylesheet" href="/src/styles/controls.css" />
     <link rel="stylesheet" href="/src/styles/synapses.css" />
+    <link rel="stylesheet" href="/src/styles/recording.css" />
     <style>
       body {
         margin: 0;
@@ -90,9 +91,9 @@
     <main class="spk-preview">
       <h1 class="spk-preview__heading">Spikeling neuronal oscilloscope</h1>
       <p class="spk-preview__description">
-        Local Phase 5 preview: a real-time Izhikevich educational model with
+        Local Phase 6 preview: a real-time Izhikevich educational model with
         desktop-faithful main-neuron controls, two virtual presynaptic neurons
-        and private local custom stimuli; an educational model and interface,
+        and private local stimulus and full-resolution recording CSV files; an educational model and interface,
         not a biological preparation or a research-grade electrophysiology
         recorder.
       </p>
@@ -113,6 +114,7 @@
       <div class="spk-preview__workspace">
         <div class="spk-preview__instrument">
           <div id="oscilloscope"></div>
+          <div id="recording"></div>
           <div id="synapses"></div>
         </div>
         <aside id="controls" aria-label="Main neuron control panel"></aside>

@@ -88,6 +88,41 @@ export type {
   EmulatorSourceOptions,
   EmulatorSourceWorker,
 } from "./data-source/EmulatorSource.ts";
+export {
+  DEFAULT_RECORDING_MAX_SAMPLES,
+  DESKTOP_RECORDING_COLUMNS,
+  MAX_RECORDING_FILE_BYTES,
+  RECORDING_SAMPLE_RATE_HZ,
+  RecordingError,
+  parseRecordingCsv,
+  parseRecordingFile,
+  serialiseRecordingCsv,
+} from "./recording/csv.ts";
+export type {
+  LocalRecordingFile,
+  ParsedRecording,
+  RecordingCsvOptions,
+  RecordingErrorCode,
+  RecordingField,
+  RecordingSample,
+} from "./recording/csv.ts";
+export {
+  RECORDING_CHUNK_SAMPLES,
+  RecordingBuffer,
+  SpikelingRecorder,
+} from "./recording/recorder.ts";
+export type {
+  RecordingLifecycle,
+  RecordingListener,
+  RecordingOptions,
+  RecordingOrigin,
+  RecordingSnapshot,
+} from "./recording/recorder.ts";
+export { SpikelingRecordingControls } from "./recording/recording-controls.ts";
+export type {
+  RecordingControlsOptions,
+  RecordingDownload,
+} from "./recording/recording-controls.ts";
 export { SimulationEngine } from "./simulation/clock.ts";
 export type {
   SimulationEngineOptions,
