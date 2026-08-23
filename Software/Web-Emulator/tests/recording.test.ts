@@ -608,12 +608,12 @@ test("recording controls cleanly dispose without owning or destroying the shared
   assert.equal(recorder.samples().length, 2);
 });
 
-test("local Phase 6 preview serves scoped recording styles, native modules and no upload paths", async () => {
+test("local Phase 7 preview serves scoped recording styles, native modules and no upload paths", async () => {
   const page = await readDevelopmentAsset("/");
   const stylesheet = await readDevelopmentAsset("/src/styles/recording.css");
   const module = await readDevelopmentAsset("/src/recording/recording-controls.ts");
-  assert.match(page.content, /Local Phase 6 preview/);
-  assert.match(page.content, /id="recording"/);
+  assert.match(page.content, /Local Phase 7 preview/);
+  assert.match(page.content, /id="emulator"/);
   assert.match(page.content, /src\/styles\/recording\.css/);
   assert.match(stylesheet.content, /\.spk-recording__progress/);
   assert.match(module.content, /class SpikelingRecordingControls/);

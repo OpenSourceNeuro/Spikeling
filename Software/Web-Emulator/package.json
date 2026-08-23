@@ -2,7 +2,7 @@
   "name": "@opensource-neuro/spikeling-web-emulator",
   "version": "0.1.0",
   "private": true,
-  "description": "Numerically validated worker-based browser emulator, scientific oscilloscope, neuron controls, dual synapses and private desktop-compatible scientific recording for Open Source Neuro Spikeling.",
+  "description": "Responsive, accessible, numerically validated worker-based neuronal emulator with scientific oscilloscope, dual synapses and private desktop-compatible recording for Open Source Neuro Spikeling.",
   "type": "module",
   "license": "GPL-3.0-or-later",
   "engines": {
@@ -22,6 +22,7 @@
     "test:controls": "node --test tests/controls.test.ts tests/custom-stimulus.test.ts",
     "test:synapses": "node --test tests/synapses.test.ts",
     "test:recording": "node --test tests/recording-csv.test.ts tests/recording.test.ts",
+    "test:accessibility": "node --test tests/accessibility.test.ts tests/interface.test.ts",
     "verify": "npm run fixtures:check && npm test"
   },
   "keywords": [

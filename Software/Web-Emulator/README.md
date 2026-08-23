@@ -1,15 +1,17 @@
 # Spikeling Web Emulator
 
-Phases 1–6 implement the numerically validated, worker-based simulation engine,
+Phases 1–7 implement the numerically validated, worker-based simulation engine,
 scientific oscilloscope, desktop-faithful main-neuron controls and two complete
-virtual presynaptic neurons and private full-resolution scientific recording for
-the Open Source Neuro Spikeling emulator. The
+virtual presynaptic neurons, private full-resolution scientific recording and an
+accessible responsive application shell for the Open Source Neuro Spikeling
+emulator. The
 package includes the browser-independent model, a dedicated worker,
 desktop-equivalent timing, bounded full-precision histories, a UI-independent
 data-source interface, a responsive dual-axis rolling oscilloscope, two signed
-synaptic input channels, validated local custom-stimulus import and exact
-desktop-compatible recording CSV import/export. It does not yet add WordPress
-integration, serial support or deployment configuration.
+synaptic input channels, validated local custom-stimulus import, exact
+desktop-compatible recording CSV import/export and keyboard-native
+desktop/tablet/mobile interaction. It does not yet add WordPress integration,
+serial support or deployment configuration.
 
 ## Requirements
 
@@ -30,8 +32,8 @@ From Software/Web-Emulator:
 The first command regenerates committed Python desktop-reference fixtures. The
 second checks that those fixtures still match the pinned desktop source and then
 runs the TypeScript model, cross-language parity, engine, worker, oscilloscope,
-main-neuron controls, dual-synapse, custom-stimulus, scientific-recording and
-performance tests.
+main-neuron controls, dual-synapse, custom-stimulus, scientific-recording,
+accessibility, responsive-interface and performance tests.
 
 Run individual groups with:
 
@@ -44,6 +46,7 @@ Run individual groups with:
     npm run test:controls
     npm run test:synapses
     npm run test:recording
+    npm run test:accessibility
 
 ## Run the local oscilloscope preview
 
@@ -66,10 +69,107 @@ Use Start recording and Stop recording independently of simulation transport,
 then select Download CSV to save the captured values locally. Existing desktop
 recordings can be loaded with Import desktop-compatible recording CSV.
 
+The complete interface is intentionally standalone: no WordPress page, live
+website, Elementor template or production deployment is changed by this phase.
+
 The local server strips Node-supported erasable TypeScript syntax on demand and
 serves native browser modules with their correct MIME types. It requires no
 Vite installation, third-party framework, package download, WordPress access or
 website deployment. Set SPIKELING_DEV_PORT to select a different local port.
+
+## Responsive accessible application shell
+
+Mount all previously validated components behind one isolated root without
+directly coupling the interface to a particular worker or future hardware
+implementation:
+
+    const source = new EmulatorSource({
+      speedIndex: 2,
+      simulation: { seed: 123456 },
+    });
+
+    const emulator = new SpikelingEmulator(containerElement, source, {
+      recorder: { maxSamples: 250_000 },
+      synapses: { autoShowTraces: true },
+    });
+
+    await source.connect();
+    emulator.controls.setControlEnabled("injectedCurrent", true);
+    emulator.controls.setControlValue("injectedCurrent", 18);
+    emulator.recorder.start();
+
+    // Panel visibility is keyboard-native and independently addressable.
+    emulator.setPanelOpen("synapses", true);
+    const layout = emulator.getLayout();
+
+    // Removing the interface releases every component and media-query listener.
+    emulator.dispose();
+    await source.disconnect();
+
+Load src/styles/emulator.css after the oscilloscope, controls, synapses and
+recording stylesheets. The shell is scoped exclusively to .spk-emulator and
+contains no global button, input, body, Canvas or Elementor selectors. Its
+maximum content width is 1,240 px, matching the approved OSN layout system.
+
+### Deliberate responsive layouts
+
+| Viewport | Width | Graph and parameter behaviour |
+| --- | --- | --- |
+| Desktop | 1,025 px or wider | Prominent left-hand oscilloscope, recording and synapses; separate right-hand main-neuron/stimulus panel; all panels initially open. |
+| Tablet | 768–1,024 px | One graph-first column followed by expanded main controls, recording and synapses; no forced horizontal overflow. |
+| Mobile | Below 768 px | Graph first; native, initially collapsed control/recording/synapse panels; two-column transport; full-width selects and readable stacked values. |
+
+The scientific plot is always first in both DOM and reading order. Responsive
+changes do not clone components, reset the model, modify sample rates or create
+additional worker subscriptions. Synapse columns collapse into one column on
+narrow displays, and all interactive targets retain a minimum 44 px hit area.
+
+Every expandable panel uses native details/summary elements, an explicit
+aria-expanded state and a labelled region. Simulation transport buttons are
+semantically disabled until a real worker snapshot arrives, then truthfully
+reflect ready/running/paused/stopped state. The simulation speed selector
+distinguishes real-time multiplier and wall-clock model-step throughput from
+the fixed 10,000 samples per simulated second used for integration/recording.
+
+### Keyboard, assistive technology and reduced motion
+
+Every slider, toggle, select, file picker, action button, expandable summary
+and source link has a genuine native or explicit accessible name. Three-pixel
+focus-visible outlines are scoped to the emulator and remain visible in forced
+colour modes. Status changes have polite, atomic screen-reader announcements;
+high-frequency plot and recording readings deliberately keep aria-live off to
+avoid narrating every scientific sample. Essential membrane voltage, signed
+input current, stimulus and presynaptic outputs retain textual equivalents.
+
+The emulator observes prefers-reduced-motion and disables non-essential CSS
+transitions, animation and smooth scrolling without pausing the actual
+scientific Canvas or changing simulation timing. prefers-contrast and
+forced-colors media queries provide stronger borders and platform-native focus
+outlines where needed.
+
+### Verified scientific colour semantics and text contrast
+
+The original source-pinned stimulus blue #268BD2, cell green #859900, Synapse 1
+cyan #2AA198, Synapse 2 magenta #D33682 and membrane red #DC322F remain
+unchanged for traces, slider fills and control accents. Some of those genuine
+desktop accents do not achieve the WCAG 4.5:1 normal-text threshold on the dark
+Solarized backgrounds, so a separate audited text palette is used only for
+readable headings, numerical values, status and errors:
+
+| Functional text | Accessible colour | Contrast on #002B36 | Contrast on #073642 |
+| --- | --- | ---: | ---: |
+| Stimulus | #80C9FF | 7.36:1 | 6.22:1 |
+| Cell input | #B4CA60 | 7.31:1 | 6.18:1 |
+| Synapse 1 | #67D3C7 | 7.33:1 | 6.20:1 |
+| Synapse 2 | #F08AC3 | 5.90:1 | 4.99:1 |
+| Warning | #E4C36A | 7.70:1 | 6.51:1 |
+| Error | #FF8E8B | 6.07:1 | 5.13:1 |
+
+The exported relativeLuminance, contrastRatio and meetsTextContrast utilities
+use the WCAG 2.x sRGB transfer function. Regression tests independently verify
+every functional text colour against both dark surfaces, all breakpoint
+boundaries, native accessible names, screen-reader announcements, keyboard
+semantics, source isolation, real worker batches and complete disposal.
 
 ## Public model API
 

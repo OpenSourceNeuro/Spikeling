@@ -89,6 +89,29 @@ export type {
   EmulatorSourceWorker,
 } from "./data-source/EmulatorSource.ts";
 export {
+  ACCESSIBLE_SPIKELING_PALETTE,
+  DESKTOP_MINIMUM_WIDTH,
+  MOBILE_MEDIA_QUERY,
+  REDUCED_MOTION_MEDIA_QUERY,
+  TABLET_MEDIA_QUERY,
+  TABLET_MINIMUM_WIDTH,
+  contrastRatio,
+  emulatorLayout,
+  meetsTextContrast,
+  relativeLuminance,
+} from "./interface/accessibility.ts";
+export type {
+  ContrastConformance,
+  ContrastOptions,
+  EmulatorLayout,
+} from "./interface/accessibility.ts";
+export { SpikelingEmulator } from "./interface/emulator.ts";
+export type {
+  EmulatorInterfaceOptions,
+  EmulatorPanel,
+  MediaQueryAdapter,
+} from "./interface/emulator.ts";
+export {
   DEFAULT_RECORDING_MAX_SAMPLES,
   DESKTOP_RECORDING_COLUMNS,
   MAX_RECORDING_FILE_BYTES,

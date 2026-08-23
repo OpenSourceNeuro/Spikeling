@@ -892,8 +892,8 @@ test("local preview serves independently scoped cyan/magenta Phase 5 styles and 
   const module = await readDevelopmentAsset("/src/controls/synapse-controls.ts");
 
   assert.equal(page.status, 200);
-  assert.match(page.content, /Local Phase 6 preview/);
-  assert.match(page.content, /id="synapses"/);
+  assert.match(page.content, /Local Phase 7 preview/);
+  assert.match(page.content, /id="emulator"/);
   assert.match(page.content, /src\/styles\/synapses\.css/);
   assert.equal(stylesheet.status, 200);
   assert.match(stylesheet.contentType, /^text\/css/);

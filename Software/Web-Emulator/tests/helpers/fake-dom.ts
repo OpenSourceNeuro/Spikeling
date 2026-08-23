@@ -29,6 +29,8 @@ export class FakeElement {
   step = "";
   accept = "";
   htmlFor = "";
+  href = "";
+  open = false;
   disabled = false;
   checked = false;
   files: Array<{ name: string; size: number; text(): Promise<string> }> | undefined;

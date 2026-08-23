@@ -1,0 +1,338 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-emulator {
+  --spk-bg-deep: #001e26;
+  --spk-bg: #002b36;
+  --spk-panel: #073642;
+  --spk-text: #eee8d5;
+  --spk-muted: #a3b1b1;
+  --spk-focus: #fdf6e3;
+  --spk-stimulus: #268bd2;
+  --spk-cell: #859900;
+  --spk-syn1: #2aa198;
+  --spk-syn2: #d33682;
+  --spk-stimulus-text: #80c9ff;
+  --spk-cell-text: #b4ca60;
+  --spk-syn1-text: #67d3c7;
+  --spk-syn2-text: #f08ac3;
+  --spk-warning-text: #e4c36a;
+  --spk-error-text: #ff8e8b;
+
+  box-sizing: border-box;
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1240px;
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--spk-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.spk-emulator *,
+.spk-emulator *::before,
+.spk-emulator *::after {
+  box-sizing: border-box;
+}
+
+.spk-emulator__introduction,
+.spk-emulator__transport,
+.spk-emulator__panel,
+.spk-emulator__footer {
+  border: 1px solid var(--spk-panel);
+  border-radius: 0.75rem;
+  background: var(--spk-bg);
+}
+
+.spk-emulator__introduction {
+  display: grid;
+  gap: 0.375rem;
+  padding: 1rem;
+}
+
+.spk-emulator__title,
+.spk-emulator__scope,
+.spk-emulator__status,
+.spk-emulator__error {
+  margin: 0;
+}
+
+.spk-emulator__title {
+  color: var(--spk-text);
+  font-size: clamp(1rem, 2vw, 1.375rem);
+}
+
+.spk-emulator__scope {
+  max-width: 75ch;
+  color: var(--spk-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.spk-emulator__transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.625rem;
+  padding: 0.875rem;
+}
+
+.spk-emulator__button,
+.spk-emulator__speed {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--spk-muted);
+  border-radius: 0.375rem;
+  background: var(--spk-bg-deep);
+  color: var(--spk-text);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.spk-emulator__button[data-action="start"] {
+  border-color: var(--spk-cell);
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator__button:disabled,
+.spk-emulator__speed:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.spk-emulator__speed-label {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+}
+
+.spk-emulator__speed {
+  max-width: 100%;
+}
+
+.spk-emulator__status {
+  flex: 1 1 100%;
+  min-height: 1.5rem;
+  color: var(--spk-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.spk-emulator__status[data-state="running"] {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator__status[data-state="paused"] {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  grid-template-areas:
+    "oscilloscope main"
+    "recording main"
+    "synapses main";
+  align-items: start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.spk-emulator__oscilloscope {
+  grid-area: oscilloscope;
+  min-width: 0;
+}
+
+.spk-emulator__panel {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.spk-emulator__panel[data-panel="main"] { grid-area: main; }
+.spk-emulator__panel[data-panel="recording"] { grid-area: recording; }
+.spk-emulator__panel[data-panel="synapses"] { grid-area: synapses; }
+
+.spk-emulator__panel-summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--spk-text);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 650;
+  list-style-position: inside;
+}
+
+.spk-emulator__panel-content {
+  min-width: 0;
+  padding: 0 0.625rem 0.625rem;
+}
+
+.spk-emulator__panel-content > .spk-controls {
+  width: 100%;
+  min-width: 0;
+}
+
+.spk-emulator .spk-controls {
+  --spk-foreground: var(--spk-text);
+  --spk-muted: #a3b1b1;
+}
+
+.spk-emulator .spk-controls__group[data-accent="neuron"] .spk-controls__heading,
+.spk-emulator .spk-controls__group[data-accent="neuron"] .spk-controls__value {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator .spk-controls__group[data-accent="stimulus"] .spk-controls__heading,
+.spk-emulator .spk-controls__control[data-accent="stimulus"] .spk-controls__value,
+.spk-emulator .spk-recording__heading {
+  color: var(--spk-stimulus-text);
+}
+
+.spk-emulator .spk-controls__group[data-accent="cell"] .spk-controls__heading,
+.spk-emulator .spk-controls__control[data-accent="cell"] .spk-controls__value {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__title,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__reading,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading,
+.spk-emulator .spk-controls__control[data-accent="synapse1"] .spk-controls__value {
+  color: var(--spk-syn1-text);
+}
+
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__title,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__reading,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading,
+.spk-emulator .spk-controls__control[data-accent="synapse2"] .spk-controls__value {
+  color: var(--spk-syn2-text);
+}
+
+.spk-emulator .spk-controls__error,
+.spk-emulator .spk-recording__error,
+.spk-emulator__error {
+  color: var(--spk-error-text);
+}
+
+.spk-emulator .spk-oscilloscope__status[data-state="running"] {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator .spk-oscilloscope__status[data-state="paused"] {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator__error:empty {
+  display: none;
+}
+
+.spk-emulator__footer {
+  padding: 0.5rem 0.875rem;
+}
+
+.spk-emulator__source {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--spk-stimulus-text);
+  font-size: 0.8125rem;
+  text-underline-offset: 0.18em;
+}
+
+.spk-emulator :where(button, input, select, summary, a):focus-visible {
+  outline: 3px solid var(--spk-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+  .spk-emulator__workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "oscilloscope"
+      "main"
+      "recording"
+      "synapses";
+  }
+
+  .spk-emulator .spk-controls__parameters {
+    gap: 0.375rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .spk-emulator {
+    gap: 0.75rem;
+  }
+
+  .spk-emulator__transport {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .spk-emulator__button {
+    width: 100%;
+  }
+
+  .spk-emulator__speed-label,
+  .spk-emulator__status {
+    grid-column: 1 / -1;
+  }
+
+  .spk-emulator .spk-recording__transport {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .spk-emulator .spk-controls__control-header {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+  }
+
+  .spk-emulator .spk-controls__value {
+    grid-column: 2;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .spk-emulator .spk-synapses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spk-emulator *,
+  .spk-emulator *::before,
+  .spk-emulator *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .spk-emulator :where(button, input, select, summary, a):focus-visible {
+    outline: 3px solid CanvasText;
+  }
+
+  .spk-emulator__panel,
+  .spk-emulator__button,
+  .spk-emulator__speed {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .spk-emulator {
+    --spk-muted: #eee8d5;
+  }
+
+  .spk-emulator__panel,
+  .spk-emulator__button,
+  .spk-emulator__speed {
+    border-color: var(--spk-text);
+  }
+}
