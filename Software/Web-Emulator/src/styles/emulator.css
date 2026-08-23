@@ -132,10 +132,11 @@
 
 .spk-emulator__workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
   grid-template-areas:
     "oscilloscope main"
-    "synapses stimulus";
+    "oscilloscope stimulus"
+    "synapses synapses";
   align-items: start;
   gap: 1rem;
   min-width: 0;
@@ -162,7 +163,7 @@
   padding: 0.75rem 1rem;
   color: var(--spk-text);
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 16px;
   font-weight: 650;
   list-style-position: inside;
 }
@@ -180,6 +181,43 @@
 .spk-emulator .spk-controls {
   --spk-foreground: var(--spk-text);
   --spk-muted: #a3b1b1;
+}
+
+.spk-emulator .spk-controls__heading,
+.spk-emulator .spk-synapses__title {
+  font-size: 15px;
+}
+
+.spk-emulator .spk-controls__select,
+.spk-emulator .spk-controls__file,
+.spk-emulator .spk-emulator__button,
+.spk-emulator .spk-emulator__speed,
+.spk-emulator .spk-emulator__source {
+  font-size: 14px;
+}
+
+.spk-emulator .spk-controls__select-label,
+.spk-emulator .spk-controls__file-label,
+.spk-emulator .spk-controls__toggle-label,
+.spk-emulator .spk-controls__control-label,
+.spk-emulator .spk-controls__parameter-name,
+.spk-emulator .spk-controls__parameter-value,
+.spk-emulator .spk-controls__value,
+.spk-emulator .spk-emulator__speed-label,
+.spk-emulator .spk-emulator__status,
+.spk-emulator .spk-synapses__activation-label,
+.spk-emulator .spk-synapses__subheading,
+.spk-emulator .spk-synapses__reading,
+.spk-emulator .spk-oscilloscope__status,
+.spk-emulator .spk-oscilloscope__readings,
+.spk-emulator .spk-oscilloscope__legend,
+.spk-emulator .spk-oscilloscope__trace {
+  font-size: 13px;
+}
+
+.spk-emulator .spk-controls__toggle-label,
+.spk-emulator .spk-controls__control-label {
+  color: var(--spk-text);
 }
 
 .spk-emulator .spk-controls__group[data-accent="neuron"] .spk-controls__heading,
@@ -292,13 +330,18 @@
   }
 
   .spk-emulator .spk-controls__control[data-always-enabled="true"] .spk-controls__control-header {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .spk-emulator .spk-controls__value {
     grid-column: 2;
     text-align: left;
     white-space: normal;
+  }
+
+  .spk-emulator .spk-controls__control[data-always-enabled="true"] .spk-controls__value {
+    grid-column: 1;
+    text-align: right;
   }
 
   .spk-emulator .spk-synapses {

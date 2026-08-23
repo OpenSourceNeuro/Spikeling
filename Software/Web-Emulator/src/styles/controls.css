@@ -164,7 +164,7 @@
 }
 
 .spk-controls__control[data-always-enabled="true"] .spk-controls__control-header {
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .spk-controls__enable {
@@ -217,6 +217,42 @@
 
 .spk-controls__ticks {
   display: none;
+}
+
+.spk-controls__scale {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  color: var(--spk-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.spk-controls__scale-mark {
+  position: relative;
+  padding-top: 8px;
+}
+
+.spk-controls__scale-mark::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 6px;
+  background: var(--spk-muted);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.spk-controls__scale-mark:first-child::before {
+  left: 0;
+  transform: none;
+}
+
+.spk-controls__scale-mark:last-child::before {
+  right: 0;
+  left: auto;
+  transform: none;
 }
 
 .spk-controls__control[data-disabled="true"] .spk-controls__control-label,

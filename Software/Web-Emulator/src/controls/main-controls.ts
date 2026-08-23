@@ -339,7 +339,7 @@ export class SpikelingMainControls {
     output.setAttribute("for", slider.id);
     if (alwaysEnabled) {
       row.dataset.alwaysEnabled = "true";
-      header.append(label, output);
+      header.append(output);
     } else {
       header.append(toggleTarget, label, output);
     }
@@ -353,6 +353,17 @@ export class SpikelingMainControls {
     }
     slider.setAttribute("list", ticks.id);
     row.append(header, slider, ticks);
+    if (alwaysEnabled) {
+      const scale = element(this.owner, "div", "spk-controls__scale");
+      scale.setAttribute("aria-hidden", "true");
+      const values = id === "injectedCurrent"
+        ? ["-100%", "0%", "100%"]
+        : ["0%", "100%"];
+      for (const value of values) {
+        scale.append(element(this.owner, "span", "spk-controls__scale-mark", value));
+      }
+      row.append(scale);
+    }
     parent.append(row);
 
     const references = { specification, row, toggle, slider, output, alwaysEnabled };

@@ -232,6 +232,13 @@ test("neuron panel exposes only mode, always-active current input and always-act
     assert.equal(inputs[0].type, "range");
     assert.equal(inputs[0].disabled, false);
     assert.equal(inputs[0].attributes.get("aria-label"), label);
+    assert.equal(row.findAll((element) => element.className === "spk-controls__control-label").length, 0);
+    const scale = find(row, (element) => element.className === "spk-controls__scale");
+    assert.equal(scale.attributes.get("aria-hidden"), "true");
+    assert.deepEqual(
+      scale.children.map((marker) => marker.textContent),
+      identifier === "injectedCurrent" ? ["-100%", "0%", "100%"] : ["0%", "100%"],
+    );
     emulator.controls.setControlEnabled(identifier, false);
     assert.equal(emulator.controls.isEnabled(identifier), true);
   }
