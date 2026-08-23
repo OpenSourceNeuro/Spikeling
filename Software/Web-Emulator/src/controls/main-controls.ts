@@ -31,10 +31,13 @@ interface SliderElements {
   readonly toggle: HTMLInputElement;
   readonly slider: HTMLInputElement;
   readonly output: HTMLOutputElement;
+  readonly alwaysEnabled: boolean;
 }
 
 export interface MainNeuronControlsOptions extends CustomStimulusOptions {
   readonly devicePixelRatio?: () => number;
+  readonly compact?: boolean;
+  readonly stimulusHost?: HTMLElement;
 }
 
 let controlsInstanceCount = 0;
@@ -67,6 +70,7 @@ export class SpikelingMainControls {
   private readonly options: MainNeuronControlsOptions;
   private readonly controls = new Map<MainControlId, SliderElements>();
   private readonly enabled = new Map<MainControlId, boolean>();
+  private readonly auxiliaryElements: HTMLElement[] = [];
   private readonly subscriptions: Unsubscribe[] = [];
   private readonly neuronSelect: HTMLSelectElement;
   private readonly parameters: HTMLElement;
@@ -89,13 +93,18 @@ export class SpikelingMainControls {
     controlsInstanceCount += 1;
     this.instancePrefix = "spk-main-" + controlsInstanceCount + "-";
     this.element = element(this.owner, "section", "spk-controls");
-    this.element.setAttribute("aria-label", "Main neuron and stimulus controls");
+    this.element.setAttribute("aria-label", options.compact ? "Main neuron controls" : "Main neuron and stimulus controls");
 
-    const neuron = this.group("Neuron parameters", "neuron");
-    const selectorLabel = element(this.owner, "label", "spk-controls__select-label", "Neuron mode");
+    const neuron = this.group(options.compact ? "Neuron mode" : "Neuron parameters", "neuron");
     this.neuronSelect = element(this.owner, "select", "spk-controls__select");
     this.neuronSelect.id = this.instancePrefix + "neuron-mode";
-    selectorLabel.htmlFor = this.neuronSelect.id;
+    if (options.compact) {
+      this.neuronSelect.setAttribute("aria-label", "Neuron mode");
+    } else {
+      const selectorLabel = element(this.owner, "label", "spk-controls__select-label", "Neuron mode");
+      selectorLabel.htmlFor = this.neuronSelect.id;
+      neuron.append(selectorLabel);
+    }
     for (const preset of NEURON_PRESETS) {
       const choice = element(this.owner, "option", "", preset.label);
       choice.value = String(preset.id);
@@ -104,9 +113,23 @@ export class SpikelingMainControls {
     this.neuronSelect.value = "1";
     this.neuronSelect.addEventListener("change", () => this.selectPreset(Number(this.neuronSelect.value)));
     this.parameters = element(this.owner, "dl", "spk-controls__parameters");
-    neuron.append(selectorLabel, this.neuronSelect, this.parameters);
+    neuron.append(this.neuronSelect, this.parameters);
 
-    const stimulus = this.group("Stimulus parameters", "stimulus");
+    if (options.compact) {
+      const input = this.group("Current input", "cell");
+      this.addSlider(input, "injectedCurrent", { alwaysEnabled: true, label: "Current input" });
+      const noise = this.group("Noise", "cell");
+      this.addSlider(noise, "noiseLevel", { alwaysEnabled: true, label: "Noise" });
+    }
+
+    let stimulusParent = this.element;
+    if (options.stimulusHost !== undefined) {
+      stimulusParent = element(this.owner, "section", "spk-controls");
+      stimulusParent.setAttribute("aria-label", "Stimulus controls");
+      options.stimulusHost.append(stimulusParent);
+      this.auxiliaryElements.push(stimulusParent);
+    }
+    const stimulus = this.group("Stimulus parameters", "stimulus", stimulusParent);
     const routing = element(this.owner, "div", "spk-controls__routing");
     this.directCurrent = this.standaloneToggle(routing, "Direct current stimulation", "stimulus");
     this.light = this.standaloneToggle(routing, "Light stimulation", "cell");
@@ -145,11 +168,15 @@ export class SpikelingMainControls {
     custom.append(fileLabel, this.fileInput, this.customStatus, this.preview);
     stimulus.append(custom);
 
-    const input = this.group("Cell input", "cell");
-    this.addSlider(input, "injectedCurrent");
-    this.addSlider(input, "noiseLevel");
+    if (!options.compact) {
+      const input = this.group("Cell input", "cell");
+      this.addSlider(input, "injectedCurrent");
+      this.addSlider(input, "noiseLevel");
+    }
 
-    const photo = this.group("Photoreceptor", "cell");
+    const photo = options.compact
+      ? element(this.owner, "div", "spk-controls__legacy-photoreceptor")
+      : this.group("Photoreceptor", "cell");
     this.addSlider(photo, "photoreceptorGain");
     this.addSlider(photo, "photoreceptorDecay");
     this.addSlider(photo, "photoreceptorRecovery");
@@ -195,9 +222,10 @@ export class SpikelingMainControls {
   setControlEnabled(id: MainControlId, active: boolean): void {
     const specification = getMainControlSpecification(id);
     const controls = this.controls.get(id)!;
-    this.enabled.set(id, active);
-    controls.toggle.checked = active;
-    if (!active) {
+    const enabled = controls.alwaysEnabled || active;
+    this.enabled.set(id, enabled);
+    controls.toggle.checked = enabled;
+    if (!enabled) {
       controls.slider.value = String(specification.defaultValue);
       this.updateSliderDisplay(controls, specification.defaultValue);
     }
@@ -246,15 +274,18 @@ export class SpikelingMainControls {
     for (const unsubscribe of this.subscriptions) {
       unsubscribe();
     }
+    for (const auxiliary of this.auxiliaryElements) {
+      auxiliary.remove();
+    }
     this.element.remove();
   }
 
-  private group(title: string, accent: ControlAccentName): HTMLElement {
+  private group(title: string, accent: ControlAccentName, parent = this.element): HTMLElement {
     const section = element(this.owner, "section", "spk-controls__group");
     section.dataset.accent = accent;
     const heading = element(this.owner, "h3", "spk-controls__heading", title);
     section.append(heading);
-    this.element.append(section);
+    parent.append(section);
     return section;
   }
 
@@ -270,8 +301,15 @@ export class SpikelingMainControls {
     return input;
   }
 
-  private addSlider(parent: HTMLElement, id: MainControlId): void {
+  private addSlider(
+    parent: HTMLElement,
+    id: MainControlId,
+    options: { readonly alwaysEnabled?: boolean; readonly label?: string } = {},
+  ): void {
     const specification = getMainControlSpecification(id);
+    const labelText = options.label ?? specification.label;
+    const alwaysEnabled = options.alwaysEnabled ?? false;
+    const enabled = alwaysEnabled || specification.enabledByDefault;
     const row = element(this.owner, "div", "spk-controls__control");
     row.dataset.control = id;
     row.dataset.accent = specification.accent;
@@ -279,11 +317,11 @@ export class SpikelingMainControls {
 
     const toggle = element(this.owner, "input", "spk-controls__toggle");
     toggle.type = "checkbox";
-    toggle.checked = specification.enabledByDefault;
-    toggle.setAttribute("aria-label", "Enable " + specification.label.toLowerCase());
+    toggle.checked = enabled;
+    toggle.setAttribute("aria-label", "Enable " + labelText.toLowerCase());
     const toggleTarget = element(this.owner, "label", "spk-controls__enable");
     toggleTarget.append(toggle);
-    this.enabled.set(id, specification.enabledByDefault);
+    this.enabled.set(id, enabled);
 
     const slider = element(this.owner, "input", "spk-controls__range");
     slider.type = "range";
@@ -292,14 +330,19 @@ export class SpikelingMainControls {
     slider.max = String(specification.maximum);
     slider.step = String(specification.step);
     slider.value = String(specification.defaultValue);
-    slider.disabled = !specification.enabledByDefault;
-    slider.setAttribute("aria-label", specification.label + " (" + specification.unit + ")");
+    slider.disabled = !enabled;
+    slider.setAttribute("aria-label", labelText + " (" + specification.unit + ")");
 
-    const label = element(this.owner, "label", "spk-controls__control-label", specification.label);
+    const label = element(this.owner, "label", "spk-controls__control-label", labelText);
     label.htmlFor = slider.id;
     const output = element(this.owner, "output", "spk-controls__value");
     output.setAttribute("for", slider.id);
-    header.append(toggleTarget, label, output);
+    if (alwaysEnabled) {
+      row.dataset.alwaysEnabled = "true";
+      header.append(label, output);
+    } else {
+      header.append(toggleTarget, label, output);
+    }
 
     const ticks = element(this.owner, "datalist", "spk-controls__ticks");
     ticks.id = slider.id + "-ticks";
@@ -312,7 +355,7 @@ export class SpikelingMainControls {
     row.append(header, slider, ticks);
     parent.append(row);
 
-    const references = { specification, row, toggle, slider, output };
+    const references = { specification, row, toggle, slider, output, alwaysEnabled };
     this.controls.set(id, references);
     this.updateSliderDisplay(references, specification.defaultValue);
 

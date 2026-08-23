@@ -227,7 +227,10 @@ test("launch assessment does not mutate the audited captured evidence", () => {
 
 test("committed production assets pass genuine content, gzip and reproducibility validation", async () => {
   const report = await validateProductionAssets(assetDirectory, manifest);
-  assert.equal(report.compressedBytes, 48_660);
+  assert.equal(
+    report.compressedBytes,
+    manifest.application.gzipBytes + manifest.worker.gzipBytes + manifest.stylesheet.gzipBytes,
+  );
   assert.ok(report.compressedBytes < PRODUCTION_GZIP_BUDGETS.total);
   assert.match(report.content.application, /\[data-spikeling-emulator\]/);
 });
@@ -264,7 +267,10 @@ test("the complete integration gate combines pinned artefacts with honest draft-
   assert.equal(report.referenceScenarios, 33);
   assert.equal(report.presetCount, 20);
   assert.equal(report.speedCount, 10);
-  assert.equal(report.compressedBytes, 48_660);
+  assert.equal(
+    report.compressedBytes,
+    manifest.application.gzipBytes + manifest.worker.gzipBytes + manifest.stylesheet.gzipBytes,
+  );
   assert.equal(report.readiness.publishAllowed, false);
 });
 

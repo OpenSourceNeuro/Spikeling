@@ -1,0 +1,1017 @@
+/*! SPDX-License-Identifier: GPL-3.0-or-later | Open Source Neuro Spikeling */
+/* Source: src/styles/oscilloscope.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-oscilloscope {
+  --spk-bg-deep: #001e26;
+  --spk-bg: #002b36;
+  --spk-panel: #073642;
+  --spk-muted: #586e75;
+  --spk-secondary: #93a1a1;
+  --spk-text: #becdcd;
+  --spk-light: #fdf6e3;
+  --spk-membrane: #dc322f;
+  --spk-cell: #859900;
+  --spk-stimulus: #268bd2;
+  --spk-syn1-voltage: #cb4b16;
+  --spk-syn1: #2aa198;
+  --spk-syn2-voltage: #b58900;
+  --spk-syn2: #d33682;
+
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.875rem;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  border: 1px solid var(--spk-panel);
+  border-radius: 1rem;
+  background: var(--spk-bg);
+  color: var(--spk-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.spk-oscilloscope *,
+.spk-oscilloscope *::before,
+.spk-oscilloscope *::after {
+  box-sizing: border-box;
+}
+
+.spk-oscilloscope__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spk-oscilloscope__title {
+  margin: 0;
+  color: var(--spk-light);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+}
+
+.spk-oscilloscope__status {
+  min-width: 5.5rem;
+  color: var(--spk-secondary);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.spk-oscilloscope__status[data-state="running"] {
+  color: var(--spk-cell);
+}
+
+.spk-oscilloscope__status[data-state="paused"] {
+  color: var(--spk-syn2-voltage);
+}
+
+.spk-oscilloscope__canvas {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 46vw, 440px);
+  border: 1px solid var(--spk-panel);
+  border-radius: 0.5rem;
+  background: var(--spk-bg-deep);
+}
+
+.spk-oscilloscope__readings {
+  margin: 0;
+  color: var(--spk-secondary);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spk-oscilloscope__traces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.875rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.625rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--spk-panel);
+}
+
+.spk-oscilloscope__legend {
+  padding: 0 0.5rem 0 0;
+  color: var(--spk-secondary);
+  font-size: 0.75rem;
+}
+
+.spk-oscilloscope__trace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  gap: 0.375rem;
+  color: var(--spk-text);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.spk-oscilloscope__trace-input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--spk-trace-colour);
+}
+
+.spk-oscilloscope__trace-input:focus-visible {
+  outline: 2px solid var(--spk-light);
+  outline-offset: 3px;
+}
+
+.spk-oscilloscope__trace-input:not(:checked) + .spk-oscilloscope__trace-label {
+  color: var(--spk-secondary);
+}
+
+@media (max-width: 540px) {
+  .spk-oscilloscope {
+    border-radius: 0.75rem;
+  }
+
+  .spk-oscilloscope__canvas {
+    height: 300px;
+  }
+
+  .spk-oscilloscope__readings {
+    line-height: 1.6;
+  }
+
+  .spk-oscilloscope__trace {
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spk-oscilloscope *,
+  .spk-oscilloscope *::before,
+  .spk-oscilloscope *::after {
+    scroll-behavior: auto;
+  }
+}
+
+/* Source: src/styles/controls.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-controls {
+  --spk-background: #002b36;
+  --spk-surface: #073642;
+  --spk-grid: #586e75;
+  --spk-foreground: #eee8d5;
+  --spk-muted: #93a1a1;
+  --spk-stimulus: #268bd2;
+  --spk-cell: #859900;
+  --spk-neuron: #b58900;
+  --spk-danger: #dc322f;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 1px solid var(--spk-surface);
+  border-radius: 0.75rem;
+  background: var(--spk-background);
+  color: var(--spk-foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.spk-controls *,
+.spk-controls *::before,
+.spk-controls *::after {
+  box-sizing: border-box;
+}
+
+.spk-controls__group {
+  display: grid;
+  gap: 0.625rem;
+  padding: 0.75rem;
+  border: 1px solid var(--spk-surface);
+  border-radius: 0.625rem;
+  background: rgb(7 54 66 / 38%);
+}
+
+.spk-controls__group[data-accent="neuron"] {
+  --spk-accent: var(--spk-neuron);
+}
+
+.spk-controls__group[data-accent="stimulus"],
+.spk-controls__toggle-row[data-accent="stimulus"],
+.spk-controls__control[data-accent="stimulus"] {
+  --spk-accent: var(--spk-stimulus);
+}
+
+.spk-controls__group[data-accent="cell"],
+.spk-controls__toggle-row[data-accent="cell"],
+.spk-controls__control[data-accent="cell"] {
+  --spk-accent: var(--spk-cell);
+}
+
+.spk-controls__heading {
+  margin: 0;
+  color: var(--spk-accent);
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.spk-controls__select-label,
+.spk-controls__file-label {
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+}
+
+.spk-controls__select,
+.spk-controls__file {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 1px solid var(--spk-grid);
+  border-radius: 0.375rem;
+  background: var(--spk-background);
+  color: var(--spk-foreground);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.spk-controls__parameters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0.125rem 0 0;
+  text-align: center;
+}
+
+.spk-controls__parameter-name {
+  grid-row: 1;
+  color: var(--spk-muted);
+  font-size: 0.7rem;
+}
+
+.spk-controls__parameter-value {
+  grid-row: 2;
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spk-controls__routing,
+.spk-controls__custom {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.spk-controls__toggle-row {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+.spk-controls__toggle-label,
+.spk-controls__control-label {
+  font-size: 0.75rem;
+}
+
+.spk-controls__toggle {
+  width: 2rem;
+  height: 1.125rem;
+  flex: 0 0 2rem;
+  margin: 0;
+  border: 1px solid var(--spk-grid);
+  border-radius: 2rem;
+  appearance: none;
+  background: var(--spk-background);
+  cursor: pointer;
+}
+
+.spk-controls__toggle::before {
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: 0.125rem;
+  border-radius: 50%;
+  background: var(--spk-muted);
+  content: "";
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.spk-controls__toggle:checked {
+  border-color: var(--spk-accent);
+}
+
+.spk-controls__toggle:checked::before {
+  transform: translateX(0.875rem);
+  background: var(--spk-accent);
+}
+
+.spk-controls__control {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.spk-controls__control-header {
+  display: grid;
+  min-height: 2.75rem;
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spk-controls__control[data-always-enabled="true"] .spk-controls__control-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.spk-controls__enable {
+  display: flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.spk-controls__value {
+  color: var(--spk-accent);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.spk-controls__range {
+  width: 100%;
+  height: 2.75rem;
+  margin: 0;
+  accent-color: var(--spk-accent);
+  background: transparent;
+  cursor: pointer;
+}
+
+.spk-controls__range::-webkit-slider-runnable-track {
+  height: 0.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(
+    to right,
+    var(--spk-accent) 0 var(--spk-fill, 50%),
+    var(--spk-grid) var(--spk-fill, 50%) 100%
+  );
+}
+
+.spk-controls__range::-moz-range-track {
+  height: 0.25rem;
+  border-radius: 1rem;
+  background: var(--spk-grid);
+}
+
+.spk-controls__range::-moz-range-progress {
+  height: 0.25rem;
+  border-radius: 1rem;
+  background: var(--spk-accent);
+}
+
+.spk-controls__ticks {
+  display: none;
+}
+
+.spk-controls__control[data-disabled="true"] .spk-controls__control-label,
+.spk-controls__control[data-disabled="true"] .spk-controls__value,
+.spk-controls__range:disabled,
+.spk-controls__toggle:disabled {
+  opacity: 0.55;
+}
+
+.spk-controls__range:disabled,
+.spk-controls__toggle:disabled {
+  cursor: not-allowed;
+}
+
+.spk-controls__custom {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--spk-surface);
+}
+
+.spk-controls__custom-status {
+  min-height: 1.25rem;
+  margin: 0.25rem 0;
+  color: var(--spk-muted);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.spk-controls__preview {
+  display: block;
+  width: 100%;
+  height: 4.5rem;
+  border: 1px solid var(--spk-surface);
+  border-radius: 0.375rem;
+}
+
+.spk-controls__error {
+  margin: 0;
+  color: var(--spk-danger);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.spk-controls__error:empty {
+  display: none;
+}
+
+.spk-controls :focus-visible {
+  outline: 2px solid var(--spk-foreground);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spk-controls__toggle::before {
+    transition: none;
+  }
+}
+
+/* Source: src/styles/synapses.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-synapses {
+  --spk-synapse1: #2aa198;
+  --spk-synapse2: #d33682;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.spk-synapses__channel {
+  min-width: 0;
+  gap: 0.625rem;
+  align-content: start;
+}
+
+.spk-synapses__channel[data-synapse="synapse1"] {
+  --spk-channel-accent: var(--spk-synapse1);
+}
+
+.spk-synapses__channel[data-synapse="synapse2"] {
+  --spk-channel-accent: var(--spk-synapse2);
+}
+
+.spk-synapses__channel[data-active="true"] {
+  border-color: var(--spk-channel-accent);
+}
+
+.spk-synapses__heading {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spk-synapses__title {
+  margin: 0;
+  color: var(--spk-channel-accent);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.spk-synapses__activation {
+  --spk-accent: var(--spk-channel-accent);
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.spk-synapses__activation-label {
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+}
+
+.spk-synapses__subgroup {
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--spk-surface);
+}
+
+.spk-synapses__subheading {
+  margin: 0;
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading {
+  color: var(--spk-channel-accent);
+}
+
+.spk-synapses .spk-controls__control[data-accent="synapse1"] {
+  --spk-accent: var(--spk-synapse1);
+}
+
+.spk-synapses .spk-controls__control[data-accent="synapse2"] {
+  --spk-accent: var(--spk-synapse2);
+}
+
+.spk-synapses__reading {
+  min-height: 2.5rem;
+  margin: 0;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--spk-surface);
+  color: var(--spk-channel-accent);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.spk-synapses__error {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .spk-synapses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Source: src/styles/recording.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-recording {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.spk-recording__heading,
+.spk-recording__status,
+.spk-recording__statistics,
+.spk-recording__rates,
+.spk-recording__error {
+  margin: 0;
+}
+
+.spk-recording__heading {
+  color: var(--spk-stimulus, #268bd2);
+  font-size: 0.95rem;
+}
+
+.spk-recording__status,
+.spk-recording__statistics,
+.spk-recording__rates,
+.spk-recording__import {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.spk-recording__transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spk-recording__button,
+.spk-recording__file {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--spk-grid, #93a1a1);
+  border-radius: 0.375rem;
+  background: var(--spk-background, #fdf6e3);
+  color: var(--spk-foreground, #073642);
+  font: inherit;
+}
+
+.spk-recording__button[data-action="start"] {
+  border-color: var(--spk-cell, #859900);
+}
+
+.spk-recording__button:disabled,
+.spk-recording__file:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.spk-recording__import {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.spk-recording__progress {
+  width: 100%;
+  height: 0.75rem;
+  accent-color: var(--spk-stimulus, #268bd2);
+}
+
+.spk-recording__rates {
+  color: var(--spk-muted, #586e75);
+}
+
+.spk-recording__error {
+  color: var(--spk-neuron, #dc322f);
+  font-size: 0.8125rem;
+}
+
+/* Source: src/styles/emulator.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.spk-emulator {
+  --spk-bg-deep: #001e26;
+  --spk-bg: #002b36;
+  --spk-panel: #073642;
+  --spk-text: #eee8d5;
+  --spk-muted: #a3b1b1;
+  --spk-focus: #fdf6e3;
+  --spk-stimulus: #268bd2;
+  --spk-cell: #859900;
+  --spk-syn1: #2aa198;
+  --spk-syn2: #d33682;
+  --spk-stimulus-text: #80c9ff;
+  --spk-cell-text: #b4ca60;
+  --spk-syn1-text: #67d3c7;
+  --spk-syn2-text: #f08ac3;
+  --spk-warning-text: #e4c36a;
+  --spk-error-text: #ff8e8b;
+
+  box-sizing: border-box;
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1240px;
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--spk-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.spk-emulator *,
+.spk-emulator *::before,
+.spk-emulator *::after {
+  box-sizing: border-box;
+}
+
+.spk-emulator__introduction,
+.spk-emulator__transport,
+.spk-emulator__panel,
+.spk-emulator__footer {
+  border: 1px solid var(--spk-panel);
+  border-radius: 0.75rem;
+  background: var(--spk-bg);
+}
+
+.spk-emulator__introduction {
+  display: grid;
+  gap: 0.375rem;
+  padding: 1rem;
+}
+
+.spk-emulator__title,
+.spk-emulator__scope,
+.spk-emulator__status,
+.spk-emulator__error {
+  margin: 0;
+}
+
+.spk-emulator__title {
+  color: var(--spk-text);
+  font-size: clamp(1rem, 2vw, 1.375rem);
+}
+
+.spk-emulator__scope {
+  max-width: 75ch;
+  color: var(--spk-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.spk-emulator__transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.625rem;
+  padding: 0.875rem;
+}
+
+.spk-emulator__button,
+.spk-emulator__speed {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--spk-muted);
+  border-radius: 0.375rem;
+  background: var(--spk-bg-deep);
+  color: var(--spk-text);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.spk-emulator__button[data-action="start"] {
+  border-color: var(--spk-cell);
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator__button:disabled,
+.spk-emulator__speed:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.spk-emulator__speed-label {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+  color: var(--spk-muted);
+  font-size: 0.75rem;
+}
+
+.spk-emulator__speed {
+  max-width: 100%;
+}
+
+.spk-emulator__status {
+  flex: 1 1 100%;
+  min-height: 1.5rem;
+  color: var(--spk-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.spk-emulator__status[data-state="running"] {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator__status[data-state="paused"] {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  grid-template-areas:
+    "oscilloscope main"
+    "synapses stimulus";
+  align-items: start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.spk-emulator__oscilloscope {
+  grid-area: oscilloscope;
+  min-width: 0;
+}
+
+.spk-emulator__panel {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.spk-emulator__panel[data-panel="main"] { grid-area: main; }
+.spk-emulator__panel[data-panel="stimulus"] { grid-area: stimulus; }
+.spk-emulator__panel[data-panel="synapses"] { grid-area: synapses; }
+
+.spk-emulator__panel-summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--spk-text);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 650;
+  list-style-position: inside;
+}
+
+.spk-emulator__panel-content {
+  min-width: 0;
+  padding: 0 0.625rem 0.625rem;
+}
+
+.spk-emulator__panel-content > .spk-controls {
+  width: 100%;
+  min-width: 0;
+}
+
+.spk-emulator .spk-controls {
+  --spk-foreground: var(--spk-text);
+  --spk-muted: #a3b1b1;
+}
+
+.spk-emulator .spk-controls__group[data-accent="neuron"] .spk-controls__heading,
+.spk-emulator .spk-controls__group[data-accent="neuron"] .spk-controls__value {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator .spk-controls__group[data-accent="stimulus"] .spk-controls__heading,
+.spk-emulator .spk-controls__control[data-accent="stimulus"] .spk-controls__value,
+.spk-emulator .spk-recording__heading {
+  color: var(--spk-stimulus-text);
+}
+
+.spk-emulator .spk-controls__group[data-accent="cell"] .spk-controls__heading,
+.spk-emulator .spk-controls__control[data-accent="cell"] .spk-controls__value {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__title,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__reading,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse1"] .spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading,
+.spk-emulator .spk-controls__control[data-accent="synapse1"] .spk-controls__value {
+  color: var(--spk-syn1-text);
+}
+
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__title,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__reading,
+.spk-emulator .spk-synapses__channel[data-synapse="synapse2"] .spk-synapses__subgroup[data-accent="channel"] .spk-synapses__subheading,
+.spk-emulator .spk-controls__control[data-accent="synapse2"] .spk-controls__value {
+  color: var(--spk-syn2-text);
+}
+
+.spk-emulator .spk-controls__error,
+.spk-emulator .spk-recording__error,
+.spk-emulator__error {
+  color: var(--spk-error-text);
+}
+
+.spk-emulator .spk-oscilloscope__status[data-state="running"] {
+  color: var(--spk-cell-text);
+}
+
+.spk-emulator .spk-oscilloscope__status[data-state="paused"] {
+  color: var(--spk-warning-text);
+}
+
+.spk-emulator__error:empty {
+  display: none;
+}
+
+.spk-emulator__footer {
+  padding: 0.5rem 0.875rem;
+}
+
+.spk-emulator__source {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--spk-stimulus-text);
+  font-size: 0.8125rem;
+  text-underline-offset: 0.18em;
+}
+
+.spk-emulator :where(button, input, select, summary, a):focus-visible {
+  outline: 3px solid var(--spk-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+  .spk-emulator__workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "oscilloscope"
+      "main"
+      "stimulus"
+      "synapses";
+  }
+
+  .spk-emulator .spk-controls__parameters {
+    gap: 0.375rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .spk-emulator {
+    gap: 0.75rem;
+  }
+
+  .spk-emulator__transport {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .spk-emulator__button {
+    width: 100%;
+  }
+
+  .spk-emulator__speed-label,
+  .spk-emulator__status {
+    grid-column: 1 / -1;
+  }
+
+  .spk-emulator .spk-recording__transport {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .spk-emulator .spk-controls__control-header {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+  }
+
+  .spk-emulator .spk-controls__control[data-always-enabled="true"] .spk-controls__control-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .spk-emulator .spk-controls__value {
+    grid-column: 2;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .spk-emulator .spk-synapses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spk-emulator *,
+  .spk-emulator *::before,
+  .spk-emulator *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .spk-emulator :where(button, input, select, summary, a):focus-visible {
+    outline: 3px solid CanvasText;
+  }
+
+  .spk-emulator__panel,
+  .spk-emulator__button,
+  .spk-emulator__speed {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .spk-emulator {
+    --spk-muted: #eee8d5;
+  }
+
+  .spk-emulator__panel,
+  .spk-emulator__button,
+  .spk-emulator__speed {
+    border-color: var(--spk-text);
+  }
+}
+
+/* Source: src/styles/wordpress.css */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+.osn-spikeling-emulator-page {
+  --osn-spikeling-core: #073642;
+  --osn-spikeling-canvas: #f7f7f2;
+  --osn-spikeling-muted: #586e75;
+  --osn-spikeling-border: #e1e2d8;
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  width: min(100%, 1240px);
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--osn-spikeling-core);
+}
+
+.osn-spikeling-emulator-page__eyebrow {
+  margin: 0;
+  color: var(--osn-spikeling-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.osn-spikeling-emulator-page__title {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--osn-spikeling-core);
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.08;
+}
+
+.osn-spikeling-emulator-page__lead,
+.osn-spikeling-emulator-page__scope {
+  max-width: 72ch;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.osn-spikeling-emulator-page__scope {
+  color: var(--osn-spikeling-muted);
+  font-size: 0.875rem;
+}
+
+.osn-spikeling-emulator {
+  width: 100%;
+  min-width: 0;
+}
+
+.osn-spikeling-emulator__error {
+  padding: 0.875rem;
+  border: 1px solid #a5221e;
+  border-radius: 0.5rem;
+  color: #a5221e;
+}
+
+@media (max-width: 767px) {
+  .osn-spikeling-emulator-page__title {
+    max-width: none;
+  }
+}

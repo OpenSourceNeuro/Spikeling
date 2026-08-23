@@ -135,8 +135,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
   grid-template-areas:
     "oscilloscope main"
-    "recording main"
-    "synapses main";
+    "synapses stimulus";
   align-items: start;
   gap: 1rem;
   min-width: 0;
@@ -153,7 +152,7 @@
 }
 
 .spk-emulator__panel[data-panel="main"] { grid-area: main; }
-.spk-emulator__panel[data-panel="recording"] { grid-area: recording; }
+.spk-emulator__panel[data-panel="stimulus"] { grid-area: stimulus; }
 .spk-emulator__panel[data-panel="synapses"] { grid-area: synapses; }
 
 .spk-emulator__panel-summary {
@@ -255,7 +254,7 @@
     grid-template-areas:
       "oscilloscope"
       "main"
-      "recording"
+      "stimulus"
       "synapses";
   }
 
@@ -290,6 +289,10 @@
 
   .spk-emulator .spk-controls__control-header {
     grid-template-columns: 2.75rem minmax(0, 1fr);
+  }
+
+  .spk-emulator .spk-controls__control[data-always-enabled="true"] .spk-controls__control-header {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .spk-emulator .spk-controls__value {

@@ -36,7 +36,7 @@ export interface EmulatorInterfaceOptions {
   readonly sourceUrl?: string;
 }
 
-export type EmulatorPanel = "main" | "recording" | "synapses";
+export type EmulatorPanel = "main" | "stimulus" | "synapses";
 
 interface PanelElements {
   readonly details: HTMLDetailsElement;
@@ -131,8 +131,8 @@ export class SpikelingEmulator {
     const workspace = node(this.owner, "div", "spk-emulator__workspace");
     const scopeHost = node(this.owner, "div", "spk-emulator__oscilloscope");
     workspace.append(scopeHost);
-    const main = this.addPanel(workspace, "main", "Neuron and stimulus parameters");
-    const recording = this.addPanel(workspace, "recording", "Scientific recording and local files");
+    const main = this.addPanel(workspace, "main", "Neuron parameters");
+    const stimulus = this.addPanel(workspace, "stimulus", "Stimulus parameters");
     const synapses = this.addPanel(workspace, "synapses", "Synapse 1 and Synapse 2");
     this.element.append(workspace);
 
@@ -148,9 +148,14 @@ export class SpikelingEmulator {
     host.append(this.element);
 
     this.oscilloscope = new SpikelingOscilloscope(scopeHost, source, options.oscilloscope);
-    this.controls = new SpikelingMainControls(main.content, source, options.controls);
+    this.controls = new SpikelingMainControls(main.content, source, {
+      ...options.controls,
+      compact: true,
+      stimulusHost: stimulus.content,
+    });
     this.recorder = new SpikelingRecorder(source, options.recorder);
-    this.recording = new SpikelingRecordingControls(recording.content, this.recorder, options.recording);
+    const recordingHost = node(this.owner, "div", "spk-emulator__background-recording");
+    this.recording = new SpikelingRecordingControls(recordingHost, this.recorder, options.recording);
     this.synapses = new SpikelingSynapseControls(synapses.content, source, {
       ...options.synapses,
       oscilloscope: this.oscilloscope,

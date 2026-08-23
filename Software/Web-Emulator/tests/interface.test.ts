@@ -216,6 +216,40 @@ test("standalone shell mounts all existing scientific components behind one scop
   assert.ok(emulator.recording);
 });
 
+test("neuron panel exposes only mode, always-active current input and always-active noise", () => {
+  const { host, emulator } = mount();
+  const main = panel(host, "main");
+  assert.equal(main.children[0].textContent, "Neuron parameters");
+  assert.deepEqual(
+    main.findAll((element) => element.className === "spk-controls__heading").map((heading) => heading.textContent),
+    ["Neuron mode", "Current input", "Noise"],
+  );
+  assert.equal(main.findAll((element) => element.tagName === "label" && element.textContent === "Neuron mode").length, 0);
+  for (const [identifier, label] of [["injectedCurrent", "Current input (a.u.)"], ["noiseLevel", "Noise (%)"]] as const) {
+    const row = find(main, (element) => element.dataset.control === identifier);
+    const inputs = row.findAll((element) => element.tagName === "input");
+    assert.equal(inputs.length, 1);
+    assert.equal(inputs[0].type, "range");
+    assert.equal(inputs[0].disabled, false);
+    assert.equal(inputs[0].attributes.get("aria-label"), label);
+    emulator.controls.setControlEnabled(identifier, false);
+    assert.equal(emulator.controls.isEnabled(identifier), true);
+  }
+  assert.equal(main.findAll((element) => element.textContent === "Photoreceptor").length, 0);
+  assert.equal(host.findAll((element) => element.dataset.panel === "recording").length, 0);
+  assert.equal(host.findAll((element) => element.className.split(" ").includes("spk-recording")).length, 0);
+});
+
+test("stimulus controls remain available independently without appearing in neuron parameters", () => {
+  const { host } = mount();
+  const main = panel(host, "main");
+  const stimulus = panel(host, "stimulus");
+  assert.equal(stimulus.children[0].textContent, "Stimulus parameters");
+  assert.equal(main.findAll((element) => element.dataset.control === "stimulusFrequency").length, 0);
+  assert.equal(stimulus.findAll((element) => element.dataset.control === "stimulusFrequency").length, 1);
+  assert.equal(stimulus.findAll((element) => element.dataset.control === "stimulusStrength").length, 1);
+});
+
 test("scientific scope clearly distinguishes educational simulation from biological recordings", () => {
   const { host } = mount();
   const scope = byClass(host, "spk-emulator__scope");
@@ -272,14 +306,14 @@ test("start, pause, resume, stop and reset update accessible state without relyi
 });
 
 test("simulation speed selector displays the genuine wall-clock target independently of sampling", () => {
-  const { host, source } = mount();
+  const { host, source, emulator } = mount();
   const speed = byClass(host, "spk-emulator__speed");
   assert.equal(speed.value, "2");
   speed.value = "5";
   speed.dispatch("change");
   assert.equal(source.engine.getSnapshot().speed.stepsPerSecond, 10_000);
   assert.match(byClass(host, "spk-emulator__status").textContent, /1× real time · 10,000 samples\/s/);
-  assert.match(byClass(host, "spk-recording__rates").textContent, /10,000 samples\/s of simulation time/);
+  assert.match(byClass(emulator.recording.element as unknown as FakeElement, "spk-recording__rates").textContent, /10,000 samples\/s of simulation time/);
 });
 
 test("graph is the first scientific workspace item in desktop and narrow-screen DOM order", () => {
@@ -287,7 +321,7 @@ test("graph is the first scientific workspace item in desktop and narrow-screen 
     const { host } = mount({ width });
     const workspace = byClass(host, "spk-emulator__workspace");
     assert.equal(workspace.children[0].className, "spk-emulator__oscilloscope");
-    assert.deepEqual(workspace.children.slice(1).map((element) => element.dataset.panel), ["main", "recording", "synapses"]);
+    assert.deepEqual(workspace.children.slice(1).map((element) => element.dataset.panel), ["main", "stimulus", "synapses"]);
   }
 });
 
@@ -296,7 +330,7 @@ test("desktop and tablet preserve expanded panels while mobile starts with nativ
     const { emulator, host } = mount({ width });
     assert.equal(emulator.getLayout(), layout);
     assert.equal(byClass(host, "spk-emulator").dataset.layout, layout);
-    for (const name of ["main", "recording", "synapses"] as const) {
+    for (const name of ["main", "stimulus", "synapses"] as const) {
       assert.equal(emulator.isPanelOpen(name), open);
       assert.equal(panel(host, name).children[0].attributes.get("aria-expanded"), String(open));
     }
@@ -305,7 +339,7 @@ test("desktop and tablet preserve expanded panels while mobile starts with nativ
 
 test("native details summaries control labelled regions without replacing keyboard semantics", () => {
   const { host } = mount();
-  for (const name of ["main", "recording", "synapses"] as const) {
+  for (const name of ["main", "stimulus", "synapses"] as const) {
     const details = panel(host, name);
     const summary = details.children[0];
     const content = details.children[1];
@@ -341,7 +375,7 @@ test("responsive resize transitions deliberately collapse mobile panels and reop
   emulator.setPanelOpen("main", true);
   environment.resize(768);
   assert.equal(emulator.getLayout(), "tablet");
-  assert.equal(emulator.isPanelOpen("recording"), true);
+  assert.equal(emulator.isPanelOpen("stimulus"), true);
   environment.resize(1_440);
   assert.equal(emulator.getLayout(), "desktop");
   assert.equal(byClass(host, "spk-emulator").dataset.layout, "desktop");
@@ -420,7 +454,7 @@ test("each native input, button, select, summary and source link has an accessib
 });
 
 test("screen-reader live regions announce lifecycle changes without narrating every sample", () => {
-  const { host, source } = mount();
+  const { host, source, emulator } = mount();
   const status = byClass(host, "spk-emulator__status");
   assert.equal(status.attributes.get("role"), "status");
   assert.equal(status.attributes.get("aria-live"), "polite");
@@ -430,7 +464,7 @@ test("screen-reader live regions announce lifecycle changes without narrating ev
   source.scheduler.advance(50);
   assert.equal(status.textContent, announcement);
   assert.equal(byClass(host, "spk-oscilloscope__readings").attributes.get("aria-live"), "off");
-  assert.equal(byClass(host, "spk-recording__statistics").attributes.get("aria-live"), "off");
+  assert.equal(byClass(emulator.recording.element as unknown as FakeElement, "spk-recording__statistics").attributes.get("aria-live"), "off");
 });
 
 test("essential plot readings include text equivalents for voltage, current and stimulus", () => {

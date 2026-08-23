@@ -109,7 +109,7 @@ test("responsive stylesheet keeps desktop, tablet and mobile graph-first grid ar
   assert.match(content, /grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(300px, 360px\)/);
   assert.match(content, /@media\s*\(max-width:\s*1024px\)/);
   assert.match(content, /@media\s*\(max-width:\s*767px\)/);
-  assert.match(content, /"oscilloscope"\s*\n\s*"main"\s*\n\s*"recording"\s*\n\s*"synapses"/);
+  assert.match(content, /"oscilloscope"\s*\n\s*"main"\s*\n\s*"stimulus"\s*\n\s*"synapses"/);
   assert.match(content, /minmax\(0, 1fr\)/);
 });
 
