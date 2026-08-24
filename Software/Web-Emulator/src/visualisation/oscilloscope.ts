@@ -16,7 +16,6 @@ import type {
   PageVisibilitySource,
 } from "./render-loop.ts";
 import {
-  OSCILLOSCOPE_TRACES,
   defaultVisibleTraces,
   getOscilloscopeTrace,
 } from "./traces.ts";
@@ -117,20 +116,43 @@ export class SpikelingOscilloscope {
     const legend = createElement(owner, "legend", "spk-oscilloscope__legend", "Visible traces");
     controls.append(legend);
 
-    for (const trace of OSCILLOSCOPE_TRACES) {
-      const label = createElement(owner, "label", "spk-oscilloscope__trace");
-      label.style.setProperty("--spk-trace-colour", "var(" + trace.colourVariable + ")");
-      const input = createElement(owner, "input", "spk-oscilloscope__trace-input");
-      input.type = "checkbox";
-      input.checked = this.visible.has(trace.id);
-      input.setAttribute("aria-label", "Show " + trace.label.toLowerCase());
-      input.addEventListener("change", () => {
-        this.setTraceVisible(trace.id, input.checked);
-      });
-      const name = createElement(owner, "span", "spk-oscilloscope__trace-label", trace.label);
-      label.append(input, name);
-      controls.append(label);
-      this.traceInputs.set(trace.id, input);
+    const traceGroups: ReadonlyArray<{
+      readonly id: "main" | "synapses";
+      readonly label: string;
+      readonly traces: readonly TraceField[];
+    }> = [
+      { id: "main", label: "Main-neuron traces", traces: ["mainVm", "totalCurrent", "stimulus"] },
+      {
+        id: "synapses",
+        label: "Synapse traces",
+        traces: ["synapse1Vm", "synapse1Current", "synapse2Vm", "synapse2Current"],
+      },
+    ];
+
+    for (const group of traceGroups) {
+      const row = createElement(owner, "div", "spk-oscilloscope__trace-row");
+      row.dataset.traceGroup = group.id;
+      row.setAttribute("role", "group");
+      row.setAttribute("aria-label", group.label);
+
+      for (const id of group.traces) {
+        const trace = getOscilloscopeTrace(id);
+        const label = createElement(owner, "label", "spk-oscilloscope__trace");
+        label.style.setProperty("--spk-trace-colour", "var(" + trace.colourVariable + ")");
+        const input = createElement(owner, "input", "spk-oscilloscope__trace-input");
+        input.type = "checkbox";
+        input.checked = this.visible.has(trace.id);
+        input.setAttribute("aria-label", "Show " + trace.label.toLowerCase());
+        input.addEventListener("change", () => {
+          this.setTraceVisible(trace.id, input.checked);
+        });
+        const name = createElement(owner, "span", "spk-oscilloscope__trace-label", trace.label);
+        label.append(input, name);
+        row.append(label);
+        this.traceInputs.set(trace.id, input);
+      }
+
+      controls.append(row);
     }
 
     this.element.append(header, this.canvas, this.readings, controls);

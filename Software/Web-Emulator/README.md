@@ -421,6 +421,14 @@ The desktop Graph_Emulator.py plotting contract is preserved:
 | Synapse 2 membrane potential | synapse2Vm | Voltage | Yellow #B58900 | No |
 | Synapse 2 input current | synapse2Current | Current | Magenta #D33682 | No |
 
+The visible trace controls are arranged separately from the scientific plotting
+order. Their first row presents **Membrane potential**, **Input current** and
+**Stimulus**; the second presents **Synapse 1 Vm**, **Synapse 1 input**,
+**Synapse 2 Vm** and **Synapse 2 input**. Every label and checked indicator uses
+its exact source-matched trace colour. Explicit pixel-sized checkboxes, slider
+tracks and toggle switches remain readable even when an embedding WordPress
+theme overrides native checkbox styling or reduces its root font size.
+
 The display decimator retains each horizontal pixel bucket's first, minimum,
 maximum and last genuine samples in chronological order. Consequently a narrow
 +30 mV action-potential peak or abrupt stimulus edge cannot disappear merely

@@ -64,7 +64,7 @@ constitute a claim that a physical browser or device was actually exercised.
 | --- | --- | --- |
 | Real WordPress/PHP runtime | Active plugin rendered the actual scientific emulator on draft page 1196. | Pass |
 | Shortcode and unique root | One isolated shortcode root initialised one production worker without duplicate initialisation. | Pass |
-| Production asset integrity | Manifest pins one application, one dedicated worker and one scoped stylesheet; combined compressed payload 49,497 bytes. | Pass |
+| Production asset integrity | Manifest pins one application, one dedicated worker and one scoped stylesheet; combined compressed payload 49,901 bytes. | Pass |
 | Existing-page isolation | Original and redesigned published Spikeling pages contain zero emulator roots and load zero emulator JS/CSS assets. | Pass |
 | Site console | No site-origin JavaScript errors observed; an unrelated browser-extension error is excluded. | Pass |
 | Elementor storage/frontend contracts | Conditional `_elementor_data` lookup, dynamic shortcode fallback and duplicate-initialisation regressions pass. | Pass |

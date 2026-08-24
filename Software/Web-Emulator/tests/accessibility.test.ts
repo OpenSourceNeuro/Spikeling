@@ -121,6 +121,22 @@ test("embedded labels use readable pixel sizes regardless of the host site's roo
   assert.match(content, /\.spk-emulator \.spk-controls__control-label,[\s\S]*?font-size:\s*13px/);
 });
 
+test("trace checkboxes retain theme-independent checked styling and signal-matched labels", async () => {
+  const { content } = await readDevelopmentAsset("/src/styles/oscilloscope.css");
+  assert.match(content, /\.spk-oscilloscope \.spk-oscilloscope__trace-input\s*\{[^}]*width:\s*18px/s);
+  assert.match(content, /\.spk-oscilloscope \.spk-oscilloscope__trace-input:checked\s*\{[^}]*background:\s*var\(--spk-trace-colour\)/s);
+  assert.match(content, /\.spk-oscilloscope__trace-label\s*\{[^}]*color:\s*var\(--spk-trace-colour\)/s);
+  assert.match(content, /data-trace-group="synapses"\][^}]*repeat\(4,\s*minmax\(0,\s*1fr\)\)/s);
+});
+
+test("slider fills and toggle indicators remain readable under a 10px host root scale", async () => {
+  const { content } = await readDevelopmentAsset("/src/styles/controls.css");
+  assert.match(content, /\.spk-controls \.spk-controls__toggle\s*\{[^}]*width:\s*44px[^}]*height:\s*24px/s);
+  assert.match(content, /\.spk-controls \.spk-controls__toggle::before\s*\{[^}]*width:\s*18px[^}]*height:\s*18px/s);
+  assert.match(content, /::-webkit-slider-runnable-track\s*\{[^}]*height:\s*8px/s);
+  assert.match(content, /::-moz-range-progress\s*\{[^}]*height:\s*8px/s);
+});
+
 test("scoped styles expose visible focus, forced-colours and touch-safe native controls", async () => {
   const { content } = await readDevelopmentAsset("/src/styles/emulator.css");
   assert.match(content, /:where\(button, input, select, summary, a\):focus-visible/);

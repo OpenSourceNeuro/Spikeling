@@ -51,7 +51,7 @@ export const OSCILLOSCOPE_TRACES: readonly OscilloscopeTrace[] = Object.freeze([
   },
   {
     id: "synapse1Vm",
-    label: "Synapse 1 membrane potential",
+    label: "Synapse 1 Vm",
     axis: "voltage",
     colour: SPIKELING_PALETTE.synapse1Voltage,
     colourVariable: "--spk-syn1-voltage",
@@ -67,7 +67,7 @@ export const OSCILLOSCOPE_TRACES: readonly OscilloscopeTrace[] = Object.freeze([
   },
   {
     id: "synapse2Vm",
-    label: "Synapse 2 membrane potential",
+    label: "Synapse 2 Vm",
     axis: "voltage",
     colour: SPIKELING_PALETTE.synapse2Voltage,
     colourVariable: "--spk-syn2-voltage",

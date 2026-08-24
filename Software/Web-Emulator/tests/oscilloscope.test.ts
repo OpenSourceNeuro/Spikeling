@@ -124,6 +124,38 @@ test("instrument mounts a semantic, accessible oscilloscope with seven native tr
   assert.ok(checkboxes.every((input) => input.attributes.has("aria-label")));
   assert.deepEqual(checkboxes.slice(0, 3).map((input) => input.checked), [true, true, true]);
   assert.deepEqual(checkboxes.slice(3).map((input) => input.checked), [false, false, false, false]);
+  assert.deepEqual(
+    checkboxes.map((input) => input.attributes.get("aria-label")),
+    [
+      "Show membrane potential",
+      "Show input current",
+      "Show stimulus",
+      "Show synapse 1 vm",
+      "Show synapse 1 input",
+      "Show synapse 2 vm",
+      "Show synapse 2 input",
+    ],
+  );
+
+  const groups = host.findAll((element) => element.className === "spk-oscilloscope__trace-row");
+  assert.deepEqual(groups.map((group) => group.dataset.traceGroup), ["main", "synapses"]);
+  assert.deepEqual(groups.map((group) => group.children.length), [3, 4]);
+  assert.deepEqual(
+    groups.map((group) => group.attributes.get("aria-label")),
+    ["Main-neuron traces", "Synapse traces"],
+  );
+  assert.deepEqual(
+    groups.flatMap((group) => group.children.map((label) => label.style.values.get("--spk-trace-colour"))),
+    [
+      "var(--spk-membrane)",
+      "var(--spk-cell)",
+      "var(--spk-stimulus)",
+      "var(--spk-syn1-voltage)",
+      "var(--spk-syn1)",
+      "var(--spk-syn2-voltage)",
+      "var(--spk-syn2)",
+    ],
+  );
 
   const statuses = host.findAll((element) => element.attributes.get("role") === "status");
   assert.equal(statuses.length, 1);

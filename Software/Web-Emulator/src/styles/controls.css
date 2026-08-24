@@ -118,36 +118,39 @@
   font-size: 0.75rem;
 }
 
-.spk-controls__toggle {
-  width: 2rem;
-  height: 1.125rem;
-  flex: 0 0 2rem;
+.spk-controls .spk-controls__toggle {
+  width: 44px;
+  height: 24px;
+  flex: 0 0 44px;
   margin: 0;
+  padding: 0;
   border: 1px solid var(--spk-grid);
-  border-radius: 2rem;
+  border-radius: 24px;
   appearance: none;
   background: var(--spk-background);
   cursor: pointer;
 }
 
-.spk-controls__toggle::before {
+.spk-controls .spk-controls__toggle::before {
   display: block;
-  width: 0.75rem;
-  height: 0.75rem;
-  margin: 0.125rem;
+  width: 18px;
+  height: 18px;
+  margin: 2px;
   border-radius: 50%;
   background: var(--spk-muted);
   content: "";
   transition: transform 120ms ease, background-color 120ms ease;
 }
 
-.spk-controls__toggle:checked {
+.spk-controls .spk-controls__toggle:checked {
   border-color: var(--spk-accent);
+  background: var(--spk-accent);
 }
 
-.spk-controls__toggle:checked::before {
-  transform: translateX(0.875rem);
-  background: var(--spk-accent);
+.spk-controls .spk-controls__toggle:checked::before {
+  background: var(--spk-foreground);
+  content: "";
+  transform: translateX(20px);
 }
 
 .spk-controls__control {
@@ -158,7 +161,7 @@
 .spk-controls__control-header {
   display: grid;
   min-height: 2.75rem;
-  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem;
 }
@@ -169,7 +172,7 @@
 
 .spk-controls__enable {
   display: flex;
-  min-width: 2.75rem;
+  min-width: 44px;
   min-height: 2.75rem;
   align-items: center;
   justify-content: center;
@@ -188,13 +191,16 @@
   width: 100%;
   height: 2.75rem;
   margin: 0;
+  padding: 0;
+  border: 0;
   accent-color: var(--spk-accent);
   background: transparent;
   cursor: pointer;
 }
 
 .spk-controls__range::-webkit-slider-runnable-track {
-  height: 0.25rem;
+  height: 8px;
+  border: 0;
   border-radius: 1rem;
   background: linear-gradient(
     to right,
@@ -204,13 +210,15 @@
 }
 
 .spk-controls__range::-moz-range-track {
-  height: 0.25rem;
+  height: 8px;
+  border: 0;
   border-radius: 1rem;
   background: var(--spk-grid);
 }
 
 .spk-controls__range::-moz-range-progress {
-  height: 0.25rem;
+  height: 8px;
+  border: 0;
   border-radius: 1rem;
   background: var(--spk-accent);
 }
@@ -306,7 +314,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spk-controls__toggle::before {
+  .spk-controls .spk-controls__toggle::before {
     transition: none;
   }
 }

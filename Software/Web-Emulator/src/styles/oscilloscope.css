@@ -82,9 +82,8 @@
 }
 
 .spk-oscilloscope__traces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem 0.875rem;
+  display: grid;
+  gap: 8px;
   min-width: 0;
   margin: 0;
   padding: 0.625rem 0 0;
@@ -98,21 +97,64 @@
   font-size: 0.75rem;
 }
 
+.spk-oscilloscope__trace-row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px 14px;
+}
+
+.spk-oscilloscope__trace-row[data-trace-group="synapses"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .spk-oscilloscope__trace {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
   min-height: 2.25rem;
-  gap: 0.375rem;
-  color: var(--spk-text);
+  gap: 7px;
+  color: var(--spk-trace-colour);
   cursor: pointer;
   font-size: 0.8125rem;
 }
 
-.spk-oscilloscope__trace-input {
-  width: 1rem;
-  height: 1rem;
+.spk-oscilloscope .spk-oscilloscope__trace-input {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  place-content: center;
   margin: 0;
+  padding: 0;
+  border: 2px solid var(--spk-trace-colour);
+  border-radius: 4px;
+  appearance: none;
+  background: var(--spk-bg-deep);
   accent-color: var(--spk-trace-colour);
+  cursor: pointer;
+}
+
+.spk-oscilloscope .spk-oscilloscope__trace-input::before {
+  display: block;
+  width: 9px;
+  height: 5px;
+  margin: 0;
+  border-bottom: 2px solid var(--spk-bg-deep);
+  border-left: 2px solid var(--spk-bg-deep);
+  background: transparent;
+  content: "";
+  transform: rotate(-45deg) scale(0);
+}
+
+.spk-oscilloscope .spk-oscilloscope__trace-input:checked {
+  border-color: var(--spk-trace-colour);
+  background: var(--spk-trace-colour);
+}
+
+.spk-oscilloscope .spk-oscilloscope__trace-input:checked::before {
+  content: "";
+  transform: rotate(-45deg) scale(1);
 }
 
 .spk-oscilloscope__trace-input:focus-visible {
@@ -120,8 +162,8 @@
   outline-offset: 3px;
 }
 
-.spk-oscilloscope__trace-input:not(:checked) + .spk-oscilloscope__trace-label {
-  color: var(--spk-secondary);
+.spk-oscilloscope__trace-label {
+  color: var(--spk-trace-colour);
 }
 
 @media (max-width: 540px) {
@@ -139,6 +181,11 @@
 
   .spk-oscilloscope__trace {
     min-height: 2.75rem;
+  }
+
+  .spk-oscilloscope__trace-row,
+  .spk-oscilloscope__trace-row[data-trace-group="synapses"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
