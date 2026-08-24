@@ -98,7 +98,14 @@ export function mountWordPressEmulator(
   try {
     source = options.sourceFactory?.(configuration) ?? new EmulatorSource({
       speedIndex: configuration.speedIndex,
-      simulation: { seed: configuration.seed },
+      simulation: {
+        seed: configuration.seed,
+        controls: {
+          main: { noiseLevel: 5 },
+          synapse1: { noiseLevel: 5 },
+          synapse2: { noiseLevel: 5 },
+        },
+      },
     });
     emulator = new SpikelingEmulator(host, source, {
       ...options.interfaceOptions,

@@ -225,6 +225,7 @@ test("neuron panel exposes only mode, always-active current input and always-act
     ["Neuron mode", "Current input", "Noise"],
   );
   assert.equal(main.findAll((element) => element.tagName === "label" && element.textContent === "Neuron mode").length, 0);
+  assert.equal(main.findAll((element) => element.className === "spk-controls__parameters").length, 0);
   for (const [identifier, label] of [["injectedCurrent", "Current input (a.u.)"], ["noiseLevel", "Noise (%)"]] as const) {
     const row = find(main, (element) => element.dataset.control === identifier);
     const inputs = row.findAll((element) => element.tagName === "input");
@@ -295,17 +296,42 @@ test("speed and oscilloscope share one instrument column alongside consistently 
   );
 });
 
-test("public synapse panels omit photoreceptors and retain one renamed stimulus switch", () => {
-  const { host } = mount();
+test("public synapse panels expose always-active current, noise and output sliders without mode coefficients", () => {
+  const { host, emulator, source } = mount();
   const synapses = panel(host, "synapses");
 
   for (const number of ["1", "2"] as const) {
+    const identifier = number === "1" ? "synapse1" : "synapse2";
     const channel = find(synapses, (element) =>
       element.className.includes("spk-synapses__channel") && element.dataset.synapse === "synapse" + number);
     assert.deepEqual(
       channel.findAll((element) => element.className === "spk-synapses__subheading").map((heading) => heading.textContent),
-      ["Synaptic output", "Auxiliary cell input", "Stimulus"],
+      ["Synaptic output", "Stimulus"],
     );
+    assert.equal(channel.findAll((element) => element.className === "spk-controls__parameters").length, 0);
+    assert.deepEqual(
+      channel.findAll((element) => element.className === "spk-controls__control").map((row) => row.dataset.control),
+      ["injectedCurrent", "noiseLevel", "gain", "decay"],
+    );
+    for (const [control, label] of [
+      ["injectedCurrent", "Injected current"],
+      ["noiseLevel", "Noise level"],
+      ["gain", "Synaptic gain"],
+      ["decay", "Synaptic decay"],
+    ] as const) {
+      const row = find(channel, (element) => element.dataset.control === control);
+      const inputs = row.findAll((element) => element.tagName === "input");
+      assert.equal(inputs.length, 1);
+      assert.equal(inputs[0].type, "range");
+      assert.equal(inputs[0].disabled, false);
+      assert.equal(find(row, (element) => element.className === "spk-controls__control-label").textContent, label);
+      emulator.synapses.setControlEnabled(identifier, control, false);
+      assert.equal(emulator.synapses.isControlEnabled(identifier, control), true);
+    }
+    emulator.synapses.setControlValue(identifier, "noiseLevel", 5);
+    emulator.synapses.setSynapseEnabled(identifier, true);
+    emulator.synapses.setSynapseEnabled(identifier, false);
+    assert.equal(source.engine.model.getControls()[identifier].noiseLevel, 5);
     assert.equal(channel.findAll((element) => element.textContent === "Photoreceptor").length, 0);
     assert.equal(channel.findAll((element) =>
       element.attributes.get("aria-label") === "Synapse " + number + " light stimulation").length, 0);
@@ -314,6 +340,27 @@ test("public synapse panels omit photoreceptors and retain one renamed stimulus 
     assert.equal(current.type, "checkbox");
     assert.equal(channel.findAll((element) =>
       element.className === "spk-controls__toggle-label" && element.textContent === "Apply current stimulation").length, 1);
+  }
+});
+
+test("main and both presynaptic noise sliders display the configured five-percent startup values", () => {
+  const { host, source } = mount();
+  source.updateControls({
+    main: { noiseLevel: 5 },
+    synapse1: { noiseLevel: 5 },
+    synapse2: { noiseLevel: 5 },
+  });
+
+  for (const section of [
+    panel(host, "main"),
+    find(panel(host, "synapses"), (element) => element.dataset.synapse === "synapse1"),
+    find(panel(host, "synapses"), (element) => element.dataset.synapse === "synapse2"),
+  ]) {
+    const row = find(section, (element) => element.dataset.control === "noiseLevel");
+    const slider = find(row, (element) => element.tagName === "input" && element.type === "range");
+    assert.equal(slider.value, "5");
+    assert.equal(slider.disabled, false);
+    assert.match(find(row, (element) => element.tagName === "output").textContent, /^5%/);
   }
 });
 

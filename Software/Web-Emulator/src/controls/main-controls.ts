@@ -113,7 +113,10 @@ export class SpikelingMainControls {
     this.neuronSelect.value = "1";
     this.neuronSelect.addEventListener("change", () => this.selectPreset(Number(this.neuronSelect.value)));
     this.parameters = element(this.owner, "dl", "spk-controls__parameters");
-    neuron.append(this.neuronSelect, this.parameters);
+    neuron.append(this.neuronSelect);
+    if (!options.compact) {
+      neuron.append(this.parameters);
+    }
 
     if (options.compact) {
       const input = this.group("Current input", "cell");

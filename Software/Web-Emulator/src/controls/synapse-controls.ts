@@ -44,6 +44,7 @@ interface SynapseSliderElements {
   readonly toggle: HTMLInputElement;
   readonly slider: HTMLInputElement;
   readonly output: HTMLOutputElement;
+  readonly alwaysEnabled: boolean;
 }
 
 interface SynapseElements {
@@ -161,13 +162,13 @@ export class SpikelingSynapseControls {
       "photoreceptorDecay",
       "photoreceptorRecovery",
     ] as const) {
-      references.enabled.set(id, false);
+      references.enabled.set(id, references.controls.get(id)?.alwaysEnabled ?? false);
     }
 
     this.applyPatch(channel, {
       enabled: false,
-      patchCurrent: 0,
-      noiseLevel: 0,
+      patchCurrent: this.options.compact ? this.current[channel].patchCurrent : 0,
+      noiseLevel: this.options.compact ? this.current[channel].noiseLevel : 0,
       directCurrentEnabled: false,
       lightEnabled: false,
       photoreceptor: { gain: 0, decaySlider: 100, recoverySlider: 25 },
@@ -191,17 +192,18 @@ export class SpikelingSynapseControls {
   setControlEnabled(channel: SynapseId, id: SynapseControlId, active: boolean): void {
     const references = this.channel(channel);
     const specification = getSynapseControlSpecification(channel, id);
-    if (active && !independentControl(id) && !this.current[channel].enabled) {
+    const slider = references.controls.get(id)!;
+    const enabled = slider.alwaysEnabled || active;
+    if (enabled && !slider.alwaysEnabled && !independentControl(id) && !this.current[channel].enabled) {
       throw new RangeError("Enable Synapse " + channelNumber(channel) + " before adjusting its auxiliary neuron.");
     }
-    if (active && photoControl(id) && !this.current[channel].lightEnabled) {
+    if (enabled && photoControl(id) && !this.current[channel].lightEnabled) {
       throw new RangeError("Enable light stimulation before adjusting photoreceptor controls.");
     }
 
-    const slider = references.controls.get(id)!;
-    references.enabled.set(id, active);
-    slider.toggle.checked = active;
-    if (!active) {
+    references.enabled.set(id, enabled);
+    slider.toggle.checked = enabled;
+    if (!enabled) {
       slider.slider.value = String(specification.defaultValue);
       this.updateSlider(references, slider, specification.defaultValue);
     }
@@ -283,10 +285,16 @@ export class SpikelingSynapseControls {
     }
     selector.value = "1";
     const parameters = element(this.owner, "dl", "spk-controls__parameters");
-    root.append(selectorLabel, selector, parameters);
+    root.append(selectorLabel, selector);
+    if (!this.options.compact) {
+      root.append(parameters);
+    }
 
+    const cell = this.options.compact
+      ? this.subgroup(root, "", "cell")
+      : undefined;
     const output = this.subgroup(root, "Synaptic output", "channel");
-    const cell = this.subgroup(root, "Auxiliary cell input", "cell");
+    const auxiliary = cell ?? this.subgroup(root, "Auxiliary cell input", "cell");
     const routing = this.subgroup(root, this.options.compact ? "Stimulus" : "Stimulus routing", "cell");
     const directLabel = this.options.compact
       ? "Synapse " + number + " Apply current stimulation"
@@ -317,10 +325,10 @@ export class SpikelingSynapseControls {
     this.channels.set(channel, references);
 
     for (const id of ["gain", "decay"] as const) {
-      this.addSlider(references, output, id);
+      this.addSlider(references, output, id, { alwaysEnabled: this.options.compact });
     }
     for (const id of ["injectedCurrent", "noiseLevel"] as const) {
-      this.addSlider(references, cell, id);
+      this.addSlider(references, auxiliary, id, { alwaysEnabled: this.options.compact });
     }
     for (const id of ["photoreceptorGain", "photoreceptorDecay", "photoreceptorRecovery"] as const) {
       this.addSlider(references, photo, id);
@@ -339,7 +347,9 @@ export class SpikelingSynapseControls {
   private subgroup(parent: HTMLElement, title: string, accent: "channel" | "cell"): HTMLElement {
     const group = element(this.owner, "section", "spk-synapses__subgroup");
     group.dataset.accent = accent;
-    group.append(element(this.owner, "h4", "spk-synapses__subheading", title));
+    if (title !== "") {
+      group.append(element(this.owner, "h4", "spk-synapses__subheading", title));
+    }
     parent.append(group);
     return group;
   }
@@ -356,8 +366,15 @@ export class SpikelingSynapseControls {
     return control;
   }
 
-  private addSlider(references: SynapseElements, parent: HTMLElement, id: SynapseControlId): void {
+  private addSlider(
+    references: SynapseElements,
+    parent: HTMLElement,
+    id: SynapseControlId,
+    options: { readonly alwaysEnabled?: boolean } = {},
+  ): void {
     const specification = getSynapseControlSpecification(references.channel, id);
+    const alwaysEnabled = options.alwaysEnabled ?? false;
+    const enabled = alwaysEnabled || specification.enabledByDefault;
     const row = element(this.owner, "div", "spk-controls__control");
     row.dataset.control = id;
     row.dataset.synapse = references.channel;
@@ -366,13 +383,13 @@ export class SpikelingSynapseControls {
     const target = element(this.owner, "label", "spk-controls__enable");
     const toggle = element(this.owner, "input", "spk-controls__toggle");
     toggle.type = "checkbox";
-    toggle.checked = specification.enabledByDefault;
+    toggle.checked = enabled;
     toggle.setAttribute(
       "aria-label",
       "Enable Synapse " + channelNumber(references.channel) + " " + specification.label.toLowerCase(),
     );
     target.append(toggle);
-    references.enabled.set(id, specification.enabledByDefault);
+    references.enabled.set(id, enabled);
 
     const slider = element(this.owner, "input", "spk-controls__range");
     slider.type = "range";
@@ -391,7 +408,13 @@ export class SpikelingSynapseControls {
     label.htmlFor = slider.id;
     const output = element(this.owner, "output", "spk-controls__value");
     output.setAttribute("for", slider.id);
-    header.append(target, label, output);
+    if (alwaysEnabled) {
+      row.dataset.alwaysEnabled = "true";
+      row.dataset.alwaysEnabledLabel = "true";
+      header.append(label, output);
+    } else {
+      header.append(target, label, output);
+    }
 
     const ticks = element(this.owner, "datalist", "spk-controls__ticks");
     ticks.id = slider.id + "-ticks";
@@ -404,7 +427,7 @@ export class SpikelingSynapseControls {
     row.append(header, slider, ticks);
     parent.append(row);
 
-    const controls = { specification, row, toggle, slider, output };
+    const controls = { specification, row, toggle, slider, output, alwaysEnabled };
     references.controls.set(id, controls);
     this.updateSlider(references, controls, specification.defaultValue);
 
@@ -547,7 +570,8 @@ export class SpikelingSynapseControls {
     references.light.disabled = !state.enabled;
 
     for (const [id, controls] of references.controls) {
-      const available = independentControl(id) || (state.enabled && (!photoControl(id) || state.lightEnabled));
+      const available = controls.alwaysEnabled || independentControl(id)
+        || (state.enabled && (!photoControl(id) || state.lightEnabled));
       controls.toggle.disabled = !available;
       controls.slider.disabled = !available || !(references.enabled.get(id) ?? false);
       controls.row.dataset.disabled = String(controls.slider.disabled);

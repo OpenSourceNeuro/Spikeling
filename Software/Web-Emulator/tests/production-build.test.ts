@@ -84,6 +84,13 @@ test("production application references only its manifest-pinned dedicated worke
   assert.doesNotMatch(application, /\bfetch\s*\(|XMLHttpRequest|navigator\.serial|document\.body\.innerHTML/);
 });
 
+test("production WordPress worker starts all three neuronal noise controls at five percent", async () => {
+  const application = await asset("application");
+  for (const neuron of ["main", "synapse1", "synapse2"]) {
+    assert.match(application, new RegExp(neuron + "\\s*:\\s*\\{\\s*noiseLevel\\s*:\\s*5\\s*\\}"));
+  }
+});
+
 test("six stylesheets remain concatenated in their deterministic component-to-page order", async () => {
   const stylesheet = await asset("stylesheet");
   assert.deepEqual(manifest.sourceStylesheets, PRODUCTION_STYLE_SOURCES);
