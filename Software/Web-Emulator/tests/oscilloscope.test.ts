@@ -131,9 +131,9 @@ test("instrument mounts a semantic, accessible oscilloscope with seven native tr
       "Show input current",
       "Show stimulus",
       "Show synapse 1 vm",
-      "Show synapse 1 input",
+      "Show synapse 1 current",
       "Show synapse 2 vm",
-      "Show synapse 2 input",
+      "Show synapse 2 current",
     ],
   );
 

@@ -170,6 +170,10 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.spk-controls__control[data-always-enabled-label="true"] .spk-controls__control-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .spk-controls__enable {
   display: flex;
   min-width: 44px;

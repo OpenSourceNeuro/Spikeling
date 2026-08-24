@@ -1,10 +1,10 @@
 {
-  "version": "1e6b82924341279f",
+  "version": "d81c66f4b8e79410",
   "application": {
-    "file": "spikeling-emulator.516934e6721b.js",
-    "bytes": 177907,
-    "gzipBytes": 36105,
-    "sha256": "516934e6721b46cf5b3a33540c2976651a178315ee094f051739ec032abd7a5d"
+    "file": "spikeling-emulator.7c46f6d13518.js",
+    "bytes": 178631,
+    "gzipBytes": 36247,
+    "sha256": "7c46f6d13518438ac96b16880d3265afa8bce47db008c972d8ce41edf61c4f71"
   },
   "worker": {
     "file": "spikeling-worker.e60975b9f106.js",
@@ -13,10 +13,10 @@
     "sha256": "e60975b9f10609a31bd1e20cd20bbe960553eef8a63db7c5e23f4b3d456c6c2b"
   },
   "stylesheet": {
-    "file": "spikeling-emulator.6e28629ca0ae.css",
-    "bytes": 24490,
-    "gzipBytes": 4216,
-    "sha256": "6e28629ca0aee5cf55ae532115cf852ca488819f8acb7edc65ce80a939aae1c2"
+    "file": "spikeling-emulator.9b5e1975f415.css",
+    "bytes": 24628,
+    "gzipBytes": 4227,
+    "sha256": "9b5e1975f41599a128ff630e821b9cc4589be4e86207ea12b00cc6d11ca6ea79"
   },
   "sourceStylesheets": [
     "src/styles/oscilloscope.css",

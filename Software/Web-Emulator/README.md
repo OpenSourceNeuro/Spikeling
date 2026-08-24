@@ -423,8 +423,8 @@ The desktop Graph_Emulator.py plotting contract is preserved:
 
 The visible trace controls are arranged separately from the scientific plotting
 order. Their first row presents **Membrane potential**, **Input current** and
-**Stimulus**; the second presents **Synapse 1 Vm**, **Synapse 1 input**,
-**Synapse 2 Vm** and **Synapse 2 input**. Every label and checked indicator uses
+**Stimulus**; the second presents **Synapse 1 Vm**, **Synapse 1 current**,
+**Synapse 2 Vm** and **Synapse 2 current**. Every label and checked indicator uses
 its exact source-matched trace colour. Explicit pixel-sized checkboxes, slider
 tracks and toggle switches remain readable even when an embedding WordPress
 theme overrides native checkbox styling or reduces its root font size.
@@ -473,10 +473,13 @@ potential, with appropriate millivolt units. Changing a preset retains existing
 membrane voltage, recovery state, simulation time, injected current and synapse
 settings; only the main photoreceptor controls return to their desktop defaults.
 
-Every slider is initially disabled with a separate keyboard-native on/off
-toggle. Switching a control off restores its source-pinned desktop default.
-Direct current stimulation and Light stimulation are independent routing
-checkboxes.
+The complete desktop-faithful controller supports separately enabled sliders,
+independent direct-current/light routing and optional local custom-stimulus
+playback. The public emulator presents a streamlined stimulus panel instead:
+one **Apply current stimulation** switch followed by always-enabled, labelled
+**Stimulus frequency** and **Stimulus strength** sliders. Light routing,
+per-slider switches and the custom-stimulus section are omitted from that
+public interface without changing the underlying scientific model.
 
 | Control | Raw slider range | Desktop default/off value | Scientifically labelled display |
 | --- | ---: | ---: | --- |

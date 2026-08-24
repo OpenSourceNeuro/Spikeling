@@ -247,14 +247,34 @@ test("neuron panel exposes only mode, always-active current input and always-act
   assert.equal(host.findAll((element) => element.className.split(" ").includes("spk-recording")).length, 0);
 });
 
-test("stimulus controls remain available independently without appearing in neuron parameters", () => {
-  const { host } = mount();
+test("stimulus panel keeps only current routing and always-active labelled waveform sliders", () => {
+  const { host, emulator } = mount();
   const main = panel(host, "main");
   const stimulus = panel(host, "stimulus");
   assert.equal(stimulus.children[0].textContent, "Stimulus parameters");
   assert.equal(main.findAll((element) => element.dataset.control === "stimulusFrequency").length, 0);
-  assert.equal(stimulus.findAll((element) => element.dataset.control === "stimulusFrequency").length, 1);
-  assert.equal(stimulus.findAll((element) => element.dataset.control === "stimulusStrength").length, 1);
+  assert.equal(stimulus.findAll((element) => element.className === "spk-controls__heading").length, 0);
+  assert.equal(stimulus.findAll((element) => element.className === "spk-controls__custom").length, 0);
+  assert.equal(stimulus.findAll((element) => element.attributes.get("aria-label") === "Light stimulation").length, 0);
+  assert.equal(stimulus.findAll((element) => element.attributes.get("aria-label") === "Use custom stimulus").length, 0);
+
+  const routing = find(stimulus, (element) => element.attributes.get("aria-label") === "Apply current stimulation");
+  assert.equal(routing.type, "checkbox");
+
+  for (const [id, label] of [
+    ["stimulusFrequency", "Stimulus frequency"],
+    ["stimulusStrength", "Stimulus strength"],
+  ] as const) {
+    const row = find(stimulus, (element) => element.dataset.control === id);
+    const inputs = row.findAll((element) => element.tagName === "input");
+    assert.equal(inputs.length, 1);
+    assert.equal(inputs[0].type, "range");
+    assert.equal(inputs[0].disabled, false);
+    assert.equal(row.findAll((element) => element.className === "spk-controls__control-label")[0].textContent, label);
+    assert.equal(row.findAll((element) => element.className === "spk-controls__scale").length, 0);
+    emulator.controls.setControlEnabled(id, false);
+    assert.equal(emulator.controls.isEnabled(id), true);
+  }
 });
 
 test("scientific scope clearly distinguishes educational simulation from biological recordings", () => {

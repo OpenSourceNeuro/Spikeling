@@ -59,7 +59,7 @@ export const OSCILLOSCOPE_TRACES: readonly OscilloscopeTrace[] = Object.freeze([
   },
   {
     id: "synapse1Current",
-    label: "Synapse 1 input",
+    label: "Synapse 1 current",
     axis: "current",
     colour: SPIKELING_PALETTE.synapse1Current,
     colourVariable: "--spk-syn1",
@@ -75,7 +75,7 @@ export const OSCILLOSCOPE_TRACES: readonly OscilloscopeTrace[] = Object.freeze([
   },
   {
     id: "synapse2Current",
-    label: "Synapse 2 input",
+    label: "Synapse 2 current",
     axis: "current",
     colour: SPIKELING_PALETTE.synapse2Current,
     colourVariable: "--spk-syn2",

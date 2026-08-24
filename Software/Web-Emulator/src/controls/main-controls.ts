@@ -129,10 +129,17 @@ export class SpikelingMainControls {
       options.stimulusHost.append(stimulusParent);
       this.auxiliaryElements.push(stimulusParent);
     }
-    const stimulus = this.group("Stimulus parameters", "stimulus", stimulusParent);
+    const stimulus = this.group(options.compact ? "" : "Stimulus parameters", "stimulus", stimulusParent);
     const routing = element(this.owner, "div", "spk-controls__routing");
-    this.directCurrent = this.standaloneToggle(routing, "Direct current stimulation", "stimulus");
-    this.light = this.standaloneToggle(routing, "Light stimulation", "cell");
+    this.directCurrent = this.standaloneToggle(
+      routing,
+      options.compact ? "Apply current stimulation" : "Direct current stimulation",
+      "stimulus",
+    );
+    const lightParent = options.compact
+      ? element(this.owner, "div", "spk-controls__legacy-light")
+      : routing;
+    this.light = this.standaloneToggle(lightParent, "Light stimulation", "cell");
     this.directCurrent.addEventListener("change", () => {
       this.applyPatch({ main: { directCurrentEnabled: this.directCurrent.checked } });
     });
@@ -140,8 +147,11 @@ export class SpikelingMainControls {
       this.applyPatch({ main: { lightEnabled: this.light.checked } });
     });
     stimulus.append(routing);
-    this.addSlider(stimulus, "stimulusFrequency");
-    this.addSlider(stimulus, "stimulusStrength");
+    const stimulusSliderOptions = options.compact
+      ? { alwaysEnabled: true, showLabel: true, showScale: false }
+      : {};
+    this.addSlider(stimulus, "stimulusFrequency", stimulusSliderOptions);
+    this.addSlider(stimulus, "stimulusStrength", stimulusSliderOptions);
 
     const custom = element(this.owner, "div", "spk-controls__custom");
     this.customToggle = this.standaloneToggle(custom, "Use custom stimulus", "stimulus");
@@ -166,7 +176,9 @@ export class SpikelingMainControls {
     this.preview.setAttribute("role", "img");
     this.preview.setAttribute("aria-label", "Imported custom stimulus preview.");
     custom.append(fileLabel, this.fileInput, this.customStatus, this.preview);
-    stimulus.append(custom);
+    if (!options.compact) {
+      stimulus.append(custom);
+    }
 
     if (!options.compact) {
       const input = this.group("Cell input", "cell");
@@ -283,8 +295,10 @@ export class SpikelingMainControls {
   private group(title: string, accent: ControlAccentName, parent = this.element): HTMLElement {
     const section = element(this.owner, "section", "spk-controls__group");
     section.dataset.accent = accent;
-    const heading = element(this.owner, "h3", "spk-controls__heading", title);
-    section.append(heading);
+    if (title !== "") {
+      const heading = element(this.owner, "h3", "spk-controls__heading", title);
+      section.append(heading);
+    }
     parent.append(section);
     return section;
   }
@@ -304,7 +318,12 @@ export class SpikelingMainControls {
   private addSlider(
     parent: HTMLElement,
     id: MainControlId,
-    options: { readonly alwaysEnabled?: boolean; readonly label?: string } = {},
+    options: {
+      readonly alwaysEnabled?: boolean;
+      readonly label?: string;
+      readonly showLabel?: boolean;
+      readonly showScale?: boolean;
+    } = {},
   ): void {
     const specification = getMainControlSpecification(id);
     const labelText = options.label ?? specification.label;
@@ -339,7 +358,12 @@ export class SpikelingMainControls {
     output.setAttribute("for", slider.id);
     if (alwaysEnabled) {
       row.dataset.alwaysEnabled = "true";
-      header.append(output);
+      if (options.showLabel) {
+        row.dataset.alwaysEnabledLabel = "true";
+        header.append(label, output);
+      } else {
+        header.append(output);
+      }
     } else {
       header.append(toggleTarget, label, output);
     }
@@ -353,7 +377,7 @@ export class SpikelingMainControls {
     }
     slider.setAttribute("list", ticks.id);
     row.append(header, slider, ticks);
-    if (alwaysEnabled) {
+    if (options.showScale ?? alwaysEnabled) {
       const scale = element(this.owner, "div", "spk-controls__scale");
       scale.setAttribute("aria-hidden", "true");
       const values = id === "injectedCurrent"

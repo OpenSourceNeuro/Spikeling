@@ -55,7 +55,8 @@ test("desktop trace registry preserves all seven exact colours, order and axis a
     ],
   );
   assert.deepEqual([...defaultVisibleTraces()], ["mainVm", "stimulus", "totalCurrent"]);
-  assert.equal(getOscilloscopeTrace("synapse1Current").label, "Synapse 1 input");
+  assert.equal(getOscilloscopeTrace("synapse1Current").label, "Synapse 1 current");
+  assert.equal(getOscilloscopeTrace("synapse2Current").label, "Synapse 2 current");
   assert.throws(() => getOscilloscopeTrace("invalid" as TraceField), RangeError);
   assert.equal(SPIKELING_PALETTE.backgroundDeep, "#001E26");
   assert.equal(DEFAULT_OSCILLOSCOPE_THEME.grid, "#073642");
