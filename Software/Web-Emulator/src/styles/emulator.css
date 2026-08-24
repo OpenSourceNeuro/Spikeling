@@ -142,6 +142,7 @@
 .spk-emulator__workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
+  grid-template-rows: max-content minmax(max-content, 1fr) max-content;
   grid-template-areas:
     "instrument main"
     "instrument stimulus"
@@ -171,7 +172,7 @@
 .spk-emulator__panel[data-panel="main"] { grid-area: main; }
 .spk-emulator__panel[data-panel="stimulus"] {
   grid-area: stimulus;
-  align-self: end;
+  align-self: stretch;
 }
 .spk-emulator__panel[data-panel="synapses"] { grid-area: synapses; }
 
@@ -308,6 +309,7 @@
 @media (max-width: 1024px) {
   .spk-emulator__workspace {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(4, max-content);
     grid-template-areas:
       "instrument"
       "main"

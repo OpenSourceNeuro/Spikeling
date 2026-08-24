@@ -107,8 +107,11 @@ test("responsive stylesheet keeps desktop, tablet and mobile graph-first grid ar
   const { content } = await readDevelopmentAsset("/src/styles/emulator.css");
   assert.match(content, /max-width:\s*1240px/);
   assert.match(content, /grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(360px, 440px\)/);
+  assert.match(content, /grid-template-rows:\s*max-content\s+minmax\(max-content, 1fr\)\s+max-content/);
   assert.match(content, /"instrument main"\s*\n\s*"instrument stimulus"\s*\n\s*"synapses synapses"/);
+  assert.match(content, /\.spk-emulator__panel\[data-panel="stimulus"\]\s*\{[^}]*align-self:\s*stretch/s);
   assert.match(content, /@media\s*\(max-width:\s*1024px\)/);
+  assert.match(content, /grid-template-rows:\s*repeat\(4, max-content\)/);
   assert.match(content, /@media\s*\(max-width:\s*767px\)/);
   assert.match(content, /"instrument"\s*\n\s*"main"\s*\n\s*"stimulus"\s*\n\s*"synapses"/);
   assert.match(content, /minmax\(0, 1fr\)/);

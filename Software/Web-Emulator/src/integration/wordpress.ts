@@ -102,8 +102,9 @@ export function mountWordPressEmulator(
         seed: configuration.seed,
         controls: {
           main: { noiseLevel: 5 },
-          synapse1: { noiseLevel: 5 },
-          synapse2: { noiseLevel: 5 },
+          synapse1: { noiseLevel: 5, gain: 10 },
+          synapse2: { noiseLevel: 5, gain: -10 },
+          stimulus: { strength: 10 },
         },
       },
     });

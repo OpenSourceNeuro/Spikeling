@@ -84,11 +84,14 @@ test("production application references only its manifest-pinned dedicated worke
   assert.doesNotMatch(application, /\bfetch\s*\(|XMLHttpRequest|navigator\.serial|document\.body\.innerHTML/);
 });
 
-test("production WordPress worker starts all three neuronal noise controls at five percent", async () => {
+test("production WordPress worker starts with requested noise, stimulus and signed synaptic gains", async () => {
   const application = await asset("application");
   for (const neuron of ["main", "synapse1", "synapse2"]) {
-    assert.match(application, new RegExp(neuron + "\\s*:\\s*\\{\\s*noiseLevel\\s*:\\s*5\\s*\\}"));
+    assert.match(application, new RegExp(neuron + "\\s*:\\s*\\{[^}]*\\bnoiseLevel\\s*:\\s*5\\b"));
   }
+  assert.match(application, /synapse1\s*:\s*\{[^}]*\bgain\s*:\s*10\b/);
+  assert.match(application, /synapse2\s*:\s*\{[^}]*\bgain\s*:\s*-10\b/);
+  assert.match(application, /stimulus\s*:\s*\{\s*strength\s*:\s*10\s*\}/);
 });
 
 test("six stylesheets remain concatenated in their deterministic component-to-page order", async () => {

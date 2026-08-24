@@ -151,7 +151,7 @@ export class SpikelingMainControls {
     });
     stimulus.append(routing);
     const stimulusSliderOptions = options.compact
-      ? { alwaysEnabled: true, showLabel: true, showScale: false }
+      ? { alwaysEnabled: true, showLabel: true, showScale: true }
       : {};
     this.addSlider(stimulus, "stimulusFrequency", stimulusSliderOptions);
     this.addSlider(stimulus, "stimulusStrength", stimulusSliderOptions);
@@ -385,7 +385,10 @@ export class SpikelingMainControls {
       scale.setAttribute("aria-hidden", "true");
       const values = id === "injectedCurrent"
         ? ["-100", "0", "100"]
-        : ["0%", "100%"];
+        : id === "stimulusFrequency" || id === "stimulusStrength"
+          ? [specification.minimum, 0, specification.maximum]
+            .map((value) => formatMainControlValue(id, value))
+          : ["0%", "100%"];
       for (const value of values) {
         scale.append(element(this.owner, "span", "spk-controls__scale-mark", value));
       }

@@ -272,7 +272,12 @@ test("stimulus panel keeps only current routing and always-active labelled wavef
     assert.equal(inputs[0].type, "range");
     assert.equal(inputs[0].disabled, false);
     assert.equal(row.findAll((element) => element.className === "spk-controls__control-label")[0].textContent, label);
-    assert.equal(row.findAll((element) => element.className === "spk-controls__scale").length, 0);
+    const scale = find(row, (element) => element.className === "spk-controls__scale");
+    assert.equal(scale.attributes.get("aria-hidden"), "true");
+    assert.deepEqual(
+      scale.children.map((marker) => marker.textContent),
+      id === "stimulusFrequency" ? ["10 Hz", "20 Hz", "1000 Hz"] : ["-100%", "0%", "100%"],
+    );
     emulator.controls.setControlEnabled(id, false);
     assert.equal(emulator.controls.isEnabled(id), true);
   }
@@ -343,12 +348,13 @@ test("public synapse panels expose always-active current, noise and output slide
   }
 });
 
-test("main and both presynaptic noise sliders display the configured five-percent startup values", () => {
+test("public controls display the configured noise, stimulus and signed synaptic startup values", () => {
   const { host, source } = mount();
   source.updateControls({
     main: { noiseLevel: 5 },
-    synapse1: { noiseLevel: 5 },
-    synapse2: { noiseLevel: 5 },
+    synapse1: { noiseLevel: 5, gain: 10 },
+    synapse2: { noiseLevel: 5, gain: -10 },
+    stimulus: { strength: 10 },
   });
 
   for (const section of [
@@ -362,6 +368,17 @@ test("main and both presynaptic noise sliders display the configured five-percen
     assert.equal(slider.disabled, false);
     assert.match(find(row, (element) => element.tagName === "output").textContent, /^5%/);
   }
+
+  for (const [channel, expected] of [["synapse1", "10"], ["synapse2", "-10"]] as const) {
+    const section = find(panel(host, "synapses"), (element) => element.dataset.synapse === channel);
+    const row = find(section, (element) => element.dataset.control === "gain");
+    assert.equal(find(row, (element) => element.tagName === "input" && element.type === "range").value, expected);
+    assert.equal(find(row, (element) => element.tagName === "output").textContent, expected + "%");
+  }
+
+  const strength = find(panel(host, "stimulus"), (element) => element.dataset.control === "stimulusStrength");
+  assert.equal(find(strength, (element) => element.tagName === "input" && element.type === "range").value, "10");
+  assert.equal(find(strength, (element) => element.tagName === "output").textContent, "10%");
 });
 
 test("scientific scope clearly distinguishes educational simulation from biological recordings", () => {
