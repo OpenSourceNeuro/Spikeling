@@ -104,14 +104,16 @@ export class SpikelingEmulator {
     const transport = node(this.owner, "div", "spk-emulator__transport");
     transport.setAttribute("role", "group");
     transport.setAttribute("aria-label", "Simulation transport and speed");
+    const transportTitle = node(this.owner, "h3", "spk-emulator__transport-title", "Simulation speed");
     this.startButton = this.transportButton("Start simulation", "start");
     this.pauseButton = this.transportButton("Pause simulation", "pause");
     this.stopButton = this.transportButton("Stop simulation", "stop");
     this.resetButton = this.transportButton("Reset simulation", "reset");
-    const speedLabel = node(this.owner, "label", "spk-emulator__speed-label", "Simulation speed");
+    const speedLabel = node(this.owner, "label", "spk-emulator__speed-label");
     this.speed = node(this.owner, "select", "spk-emulator__speed");
     this.speed.id = this.prefix + "speed";
     speedLabel.htmlFor = this.speed.id;
+    this.speed.setAttribute("aria-label", "Simulation speed");
     this.speed.setAttribute("aria-describedby", scope.id);
     for (const [index] of DESKTOP_STEPS_PER_UPDATE.entries()) {
       const setting = getSimulationSpeed(index);
@@ -125,15 +127,16 @@ export class SpikelingEmulator {
     this.status.setAttribute("role", "status");
     this.status.setAttribute("aria-live", "polite");
     this.status.setAttribute("aria-atomic", "true");
-    transport.append(this.startButton, this.pauseButton, this.stopButton, this.resetButton, speedLabel, this.status);
-    this.element.append(transport);
+    transport.append(transportTitle, this.startButton, this.pauseButton, this.stopButton, this.resetButton, speedLabel, this.status);
 
     const workspace = node(this.owner, "div", "spk-emulator__workspace");
+    const instrument = node(this.owner, "div", "spk-emulator__instrument");
     const scopeHost = node(this.owner, "div", "spk-emulator__oscilloscope");
-    workspace.append(scopeHost);
-    const main = this.addPanel(workspace, "main", "Neuron parameters");
-    const stimulus = this.addPanel(workspace, "stimulus", "Stimulus parameters");
-    const synapses = this.addPanel(workspace, "synapses", "Synapse 1 and Synapse 2");
+    instrument.append(transport, scopeHost);
+    workspace.append(instrument);
+    const main = this.addPanel(workspace, "main", "Neuron Parameters");
+    const stimulus = this.addPanel(workspace, "stimulus", "Stimulus Parameters");
+    const synapses = this.addPanel(workspace, "synapses", "Synapses");
     this.element.append(workspace);
 
     this.error = node(this.owner, "p", "spk-emulator__error");
@@ -158,6 +161,7 @@ export class SpikelingEmulator {
     this.recording = new SpikelingRecordingControls(recordingHost, this.recorder, options.recording);
     this.synapses = new SpikelingSynapseControls(synapses.content, source, {
       ...options.synapses,
+      compact: true,
       oscilloscope: this.oscilloscope,
     });
 

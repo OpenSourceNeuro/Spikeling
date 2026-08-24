@@ -35,6 +35,7 @@ export interface SynapseTraceController {
 export interface SynapseControlsOptions {
   readonly oscilloscope?: SynapseTraceController;
   readonly autoShowTraces?: boolean;
+  readonly compact?: boolean;
 }
 
 interface SynapseSliderElements {
@@ -286,10 +287,18 @@ export class SpikelingSynapseControls {
 
     const output = this.subgroup(root, "Synaptic output", "channel");
     const cell = this.subgroup(root, "Auxiliary cell input", "cell");
-    const routing = this.subgroup(root, "Stimulus routing", "cell");
-    const directCurrent = this.toggle(routing, "Synapse " + number + " direct current stimulation", "stimulus");
-    const light = this.toggle(routing, "Synapse " + number + " light stimulation", "cell");
-    const photo = this.subgroup(root, "Photoreceptor", "cell");
+    const routing = this.subgroup(root, this.options.compact ? "Stimulus" : "Stimulus routing", "cell");
+    const directLabel = this.options.compact
+      ? "Synapse " + number + " Apply current stimulation"
+      : "Synapse " + number + " direct current stimulation";
+    const directCurrent = this.toggle(routing, directLabel, "stimulus");
+    const lightParent = this.options.compact
+      ? element(this.owner, "div", "spk-synapses__legacy-light")
+      : routing;
+    const light = this.toggle(lightParent, "Synapse " + number + " light stimulation", "cell");
+    const photo = this.options.compact
+      ? element(this.owner, "div", "spk-synapses__legacy-photoreceptor")
+      : this.subgroup(root, "Photoreceptor", "cell");
     const reading = element(this.owner, "p", "spk-synapses__reading", "Inactive · output 0.0 a.u.");
     reading.setAttribute("aria-live", "off");
 

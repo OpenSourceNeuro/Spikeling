@@ -207,11 +207,12 @@ maximum content width is 1,240 px, matching the approved OSN layout system.
 
 | Viewport | Width | Graph and parameter behaviour |
 | --- | --- | --- |
-| Desktop | 1,025 px or wider | Prominent left-hand oscilloscope, recording and synapses; separate right-hand main-neuron/stimulus panel; all panels initially open. |
-| Tablet | 768–1,024 px | One graph-first column followed by expanded main controls, recording and synapses; no forced horizontal overflow. |
-| Mobile | Below 768 px | Graph first; native, initially collapsed control/recording/synapse panels; two-column transport; full-width selects and readable stacked values. |
+| Desktop | 1,025 px or wider | Matching-width Simulation speed and oscilloscope boxes form the left column; Neuron Parameters and Stimulus Parameters occupy the right column with aligned lower edges; Synapses spans both columns. |
+| Tablet | 768–1,024 px | One instrument-first column followed by expanded neuron, stimulus and synapse controls; no forced horizontal overflow. |
+| Mobile | Below 768 px | Instrument first; native, initially collapsed neuron/stimulus/synapse panels; two-column transport; full-width selects and readable stacked values. |
 
-The scientific plot is always first in both DOM and reading order. Responsive
+The simulation-speed controls and scientific plot remain together first in DOM
+and reading order. Responsive
 changes do not clone components, reset the model, modify sample rates or create
 additional worker subscriptions. Synapse columns collapse into one column on
 narrow displays, and all interactive targets retain a minimum 44 px hit area.
@@ -584,6 +585,12 @@ Each auxiliary neuron independently exposes all 20 audited presets, a/b/c/d and
 resting-voltage displays, signed injected current, deterministic Gaussian noise,
 direct-current stimulation, light stimulation and three recovering
 photoreceptor controls:
+
+The public emulator uses the component's compact presentation: both synapse
+panels retain the neuron, synaptic output, auxiliary input and **Stimulus**
+sections, with one **Apply current stimulation** switch. Their light-routing
+switches and photoreceptor groups are omitted while their desktop-faithful
+scientific APIs remain available to standalone integrations.
 
 | Per-synapse control | Raw slider range | Synapse 1 default | Synapse 2 default | Scientific interpretation |
 | --- | ---: | ---: | ---: | --- |

@@ -107,16 +107,17 @@ test("responsive stylesheet keeps desktop, tablet and mobile graph-first grid ar
   const { content } = await readDevelopmentAsset("/src/styles/emulator.css");
   assert.match(content, /max-width:\s*1240px/);
   assert.match(content, /grid-template-columns:\s*minmax\(0, 1fr\)\s+minmax\(360px, 440px\)/);
-  assert.match(content, /"oscilloscope main"\s*\n\s*"oscilloscope stimulus"\s*\n\s*"synapses synapses"/);
+  assert.match(content, /"instrument main"\s*\n\s*"instrument stimulus"\s*\n\s*"synapses synapses"/);
   assert.match(content, /@media\s*\(max-width:\s*1024px\)/);
   assert.match(content, /@media\s*\(max-width:\s*767px\)/);
-  assert.match(content, /"oscilloscope"\s*\n\s*"main"\s*\n\s*"stimulus"\s*\n\s*"synapses"/);
+  assert.match(content, /"instrument"\s*\n\s*"main"\s*\n\s*"stimulus"\s*\n\s*"synapses"/);
   assert.match(content, /minmax\(0, 1fr\)/);
 });
 
 test("embedded labels use readable pixel sizes regardless of the host site's root rem scale", async () => {
   const { content } = await readDevelopmentAsset("/src/styles/emulator.css");
   assert.match(content, /\.spk-emulator__panel-summary\s*\{[^}]*font-size:\s*16px/s);
+  assert.match(content, /\.spk-emulator__transport-title\s*\{[^}]*font-size:\s*16px/s);
   assert.match(content, /\.spk-emulator \.spk-controls__heading,[\s\S]*?font-size:\s*15px/);
   assert.match(content, /\.spk-emulator \.spk-controls__control-label,[\s\S]*?font-size:\s*13px/);
 });

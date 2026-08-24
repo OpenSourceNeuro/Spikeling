@@ -77,6 +77,15 @@
   padding: 0.875rem;
 }
 
+.spk-emulator__transport-title {
+  flex: 1 0 100%;
+  margin: 0;
+  color: var(--spk-text);
+  font-size: 16px;
+  font-weight: 650;
+  text-align: left;
+}
+
 .spk-emulator__button,
 .spk-emulator__speed {
   min-width: 2.75rem;
@@ -134,16 +143,23 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
   grid-template-areas:
-    "oscilloscope main"
-    "oscilloscope stimulus"
+    "instrument main"
+    "instrument stimulus"
     "synapses synapses";
   align-items: start;
   gap: 1rem;
   min-width: 0;
 }
 
+.spk-emulator__instrument {
+  display: grid;
+  grid-area: instrument;
+  align-self: stretch;
+  gap: 1rem;
+  min-width: 0;
+}
+
 .spk-emulator__oscilloscope {
-  grid-area: oscilloscope;
   min-width: 0;
 }
 
@@ -153,7 +169,10 @@
 }
 
 .spk-emulator__panel[data-panel="main"] { grid-area: main; }
-.spk-emulator__panel[data-panel="stimulus"] { grid-area: stimulus; }
+.spk-emulator__panel[data-panel="stimulus"] {
+  grid-area: stimulus;
+  align-self: end;
+}
 .spk-emulator__panel[data-panel="synapses"] { grid-area: synapses; }
 
 .spk-emulator__panel-summary {
@@ -290,10 +309,14 @@
   .spk-emulator__workspace {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "oscilloscope"
+      "instrument"
       "main"
       "stimulus"
       "synapses";
+  }
+
+  .spk-emulator__panel[data-panel="stimulus"] {
+    align-self: start;
   }
 
   .spk-emulator .spk-controls__parameters {
@@ -315,6 +338,7 @@
     width: 100%;
   }
 
+  .spk-emulator__transport-title,
   .spk-emulator__speed-label,
   .spk-emulator__status {
     grid-column: 1 / -1;

@@ -219,7 +219,7 @@ test("standalone shell mounts all existing scientific components behind one scop
 test("neuron panel exposes only mode, always-active current input and always-active noise", () => {
   const { host, emulator } = mount();
   const main = panel(host, "main");
-  assert.equal(main.children[0].textContent, "Neuron parameters");
+  assert.equal(main.children[0].textContent, "Neuron Parameters");
   assert.deepEqual(
     main.findAll((element) => element.className === "spk-controls__heading").map((heading) => heading.textContent),
     ["Neuron mode", "Current input", "Noise"],
@@ -237,7 +237,7 @@ test("neuron panel exposes only mode, always-active current input and always-act
     assert.equal(scale.attributes.get("aria-hidden"), "true");
     assert.deepEqual(
       scale.children.map((marker) => marker.textContent),
-      identifier === "injectedCurrent" ? ["-100%", "0%", "100%"] : ["0%", "100%"],
+      identifier === "injectedCurrent" ? ["-100", "0", "100"] : ["0%", "100%"],
     );
     emulator.controls.setControlEnabled(identifier, false);
     assert.equal(emulator.controls.isEnabled(identifier), true);
@@ -251,7 +251,7 @@ test("stimulus panel keeps only current routing and always-active labelled wavef
   const { host, emulator } = mount();
   const main = panel(host, "main");
   const stimulus = panel(host, "stimulus");
-  assert.equal(stimulus.children[0].textContent, "Stimulus parameters");
+  assert.equal(stimulus.children[0].textContent, "Stimulus Parameters");
   assert.equal(main.findAll((element) => element.dataset.control === "stimulusFrequency").length, 0);
   assert.equal(stimulus.findAll((element) => element.className === "spk-controls__heading").length, 0);
   assert.equal(stimulus.findAll((element) => element.className === "spk-controls__custom").length, 0);
@@ -274,6 +274,46 @@ test("stimulus panel keeps only current routing and always-active labelled wavef
     assert.equal(row.findAll((element) => element.className === "spk-controls__scale").length, 0);
     emulator.controls.setControlEnabled(id, false);
     assert.equal(emulator.controls.isEnabled(id), true);
+  }
+});
+
+test("speed and oscilloscope share one instrument column alongside consistently titled panels", () => {
+  const { host } = mount();
+  const workspace = byClass(host, "spk-emulator__workspace");
+  const instrument = byClass(host, "spk-emulator__instrument");
+  const controls = byClass(host, "spk-emulator__transport");
+  const title = byClass(host, "spk-emulator__transport-title");
+  const oscilloscope = byClass(host, "spk-emulator__oscilloscope");
+
+  assert.equal(instrument.parent, workspace);
+  assert.deepEqual(instrument.children, [controls, oscilloscope]);
+  assert.equal(title.textContent, "Simulation speed");
+  assert.equal(byClass(host, "spk-emulator__speed").attributes.get("aria-label"), "Simulation speed");
+  assert.deepEqual(
+    [panel(host, "main"), panel(host, "stimulus"), panel(host, "synapses")].map((section) => section.children[0].textContent),
+    ["Neuron Parameters", "Stimulus Parameters", "Synapses"],
+  );
+});
+
+test("public synapse panels omit photoreceptors and retain one renamed stimulus switch", () => {
+  const { host } = mount();
+  const synapses = panel(host, "synapses");
+
+  for (const number of ["1", "2"] as const) {
+    const channel = find(synapses, (element) =>
+      element.className.includes("spk-synapses__channel") && element.dataset.synapse === "synapse" + number);
+    assert.deepEqual(
+      channel.findAll((element) => element.className === "spk-synapses__subheading").map((heading) => heading.textContent),
+      ["Synaptic output", "Auxiliary cell input", "Stimulus"],
+    );
+    assert.equal(channel.findAll((element) => element.textContent === "Photoreceptor").length, 0);
+    assert.equal(channel.findAll((element) =>
+      element.attributes.get("aria-label") === "Synapse " + number + " light stimulation").length, 0);
+    const current = find(channel, (element) =>
+      element.attributes.get("aria-label") === "Synapse " + number + " Apply current stimulation");
+    assert.equal(current.type, "checkbox");
+    assert.equal(channel.findAll((element) =>
+      element.className === "spk-controls__toggle-label" && element.textContent === "Apply current stimulation").length, 1);
   }
 });
 
@@ -349,11 +389,15 @@ test("simulation speed selector displays the genuine wall-clock target independe
   assert.match(byClass(emulator.recording.element as unknown as FakeElement, "spk-recording__rates").textContent, /10,000 samples\/s of simulation time/);
 });
 
-test("graph is the first scientific workspace item in desktop and narrow-screen DOM order", () => {
+test("speed and graph remain the first scientific workspace items at every viewport width", () => {
   for (const width of [1_440, 1_024, 767, 360]) {
     const { host } = mount({ width });
     const workspace = byClass(host, "spk-emulator__workspace");
-    assert.equal(workspace.children[0].className, "spk-emulator__oscilloscope");
+    assert.equal(workspace.children[0].className, "spk-emulator__instrument");
+    assert.deepEqual(
+      workspace.children[0].children.map((element) => element.className),
+      ["spk-emulator__transport", "spk-emulator__oscilloscope"],
+    );
     assert.deepEqual(workspace.children.slice(1).map((element) => element.dataset.panel), ["main", "stimulus", "synapses"]);
   }
 });

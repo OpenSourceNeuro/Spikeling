@@ -381,7 +381,7 @@ export class SpikelingMainControls {
       const scale = element(this.owner, "div", "spk-controls__scale");
       scale.setAttribute("aria-hidden", "true");
       const values = id === "injectedCurrent"
-        ? ["-100%", "0%", "100%"]
+        ? ["-100", "0", "100"]
         : ["0%", "100%"];
       for (const value of values) {
         scale.append(element(this.owner, "span", "spk-controls__scale-mark", value));
