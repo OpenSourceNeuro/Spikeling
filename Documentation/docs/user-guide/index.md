@@ -64,7 +64,7 @@ Finally, use the task-oriented reference:
 ## **Where to go next**
 
 - Ready-to-run protocols with expected outcomes: **[Experiments](../experiments/index.md)**
-- Teaching materials (handouts, classroom setup, troubleshooting at scale): **[Teaching hub](../teaching-hub/index.md)**
+- Teaching resources (curriculum catalogue, course pathways and class preparation): **[Teaching Hub](../teaching-hub/index.md)**
 - Data analysis starter workflows: **[Data analysis](../data-analysis/index.md)**
 
 ---

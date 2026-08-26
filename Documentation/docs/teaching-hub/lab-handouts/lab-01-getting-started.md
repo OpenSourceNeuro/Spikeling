@@ -1,36 +1,15 @@
-# Lab 1 — Getting started
+# Getting started — module specification
 
-This is an instructor-ready lab handout template. Replace TODO blocks with your local instructions.
+!!! warning "Not yet an instructor-ready handout"
+    This legacy URL now points to the real curriculum specification rather than an empty template. Validated settings, a student worksheet and an answer key have not yet been released.
 
-## Learning objectives
+The curriculum entry [FND-01 — First contact: make a neuron respond](../modules/foundations.md#fnd-01) defines a 30-minute exploratory activity in which learners manipulate input, observe model voltage and spike events, and state why a model spike is not a complete biological action potential.
 
-TODO
+## Available operational material
 
-## Background
+- [First experiment](../../quickstart/first-experiment.md)
+- [Hardware setup](../../quickstart/hardware-setup.md)
+- [GUI overview](../../user-guide/gui-overview.md)
+- [Controls and I/O](../../user-guide/controls-and-io.md)
 
-TODO
-
-## Materials
-
-TODO
-
-## Procedure
-
-TODO
-
-## Deliverables
-
-TODO
-
-## Questions
-
-TODO
-
-## Optional extensions
-
-TODO
-
-## See also
-
-- [Troubleshooting at scale](../troubleshooting-at-scale.md)
-- [CSV format reference](../../data-analysis/csv-format.md)
+Use the [full module-development template](../development-status.md#template-for-later-full-module-development) before converting the specification into a local student handout.

@@ -16,7 +16,7 @@ This site covers:
 - Installing and configuring: **[Quickstart overview](quickstart/index.md)**
 - Learning workflows and concepts: **[User guide overview](user-guide/index.md)**
 - Ready-to-run activities: **[Experiments](experiments/index.md)**
-- Teaching materials (handouts, rubrics, classroom setup): **[Teaching hub](teaching-hub/index.md)**
+- Curriculum catalogue, course pathways and practical resources: **[Teaching Hub](teaching-hub/index.md)**
 
 ## **What Spikeling is**
 
@@ -53,7 +53,7 @@ By following this documentation, you will be able to:
 ## **Who this documentation is for**
 
 - **Students**: step-by-step guides and experiments with expected outcomes
-- **Instructors / TAs**: classroom setup, lab handouts, and troubleshooting at scale
+- **Instructors / TAs**: class preparation, curriculum modules, practical guides and troubleshooting routes
 - **Developers / contributors**: reference material for hardware, firmware, GUI, and extension points
 
 ## **Support and community**

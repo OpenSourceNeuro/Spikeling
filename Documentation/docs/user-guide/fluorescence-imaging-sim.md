@@ -9,7 +9,7 @@ Spikeling’s imaging simulation is not a camera and not a microscope pipeline. 
 See also:
 - [Concepts](concepts.md) (why Vm can be transformed into fluorescence)
 - [GUI overview](gui-overview.md) (where the Imaging screen lives)
-- [Teaching hub → Lab 4 — Imaging](../teaching-hub/lab-handouts/lab-04-imaging.md) (structured activity)
+- [Teaching Hub → Imaging module specification](../teaching-hub/lab-handouts/lab-04-imaging.md)
 
 ---
 
@@ -175,4 +175,4 @@ Also expected, especially at high firing rates where transients overlap.
 
 - How to record and export: [Recording and export](recording-and-export.md)
 - Analysis of fluorescence-like signals: [Data analysis → Fluorescence analysis](../data-analysis/fluorescence-analysis.md)
-- Structured teaching activity: [Teaching hub → Lab 4 — Imaging](../teaching-hub/lab-handouts/lab-04-imaging.md)
+- Curriculum specification: [Teaching Hub → Imaging module](../teaching-hub/lab-handouts/lab-04-imaging.md)
