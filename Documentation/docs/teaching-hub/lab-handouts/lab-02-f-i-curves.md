@@ -1,36 +1,17 @@
-# Lab 2 — F–I curves
+# F–I curves — module specification
 
-This is an instructor-ready lab handout template. Replace TODO blocks with your local instructions.
+!!! warning "Not yet an instructor-ready handout"
+    This page preserves the former lab URL while replacing its placeholder content with the actual curriculum status. No validated Jupyter notebook, example dataset or answer key is currently shipped.
 
-## Learning objectives
+The relevant curriculum entry is [NPH-04 — Input–output and firing-rate curve](../modules/neurophysiology.md#nph-04). It specifies a hybrid board-and-Jupyter activity that produces an F–I dataset, plot, operational definition and uncertainty statement.
 
-TODO
+Time-derived analysis depends on [EPH-04 — Sampling and timebase validation](../modules/electrophysiology.md#eph-04).
 
-## Background
+## Available supporting material
 
-TODO
+- [Excitability and threshold practical](../../experiments/excitability-and-threshold.md)
+- [Stimulus recipes](../../experiments/stimulus-recipes.md)
+- [Recording and export](../../user-guide/recording-and-export.md)
+- [Assessment and learner evidence](../assessment-rubrics.md)
 
-## Materials
-
-TODO
-
-## Procedure
-
-TODO
-
-## Deliverables
-
-TODO
-
-## Questions
-
-TODO
-
-## Optional extensions
-
-TODO
-
-## See also
-
-- [Troubleshooting at scale](../troubleshooting-at-scale.md)
-- [CSV format reference](../../data-analysis/csv-format.md)
+Do not translate model-current values into pA or nA without an independent calibration.

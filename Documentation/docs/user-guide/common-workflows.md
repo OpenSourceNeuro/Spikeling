@@ -228,5 +228,5 @@ If you need a fast outreach demonstration:
 ## **What to read next**
 
 - Structured protocols with expected outcomes: [Experiments](../experiments/index.md)
-- Teaching materials and handouts: [Teaching hub](../teaching-hub/index.md)
+- Curriculum modules and teaching resources: [Teaching Hub](../teaching-hub/index.md)
 - If you want analysis templates: [Data analysis](../data-analysis/index.md)

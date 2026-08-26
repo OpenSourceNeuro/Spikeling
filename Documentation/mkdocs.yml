@@ -98,17 +98,38 @@ nav:
       - Network with two units: experiments/network-two-units.md
       - Stimulus recipes: experiments/stimulus-recipes.md
 
-  - Teaching hub:
-      - Overview: teaching-hub/index.md
-      - Course module outlines: teaching-hub/course-module-outlines.md
-      - Lab handouts:
-          - Lab 1 — Getting started: teaching-hub/lab-handouts/lab-01-getting-started.md
-          - Lab 2 — F–I curves: teaching-hub/lab-handouts/lab-02-f-i-curves.md
-          - Lab 3 — Synapses: teaching-hub/lab-handouts/lab-03-synapses.md
-          - Lab 4 — Imaging: teaching-hub/lab-handouts/lab-04-imaging.md
-      - Assessment rubrics: teaching-hub/assessment-rubrics.md
-      - Classroom setup: teaching-hub/classroom-setup.md
-      - Troubleshooting at scale: teaching-hub/troubleshooting-at-scale.md
+  - Teaching Hub:
+      - Teaching Hub: teaching-hub/index.md
+      - Prepare a class: teaching-hub/classroom-setup.md
+      - Teaching resources: teaching-hub/teaching-resources.md
+      - Course pathways and bundles: teaching-hub/course-module-outlines.md
+      - Module catalogue:
+          - Catalogue and module contract: teaching-hub/modules/index.md
+          - Foundations and orientation: teaching-hub/modules/foundations.md
+          - Neurophysiology: teaching-hub/modules/neurophysiology.md
+          - Electrophysiology and instrumentation: teaching-hub/modules/electrophysiology.md
+          - Synapses and integration: teaching-hub/modules/synapses.md
+          - Sensory neuroscience: teaching-hub/modules/sensory-neuroscience.md
+          - Networks and neural computation: teaching-hub/modules/networks.md
+          - Computational neuroscience: teaching-hub/modules/computational-neuroscience.md
+          - Neural-data analysis: teaching-hub/modules/data-analysis.md
+          - Statistics: teaching-hub/modules/statistics.md
+          - Calcium imaging: teaching-hub/modules/calcium-imaging.md
+          - Extracellular recording: teaching-hub/modules/extracellular-recording.md
+          - Experimental methodology: teaching-hub/modules/experimental-methodology.md
+          - Epistemology and scientific reasoning: teaching-hub/modules/epistemology.md
+          - Outreach and educator practice: teaching-hub/modules/educator-practice.md
+      - Selected module specifications:
+          - Getting started: teaching-hub/lab-handouts/lab-01-getting-started.md
+          - F–I curves: teaching-hub/lab-handouts/lab-02-f-i-curves.md
+          - Synapses: teaching-hub/lab-handouts/lab-03-synapses.md
+          - Imaging simulation: teaching-hub/lab-handouts/lab-04-imaging.md
+      - Scope and development:
+          - Scope, evidence and limits: teaching-hub/scope-and-evidence.md
+          - Assessment and learner evidence: teaching-hub/assessment-rubrics.md
+          - Development status: teaching-hub/development-status.md
+          - Troubleshooting at scale: teaching-hub/troubleshooting-at-scale.md
+          - Sources and references: teaching-hub/sources.md
 
   - Hardware:
       - Overview: hardware/index.md
