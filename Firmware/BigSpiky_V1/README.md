@@ -74,9 +74,13 @@ arduino-cli core update-index
 arduino-cli core install esp32:esp32@3.3.11
 arduino-cli lib install "Adafruit NeoPixel@1.15.5"
 arduino-cli compile --warnings all \
-  --fqbn 'esp32:esp32:esp32s3:CDCOnBoot=cdc,USBMode=hwcdc,CPUFreq=240,FlashFreq=80,FlashMode=qio,FlashSize=4M,PSRAM=disabled' \
+  --fqbn 'esp32:esp32:esp32s3:CDCOnBoot=cdc,USBMode=hwcdc,CPUFreq=240,FlashMode=qio,FlashSize=4M,PSRAM=disabled' \
   Firmware/BigSpiky_V1
 ```
+
+Arduino-ESP32 3.3.11's generic `ESP32S3 Dev Module` profile fixes the selected QIO flash interface at 80 MHz;
+it does not expose a `FlashFreq` FQBN menu key. The command therefore selects QIO explicitly and relies on that
+profile's 80 MHz setting rather than passing an invalid board option.
 
 The branch workflow runs the host suite, compiles the repository copy, constructs the ZIP, extracts it into a
 clean directory and compiles that extracted copy with the same command. It records flash/RAM use and warnings.
@@ -113,4 +117,3 @@ are educationally necessary. Each is isolated in configuration or documented as 
 
 A powered connector profile is deliberately absent. Spike + Vm + power + ground needs TRRS or separate power,
 and public hot-plug power needs hardware current limiting and ESD design that firmware cannot replace.
-

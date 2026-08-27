@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 30
     env:
       SKETCH: Firmware/BigSpiky_V1
-      FQBN: esp32:esp32:esp32s3:CDCOnBoot=cdc,USBMode=hwcdc,CPUFreq=240,FlashFreq=80,FlashMode=qio,FlashSize=4M,PSRAM=disabled
+      FQBN: esp32:esp32:esp32s3:CDCOnBoot=cdc,USBMode=hwcdc,CPUFreq=240,FlashMode=qio,FlashSize=4M,PSRAM=disabled
     steps:
       - uses: actions/checkout@v4
         with:

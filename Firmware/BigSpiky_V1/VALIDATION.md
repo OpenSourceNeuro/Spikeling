@@ -38,6 +38,9 @@ from `README.md`, compiles with all warnings, packages the sketch folder, extrac
 directory and compiles the extracted copy. The final workflow log, flash/RAM summary, warnings and artifact
 hash are delivered with the validated ZIP.
 
+`FlashFreq` is intentionally absent from the command: Arduino-ESP32 3.3.11's generic ESP32-S3 profile uses an
+80 MHz QIO flash interface but does not expose that setting as an FQBN menu key.
+
 ## Timing evidence boundary
 
 Implemented instrumentation records model overruns and maximum model-step execution. Scheduling analysis:
@@ -71,4 +74,3 @@ SPI, USB, interrupt latency or dual-core jitter on the actual carrier. The follo
   verify fuses, injection, wire gauge, bulk capacitance and level shifters.
 - Brownout and power-cycle the ESP32 and LED supply in both orders; confirm safe recovery and no decorative firing.
 - Verify self-test labels and that no self-test visual drives model current, DAC or TTL output.
-
