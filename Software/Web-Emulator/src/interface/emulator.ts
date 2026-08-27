@@ -93,14 +93,7 @@ export class SpikelingEmulator {
     this.element.dataset.layout = this.layout;
     this.element.dataset.motion = "standard";
 
-    const introduction = node(this.owner, "header", "spk-emulator__introduction");
-    const title = node(this.owner, "h2", "spk-emulator__title", "Explore a spiking neuron");
-    const scope = node(this.owner, "p", "spk-emulator__scope",
-      "A real-time Izhikevich educational model and interface — not a biological preparation or a research-grade electrophysiology recorder.");
-    scope.id = this.prefix + "scope";
-    introduction.append(title, scope);
-    this.element.append(introduction);
-
+  
     const transport = node(this.owner, "div", "spk-emulator__transport");
     transport.setAttribute("role", "group");
     transport.setAttribute("aria-label", "Simulation transport and speed");
