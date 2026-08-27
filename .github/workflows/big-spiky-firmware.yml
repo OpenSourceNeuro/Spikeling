@@ -21,6 +21,11 @@ jobs:
       FQBN: esp32:esp32:esp32s3:CDCOnBoot=cdc,USBMode=hwcdc,CPUFreq=240,FlashFreq=80,FlashMode=qio,FlashSize=4M,PSRAM=disabled
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            Firmware/BigSpiky_V1
+          sparse-checkout-cone-mode: false
 
       - uses: arduino/setup-arduino-cli@v2
 
@@ -77,4 +82,3 @@ jobs:
           path: artifacts/
           if-no-files-found: error
           retention-days: 90
-
