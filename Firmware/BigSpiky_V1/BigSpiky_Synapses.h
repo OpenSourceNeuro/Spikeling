@@ -43,7 +43,7 @@ inline Synapse synapses[SYNAPSE_COUNT];
 inline portMUX_TYPE synapseMux = portMUX_INITIALIZER_UNLOCKED;
 inline uint16_t incomingMaskThisStep = 0U;
 
-inline void IRAM_ATTR synapseRisingIsr(void *argument) {
+void IRAM_ATTR synapseRisingIsr(void *argument) {
   Synapse *synapse = static_cast<Synapse *>(argument);
   const uint32_t nowUs = micros();
   portENTER_CRITICAL_ISR(&synapseMux);
