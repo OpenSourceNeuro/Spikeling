@@ -381,12 +381,12 @@ test("public controls display the configured noise, stimulus and signed synaptic
   assert.equal(find(strength, (element) => element.tagName === "output").textContent, "10%");
 });
 
-test("scientific scope clearly distinguishes educational simulation from biological recordings", () => {
+test("standalone shell omits the inner introduction reserved for the WordPress page", () => {
   const { host } = mount();
-  const scope = byClass(host, "spk-emulator__scope");
-  assert.match(scope.textContent, /Izhikevich educational model/);
-  assert.match(scope.textContent, /not a biological preparation/);
-  assert.match(scope.textContent, /not a research-grade|research-grade electrophysiology recorder/);
+  assert.equal(host.findAll((element) => element.className === "spk-emulator__introduction").length, 0);
+  const text = host.findAll(() => true).map((element) => element.textContent).join(" ");
+  assert.doesNotMatch(text, /Explore a spiking neuron/);
+  assert.doesNotMatch(text, /Izhikevich educational model/);
 });
 
 test("simulation transport contains genuinely labelled native buttons and six truthful speeds", () => {
@@ -408,7 +408,7 @@ test("simulation transport contains genuinely labelled native buttons and six tr
     "0.5× real time · 5,000 samples/s",
     "1× real time · 10,000 samples/s",
   ]);
-  assert.equal(speed.attributes.get("aria-describedby"), byClass(host, "spk-emulator__scope").id);
+  assert.equal(speed.attributes.has("aria-describedby"), false);
 });
 
 test("unconnected transport is semantically disabled until a genuine source snapshot arrives", async () => {

@@ -93,7 +93,6 @@ export class SpikelingEmulator {
     this.element.dataset.layout = this.layout;
     this.element.dataset.motion = "standard";
 
-  
     const transport = node(this.owner, "div", "spk-emulator__transport");
     transport.setAttribute("role", "group");
     transport.setAttribute("aria-label", "Simulation transport and speed");
@@ -107,7 +106,6 @@ export class SpikelingEmulator {
     this.speed.id = this.prefix + "speed";
     speedLabel.htmlFor = this.speed.id;
     this.speed.setAttribute("aria-label", "Simulation speed");
-    this.speed.setAttribute("aria-describedby", scope.id);
     for (const [index] of DESKTOP_STEPS_PER_UPDATE.entries()) {
       const setting = getSimulationSpeed(index);
       const option = node(this.owner, "option", "", setting.realtimeMultiplier + "× real time · "
