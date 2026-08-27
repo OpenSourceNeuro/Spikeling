@@ -313,7 +313,7 @@ inline bool modelStep() {
 inline void recordModelExecution(uint32_t elapsedUs, uint32_t latenessUs) {
   if (elapsedUs > diagnostics.maximumModelExecutionUs) diagnostics.maximumModelExecutionUs = elapsedUs;
   if (latenessUs >= MODEL_STEP_US || elapsedUs >= MODEL_STEP_US) {
-    ++diagnostics.modelOverruns;
+    diagnostics.modelOverruns = diagnostics.modelOverruns + 1U;
     setStatusFlag(STATUS_MODEL_OVERRUN, true);
   }
 }

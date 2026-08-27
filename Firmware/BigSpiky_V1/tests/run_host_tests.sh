@@ -6,7 +6,7 @@ mkdir -p "$build_dir"
 cxx_flags=(-std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror)
 g++ "${cxx_flags[@]}" "$test_dir/test_bigspiky_logic.cpp" -o "$build_dir/test_bigspiky_logic"
 g++ "${cxx_flags[@]}" "$test_dir/timing_sim.cpp" -o "$build_dir/timing_sim"
-g++ "${cxx_flags[@]}" -Wno-error=volatile -I"$test_dir/stubs" -I"$test_dir/.." \
+g++ "${cxx_flags[@]}" -I"$test_dir/stubs" -I"$test_dir/.." \
   -x c++ -c "$test_dir/../BigSpiky_V1.ino" -o "$build_dir/firmware_api_smoke.o"
 "$build_dir/test_bigspiky_logic"
 "$build_dir/timing_sim"

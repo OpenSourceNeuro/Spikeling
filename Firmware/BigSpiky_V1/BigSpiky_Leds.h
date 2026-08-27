@@ -258,7 +258,7 @@ inline void publishModelState(bool spikeEvent) {
   if (spikeEvent && !selfTest.active) {
     somaFlashUntilMs = nowMs + 80U;
     if (!axonQueue.enqueue(true)) {
-      ++diagnostics.visualQueueDrops;
+      diagnostics.visualQueueDrops = diagnostics.visualQueueDrops + 1U;
       diagnostics.statusFlags |= STATUS_LED_QUEUE_OVERFLOW;
     }
   }

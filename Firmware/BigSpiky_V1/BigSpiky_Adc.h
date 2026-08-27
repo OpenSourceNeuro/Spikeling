@@ -88,7 +88,7 @@ inline uint16_t read(AdcChannel mapping, bool *valid = nullptr) {
     if (h.railSamples >= ADC_RAIL_FAULT_SAMPLES && !h.fault) {
       h.fault = true;
       faultMask |= 1UL << (mapping.device * 8U + mapping.channel);
-      ++diagnostics.adcFaultEvents;
+      diagnostics.adcFaultEvents = diagnostics.adcFaultEvents + 1U;
     }
   }
   setStatusFlag(STATUS_ADC_CHANNEL_FAULT, faultMask != 0U);
@@ -107,4 +107,3 @@ inline void begin() {
 
 }  // namespace adc
 }  // namespace bigspiky
-

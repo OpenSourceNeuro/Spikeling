@@ -78,7 +78,7 @@ inline void sendTelemetry(uint32_t timestampUs) {
 }
 
 inline void error(const char *message) {
-  ++diagnostics.serialCommandErrors;
+  diagnostics.serialCommandErrors = diagnostics.serialCommandErrors + 1U;
   Serial.print("#BSERR ");
   Serial.println(message);
 }
@@ -345,7 +345,7 @@ inline void serviceInput() {
     if (discardingLine) continue;
     if (lineLength + 1U >= sizeof(lineBuffer)) {
       discardingLine = true;
-      ++diagnostics.serialOverflowErrors;
+      diagnostics.serialOverflowErrors = diagnostics.serialOverflowErrors + 1U;
       setStatusFlag(STATUS_SERIAL_OVERFLOW, true);
       continue;
     }

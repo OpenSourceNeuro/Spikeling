@@ -49,18 +49,18 @@ inline void IRAM_ATTR synapseRisingIsr(void *argument) {
   portENTER_CRITICAL_ISR(&synapseMux);
   const uint32_t interval = nowUs - synapse->lastAcceptedUs;
   if (synapse->lastAcceptedUs != 0U && interval < DIGITAL_REFRACTORY_US) {
-    ++synapse->rejectedEventCount;
+    synapse->rejectedEventCount = synapse->rejectedEventCount + 1U;
     portEXIT_CRITICAL_ISR(&synapseMux);
     return;
   }
   synapse->lastAcceptedUs = nowUs;
   synapse->lastEventUs = nowUs;
-  ++synapse->incomingEventCount;
+  synapse->incomingEventCount = synapse->incomingEventCount + 1U;
   if (synapse->pendingEvents < MAX_PENDING_EVENTS) {
-    ++synapse->pendingEvents;
+    synapse->pendingEvents = static_cast<uint8_t>(synapse->pendingEvents + 1U);
   } else {
-    ++synapse->lostEventCount;
-    ++diagnostics.eventSaturations;
+    synapse->lostEventCount = synapse->lostEventCount + 1U;
+    diagnostics.eventSaturations = diagnostics.eventSaturations + 1U;
     diagnostics.statusFlags |= STATUS_EVENT_SATURATION;
   }
   portEXIT_CRITICAL_ISR(&synapseMux);
@@ -172,4 +172,3 @@ inline void resetSynapticState() {
 }
 
 }  // namespace bigspiky
-

@@ -1,3 +1,3 @@
--DUSB_MANUFACTURER="Open\ Source\ Neuro"
--DUSB_PRODUCT="Big\ Spiky"
--DUSB_SERIAL="__MAC__"
+-DUSB_MANUFACTURER=\"Open\ Source\ Neuro\"
+-DUSB_PRODUCT=\"Big\ Spiky\"
+-DUSB_SERIAL=\"__MAC__\"
