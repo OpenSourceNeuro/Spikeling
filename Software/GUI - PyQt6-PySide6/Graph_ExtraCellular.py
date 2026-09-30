@@ -1689,9 +1689,21 @@ class ExtraCellularGraph(QObject):
             self._invalidate_geometry_cache()
 
             # Noise / contamination
-            p["baseline_noise_uV"] = float(ui.ExtraCellular_BaselineNoise_Slider.value())
-            p["shared_noise_uV"] = float(ui.ExtraCellular_SharedNoise_Slider.value())
-            p["hum_noise_uV"] = float(ui.ExtraCellular_HumNoise_Slider.value())
+            # A cleared readout label means the parameter is out of play, so the
+            # toggle must actually zero the contribution rather than leave the
+            # slider's reset value active.
+            p["baseline_noise_uV"] = (
+                float(ui.ExtraCellular_BaselineNoise_Slider.value())
+                if ui.ExtraCellular_BaselineNoise_toggleButton.isChecked() else 0.0
+            )
+            p["shared_noise_uV"] = (
+                float(ui.ExtraCellular_SharedNoise_Slider.value())
+                if ui.ExtraCellular_SharedNoise_toggleButton.isChecked() else 0.0
+            )
+            p["hum_noise_uV"] = (
+                float(ui.ExtraCellular_HumNoise_Slider.value())
+                if ui.ExtraCellular_HumNoise_toggleButton.isChecked() else 0.0
+            )
 
             # Bandpass preset
             fl, fh = self._bandpass_limits_from_ui()
@@ -1725,6 +1737,10 @@ class ExtraCellularGraph(QObject):
             ui.ExtraCellular_Bandpass_comboBox,
             ui.ExtraCellular_SignalMode_toggleButton,
             ui.ExtraCellular_CAR_toggleButton,
+            ui.ExtraCellular_BaselineNoise_toggleButton,
+            ui.ExtraCellular_SharedNoise_toggleButton,
+            ui.ExtraCellular_HumNoise_toggleButton,
+            ui.ExtraCellular_Spread_toggleButton,
         ]
 
         for w in widgets:
