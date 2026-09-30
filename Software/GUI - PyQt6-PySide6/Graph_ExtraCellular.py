@@ -44,42 +44,67 @@ Notes on units:
 - Extracellular traces are displayed / recorded in pedagogical microvolt-like units (µV).
 """
 
-from PySide6.QtCore import QObject, QTimer
+from PySide6.QtCore import QObject, QTimer, Qt
+from PySide6.QtWidgets import QVBoxLayout
 import pyqtgraph as pg
 import numpy as np
 import pandas as pd
 import collections
-from decimal import Decimal
 from typing import Tuple
 
-from scipy.signal import butter, sosfilt, sosfilt_zi
+from scipy.signal import butter, sosfilt
 
 import Parameters_Settings as Settings
 from serial_manager import serial_manager
+from graph_core import RingBuffer, configure_scope, parse_spikeling_packet, resolve_csv_path
 
 
-# =============================================================================
-# Constants
-# =============================================================================
-
-SAMPLE_INTERVAL = 0.1          # ms per incoming sample (fallback if packet lacks timestamp)
-TIME_WINDOW = 2000             # ms total rolling buffer
-TIME_WINDOW_DISPLAY = 500      # ms visible in oscilloscope x-range
+SAMPLE_INTERVAL = 0.1
+TIME_WINDOW = 2000
+TIME_WINDOW_DISPLAY = 500
 PEN_WIDTH = 1
 
-N_NEURONS = 3                  # primary + two auxiliaries from Spikeling stream
-N_CHANNELS = 4                 # tetrode contacts
+N_NEURONS = 3
+N_CHANNELS = 4
 FS_HZ = 1000.0 / SAMPLE_INTERVAL
 NYQUIST_HZ = 0.5 * FS_HZ
+MAX_PACKETS_PER_TICK = 5000
 
-# Channel colors matched to the UI labels
+# Overlay tuning
+EVENT_MERGE_WINDOW_MS = 0.4
+EVENT_MARKER_HEADROOM = 0.08
+DETECTION_SIGMA_MULTIPLIER = 4.5
+DETECTION_THRESHOLD_FLOOR_UV = 15.0
+
 CHANNEL_COLORS = [
-    (38, 139, 210),   # Ch1
-    (42, 161, 152),   # Ch2
-    (133, 153, 0),    # Ch3
-    (108, 113, 196),  # Ch4
+    (38, 139, 210), (42, 161, 152), (133, 153, 0), (108, 113, 196),
 ]
 
+# Default tetrode used until a geometry file is loaded: 4 contacts on a 25 um
+# square, the standard bundled-wire arrangement, in the electrode plane (um).
+DEFAULT_CONTACT_POSITIONS_UM = np.array(
+    [[-12.5, -12.5], [12.5, -12.5], [12.5, 12.5], [-12.5, 12.5]], dtype=float
+)
+
+# Default source placement: three units at plausible recording distances,
+# deliberately asymmetric so each contact sees a distinct amplitude profile
+# (this is what makes spike sorting a meaningful exercise).
+DEFAULT_SOURCE_POSITIONS_UM = np.array(
+    [[30.0, 10.0], [-20.0, 45.0], [55.0, -35.0]], dtype=float
+)
+
+# Guard against the 1/d singularity when a source sits on a contact.
+MIN_SOURCE_CONTACT_DISTANCE_UM = 5.0
+
+# Distance at which a unit gain is assigned; sets the overall amplitude scale.
+REFERENCE_DISTANCE_UM = 25.0
+
+# Per-unit amplitude scaling. Real units differ in soma size and spike
+# amplitude, so identical projections would make the sorting exercise trivial.
+SOURCE_RELATIVE_GAIN = np.array([1.00, 0.90, 0.80], dtype=float)
+
+# Neuron keys used by Tetrode.py in its saved distance matrix.
+TETRODE_NEURON_KEYS = ("main", "aux1", "aux2")
 
 # =============================================================================
 # ExtraCellularGraph
@@ -109,8 +134,6 @@ class ExtraCellularGraph(QObject):
         # "emulator"  : packets coming from the GUI emulator
         # "none"      : inactive / disconnected state
         self.source_mode = "spikeling"
-        self.last_valid_data = None
-        self._t_last_ms = None
         self._t_abs_ms = 0.0  # fallback clock if packets arrive without timestamp
 
         # ------------------------------------------------------------------
@@ -125,6 +148,9 @@ class ExtraCellularGraph(QObject):
         # ------------------------------------------------------------------
         # If absent, the graph falls back to the legacy hidden 2D didactic model.
         self.tetrode_geometry = None
+        self.geometry_source = "default"
+        self._init_geometry()
+
         self.tetrode_distance_matrix_um = {}
         self.tetrode_contacts_um = []
         self._use_saved_tetrode_geometry = False
@@ -178,6 +204,7 @@ class ExtraCellularGraph(QObject):
             [38.0, 18.0],
             [-28.0, 32.0],
         ], dtype=float)
+        self._init_geometry()
 
         # Per-source hidden gain factors so the 3 units are not identical.
         self._source_gain = np.array([1.00, 0.90, 0.80], dtype=float)
@@ -223,7 +250,7 @@ class ExtraCellularGraph(QObject):
         self.bandpass_low_hz = 300.0
         self.bandpass_high_hz = 3000.0
         self._filter_sos = None
-        self._filter_zi = None
+        # self._filter_zi = None
 
         # ------------------------------------------------------------------
         # Noise / hum state
@@ -237,6 +264,17 @@ class ExtraCellularGraph(QObject):
         # VmData         : latest intracellular ground-truth Vm values (mV)
         # SourceWaveData : latest clean per-source extracellular contribution
         # ExtraData      : latest final 4-channel tetrode signal (µV-like units)
+
+        # Explicit previous-sample Vm; decoupled from the display buffers
+        self._vm_prev = np.zeros(N_NEURONS, dtype=float)
+
+        # Cached geometry and block-filter state
+        self._projection_matrix_cache = None
+        self._filter_zi_block = None
+
+        # Overflow accounting (packet loss was previously silent)
+        self.dropped_packets = 0
+
         self.VmData = np.zeros(N_NEURONS, dtype=float)
         self.StimData = 0.0
         self.TriggerData = 0.0
@@ -260,15 +298,6 @@ class ExtraCellularGraph(QObject):
         # The old version used one PlotWidget / one PlotItem / one threshold line.
         # The new version uses 4 stacked PlotWidgets, one per tetrode contact.
         self._plots_ready = False
-        self._plot_decimator = 0
-        self._plot_every = 1
-
-        # Kept for structural similarity / compatibility with Graph_Imaging.py
-        # and with any other methods that may still inspect these attributes.
-        self.secondaryVB = None
-        self.calciumVB = None
-        self.calciumAxis = None
-        self._mainVB = None
 
         # Host/container layout inside ExtraCellular_Oscilloscope_widget
         self._plot_host_layout = None
@@ -317,7 +346,6 @@ class ExtraCellularGraph(QObject):
             "ch1_uV": [], "ch2_uV": [], "ch3_uV": [], "ch4_uV": [],
             "threshold_uV": [],
             "event": [],
-            "signal_mode": [],
         }
 
         # ------------------------------------------------------------------
@@ -337,49 +365,28 @@ class ExtraCellularGraph(QObject):
             mode = "spikeling"
         self.source_mode = mode
 
-    def apply_tetrode_geometry(self, payload: dict) -> None:
-        """
-        Receive the saved tetrode payload from Tetrode.py.
-
-        This overrides the legacy hidden 2D source/contact geometry with the
-        explicit 3D neuron->contact distances computed in the tetrode window.
-        """
-        if not isinstance(payload, dict):
-            return
-
-        self.tetrode_geometry = payload
-        self.tetrode_distance_matrix_um = payload.get("distance_matrix_um", {}) or {}
-
-        contacts = payload.get("tetrode", {}).get("contacts_um", []) or []
-        try:
-            contacts = sorted(contacts, key=lambda c: int(c.get("index", 999) or 999))
-        except Exception:
-            pass
-        self.tetrode_contacts_um = contacts
-
-        self._use_saved_tetrode_geometry = bool(self.tetrode_distance_matrix_um)
-
-
     # -------------------------------------------------------------------------
     # Connect / Disconnect
     # -------------------------------------------------------------------------
 
     def connect(self):
-        """Activate extracellular pipeline."""
-        self._initialize_buffers()
+        """Activate the extracellular pipeline."""
+        self._initialize_buffers()  # calls _reset_model_state internally
         self._initialize_plot()
         self._connect_parameters()
         self._update_connect_button(True)
-        self._reset_model_state()
         self._reset_filter_state()
+        self._invalidate_geometry_cache()
+        self.dropped_packets = 0
+        self._fs_warning_issued = False
 
         self._rx_queue.clear()
         self._rx_timer.start()
 
-        # Keep page-side record gating happy
         if hasattr(self.parent, "extracellular_page"):
             self.parent.extracellular_page.ExtraCellularConnectionFlag = True
         self.parent.ExtraCellularConnectionFlag = True
+        self._fs_warning_issued = False
 
     def disconnect(self):
         """Deactivate extracellular pipeline."""
@@ -394,24 +401,6 @@ class ExtraCellularGraph(QObject):
     # Data Entry Points
     # -------------------------------------------------------------------------
 
-    def _process_rx_queue(self):
-        if self.source_mode != "spikeling" or not getattr(self.parent, "ExtraCellularConnectionFlag", False):
-            self._rx_queue.clear()
-            return
-
-        max_per_tick = 5000
-        n = min(len(self._rx_queue), max_per_tick)
-
-        for _ in range(n):
-            pkt = self._rx_queue.popleft()
-            self._consume_vector(pkt, plot=False)
-
-        if self._plots_ready:
-            self._update_plots()
-
-        if len(self._rx_queue) > max_per_tick:
-            while len(self._rx_queue) > max_per_tick:
-                self._rx_queue.popleft()
 
     def on_data_received(self, data: list) -> None:
         if self.source_mode != "spikeling":
@@ -421,123 +410,255 @@ class ExtraCellularGraph(QObject):
 
         self._rx_queue.append(data)
 
+    def _process_rx_queue(self):
+        """Drain the hardware packet queue at the GUI refresh cadence."""
+        if self.source_mode != "spikeling" or not getattr(self.parent, "ExtraCellularConnectionFlag", False):
+            self._rx_queue.clear()
+            return
+
+        n = min(len(self._rx_queue), MAX_PACKETS_PER_TICK)
+        if n == 0:
+            return
+
+        packets = [self._rx_queue.popleft() for _ in range(n)]
+
+        overflow = len(self._rx_queue) - MAX_PACKETS_PER_TICK
+        if overflow > 0:
+            self.dropped_packets += overflow
+            for _ in range(overflow):
+                self._rx_queue.popleft()
+
+        self._consume_packets(packets)
+
     def on_emulator_data(self, data: list) -> None:
-        """Handle incoming emulator list of packets."""
+        """Handle one emulator packet or a batch of packets."""
         if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
-            self._consume_batch(data)
+            self._consume_packets(data)
         else:
-            self._consume_vector(data)
+            self._consume_packets([data])
 
-    # -------------------------------------------------------------------------
-    # Main Extracellular Pipeline
-    # -------------------------------------------------------------------------
-
-    def _consume_vector(self, data, plot=True):
+    def _consume_packets(self, packets) -> None:
         """
-        Central extracellular update pipeline.
+        Run the full extracellular pipeline over a block of packets.
 
-        Steps:
-        1) Validate & parse incoming packet
-        2) Update reduced extracellular forward model
-        3) Append data to rolling buffers
-        4) Handle recording logic
-        5) Redraw plots (decimated)
+        Splitting the pipeline into a per-sample generation stage and a
+        per-block filtering/detection stage is what makes the block bandpass
+        and the vectorised threshold crossing possible; the record state and
+        the redraw are also evaluated once per block instead of once per sample.
+
+        Parameters
+        ----------
+        packets : sequence
+            Raw 8- or 9-field Spikeling packets in chronological order.
         """
         if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
             return
-        if data is None or len(data) < 8:
+        if not self._extracellular_params:
             return
 
-        parsed = self._parse_packet(data)
-        if parsed is None:
+        staged = self._generate_raw_block(packets)
+        if staged is None:
             return
 
-        t_ms, vm1, stim, vm2, vm3, trig = parsed
-
-        # dt_ms computed from timestamps if present, otherwise fixed SAMPLE_INTERVAL
-        if self._t_last_ms is None:
-            dt_ms = SAMPLE_INTERVAL
-        else:
-            dt_ms = t_ms - self._t_last_ms
-
-        # Sanity clamp dt_ms
-        if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
-            dt_ms = SAMPLE_INTERVAL
-
-        self._t_last_ms = t_ms
-
-        # Advance reduced forward model
-        self._update_model(vm1, stim, vm2, vm3, trig, t_ms, dt_ms)
-
-        # Append rolling buffers (including time)
-        self._append_buffers(t_ms)
-
-        # Recording state machine + capture
         self._handle_recording()
-        if self.record_flag:
-            self._record_sample(t_ms)
-
-        # Plot decimation
-        if not plot or not self._plots_ready:
-            return
-
-        self._plot_decimator += 1
-        if self._plot_decimator >= self._plot_every:
-            self._plot_decimator = 0
-            self._update_plots()
-
-    def _consume_batch(self, batch):
-        """Consume many packets (emulator) and plot once at end."""
-        if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
-            return
-
-        for pkt in batch:
-            self._consume_vector(pkt, plot=False)
+        self._finalize_block(*staged)
 
         if self._plots_ready:
             self._update_plots()
 
-    # -------------------------------------------------------------------------
-    # Packet Parsing
-    # -------------------------------------------------------------------------
-
-    def _parse_packet(self, data: list):
+    def _generate_raw_block(self, packets):
         """
-        Parse packets in the two supported formats.
+        Build the unfiltered tetrode block from a run of incoming packets.
 
-        Returns:
-            (t_ms, vm1, stim, vm2, vm3, trig)
+        Pipeline per sample
+        -------------------
+        1. Detect ground-truth spikes on the three intracellular Vm traces.
+        2. Advance the per-source extracellular waveform surrogate
+           (canonical template, or gated Vm derivative).
+        3. Project the sources onto the 4 contacts with the cached geometry.
+
+        Contamination (independent baseline noise, shared noise, 50 Hz hum)
+        and the optional common average reference are then applied to the
+        whole block at once.
+
+        Parameters
+        ----------
+        packets : sequence
+            Raw Spikeling packets.
+
+        Returns
+        -------
+        tuple or None
+            ``(t, stim, trig, vm, ground_truth, raw_uV)`` arrays, or ``None``
+            if no packet decoded.
         """
-        try:
-            vals = [float(x) for x in data]
-        except Exception:
+        p = self._extracellular_params
+        n = len(packets)
+
+        t_arr = np.empty(n, dtype=float)
+        stim_arr = np.empty(n, dtype=float)
+        trig_arr = np.empty(n, dtype=float)
+        vm_arr = np.empty((n, N_NEURONS), dtype=float)
+        gt_arr = np.zeros((n, N_NEURONS), dtype=np.int8)
+        raw = np.empty((n, N_CHANNELS), dtype=float)
+
+        projection = self._projection_matrix(p).T          # (N_CHANNELS, N_NEURONS)
+        source = np.zeros(N_NEURONS, dtype=float)
+        count = 0
+
+        for packet in packets:
+            sample = parse_spikeling_packet(packet)
+            if sample is None:
+                continue
+
+            if sample.t_ms is None:
+                self._t_fallback_ms = getattr(self, "_t_fallback_ms", 0.0) + SAMPLE_INTERVAL
+                t_ms = self._t_fallback_ms
+            else:
+                t_ms = sample.t_ms
+
+            dt_ms = SAMPLE_INTERVAL if self._t_last_ms is None else (t_ms - self._t_last_ms)
+            if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
+                dt_ms = SAMPLE_INTERVAL
+            self._t_last_ms = t_ms
+
+            vms = (sample.vm0, sample.vm1, sample.vm2)
+            for i in range(N_NEURONS):
+                spike = self._detect_spike(vms[i], self._vm_prev[i], t_ms, i)
+                self._vm_prev[i] = vms[i]
+                gt_arr[count, i] = spike
+                if self.signal_mode == "dvdt":
+                    source[i] = self._dvdt_source_step(i, vms[i], spike, dt_ms)
+                else:
+                    source[i] = self._template_source_step(i, spike)
+
+            t_arr[count] = t_ms
+            stim_arr[count] = sample.stim
+            trig_arr[count] = sample.trigger
+            vm_arr[count] = vms
+            raw[count] = projection @ source
+            count += 1
+
+        if count == 0:
             return None
 
-        if len(vals) >= 9:
-            # [t, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
-            t = vals[0]
-            vm1 = vals[1]
-            stim = vals[2]
-            vm2 = vals[4]
-            vm3 = vals[6]
-            trig = vals[8]
-            return (t, vm1, stim, vm2, vm3, trig)
+        t_arr, stim_arr, trig_arr = t_arr[:count], stim_arr[:count], trig_arr[:count]
+        vm_arr, gt_arr, raw = vm_arr[:count], gt_arr[:count], raw[:count]
 
-        if len(vals) >= 8:
-            # no timestamp -> sequential samples at SAMPLE_INTERVAL
-            if not hasattr(self, "_t_fallback_ms"):
-                self._t_fallback_ms = 0.0
-            self._t_fallback_ms += SAMPLE_INTERVAL
-            t = self._t_fallback_ms
+        sigma_base = float(p.get("baseline_noise_uV", 5.0))
+        sigma_shared = float(p.get("shared_noise_uV", 5.0))
+        amplitude_hum = float(p.get("hum_noise_uV", 0.0))
 
-            vm1 = vals[0]
-            stim = vals[1]
-            vm2 = vals[3]
-            vm3 = vals[5]
-            trig = vals[7]
-            return (t, vm1, stim, vm2, vm3, trig)
+        if sigma_base > 0.0:
+            raw += self._rng.normal(scale=sigma_base, size=raw.shape)
+        if sigma_shared > 0.0:
+            raw += self._rng.normal(scale=sigma_shared, size=(count, 1))
+        if amplitude_hum != 0.0:
+            raw += amplitude_hum * np.sin(
+                2.0 * np.pi * 50.0 * (t_arr / 1000.0) + self._hum_phase_rad
+            )[:, None]
 
-        return None
+        if self.car_enabled:
+            raw -= raw.mean(axis=1, keepdims=True)
+
+        if not self._fs_warning_issued and count > 1:
+            measured_fs = 1000.0 / float(np.median(np.diff(t_arr)))
+            if abs(measured_fs - FS_HZ) / FS_HZ > 0.05:
+                print(f"[ExtraCellular] Stream is {measured_fs:.0f} Hz but the bandpass "
+                      f"is designed for {FS_HZ:.0f} Hz; cutoffs are scaled accordingly.")
+                self._fs_warning_issued = True
+
+        return t_arr, stim_arr, trig_arr, vm_arr, gt_arr, raw
+
+    def _finalize_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, raw):
+        """
+        Filter, detect and buffer one block of tetrode samples.
+
+        Parameters
+        ----------
+        t_arr, stim_arr, trig_arr : numpy.ndarray
+            Per-sample time (ms), stimulus and trigger.
+        vm_arr, gt_arr : numpy.ndarray
+            Per-sample intracellular Vm (mV) and ground-truth spike flags.
+        raw : numpy.ndarray
+            Unfiltered tetrode block of shape ``(n, N_CHANNELS)``, in µV.
+        """
+        self._update_detection_threshold(self._extracellular_params)
+        filtered = self._apply_bandpass_block(raw)
+
+        self._detect_block_crossings(t_arr, filtered)
+
+        # Latest-sample state for downstream readers
+        self.VmData[:] = vm_arr[-1]
+        self.StimData = float(stim_arr[-1])
+        self.TriggerData = float(trig_arr[-1])
+        self.GroundTruthSpikeData[:] = gt_arr[-1]
+        self.ExtraData[:] = filtered[-1]
+
+        # Rolling buffers (vectorised)
+        self.Time_buffer.extend(t_arr)
+        self.Stim_buffer.extend(stim_arr)
+        self.Trigger_buffer.extend(trig_arr)
+        self.Threshold_buffer.extend(
+            np.full(t_arr.size, self.DetectionThreshold_uV, dtype=float)
+        )
+        for i in range(N_NEURONS):
+            self.Vm_buffers[i].extend(vm_arr[:, i])
+        for k in range(N_CHANNELS):
+            self.Extra_buffers[k].extend(filtered[:, k])
+
+        if self.record_flag:
+            self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered)
+
+    def _detect_block_crossings(self, t_arr, channels_uV) -> None:
+        """
+        Locate downward threshold crossings over a whole block.
+
+        Crossings are found with a vectorised comparison and the refractory
+        rule is then applied only to the handful of candidate indices, instead
+        of running the full per-sample comparison chain in Python.
+
+        Parameters
+        ----------
+        t_arr : numpy.ndarray
+            Sample times in milliseconds.
+        channels_uV : numpy.ndarray
+            Filtered tetrode block of shape ``(n, N_CHANNELS)``.
+        """
+        threshold = float(self.DetectionThreshold_uV)
+        event_times = []
+        self.ChannelSpikeData[:] = 0
+
+        for k in range(N_CHANNELS):
+            trace = channels_uV[:, k]
+            previous = np.concatenate(([self._prev_channel_sample[k]], trace[:-1]))
+            candidates = np.flatnonzero((previous > threshold) & (trace <= threshold))
+
+            for index in candidates:
+                t_ms = float(t_arr[index])
+                if (t_ms - self._t_last_detect_ms[k]) < self.DetectRefractory_ms:
+                    continue
+                self._t_last_detect_ms[k] = t_ms
+                self.ChannelSpikeData[k] = 1
+                self._channel_spike_marks[k].append((t_ms, float(trace[index])))
+                event_times.append(t_ms)
+
+            self._prev_channel_sample[k] = float(trace[-1])
+
+        self.EventData = 0
+        for t_ms in sorted(event_times):
+            if (t_ms - self._last_event_ms) >= EVENT_MERGE_WINDOW_MS:
+                self._last_event_ms = t_ms
+                self.EventData = 1
+                self._event_marks.append(t_ms)
+
+        t_min = float(t_arr[-1]) - float(TIME_WINDOW)
+        for k in range(N_CHANNELS):
+            marks = self._channel_spike_marks[k]
+            while marks and marks[0][0] < t_min:
+                marks.popleft()
+        while self._event_marks and self._event_marks[0] < t_min:
+            self._event_marks.popleft()
 
     # -------------------------------------------------------------------------
     # Extracellular Model
@@ -600,13 +721,10 @@ class ExtraCellularGraph(QObject):
         # scroll out of the time window.
         # --------------------------------------------------------------
         if hasattr(self, "Extra_buffers"):
-            for k in range(N_CHANNELS):
-                self.Extra_buffers[k].clear()
-                self.Extra_buffers[k].extend([0.0] * self._bufsize)
-
+            for buffer in self.Extra_buffers:
+                buffer.fill_with(0.0)
         if hasattr(self, "Threshold_buffer"):
-            self.Threshold_buffer.clear()
-            self.Threshold_buffer.extend([float(self.DetectionThreshold_uV)] * self._bufsize)
+            self.Threshold_buffer.fill_with(float(self.DetectionThreshold_uV))
 
         # Keep time / Vm buffers intact, but redraw the traces immediately
         if self._plots_ready:
@@ -660,33 +778,271 @@ class ExtraCellularGraph(QObject):
             [+s, +s],
         ], dtype=float)
 
-    def _get_source_positions(self, p: dict) -> np.ndarray:
+    # -------------------------------------------------------------------------
+    # Geometry
+    # -------------------------------------------------------------------------
+
+    def _init_geometry(self) -> None:
         """
-        Compute hidden source coordinates for the 3 incoming neurons.
+        Install the default tetrode geometry.
 
-        User-facing controls:
-        - Electrode distance (µm)
-        - Orientation (deg)
-
-        Implementation choice:
-        - The main source is placed at the user-defined polar coordinate.
-        - The 2 auxiliary sources are placed at fixed offsets relative to the main source.
-        - The whole source cluster is rotated with the same orientation angle so the
-          UI still has a clear geometrical meaning.
+        Called once at construction so the projection matrix is always
+        well-defined, including before the user saves a layout from the
+        tetrode window.
         """
-        R = float(p.get("electrode_distance_um", 50.0))
-        theta_deg = float(p.get("orientation_deg", 0.0))
-        theta = np.deg2rad(theta_deg)
+        self.distance_matrix_um = self._distances_from_positions(
+            DEFAULT_SOURCE_POSITIONS_UM, DEFAULT_CONTACT_POSITIONS_UM
+        )
+        self.geometry_source = "default"
+        self._invalidate_geometry_cache()
 
-        base = np.array([R * np.cos(theta), R * np.sin(theta)], dtype=float)
+    @staticmethod
+    def _distances_from_positions(sources_um, contacts_um) -> np.ndarray:
+        """
+        Compute Euclidean source-to-contact distances.
 
-        c = np.cos(theta)
-        s = np.sin(theta)
-        rot = np.array([[c, -s], [s, c]], dtype=float)
+        Parameters
+        ----------
+        sources_um : array_like
+            Source coordinates of shape ``(N_NEURONS, d)`` with ``d`` of 2 or 3.
+        contacts_um : array_like
+            Contact coordinates of shape ``(N_CHANNELS, d)``.
 
-        offsets = (rot @ self._source_cluster_offsets_um.T).T
-        positions = base[None, :] + offsets
-        return positions
+        Returns
+        -------
+        numpy.ndarray
+            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, in micrometres,
+            floored at :data:`MIN_SOURCE_CONTACT_DISTANCE_UM`.
+
+        Raises
+        ------
+        ValueError
+            If the two arrays do not share the same spatial dimensionality.
+        """
+        sources = np.atleast_2d(np.asarray(sources_um, dtype=float))
+        contacts = np.atleast_2d(np.asarray(contacts_um, dtype=float))
+
+        if sources.shape[1] != contacts.shape[1]:
+            raise ValueError(
+                f"Source and contact coordinates must share a dimensionality; "
+                f"got {sources.shape[1]}D sources and {contacts.shape[1]}D contacts."
+            )
+
+        deltas = sources[:, None, :] - contacts[None, :, :]
+        distances = np.linalg.norm(deltas, axis=2)
+        return np.maximum(distances, MIN_SOURCE_CONTACT_DISTANCE_UM)
+
+    def apply_tetrode_geometry(self, payload: dict) -> None:
+        """
+        Install the layout saved by the tetrode window.
+
+        The payload is the authoritative geometry description, so its
+        precomputed 3D ``distance_matrix_um`` is preferred over any 2D
+        coordinate list: the tetrode window already accounts for contact depth,
+        which a planar projection would discard.
+
+        Parameters
+        ----------
+        payload : dict
+            Saved tetrode description. Recognised keys:
+
+            ``distance_matrix_um``
+                ``{neuron_key: {contact_name: distance_um}}``, the preferred
+                route.
+            ``tetrode``
+                ``{"contacts_um": [{"index": int, "name": str,
+                "x": float, "y": float, "z": float}, ...]}``, used both to
+                order the contacts and as a coordinate fallback.
+            ``neurons_um``
+                Optional ``{neuron_key: {"x": .., "y": .., "z": ..}}`` used with
+                the contact coordinates when no distance matrix is present.
+
+        Notes
+        -----
+        Silently ignores a malformed payload and keeps the previous geometry,
+        because losing the electrode layout mid-recording is worse than
+        continuing with a stale one.
+        """
+        if not isinstance(payload, dict):
+            return
+
+        contact_names = self._contact_names_from_payload(payload)
+
+        matrix = self._distance_matrix_from_payload(payload, contact_names)
+        if matrix is None:
+            matrix = self._distance_matrix_from_payload_positions(payload, contact_names)
+        if matrix is None:
+            return
+
+        self.distance_matrix_um = matrix
+        self.tetrode_geometry = payload
+        self.geometry_source = "tetrode_window"
+        self._invalidate_geometry_cache()
+
+    def set_geometry_from_positions(self, contacts_um, sources_um) -> None:
+        """
+        Install a geometry directly from coordinate arrays.
+
+        Convenience entry point for scripted setups and unit tests; the GUI
+        path goes through :meth:`apply_tetrode_geometry`.
+
+        Parameters
+        ----------
+        contacts_um : array_like
+            Contact coordinates of shape ``(N_CHANNELS, d)``.
+        sources_um : array_like
+            Source coordinates of shape ``(N_NEURONS, d)``.
+
+        Raises
+        ------
+        ValueError
+            If either array has the wrong number of rows.
+        """
+        contacts = np.atleast_2d(np.asarray(contacts_um, dtype=float))
+        sources = np.atleast_2d(np.asarray(sources_um, dtype=float))
+
+        if contacts.shape[0] != N_CHANNELS:
+            raise ValueError(f"Expected {N_CHANNELS} contacts, got {contacts.shape[0]}.")
+        if sources.shape[0] != N_NEURONS:
+            raise ValueError(f"Expected {N_NEURONS} sources, got {sources.shape[0]}.")
+
+        self.distance_matrix_um = self._distances_from_positions(sources, contacts)
+        self.geometry_source = "explicit_positions"
+        self._invalidate_geometry_cache()
+
+    @staticmethod
+    def _contact_names_from_payload(payload: dict) -> list:
+        """
+        Resolve contact names in channel order.
+
+        Parameters
+        ----------
+        payload : dict
+            Saved tetrode description.
+
+        Returns
+        -------
+        list of str
+            Contact names, ordered by their saved index, padded with ``E1..E4``
+            if the payload is incomplete.
+        """
+        contacts = (payload.get("tetrode", {}) or {}).get("contacts_um", []) or []
+        try:
+            contacts = sorted(contacts, key=lambda c: int(c.get("index", 999)))
+        except (TypeError, ValueError):
+            pass
+
+        names = [str(c.get("name", f"E{k + 1}")) for k, c in enumerate(contacts[:N_CHANNELS])]
+        names += [f"E{k + 1}" for k in range(len(names), N_CHANNELS)]
+        return names
+
+    def _distance_matrix_from_payload(self, payload: dict, contact_names) -> np.ndarray:
+        """
+        Read the precomputed 3D distance matrix from a saved payload.
+
+        Parameters
+        ----------
+        payload : dict
+            Saved tetrode description.
+        contact_names : sequence of str
+            Contact names in channel order.
+
+        Returns
+        -------
+        numpy.ndarray or None
+            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, or ``None``
+            if the payload carries no usable matrix.
+        """
+        saved = payload.get("distance_matrix_um") or {}
+        if not saved:
+            return None
+
+        matrix = np.full((N_NEURONS, N_CHANNELS), REFERENCE_DISTANCE_UM, dtype=float)
+        for i, neuron_key in enumerate(TETRODE_NEURON_KEYS[:N_NEURONS]):
+            per_contact = saved.get(neuron_key) or {}
+            for k, contact_name in enumerate(contact_names):
+                try:
+                    matrix[i, k] = float(per_contact[contact_name])
+                except (KeyError, TypeError, ValueError):
+                    continue
+
+        return np.maximum(matrix, MIN_SOURCE_CONTACT_DISTANCE_UM)
+
+    def _distance_matrix_from_payload_positions(self, payload: dict, contact_names) -> np.ndarray:
+        """
+        Derive distances from explicit coordinates when no matrix was saved.
+
+        Parameters
+        ----------
+        payload : dict
+            Saved tetrode description.
+        contact_names : sequence of str
+            Contact names in channel order, used only for diagnostics.
+
+        Returns
+        -------
+        numpy.ndarray or None
+            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, or ``None``
+            if coordinates for either side are missing.
+        """
+        contacts = (payload.get("tetrode", {}) or {}).get("contacts_um", []) or []
+        neurons = payload.get("neurons_um") or {}
+        if len(contacts) < N_CHANNELS or not neurons:
+            return None
+
+        def coordinates(entry):
+            return [float(entry.get(axis, 0.0)) for axis in ("x", "y", "z")]
+
+        try:
+            contact_xyz = np.array([coordinates(c) for c in contacts[:N_CHANNELS]], dtype=float)
+            source_xyz = np.array(
+                [coordinates(neurons.get(key, {})) for key in TETRODE_NEURON_KEYS[:N_NEURONS]],
+                dtype=float,
+            )
+        except (TypeError, ValueError):
+            return None
+
+        return self._distances_from_positions(source_xyz, contact_xyz)
+
+    def _compute_projection_matrix(self, p: dict) -> np.ndarray:
+        """
+        Build the source-to-contact geometric gain matrix.
+
+        Extracellular spike amplitude falls off with distance from the soma.
+        The exponent is exposed as ``spatial_falloff`` so students can
+        interpolate between the point-source monopole limit (exponent 1) and
+        the steeper decay observed in dense tissue (exponent 2 or above):
+
+        $$g_{ik} = G_i \\\\left(\\\\frac{d_{\\\\mathrm{ref}}}{d_{ik}}\\\\right)^{\\\\alpha}$$
+
+        Parameters
+        ----------
+        p : dict
+            Live extracellular parameter cache; reads ``spatial_falloff`` and,
+            optionally, ``reference_distance_um``.
+
+        Returns
+        -------
+        numpy.ndarray
+            Gain matrix of shape ``(N_NEURONS, N_CHANNELS)``.
+
+        Notes
+        -----
+        Cached by :meth:`_projection_matrix`; invalidate with
+        :meth:`_invalidate_geometry_cache` whenever the geometry or the falloff
+        exponent changes.
+
+        References
+        ----------
+        Gold et al., 2006, Journal of Neurophysiology, "On the Origin of the
+        Extracellular Action Potential Waveform: A Modeling Study".
+        """
+        alpha = max(0.1, float(p.get("spatial_falloff", 2.0)))
+        d_ref = float(p.get("reference_distance_um", REFERENCE_DISTANCE_UM))
+
+        gains = (d_ref / self.distance_matrix_um) ** alpha
+        gains *= SOURCE_RELATIVE_GAIN[:N_NEURONS, None]
+        return np.clip(gains, 0.0, 6.0)
 
     def _get_saved_contact_names(self):
         """
@@ -749,18 +1105,6 @@ class ExtraCellularGraph(QObject):
         g *= self._source_gain[:, None]
 
         return np.clip(g, 0.0, 6.0)
-
-    def _compute_projection_matrix(self, p: dict) -> np.ndarray:
-        """
-        Compute source -> channel geometric gains.
-
-        If the tetrode window has saved an explicit 3D geometry, use it.
-        Otherwise keep the current hidden 2D educational fallback.
-        """
-        if self._use_saved_tetrode_geometry and self.tetrode_distance_matrix_um:
-            return self._compute_projection_matrix_from_saved_geometry(p)
-
-        return self._compute_projection_matrix_legacy(p)
 
     def _template_source_step(self, neuron_index: int, spike: int) -> float:
         """
@@ -860,33 +1204,98 @@ class ExtraCellularGraph(QObject):
             fh = min(max(fl * 1.5, fl + 1.0), 0.95 * NYQUIST_HZ)
 
         self._filter_sos = butter(3, [fl, fh], btype="bandpass", fs=FS_HZ, output="sos")
-        zi = sosfilt_zi(self._filter_sos)
-        self._filter_zi = [zi.copy() for _ in range(N_CHANNELS)]
         self.bandpass_low_hz = fl
         self.bandpass_high_hz = fh
+        self._filter_zi_block = None
 
     def _reset_filter_state(self) -> None:
         """Reset the streaming filter with the current UI preset."""
         fl, fh = self._bandpass_limits_from_ui()
         self._design_bandpass(fl, fh)
+        self._filter_zi_block = None
 
-    def _apply_bandpass(self, raw_channels_uV: np.ndarray) -> np.ndarray:
+    def _invalidate_geometry_cache(self) -> None:
         """
-        Sample-by-sample bandpass filtering.
-        Each tetrode channel keeps its own SOS filter state.
-        """
-        if self._filter_sos is None or self._filter_zi is None:
-            return np.asarray(raw_channels_uV, dtype=float)
+        Drop the cached source -> contact gain matrix.
 
-        y = np.zeros(N_CHANNELS, dtype=float)
-        for k in range(N_CHANNELS):
-            out, self._filter_zi[k] = sosfilt(
-                self._filter_sos,
-                [float(raw_channels_uV[k])],
-                zi=self._filter_zi[k]
-            )
-            y[k] = float(out[-1])
-        return y
+        Called whenever the spatial falloff slider moves or a new tetrode
+        geometry is applied. The matrix is otherwise constant across the ~10^4
+        samples of one GUI tick, so recomputing the pairwise distances per
+        sample is pure overhead.
+        """
+        self._projection_matrix_cache = None
+
+    def _projection_matrix(self, p: dict) -> np.ndarray:
+        """
+        Return the cached source -> channel geometric gain matrix.
+
+        Parameters
+        ----------
+        p : dict
+            Live extracellular parameter cache.
+
+        Returns
+        -------
+        numpy.ndarray
+            Gain matrix of shape ``(N_NEURONS, N_CHANNELS)``.
+        """
+        if self._projection_matrix_cache is None:
+            self._projection_matrix_cache = self._compute_projection_matrix(p)
+        return self._projection_matrix_cache
+
+    def _make_filter_state(self) -> np.ndarray:
+        """
+        Allocate the streaming second-order-section delay state.
+
+        SciPy expects ``zi`` with shape ``(n_sections, 2) + x.shape`` minus the
+        filtered axis, i.e. ``(n_sections, 2, N_CHANNELS)`` when a
+        ``(n_samples, N_CHANNELS)`` block is filtered along axis 0.
+
+        The state is initialised to zeros rather than to
+        :func:`scipy.signal.sosfilt_zi`, which returns the steady state for a
+        unit DC step. That is inappropriate for a spike-band filter: its DC
+        gain is essentially zero, and the extracellular trace is zero-mean and
+        starts from rest, so a resting filter is the correct boundary
+        condition and avoids a startup transient.
+
+        Returns
+        -------
+        numpy.ndarray
+            Zero-initialised delay state of shape ``(n_sections, 2, N_CHANNELS)``.
+        """
+        n_sections = self._filter_sos.shape[0]
+        return np.zeros((n_sections, 2, N_CHANNELS), dtype=float)
+
+    def _apply_bandpass_block(self, raw_block_uV: np.ndarray) -> np.ndarray:
+        """
+        Filter a whole tick of tetrode samples in a single SciPy call.
+
+        The per-sample variant issued ``N_CHANNELS`` ``sosfilt`` calls per
+        sample (4 x 10^4 calls per emulator tick), each re-validating its
+        arguments. Filtering along the time axis is numerically identical
+        because the section delay states carry over between blocks.
+
+        Parameters
+        ----------
+        raw_block_uV : numpy.ndarray
+            Unfiltered block of shape ``(n_samples, N_CHANNELS)``, in µV.
+
+        Returns
+        -------
+        numpy.ndarray
+            Band-limited block with the same shape as the input.
+        """
+        block = np.atleast_2d(np.asarray(raw_block_uV, dtype=float))
+        if self._filter_sos is None or block.size == 0:
+            return block
+
+        if self._filter_zi_block is None:
+            self._filter_zi_block = self._make_filter_state()
+
+        filtered, self._filter_zi_block = sosfilt(
+            self._filter_sos, block, axis=0, zi=self._filter_zi_block
+        )
+        return filtered
 
     def _update_detection_threshold(self, p: dict) -> None:
         """
@@ -903,126 +1312,11 @@ class ExtraCellularGraph(QObject):
 
         # Approximate combined contamination magnitude.
         sigma_eff = np.sqrt(sigma_base ** 2 + sigma_shared ** 2 + (a_hum / np.sqrt(2.0)) ** 2)
+        self.DetectionThreshold_uV = -max(
+            DETECTION_THRESHOLD_FLOOR_UV,
+            DETECTION_SIGMA_MULTIPLIER * float(sigma_eff),
+        )
 
-        # 4.5 sigma with a floor so the overlay remains meaningful at low-noise settings.
-        self.DetectionThreshold_uV = -max(15.0, 4.5 * float(sigma_eff))
-
-    def _update_detection_overlays(self, t_ms: float, channels_uV: np.ndarray) -> None:
-        """
-        Detect threshold-crossing markers on filtered extracellular traces.
-
-        - Per-channel markers are used for the "Spikes" overlay.
-        - Merged event times are used for the "Events" overlay.
-        """
-        thr = float(self.DetectionThreshold_uV)
-        any_event = False
-        self.ChannelSpikeData[:] = 0
-
-        for k in range(N_CHANNELS):
-            y_prev = float(self._prev_channel_sample[k])
-            y_now = float(channels_uV[k])
-
-            crossed_down = (y_prev > thr) and (y_now <= thr)
-            refractory_ok = (t_ms - self._t_last_detect_ms[k]) >= self.DetectRefractory_ms
-
-            if crossed_down and refractory_ok:
-                self._t_last_detect_ms[k] = float(t_ms)
-                self.ChannelSpikeData[k] = 1
-                any_event = True
-                self._channel_spike_marks[k].append((float(t_ms), y_now))
-
-            self._prev_channel_sample[k] = y_now
-
-        # Merge simultaneous channel detections into one event marker
-        self.EventData = 0
-        if any_event and (t_ms - self._last_event_ms) >= 0.4:
-            self._last_event_ms = float(t_ms)
-            self.EventData = 1
-            self._event_marks.append(float(t_ms))
-
-        # Drop old overlay marks outside the rolling time window
-        t_min = float(t_ms) - float(TIME_WINDOW)
-        for k in range(N_CHANNELS):
-            dq = self._channel_spike_marks[k]
-            while dq and dq[0][0] < t_min:
-                dq.popleft()
-        while self._event_marks and self._event_marks[0] < t_min:
-            self._event_marks.popleft()
-
-    def _update_model(self, vm1, stim, vm2, vm3, trigger, t_ms, dt_ms):
-        """
-        Update reduced extracellular forward model.
-
-        Pipeline per sample:
-          1) Detect spike times from the 3 incoming intracellular Vm traces
-          2) Build per-source extracellular waveform surrogate
-             - Template mode: canonical EAP template per detected spike
-             - dV/dT mode: gated derivative-like waveform from intracellular Vm
-          3) Project sources onto 4 tetrode contacts using geometry / distance falloff
-          4) Add independent baseline noise + shared noise + 50 Hz hum
-          5) Apply CAR if enabled
-          6) Apply selected bandpass preset
-          7) Update overlay detections (threshold / spikes / events)
-        """
-        self.VmData[:] = (vm1, vm2, vm3)
-        self.StimData = stim
-        self.TriggerData = trigger
-
-        if not self._extracellular_params:
-            return
-        p = self._extracellular_params
-
-        # 1) Ground-truth spike detection from intracellular Vm traces
-        for i in range(N_NEURONS):
-            vm_prev = self.Vm_buffers[i][-1] if hasattr(self, "Vm_buffers") and len(self.Vm_buffers[i]) else self.VmData[i]
-            self.GroundTruthSpikeData[i] = self._detect_spike(
-                vm_now=float(self.VmData[i]),
-                vm_prev=float(vm_prev),
-                t_ms=float(t_ms),
-                neuron_index=i,
-            )
-
-        # 2) Per-source extracellular waveform surrogate
-        for i in range(N_NEURONS):
-            if self.signal_mode == "dvdt":
-                self.SourceWaveData[i] = self._dvdt_source_step(
-                    neuron_index=i,
-                    vm_now=float(self.VmData[i]),
-                    spike=int(self.GroundTruthSpikeData[i]),
-                    dt_ms=float(dt_ms),
-                )
-            else:
-                self.SourceWaveData[i] = self._template_source_step(
-                    neuron_index=i,
-                    spike=int(self.GroundTruthSpikeData[i]),
-                )
-
-        # 3) Geometry projection: sources -> 4 tetrode channels
-        A = self._compute_projection_matrix(p)      # (3, 4)
-        clean_channels = A.T @ self.SourceWaveData  # (4,)
-
-        # 4) Noise / contamination block
-        sigma_base = float(p.get("baseline_noise_uV", 5.0))
-        sigma_shared = float(p.get("shared_noise_uV", 5.0))
-        a_hum = float(p.get("hum_noise_uV", 0.0))
-
-        baseline_noise = sigma_base * self._rng.normal(size=N_CHANNELS)
-        shared_noise = sigma_shared * float(self._rng.normal())
-        hum = a_hum * np.sin(2.0 * np.pi * 50.0 * (float(t_ms) / 1000.0) + float(self._hum_phase_rad))
-
-        raw_channels = clean_channels + baseline_noise + shared_noise + hum
-
-        # 5) Optional CAR
-        if self.car_enabled:
-            raw_channels = raw_channels - np.mean(raw_channels)
-
-        # 6) Bandpass display / recording filter
-        filtered_channels = self._apply_bandpass(raw_channels)
-        self.ExtraData[:] = filtered_channels
-
-        # 7) Overlays are computed on the filtered traces
-        self._update_detection_threshold(p)
-        self._update_detection_overlays(float(t_ms), filtered_channels)
 
     # -------------------------------------------------------------------------
     # Buffers
@@ -1032,21 +1326,14 @@ class ExtraCellularGraph(QObject):
         """Create rolling buffers for all plotted variables."""
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
-        self.Time_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
+        self.Time_buffer = RingBuffer(self._bufsize)
         self.ExtraCellularx = (np.arange(self._bufsize) - (self._bufsize - 1)) * SAMPLE_INTERVAL
 
-        self.Stim_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
-        self.Trigger_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
-        self.Threshold_buffer = collections.deque([self.DetectionThreshold_uV] * self._bufsize, self._bufsize)
-
-        self.Vm_buffers = [
-            collections.deque([0.0] * self._bufsize, self._bufsize)
-            for _ in range(N_NEURONS)
-        ]
-        self.Extra_buffers = [
-            collections.deque([0.0] * self._bufsize, self._bufsize)
-            for _ in range(N_CHANNELS)
-        ]
+        self.Stim_buffer = RingBuffer(self._bufsize)
+        self.Trigger_buffer = RingBuffer(self._bufsize)
+        self.Threshold_buffer = RingBuffer(self._bufsize, fill=self.DetectionThreshold_uV)
+        self.Vm_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
+        self.Extra_buffers = [RingBuffer(self._bufsize) for _ in range(N_CHANNELS)]
 
         # Reset detection / source states
         self._reset_model_state()
@@ -1071,6 +1358,7 @@ class ExtraCellularGraph(QObject):
         self._last_event_ms = -1e12
         self._prev_channel_sample[:] = 0.0
 
+        self._vm_prev[:] = 0.0
         self._dvdt_vm_smooth[:] = 0.0
         self._dvdt_gate_remaining_ms[:] = 0.0
         self._active_templates = [list() for _ in range(N_NEURONS)]
@@ -1098,8 +1386,6 @@ class ExtraCellularGraph(QObject):
         Each channel gets its own PlotWidget and its own Y axis.
         All plots share the same time axis.
         """
-        from PySide6.QtWidgets import QVBoxLayout
-        import pyqtgraph as pg
 
         host = self.ui.ExtraCellular_Oscilloscope_widget
 
@@ -1151,6 +1437,7 @@ class ExtraCellularGraph(QObject):
             pw.showGrid(x=True, y=True)
 
             pi = pw.getPlotItem()
+            configure_scope(pi)
             vb = pi.getViewBox()
 
             pi.getAxis("left").setLabel(f"Ch{k + 1}", units="µV")
@@ -1206,16 +1493,9 @@ class ExtraCellularGraph(QObject):
 
         self._plots_ready = True
 
-    def update_views(self):
-        """
-        Kept for structural symmetry with Graph_Imaging.py.
-        No extra ViewBoxes are currently used on the extracellular scope page.
-        """
-        return
-
     def _update_plots(self):
         ui = self.ui
-        t_arr = np.asarray(self.Time_buffer, dtype=float)
+        t_arr = self.Time_buffer.data
         x = t_arr - t_arr[-1]
 
         checks = [
@@ -1242,7 +1522,7 @@ class ExtraCellularGraph(QObject):
             if not visible:
                 continue
 
-            y = np.asarray(self.Extra_buffers[k], dtype=float)
+            y = self.Extra_buffers[k].data
             curve.setData(x, y)
 
             # Threshold line for this channel
@@ -1251,37 +1531,26 @@ class ExtraCellularGraph(QObject):
 
             # Channel-specific spike markers
             spike_scatter.setVisible(show_spikes)
-            if show_spikes:
-                spots = [{
-                    "pos": (float(t_mark - t_arr[-1]), float(y_mark)),
-                    "brush": pg.mkBrush(CHANNEL_COLORS[k]),
-                    "pen": pg.mkPen(CHANNEL_COLORS[k]),
-                    "symbol": "o",
-                    "size": 6,
-                } for t_mark, y_mark in self._channel_spike_marks[k]]
-                spike_scatter.setData(spots)
+            if show_spikes and self._channel_spike_marks[k]:
+                marks = np.asarray(self._channel_spike_marks[k], dtype=float)
+                spike_scatter.setData(
+                    x=marks[:, 0] - t_arr[-1], y=marks[:, 1], symbol="o", size=6,
+                    brush=pg.mkBrush(CHANNEL_COLORS[k]), pen=pg.mkPen(CHANNEL_COLORS[k]),
+                )
             else:
                 spike_scatter.setData([])
 
             # Event markers copied to each visible subplot
             event_scatter.setVisible(show_events)
-            if show_events:
-                if y.size:
-                    y_top = float(np.max(y))
-                    y_bot = float(np.min(y))
-                    span = max(10.0, y_top - y_bot)
-                    y_event = y_top + 0.08 * span
-                else:
-                    y_event = 20.0
-
-                spots = [{
-                    "pos": (float(t_evt - t_arr[-1]), float(y_event)),
-                    "brush": pg.mkBrush(Settings.DarkSolarized[10]),
-                    "pen": pg.mkPen(Settings.DarkSolarized[10]),
-                    "symbol": "t",
-                    "size": 8,
-                } for t_evt in self._event_marks]
-                event_scatter.setData(spots)
+            if show_events and self._event_marks:
+                span = max(10.0, float(np.ptp(y))) if y.size else 100.0
+                y_event = (float(np.max(y)) if y.size else 0.0) + EVENT_MARKER_HEADROOM * span
+                events = np.asarray(self._event_marks, dtype=float) - t_arr[-1]
+                event_scatter.setData(
+                    x=events, y=np.full(events.size, y_event), symbol="t", size=8,
+                    brush=pg.mkBrush(Settings.DarkSolarized[10]),
+                    pen=pg.mkPen(Settings.DarkSolarized[10]),
+                )
             else:
                 event_scatter.setData([])
 
@@ -1299,6 +1568,8 @@ class ExtraCellularGraph(QObject):
         # Start edge: OFF -> ON
         if checked and (not self.record_flag):
             self.record_flag = True
+            self._rec_signal_mode = str(self.signal_mode)
+            self._rec_dropped_at_start = int(self.dropped_packets)
 
             if not hasattr(self, "_rec") or not isinstance(self._rec, dict):
                 self._rec = {}
@@ -1308,7 +1579,7 @@ class ExtraCellularGraph(QObject):
                 "vm1", "vm2", "vm3",
                 "gt_spike1", "gt_spike2", "gt_spike3",
                 "ch1_uV", "ch2_uV", "ch3_uV", "ch4_uV",
-                "threshold_uV", "event", "signal_mode",
+                "threshold_uV", "event",
             ]:
                 self._rec.setdefault(k, [])
                 self._rec[k].clear()
@@ -1325,51 +1596,45 @@ class ExtraCellularGraph(QObject):
                 pass
             return
 
-    def _record_sample(self, t_ms: float) -> None:
-        """Append the latest sample to recording buffers."""
-        self._rec["t_ms"].append(float(t_ms))
-        self._rec["stim"].append(float(self.StimData))
-        self._rec["trig"].append(float(self.TriggerData))
+    def _record_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered) -> None:
+        """
+        Append a whole block to the recording buffers.
 
-        self._rec["vm1"].append(float(self.VmData[0]))
-        self._rec["vm2"].append(float(self.VmData[1]))
-        self._rec["vm3"].append(float(self.VmData[2]))
+        ``signal_mode`` is no longer stored per sample: it was a constant
+        string replicated ~6 x 10^5 times per recorded minute. It is written
+        once into the metadata sidecar instead.
+        """
+        self._rec["t_ms"].extend(t_arr.tolist())
+        self._rec["stim"].extend(stim_arr.tolist())
+        self._rec["trig"].extend(trig_arr.tolist())
 
-        self._rec["gt_spike1"].append(int(self.GroundTruthSpikeData[0]))
-        self._rec["gt_spike2"].append(int(self.GroundTruthSpikeData[1]))
-        self._rec["gt_spike3"].append(int(self.GroundTruthSpikeData[2]))
+        for i, key in enumerate(("vm1", "vm2", "vm3")):
+            self._rec[key].extend(vm_arr[:, i].tolist())
+        for i, key in enumerate(("gt_spike1", "gt_spike2", "gt_spike3")):
+            self._rec[key].extend(gt_arr[:, i].tolist())
+        for k, key in enumerate(("ch1_uV", "ch2_uV", "ch3_uV", "ch4_uV")):
+            self._rec[key].extend(filtered[:, k].tolist())
 
-        self._rec["ch1_uV"].append(float(self.ExtraData[0]))
-        self._rec["ch2_uV"].append(float(self.ExtraData[1]))
-        self._rec["ch3_uV"].append(float(self.ExtraData[2]))
-        self._rec["ch4_uV"].append(float(self.ExtraData[3]))
-
-        self._rec["threshold_uV"].append(float(self.DetectionThreshold_uV))
-        self._rec["event"].append(int(self.EventData))
-        self._rec["signal_mode"].append(str(self.signal_mode))
+        self._rec["threshold_uV"].extend(
+            [float(self.DetectionThreshold_uV)] * t_arr.size
+        )
+        self._rec["event"].extend([0] * t_arr.size)
 
     def _export_csv(self):
-        """Write recorded extracellular data to CSV."""
+        """
+        Write the recorded extracellular session to CSV plus a metadata sidecar.
+
+        Uses :func:`graph_core.resolve_csv_path`, which appends rather than
+        replaces the suffix: ``rec_v1.2`` no longer becomes ``rec_v1.csv``.
+        """
         if (not hasattr(self, "_rec")) or (len(self._rec.get("t_ms", [])) == 0):
             return
 
-        base = str(self.ui.ExtraCellular_SelectedFolderLabel.text()).strip()
-        if not base:
+        path = resolve_csv_path(self.ui.ExtraCellular_SelectedFolderLabel.text())
+        if path is None:
             return
 
-        if base.lower().endswith(".csv"):
-            base = base[:-4]
-
-        try:
-            from pathlib import Path
-            base_path = Path(base)
-            if str(base_path.parent) not in ("", "."):
-                base_path.parent.mkdir(parents=True, exist_ok=True)
-            sample_csv_path = str(base_path.with_suffix(".csv"))
-        except Exception:
-            sample_csv_path = f"{base}.csv"
-
-        df_samples = pd.DataFrame({
+        pd.DataFrame({
             "Time (ms)": self._rec["t_ms"],
             "Stim": self._rec["stim"],
             "Trigger": self._rec["trig"],
@@ -1385,9 +1650,20 @@ class ExtraCellularGraph(QObject):
             "Ch4 (uV)": self._rec["ch4_uV"],
             "Threshold (uV)": self._rec["threshold_uV"],
             "Event": self._rec["event"],
-            "Signal Mode": self._rec["signal_mode"],
-        })
-        df_samples.to_csv(sample_csv_path, index=False)
+        }).to_csv(path, index=False)
+
+        import json
+        meta = {
+            "signal_mode": getattr(self, "_rec_signal_mode", self.signal_mode),
+            "car_enabled": bool(self.car_enabled),
+            "bandpass_low_hz": float(self.bandpass_low_hz),
+            "bandpass_high_hz": float(self.bandpass_high_hz),
+            "sample_rate_hz": float(FS_HZ),
+            "dropped_packets": int(self.dropped_packets - getattr(self, "_rec_dropped_at_start", 0)),
+            "params": {k: float(v) for k, v in self._extracellular_params.items()},
+        }
+        with open(str(path.with_suffix("")) + "_meta.json", "w", encoding="utf-8") as handle:
+            json.dump(meta, handle, indent=2)
 
     # -------------------------------------------------------------------------
     # UI Helpers
@@ -1410,6 +1686,7 @@ class ExtraCellularGraph(QObject):
         def update(_=None):
             # Geometry
             p["spatial_falloff"] = float(ui.ExtraCellular_Spread_Slider.value()) / 10.0
+            self._invalidate_geometry_cache()
 
             # Noise / contamination
             p["baseline_noise_uV"] = float(ui.ExtraCellular_BaselineNoise_Slider.value())
@@ -1482,7 +1759,6 @@ class ExtraCellularGraph(QObject):
     # -------------------------------------------------------------------------
 
     def cleanup(self):
-        self.last_valid_data = None
 
         host = self.ui.ExtraCellular_Oscilloscope_widget
         layout = host.layout()
@@ -1501,14 +1777,11 @@ class ExtraCellularGraph(QObject):
         self.channel_event_scatters = []
 
         self._plots_ready = False
-        self._mainVB = None
-        self.secondaryVB = None
-        self.calciumVB = None
-        self.calciumAxis = None
 
         self._reset_model_state()
         self._filter_sos = None
-        self._filter_zi = None
+        self._filter_zi_block = None
+        self._projection_matrix_cache = None
 
         if hasattr(self, "_rx_timer"):
             self._rx_timer.stop()
