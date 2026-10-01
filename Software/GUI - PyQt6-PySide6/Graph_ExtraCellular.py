@@ -45,7 +45,7 @@ Notes on units:
 """
 
 from PySide6.QtCore import QObject, QTimer, Qt
-from PySide6.QtWidgets import QVBoxLayout
+from PySide6.QtWidgets import QSizePolicy, QVBoxLayout
 import pyqtgraph as pg
 import numpy as np
 import pandas as pd
@@ -106,6 +106,21 @@ SOURCE_RELATIVE_GAIN = np.array([1.00, 0.90, 0.80], dtype=float)
 
 # Neuron keys used by Tetrode.py in its saved distance matrix.
 TETRODE_NEURON_KEYS = ("main", "aux1", "aux2")
+
+# --- Shared channel scaling ------------------------------------------------
+# All four contacts share one y-range: the amplitude ratio across contacts is
+# the sorting cue, so per-channel autoscaling would hide it.
+Y_RANGE_FLOOR_UV = 30.0        # minimum half-range, keeps pure noise from filling the axis
+Y_RANGE_HEADROOM = 1.15        # multiplier applied above the observed peak
+Y_RANGE_HYSTERESIS = 0.20      # relative change required before the axis is moved
+Y_RANGE_RELEASE_FRACTION = 0.6 # shrink only once the peak drops below this fraction
+
+# --- Channel plot geometry -------------------------------------------------
+# Every contact must render into an identical pixel rectangle: equal y-ranges
+# are useless if the data areas differ in height, because the apparent
+# amplitude is microvolts per pixel, not microvolts.
+AXIS_LEFT_WIDTH_PX = 64     # fixed so tick-label width cannot shift the plots
+AXIS_BOTTOM_HEIGHT_PX = 42  # reserved on all four, populated only on the last
 
 # =============================================================================
 # ExtraCellularGraph
@@ -206,6 +221,9 @@ class ExtraCellularGraph(QObject):
             [-28.0, 32.0],
         ], dtype=float)
         self._init_geometry()
+
+        # Shared y half-range across the four contacts, in µV
+        self._shared_y_half_range_uV = 0.0
 
         # Per-source hidden gain factors so the 3 units are not identical.
         self._source_gain = np.array([1.00, 0.90, 0.80], dtype=float)
@@ -467,6 +485,55 @@ class ExtraCellularGraph(QObject):
         if self._plots_ready:
             self._update_plots()
 
+    def _update_shared_y_range(self) -> float:
+        """
+        Apply one common y-range to every tetrode channel plot.
+
+        Independent per-channel autoscaling normalises away the inter-contact
+        amplitude ratio, which is the primary cue for assigning a spike to a
+        unit on a tetrode. A single shared range preserves it: the nearest
+        contact visibly dominates and the most distant stays small.
+
+        The range is symmetric about zero because the displayed traces are
+        bandpass filtered and therefore zero-mean, and it is updated with
+        hysteresis so an isolated large spike cannot make the axis oscillate
+        frame to frame.
+
+        Returns
+        -------
+        float
+            The half-range applied, in microvolts.
+
+        Notes
+        -----
+        The range is written to all four viewboxes, including hidden ones, so
+        that toggling a channel back on never rescales the others.
+
+        References
+        ----------
+        Harris et al., 2000, Journal of Neurophysiology, "Accuracy of Tetrode
+        Spike Separation as Determined by Simultaneous Intracellular and
+        Extracellular Measurements".
+        """
+        peak = 0.0
+        for buffer in self.Extra_buffers:
+            trace = buffer.data
+            if trace.size:
+                peak = max(peak, float(np.max(np.abs(trace))))
+
+        target = max(Y_RANGE_FLOOR_UV, peak * Y_RANGE_HEADROOM)
+        current = self._shared_y_half_range_uV
+
+        grow = target > current * (1.0 + Y_RANGE_HYSTERESIS)
+        shrink = target < current * Y_RANGE_RELEASE_FRACTION
+
+        if current <= 0.0 or grow or shrink:
+            self._shared_y_half_range_uV = target
+            for plot_widget in self.channel_plot_widgets:
+                plot_widget.getViewBox().setYRange(-target, target, padding=0)
+
+        return float(self._shared_y_half_range_uV)
+
     def _generate_raw_block(self, packets):
         """
         Build the unfiltered tetrode block from a run of incoming packets.
@@ -726,6 +793,10 @@ class ExtraCellularGraph(QObject):
                 buffer.fill_with(0.0)
         if hasattr(self, "Threshold_buffer"):
             self.Threshold_buffer.fill_with(float(self.DetectionThreshold_uV))
+
+        # Force a rescale: dV/dT and template modes differ by roughly an order
+        # of magnitude in amplitude.
+        self._shared_y_half_range_uV = 0.0
 
         # Keep time / Vm buffers intact, but redraw the traces immediately
         if self._plots_ready:
@@ -1377,6 +1448,10 @@ class ExtraCellularGraph(QObject):
         self._event_marks = collections.deque()
         self._hum_phase_rad = float(self._rng.uniform(0.0, 2.0 * np.pi))
 
+        # Force a rescale: dV/dT and template modes differ by roughly an order
+        # of magnitude in amplitude.
+        self._shared_y_half_range_uV = 0.0
+
     # -------------------------------------------------------------------------
     # Plotting
     # -------------------------------------------------------------------------
@@ -1438,24 +1513,37 @@ class ExtraCellularGraph(QObject):
             pw.showGrid(x=True, y=True)
 
             pi = pw.getPlotItem()
-            configure_scope(pi)
             vb = pi.getViewBox()
 
-            pi.getAxis("left").setLabel(f"Ch{k + 1}", units="µV")
-            pi.getAxis("bottom").enableAutoSIPrefix(False)
+            # --- Identical axis footprints -----------------------------
+            # Both axes are pinned to fixed sizes so the four data areas are
+            # pixel-identical. Without this the bottom axis on the last plot
+            # steals ~40 px of signal height from that channel alone.
+            left_axis = pi.getAxis("left")
+            left_axis.setLabel(f"Ch{k + 1}", units="µV")
+            left_axis.setWidth(AXIS_LEFT_WIDTH_PX)
 
+            bottom_axis = pi.getAxis("bottom")
+            bottom_axis.enableAutoSIPrefix(False)
+            bottom_axis.setHeight(AXIS_BOTTOM_HEIGHT_PX)
             if k == N_CHANNELS - 1:
-                pi.getAxis("bottom").setLabel("Time", units="ms")
+                bottom_axis.setLabel("Time", units="ms")
             else:
-                pi.getAxis("bottom").setStyle(showValues=False)
+                bottom_axis.setStyle(showValues=False)
 
+            # --- Ranges ------------------------------------------------
             vb.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
             vb.setXRange(-TIME_WINDOW_DISPLAY, 0, padding=0)
             vb.setLimits(xMin=-TIME_WINDOW, xMax=0)
-            vb.enableAutoRange(axis=pg.ViewBox.YAxis, enable=True)
+
+            # Shared y-range driven by _update_shared_y_range. Autorange off,
+            # and no setYLink: linked views reroute setYRange to the master,
+            # which makes the applied range hard to reason about. Four
+            # explicit calls on a hysteresis-gated path cost nothing.
+            vb.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
+            vb.setYRange(-Y_RANGE_FLOOR_UV, Y_RANGE_FLOOR_UV, padding=0)
             vb.setMouseEnabled(x=True, y=False)
 
-            # Link X axes to the first plot
             if k > 0:
                 pw.setXLink(self.channel_plot_widgets[0])
 
@@ -1486,6 +1574,14 @@ class ExtraCellularGraph(QObject):
             self.channel_spike_scatters.append(spike_scatter)
             self.channel_event_scatters.append(event_scatter)
 
+        # Equal stretch so no channel is allocated a taller widget than another.
+        for k in range(N_CHANNELS):
+            old_layout.setStretch(k, 1)
+            self.channel_plot_widgets[k].setSizePolicy(
+                QSizePolicy.Expanding, QSizePolicy.Expanding
+            )
+            self.channel_plot_widgets[k].setMinimumHeight(0)
+
         # Keep old names for compatibility if other methods expect them
         self.Ch1curve = self.channel_curves[0]
         self.Ch2curve = self.channel_curves[1]
@@ -1505,32 +1601,31 @@ class ExtraCellularGraph(QObject):
             ui.Extracellular_Tetrode_Ch3_checkBox,
             ui.Extracellular_Tetrode_Ch4_checkBox,
         ]
+        visible_channels = [k for k in range(N_CHANNELS) if checks[k].isChecked()]
 
         show_thr = ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
         show_spikes = ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
         show_events = ui.Extracellular_Tetrode_Events_checkBox.isChecked()
 
+        y_half_range = self._update_shared_y_range()
+        y_event = y_half_range * 0.9
+
         for k in range(N_CHANNELS):
             pw = self.channel_plot_widgets[k]
+            pw.setVisible(k in visible_channels)
+            if k not in visible_channels:
+                continue
+
             curve = self.channel_curves[k]
             thr_line = self.channel_threshold_lines[k]
             spike_scatter = self.channel_spike_scatters[k]
             event_scatter = self.channel_event_scatters[k]
 
-            visible = checks[k].isChecked()
-            pw.setVisible(visible)
+            curve.setData(x, self.Extra_buffers[k].data)
 
-            if not visible:
-                continue
-
-            y = self.Extra_buffers[k].data
-            curve.setData(x, y)
-
-            # Threshold line for this channel
             thr_line.setVisible(show_thr)
             thr_line.setPos(float(self.DetectionThreshold_uV))
 
-            # Channel-specific spike markers
             spike_scatter.setVisible(show_spikes)
             if show_spikes and self._channel_spike_marks[k]:
                 marks = np.asarray(self._channel_spike_marks[k], dtype=float)
@@ -1541,11 +1636,10 @@ class ExtraCellularGraph(QObject):
             else:
                 spike_scatter.setData([])
 
-            # Event markers copied to each visible subplot
+            # Event markers sit at a fixed height in the shared range, so they
+            # stay aligned across channels instead of tracking each trace.
             event_scatter.setVisible(show_events)
             if show_events and self._event_marks:
-                span = max(10.0, float(np.ptp(y))) if y.size else 100.0
-                y_event = (float(np.max(y)) if y.size else 0.0) + EVENT_MARKER_HEADROOM * span
                 events = np.asarray(self._event_marks, dtype=float) - t_arr[-1]
                 event_scatter.setData(
                     x=events, y=np.full(events.size, y_event), symbol="t", size=8,

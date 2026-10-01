@@ -23,7 +23,7 @@ GRID_MINOR = QColor(147, 161, 161, 55)
 GRID_MAJOR = QColor(190, 205, 205, 110)
 DISTANCE = QColor(38, 139, 210, 170)
 
-
+SCENE_UNITS_PER_UM = 10.0
 # ---------------------------------------------------------------------
 # Defaults
 # ---------------------------------------------------------------------
@@ -844,6 +844,17 @@ class TetrodeGeometryWindow(QMainWindow):
         for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
             self.scene.addItem(item)
 
+        self._distance_lines = []
+        for contact_index in range(4):
+            colour = self.tetrode_item.contact_colors[contact_index]
+            pen = QPen(colour, 1, Qt.DashLine)
+            pen.setCosmetic(True)
+            for _ in range(3):
+                line = self.scene.addLine(0.0, 0.0, 0.0, 0.0, pen)
+                line.setZValue(-10)
+                line.setVisible(False)
+                self._distance_lines.append(line)
+
         # Start from a clean transform
         view.resetTransform()
 
@@ -1143,56 +1154,37 @@ class TetrodeGeometryWindow(QMainWindow):
         self._emit_geometry_changed()
 
     def _refresh_distance_lines(self, force_show: bool | None = None) -> None:
-        for line_item in self._distance_lines:
-            self.scene.removeItem(line_item)
-        self._distance_lines.clear()
+        """
+        Reposition the neuron-to-contact guide lines.
 
-        show = (
-            self.ui.Tetrode_Parameters_View_ShowDistance_checkBox.isChecked()
-            if force_show is None
-            else force_show
-        )
+        The line items are persistent; only their endpoints and visibility
+        change, so a drag no longer repeatedly tears down and rebuilds part of
+        the scene graph.
+
+        Parameters
+        ----------
+        force_show : bool, optional
+            Override the "show distances" checkbox, used while applying view
+            options before the checkbox state has settled.
+        """
+        show = (self.ui.Tetrode_Parameters_View_ShowDistance_checkBox.isChecked()
+                if force_show is None else force_show)
+
         if not show:
+            for line in self._distance_lines:
+                line.setVisible(False)
             return
 
-        # Real tetrode contact positions in world coordinates (µm)
-        contacts_um = self.get_contact_positions_um()
+        neurons = (self.neuron_main, self.neuron_aux1, self.neuron_aux2)
+        scale = SCENE_UNITS_PER_UM
 
-        # Scene uses 10 px per 1 µm
-        scene_scale = 10.0
-
-        neurons = [
-            self.neuron_main,
-            self.neuron_aux1,
-            self.neuron_aux2,
-        ]
-
-        # Use the same channel colors as the tetrode contacts / extracellular channels
-        contact_colors = getattr(self.tetrode_item, "contact_colors", [
-            QColor(38, 139, 210),  # E1
-            QColor(42, 161, 152),  # E2
-            QColor(133, 153, 0),  # E3
-            QColor(108, 113, 196),  # E4
-        ])
-
-        for contact_index, contact in enumerate(contacts_um):
-            color = contact_colors[contact_index] if contact_index < len(contact_colors) else DISTANCE
-            pen = QPen(color, 1, Qt.DashLine)
-            pen.setCosmetic(True)
-
-            cx = contact["x_um"] * scene_scale
-            cy = contact["y_um"] * scene_scale
-
-            for neuron in neurons:
-                line = self.scene.addLine(
-                    cx,
-                    cy,
-                    neuron.scenePos().x(),
-                    neuron.scenePos().y(),
-                    pen,
-                )
-                line.setZValue(-10)
-                self._distance_lines.append(line)
+        for contact_index, contact in enumerate(self.get_contact_positions_um()):
+            cx = contact["x_um"] * scale
+            cy = contact["y_um"] * scale
+            for neuron_index, neuron in enumerate(neurons):
+                line = self._distance_lines[contact_index * len(neurons) + neuron_index]
+                line.setLine(cx, cy, neuron.scenePos().x(), neuron.scenePos().y())
+                line.setVisible(True)
 
     # -------------------------------------------------------------
     # Sync dragged item -> controls
