@@ -98,6 +98,7 @@ MIN_SOURCE_CONTACT_DISTANCE_UM = 5.0
 
 # Distance at which a unit gain is assigned; sets the overall amplitude scale.
 REFERENCE_DISTANCE_UM = 25.0
+DEFAULT_SPATIAL_FALLOFF = 1.2
 
 # Per-unit amplitude scaling. Real units differ in soma size and spike
 # amplitude, so identical projections would make the sorting exercise trivial.
@@ -1037,7 +1038,7 @@ class ExtraCellularGraph(QObject):
         Gold et al., 2006, Journal of Neurophysiology, "On the Origin of the
         Extracellular Action Potential Waveform: A Modeling Study".
         """
-        alpha = max(0.1, float(p.get("spatial_falloff", 2.0)))
+        alpha = max(0.1, float(p.get("spatial_falloff", DEFAULT_SPATIAL_FALLOFF)))
         d_ref = float(p.get("reference_distance_um", REFERENCE_DISTANCE_UM))
 
         gains = (d_ref / self.distance_matrix_um) ** alpha
