@@ -570,8 +570,12 @@ def Buttons(self):
     self.tetrode_window = TetrodeGeometryWindow(self)
     self.tetrode_window.geometryChanged.connect(self.extracellular_page.apply_tetrode_geometry)
 
+    # The constructor's reset_geometry() emission predates this connection,
+    # so push the current layout explicitly to synchronise the graph.
+    self.extracellular_page.apply_tetrode_geometry(self.tetrode_window.get_geometry_payload())
+
     # Connect the button to the instance method
-    self.ui.ExtraCellular_ConnectButton.clicked.connect(lambda: self.extracellular_page.UpdateSource())
+    self.ui.ExtraCellular_ConnectButton.clicked.connect(lambda: self.extracellular_page.ToggleConnection())
 
     # Update the Vm source for ExtraCellular
     self.ui.ExtraCellular_Source_comboBox.currentIndexChanged.connect(lambda: self.extracellular_page.UpdateSource())

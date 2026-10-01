@@ -6,32 +6,30 @@ It handles serial communication, data visualization, and data export.
 """
 
 from PySide6.QtCore import QObject, QTimer
-from PySide6.QtWidgets import QMessageBox, QInputDialog
-from PySide6.QtGui import QPen
 import pyqtgraph as pg
 from pathlib import Path
 
-import collections
 import numpy as np
 import pandas as pd
-import struct
-from decimal import Decimal
 
 import Parameters_Settings as Settings
 from serial_manager import serial_manager
-# Use the global serial_manager instance
+from graph_core import RingBuffer, configure_scope, safe_reconnect
+
 serial_port = serial_manager
 
 # Constants
-DOWNSAMPLING = 5
 SAMPLE_INTERVAL = 0.1
 TIME_WINDOW = 2000
 TIME_WINDOW_DISPLAY = 250
 PEN_WIDTH = 1.5
-VM_MIN = -100
-VM_MAX = 40
-CURRENT_MIN = -100
-CURRENT_MAX = 100
+VM_MIN, VM_MAX = -100, 40
+CURRENT_MIN, CURRENT_MAX = -100, 100
+N_STREAM_CHANNELS = 8
+
+# Suppress redundant serial writes when the custom stimulus value is unchanged
+# (a 50 % duty square wave then costs 2 writes per period instead of ~10 000).
+SKIP_REPEATED_STIM_WRITES = True
 
 
 class SpikelingGraph(QObject):
@@ -48,8 +46,7 @@ class SpikelingGraph(QObject):
 
         # --- Data buffers (always exist, pre-filled with zeros) ---
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
-        for i in range(8):
-            setattr(self, f"databuffer{i}", collections.deque([0.0] * self._bufsize, self._bufsize))
+        self.databuffers = [RingBuffer(self._bufsize) for _ in range(N_STREAM_CHANNELS)]
 
         # state
         self.data = [0.0] * 8
@@ -57,7 +54,7 @@ class SpikelingGraph(QObject):
         self.record_flag = False
         self.stim_counter = 0
         self.current_plots = None
-
+        self._last_stim_value = None
 
 
         # Set SerialFlag in parent for use in Page101
@@ -105,7 +102,7 @@ class SpikelingGraph(QObject):
         self.parent.SerialFlag = True
         self.stim_counter = 0
 
-        self.timer.start(10)  # update every 1ms
+        self.timer.start(10)   # 100 Hz GUI refresh
 
     def disconnect_device(self):
         """Called when connect button is unchecked."""
@@ -126,10 +123,19 @@ class SpikelingGraph(QObject):
         )
 
     def on_connection_changed(self, is_connected: bool):
-        """Handle serial manager connection state."""
+        """
+        Reflect the serial manager state on the connect button.
+
+        ``setChecked`` is issued with signals blocked because the toggled slot
+        calls back into ``disconnect_device``, which re-enters this handler.
+        """
         if not is_connected:
             self.disconnect_device()
-        self.ui.Spikeling_ConnectButton.setChecked(is_connected)
+
+        button = self.ui.Spikeling_ConnectButton
+        was_blocked = button.blockSignals(True)
+        button.setChecked(is_connected)
+        button.blockSignals(was_blocked)
 
     def on_error(self, message: str):
         """Handle serial errors."""
@@ -160,13 +166,13 @@ class SpikelingGraph(QObject):
 
         # Push one sample into each buffer PER PACKET
         for i, v in enumerate(values):
-            getattr(self, f"databuffer{i}").append(v)
+            getattr(self, f"databuffers")[i].append(v)
 
         # If recording, also store these values for CSV export
         if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
             # spikeling_data[0] will be time (added on export)
-            for i, v in enumerate(values):
-                self.spikeling_data[i + 1].append(v)
+            for index, value in enumerate(values):
+                self.databuffers[index].append(value)
 
         self.step_custom_stimulus_on_packet()
 
@@ -199,18 +205,11 @@ class SpikelingGraph(QObject):
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
         # Initialize data buffers
-        for i in range(8):
-            setattr(self, f"databuffer{i}", collections.deque([0.0] * self._bufsize, self._bufsize))
-
-        # Numpy arrays for plotting
+        self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
+        for buffer in self.databuffers:
+            buffer.fill_with(0.0)
         self.x = np.linspace(-TIME_WINDOW, 0.0, self._bufsize)
-        for i in range(7):
-            setattr(self, f"y{i}", np.zeros(self._bufsize, dtype=float))
-
-        # Data recording arrays
-        self.spikeling_data = []
-        for _ in range(9):
-            self.spikeling_data.append([])
+        self.spikeling_data = [[] for _ in range(9)]
 
         # Set button appearance
         if self.ui.Spikeling_ConnectButton.isChecked() and serial_manager.is_open:
@@ -233,21 +232,8 @@ class SpikelingGraph(QObject):
 
 
 # -------------------------------------------------------------------------
-# Buffers + Plotting
+# Plotting
 # -------------------------------------------------------------------------
-
-    def buff_data(self): #Legacy; not used anymore. Data is now appended in on_data_received().
-        try:
-            if not self.data or len(self.data) < 8:
-                values = [0.0] * 8
-            else:
-                values = [float(v) for v in self.data]
-
-            for i, v in enumerate(values):
-                getattr(self, f"databuffer{i}").append(v)
-        except Exception as e:
-            print(f"Error in buff_data: {e}")
-
 
     def set_plot(self):
         """
@@ -278,8 +264,6 @@ class SpikelingGraph(QObject):
         pw.setLabel('right', 'Current Input', 'a.u.')
         pw.setAntialiasing(True)
 
-
-
         # -----------------------------
         # Setup secondary ViewBox (currents on right axis)
         # -----------------------------
@@ -294,23 +278,17 @@ class SpikelingGraph(QObject):
         self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX]) # Fix its Y-range to current min/max
         pw.getAxis("right").linkToView(self.current_plots) # Link the right axis to the secondary viewbox
 
-        # Create plot curves for membrane potentials on the main plot with anti-aliasing
-        self.curve0 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
-        self.curve0.clear()
-        self.curve3 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y3, pen=pg.mkPen(Settings.DarkSolarized[6], width=PEN_WIDTH, cosmetic=True))
-        self.curve3.clear()
-        self.curve5 = self.ui.Spikeling_Oscilloscope_widget.plot(self.x, self.y5, pen=pg.mkPen(Settings.DarkSolarized[8], width=PEN_WIDTH, cosmetic=True))
-        self.curve5.clear()
+        configure_scope(plot_item)
 
-        # Create plot curves for currents and stimulus (secondary plot - right y-axis) with anti-aliasing
-        self.curve1 = pg.PlotCurveItem(self.x, self.y1, pen=pg.mkPen(Settings.DarkSolarized[5], width=PEN_WIDTH, cosmetic=True))
-        self.curve1.clear()
-        self.curve2 = pg.PlotCurveItem(self.x, self.y2, pen=pg.mkPen(Settings.DarkSolarized[4], width=PEN_WIDTH, cosmetic=True))
-        self.curve2.clear()
-        self.curve4 = pg.PlotCurveItem(self.x, self.y4, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
-        self.curve4.clear()
-        self.curve6 = pg.PlotCurveItem(self.x, self.y6, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
-        self.curve6.clear()
+        zeros = np.zeros(self._bufsize, dtype=float)
+        self.curve0 = pw.plot(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
+        self.curve3 = pw.plot(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[6], width=PEN_WIDTH, cosmetic=True))
+        self.curve5 = pw.plot(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[8], width=PEN_WIDTH, cosmetic=True))
+
+        self.curve1 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[5], width=PEN_WIDTH, cosmetic=True))
+        self.curve2 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[4], width=PEN_WIDTH, cosmetic=True))
+        self.curve4 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
+        self.curve6 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
 
         # Add current and stimulus curves to the secondary plot (right y-axis)
         self.current_plots.addItem(self.curve1)
@@ -318,86 +296,41 @@ class SpikelingGraph(QObject):
         self.current_plots.addItem(self.curve4)
         self.current_plots.addItem(self.curve6)
 
+        self._update_views()
+        safe_reconnect(pw.getViewBox().sigResized, self._update_views)
 
-        # Update secondary ViewBox when main plot resizes
-        def update_views():
-            self.current_plots.setGeometry(pw.getViewBox().sceneBoundingRect())
-            self.current_plots.linkedViewChanged(pw.getViewBox(), self.current_plots.XAxis)
-
-        # Run once now and then on every resize
-        update_views()
-        pw.getViewBox().sigResized.connect(update_views)
-
+    def _update_views(self):
+        """Keep the right-axis current ViewBox aligned with the main ViewBox."""
+        pw = self.ui.Spikeling_Oscilloscope_widget
+        main_vb = pw.getViewBox()
+        self.current_plots.setGeometry(main_vb.sceneBoundingRect())
+        self.current_plots.linkedViewChanged(main_vb, self.current_plots.XAxis)
 
     def plot_curve(self):
         """
-        Update the plot curves with the latest data from buffers.
+        Push the visible rolling buffers to their curves.
+
+        Reads use the contiguous :class:`RingBuffer` views, so no per-redraw
+        deque-to-array copy is performed.
         """
+        ui = self.ui
+        channels = (
+            (ui.Spikeling_VmCheckbox, self.curve0, 0),
+            (ui.Spikeling_StimulusCheckbox, self.curve1, 1),
+            (ui.Spikeling_InputCurrentCheckbox, self.curve2, 2),
+            (ui.Spikeling_Syn1VmCheckbox, self.curve3, 3),
+            (ui.Spikeling_Syn1InputCheckbox, self.curve4, 4),
+            (ui.Spikeling_Syn2VmCheckbox, self.curve5, 5),
+            (ui.Spikeling_Syn2InputCheckbox, self.curve6, 6),
+        )
         try:
-            # Check if all required attributes are initialized
-            required_attrs = ['x', 'y0', 'y1', 'y2', 'y3', 'y4', 'y5', 'y6',
-                              'curve0', 'curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6',
-                             'databuffer0', 'databuffer1', 'databuffer2', 'databuffer3', 'databuffer4', 'databuffer5', 'databuffer6']
-
-            # Plot on the main plot
-            if self.ui.Spikeling_VmCheckbox.isChecked():
-                self.y0[:] = self.databuffer0
-                self.curve0.setData(self.x, self.y0)
-                self.curve0.setVisible(True)
-            else:
-                self.curve0.setVisible(False)
-
-            if self.ui.Spikeling_StimulusCheckbox.isChecked():
-                self.y1[:] = self.databuffer1
-                self.curve1.setData(self.x, self.y1)
-                self.curve1.setVisible(True)
-            else:
-                self.curve1.setVisible(False)
-
-            if self.ui.Spikeling_InputCurrentCheckbox.isChecked():
-                self.y2[:] = self.databuffer2
-                self.curve2.setData(self.x, self.y2)
-                self.curve2.setVisible(True)
-            else:
-                self.curve2.setVisible(False)
-
-            if self.ui.Spikeling_Syn1VmCheckbox.isChecked():
-                self.y3[:] = self.databuffer3
-                self.curve3.setData(self.x, self.y3)
-                self.curve3.setVisible(True)
-            else:
-                self.curve3.setVisible(False)
-
-            if self.ui.Spikeling_Syn1InputCheckbox.isChecked():
-                self.y4[:] = self.databuffer4
-                self.curve4.setData(self.x, self.y4)
-                self.curve4.setVisible(True)
-            else:
-                self.curve4.setVisible(False)
-
-            if self.ui.Spikeling_Syn2VmCheckbox.isChecked():
-                self.y5[:] = self.databuffer5
-                self.curve5.setData(self.x, self.y5)
-                self.curve5.setVisible(True)
-            else:
-                self.curve5.setVisible(False)
-
-            if self.ui.Spikeling_Syn2InputCheckbox.isChecked():
-                self.y6[:] = self.databuffer6
-                self.curve6.setData(self.x, self.y6)
-                self.curve6.setVisible(True)
-            else:
-                self.curve6.setVisible(False)
-
-            # Secondary ViewBox auto-syncs y-axis (current/stimulus)
-            self.current_plots.setGeometry(self.ui.Spikeling_Oscilloscope_widget.getViewBox().sceneBoundingRect())
-
-
-        except Exception as e:
-            print(f"Error in plot_curve: {e}")
-
-
-
+            for checkbox, curve, index in channels:
+                visible = checkbox.isChecked()
+                curve.setVisible(visible)
+                if visible:
+                    curve.setData(self.x, self.databuffers[index].data)
+        except Exception as error:
+            print(f"Error in plot_curve: {error}")
 
     # -------------------------------------------------------------------------
     # Saving Data
@@ -426,7 +359,7 @@ class SpikelingGraph(QObject):
 
             # Ask user if file exists
             if file_path.exists():
-                action, new_path = Settings.confirm_overwrite(self, file_path)
+                action, new_path = Settings.confirm_overwrite(self.parent, file_path)
                 if action == "cancel":
                     self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
                     self.ui.Spikeling_DataRecording_Record_pushButton.setText("Record")
@@ -438,6 +371,11 @@ class SpikelingGraph(QObject):
                     save_path = new_path
                 elif action == "overwrite":
                     save_path = file_path
+                else:
+                    # Unknown action: fail closed rather than raising NameError
+                    self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
+                    return
+
             else:
                 save_path = file_path
 
@@ -469,49 +407,45 @@ class SpikelingGraph(QObject):
             for i in range(9):
                 self.spikeling_data[i].clear()
 
-    def export_data_to_csv(self, file_path: Path):
+    def export_data_to_csv(self, file_path: Path) -> None:
         """
-        Export recorded data to a CSV file.
+        Export the recorded Spikeling stream to CSV.
 
-        Args:
-            file_path (Path): Full path of the CSV file to save.
+        Parameters
+        ----------
+        file_path : pathlib.Path
+            Destination ``.csv`` path.
+
+        Notes
+        -----
+        The time axis is reconstructed as ``k * SAMPLE_INTERVAL`` and therefore
+        assumes no packet loss on the serial link. Prefer a device-side
+        timestamp if sample-accurate timing matters for the analysis.
         """
-        if not hasattr(self, "spikeling_data") or not self.spikeling_data:
+        n_samples = len(self.spikeling_data[1])
+        if n_samples == 0:
             print("No data to save.")
             return
 
-        # Create a numpy array for the dataset
-        dataset = np.empty([9, len(self.spikeling_data[1])], dtype=float)
+        columns = [
+            'Spikeling Vm (mV)', 'Stimulus (%)', 'Total Current Input (a.u.)',
+            'Synapse 1 Vm (mV)', 'Synapse 1 Input (a.u.)',
+            'Synapse 2 Vm (mV)', 'Synapse 2 Input (a.u.)', 'Trigger',
+        ]
+        frame = {'Time (ms)': np.arange(n_samples, dtype=float) * SAMPLE_INTERVAL}
+        frame.update({
+            name: np.asarray(self.spikeling_data[j + 1], dtype=float)
+            for j, name in enumerate(columns)
+        })
 
-        # Fill the dataset with recorded data
-        _interval = Decimal(str(SAMPLE_INTERVAL))
-        for i in range(len(self.spikeling_data[1])):
-            dataset[0][i] = i * _interval  # Time
-            for j in range(1, 9):
-                dataset[j][i] = self.spikeling_data[j][i]
-
-        # Create a dictionary for pandas DataFrame
-        data_dict = {
-            'Time (ms)': dataset[0],
-            'Spikeling Vm (mV)': dataset[1],
-            'Stimulus (%)': dataset[2],
-            'Total Current Input (a.u.)': dataset[3],
-            'Synapse 1 Vm (mV)': dataset[4],
-            'Synapse 1 Input (a.u.)': dataset[5],
-            'Synapse 2 Vm (mV)': dataset[6],
-            'Synapse 2 Input (a.u.)': dataset[7],
-            'Trigger': dataset[8]
-        }
-
-        # Create DataFrame and save to CSV
-        df = pd.DataFrame(data_dict)
         try:
-            df.to_csv(file_path, index=False)
-        except Exception as e:
-            print(f"Failed to save data: {e}")
-            Settings.show_popup(self.parent,
-                                Title="Error saving file",
-                                Text=f"Could not save recording to {file_path}.\nError: {e}")
+            pd.DataFrame(frame).to_csv(file_path, index=False)
+        except Exception as error:
+            print(f"Failed to save data: {error}")
+            Settings.show_popup(
+                self.parent, Title="Error saving file",
+                Text=f"Could not save recording to {file_path}.\nError: {error}",
+            )
 
 # -------------------------------------------------------------------------
 # Cleanup
@@ -524,18 +458,12 @@ class SpikelingGraph(QObject):
 
         self.last_valid_data = None
 
-        for i in range(8):
-            buf_name = f"databuffer{i}"
-            if hasattr(self, buf_name):
-                getattr(self, buf_name).clear()
+        for buffer in self.databuffers:
+            buffer.fill_with(0.0)
 
         self.ui.Spikeling_Oscilloscope_widget.clear()
         if self.current_plots:
             self.current_plots.clear()
-
-
-
-
 
 # -------------------------------------------------------------------------
 # Handlers
@@ -564,7 +492,8 @@ class SpikelingGraph(QObject):
 
         # edge: ON -> OFF
         if (not enabled) and self._cus_prev_enabled:
-            serial_manager.write("SC0\n")  # send once, no spamming
+            serial_manager.write("SC0\n")
+            self._last_stim_value = None
 
         self._cus_prev_enabled = enabled
         if not enabled:
@@ -575,46 +504,16 @@ class SpikelingGraph(QObject):
             self.stim_counter = 0
             serial_manager.write("TR\n")
 
-        v = y[self.stim_counter]
-        serial_manager.write(f"SC1 {v}\n")
+        value = y[self.stim_counter]
         self.stim_counter += 1
-    def handle_custom_stimulus(self):
-        """
-        Handle custom stimulus if enabled.
-        """
-        try:
-            if not hasattr(self.ui, 'StimCus_toggleButton'):
-                return
 
-            if self.ui.StimCus_toggleButton.isChecked():
-                try:
-                    # # Check if df_yStim and df_Stim are initialized
-                    if not hasattr(self, 'df_yStim') or self.ui.df_yStim is None or not hasattr(self, 'df_Stim') or self.ui.df_Stim is None:
-                        return
-
-                    # Check if stim_counter is within bounds
-                    if self.stim_counter >= len(self.ui.df_yStim):
-                        self.stim_counter = 0
-
-                    self.stim_cus_value = self.ui.df_yStim[self.stim_counter]
-
-                    if serial_manager.is_open:
-                        serial_manager.write(f'SC1 {self.stim_cus_value}\n')
-                        self.stim_counter += 1
-
-                    if self.stim_counter > len(self.ui.df_Stim) - 1:
-                        self.stim_counter = 0
-                        if serial_manager.is_open:
-                            serial_manager.write('TR\n')
-                except (AttributeError, IndexError) as e:
-                    # Handle case where df_yStim or df_Stim is not defined or index is out of range
-                    print(f"Error in handle_custom_stimulus: {e}")
-            else:
-                if serial_manager.is_open:
-                    serial_manager.write('SC0\n')
-        except Exception as e:
-            # Log the error but don't crash the application
-            print(f"Error in handle_custom_stimulus: {e}")
+        # The device latches the last received value, so identical consecutive
+        # samples need not be transmitted. A square wave then costs 2 writes
+        # per period instead of one per packet (~10 kHz).
+        if SKIP_REPEATED_STIM_WRITES and value == self._last_stim_value:
+            return
+        self._last_stim_value = value
+        serial_manager.write(f"SC1 {value}\n")
 
 
     def handle_noise(self):

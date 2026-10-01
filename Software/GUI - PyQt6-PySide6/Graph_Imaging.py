@@ -29,27 +29,26 @@ import pyqtgraph as pg
 import numpy as np
 import pandas as pd
 import collections
-from decimal import Decimal
-from typing import Tuple
+import datetime
+import json
 
 import Parameters_Settings as Settings
 import Parameters_GECI
 from serial_manager import serial_manager
+from graph_core import RingBuffer, configure_scope, parse_spikeling_packet, resolve_csv_path
 
 
-# =============================================================================
-# Constants
-# =============================================================================
-
-SAMPLE_INTERVAL = 0.1          # ms per incoming sample (fallback if packet lacks timestamp)
-TIME_WINDOW = 2000             # ms total rolling buffer
-TIME_WINDOW_DISPLAY = 500      # ms visible in oscilloscope x-range
+SAMPLE_INTERVAL = 0.1
+TIME_WINDOW = 2000
+TIME_WINDOW_DISPLAY = 500
 PEN_WIDTH = 1
-STIM_MIN = -100
-STIM_MAX = 100
+STIM_MIN, STIM_MAX = -100, 100
+N_NEURONS = 3
+MAX_PACKETS_PER_TICK = 5000
 
-N_NEURONS = 3                  # primary + two auxiliaries
-
+# Frame-rate slider encoding: displayed Hz = slider value * FRAME_RATE_SCALE.
+# Defined once so _connect_parameters and _initialize_buffers cannot diverge.
+FRAME_RATE_SCALE = 100.0
 
 # =============================================================================
 # ImagingGraph
@@ -74,9 +73,11 @@ class ImagingGraph(QObject):
         # Data source control
         # -------------------------
         self.source_mode = "spikeling"   # "spikeling", "emulator", "none"
-        self.last_valid_data = None
         self._t_last_ms = None
-        self._t_abs_ms = 0.0             # fallback clock when hardware provides no timestamp
+        # Previous-sample Vm, kept explicitly instead of peeking into the
+        # display buffer, so spike detection is independent of plotting.
+        self._vm_prev = np.zeros(N_NEURONS, dtype=float)
+        self._rng = np.random.default_rng()
 
         # -------------------------
         # Imaging / Model state
@@ -159,8 +160,6 @@ class ImagingGraph(QObject):
 
         # Plot state
         self._plots_ready = False
-        self._plot_decimator = 0
-        self._plot_every = 1
         self.secondaryVB = None
         self.calciumVB = None
         self.calciumAxis = None
@@ -257,24 +256,6 @@ class ImagingGraph(QObject):
     # Data Entry Points
     # -------------------------------------------------------------------------
 
-    def _process_rx_queue(self):
-        if self.source_mode != "spikeling" or not self.parent.ImagingConnectionFlag:
-            self._rx_queue.clear()
-            return
-
-        max_per_tick = 5000
-        n = min(len(self._rx_queue), max_per_tick)
-
-        for _ in range(n):
-            pkt = self._rx_queue.popleft()
-            self._consume_vector(pkt, plot=False)
-
-        if self._plots_ready:
-            self._update_plots()
-
-        if len(self._rx_queue) > max_per_tick:
-            while len(self._rx_queue) > max_per_tick:
-                self._rx_queue.popleft()
 
     def on_data_received(self, data: list) -> None:
         if self.source_mode != "spikeling":
@@ -284,123 +265,90 @@ class ImagingGraph(QObject):
 
         self._rx_queue.append(data)
 
-    def on_emulator_data(self, data: list) -> None:
-        """Handle incoming emulator list of packets."""
-        if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
-            self._consume_batch(data)
-        else:
-            self._consume_vector(data)
+
 
     # -------------------------------------------------------------------------
     # Main Imaging Pipeline
     # -------------------------------------------------------------------------
-
-    def _consume_vector(self, data, plot=True):
-        """
-        Central imaging update pipeline.
-
-        Steps:
-        1) Validate & parse incoming packet
-        2) Update calcium + fluorescence model
-        3) Append data to rolling buffers
-        4) Handle recording logic
-        5) Redraw plots (decimated)
-        """
-        if not self.parent.ImagingConnectionFlag:
-            return
-        if data is None or len(data) < 8:
+    def _process_rx_queue(self):
+        """Drain the hardware packet queue at the GUI refresh cadence."""
+        if self.source_mode != "spikeling" or not self.parent.ImagingConnectionFlag:
+            self._rx_queue.clear()
             return
 
-        parsed = self._parse_packet(data)
-        if parsed is None:
+        n = min(len(self._rx_queue), MAX_PACKETS_PER_TICK)
+        if n == 0:
             return
 
-        t_ms, vm1, stim, vm2, vm3, trig = parsed
+        packets = [self._rx_queue.popleft() for _ in range(n)]
+        self._consume_packets(packets)
 
-        # dt_ms computed from timestamps if present, otherwise fixed SAMPLE_INTERVAL
-        if self._t_last_ms is None:
-            dt_ms = SAMPLE_INTERVAL
+        if len(self._rx_queue) > MAX_PACKETS_PER_TICK:
+            self._rx_queue.clear()
+
+    def on_emulator_data(self, data: list) -> None:
+        """Handle one emulator packet or a batch of packets."""
+        if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
+            self._consume_packets(data)
         else:
-            dt_ms = t_ms - self._t_last_ms
+            self._consume_packets([data])
 
-        # Sanity clamp dt_ms
-        if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
-            dt_ms = SAMPLE_INTERVAL
+    def _consume_packets(self, packets) -> None:
+        """
+        Run the imaging pipeline over a block of packets and redraw once.
 
-        self._t_last_ms = t_ms
+        The record-button state and the plot refresh are evaluated once per
+        block rather than once per sample, removing up to 10^4 redundant Qt
+        widget queries per GUI tick.
 
-        # Advance model (includes frame sampling)
-        self._update_model(vm1, stim, vm2, vm3, trig, t_ms, dt_ms)
-
-        # Append rolling buffers (including time)
-        self._append_buffers(t_ms)
-
-        # Recording state machine + capture
-        self._handle_recording()
-        if self.record_flag:
-            self._record_sample(t_ms)
-
-        # Plot decimation
-        if not plot or not self._plots_ready:
-            return
-
-        self._plot_decimator += 1
-        if self._plot_decimator >= self._plot_every:
-            self._plot_decimator = 0
-            self._update_plots()
-
-    def _consume_batch(self, batch):
-        """Consume many packets (emulator) and plot once at end."""
+        Parameters
+        ----------
+        packets : sequence
+            Raw 8- or 9-field Spikeling packets in chronological order.
+        """
         if not self.parent.ImagingConnectionFlag:
             return
 
-        for pkt in batch:
-            self._consume_vector(pkt, plot=False)
+        self._handle_recording()
+
+        for packet in packets:
+            self._consume_vector(packet)
 
         if self._plots_ready:
             self._update_plots()
 
-    # -------------------------------------------------------------------------
-    # Packet Parsing
-    # -------------------------------------------------------------------------
-
-    def _parse_packet(self, data: list):
+    def _consume_vector(self, data) -> None:
         """
-        Parse packets in the two supported formats.
+        Advance the imaging model by one sample.
 
-        Returns:
-            (t_ms, vm1, stim, vm2, vm3, trig)
+        Steps
+        -----
+        1. Parse the packet and resolve ``dt``.
+        2. Update calcium, indicator saturation and frame-sampled fluorescence.
+        3. Append to the rolling buffers.
+        4. Capture the sample if a recording is in progress.
         """
-        try:
-            vals = [float(x) for x in data]
-        except Exception:
-            return None
+        sample = parse_spikeling_packet(data)
+        if sample is None:
+            return
 
-        if len(vals) >= 9:
-            # [t, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
-            t = vals[0]
-            vm1 = vals[1]
-            stim = vals[2]
-            vm2 = vals[4]
-            vm3 = vals[6]
-            trig = vals[8]
-            return (t, vm1, stim, vm2, vm3, trig)
+        if sample.t_ms is None:
+            self._t_fallback_ms = getattr(self, "_t_fallback_ms", 0.0) + SAMPLE_INTERVAL
+            t_ms = self._t_fallback_ms
+        else:
+            t_ms = sample.t_ms
 
-        if len(vals) >= 8:
-            # no timestamp -> sequential samples at SAMPLE_INTERVAL
-            if not hasattr(self, "_t_fallback_ms"):
-                self._t_fallback_ms = 0.0
-            self._t_fallback_ms += SAMPLE_INTERVAL
-            t = self._t_fallback_ms
+        dt_ms = SAMPLE_INTERVAL if self._t_last_ms is None else (t_ms - self._t_last_ms)
+        if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
+            dt_ms = SAMPLE_INTERVAL
+        self._t_last_ms = t_ms
 
-            vm1 = vals[0]
-            stim = vals[1]
-            vm2 = vals[3]
-            vm3 = vals[5]
-            trig = vals[7]
-            return (t, vm1, stim, vm2, vm3, trig)
+        self._update_model(sample.vm0, sample.stim, sample.vm1, sample.vm2,
+                           sample.trigger, t_ms, dt_ms)
+        self._append_buffers(t_ms)
 
-        return None
+        if self.record_flag:
+            self._record_sample(t_ms)
 
     # -------------------------------------------------------------------------
     # Imaging Model
@@ -429,7 +377,7 @@ class ImagingGraph(QObject):
                 continue
 
             # Take last n_disp samples from the rolling buffer
-            y = np.asarray(self.Fluo_buffers[i], dtype=float)[-n_disp:]
+            y = self.Fluo_buffers[i].data[-n_disp:]
 
             # Apply the same ΔF/F0 transform as _update_plots()
             if self.use_dff:
@@ -549,22 +497,40 @@ class ImagingGraph(QObject):
         self.ui.Imaging_GECI_ReadingsDecay_Value.setText(f"{tau_decay:.0f}")
         self.ui.Imaging_GECI_ReadingsDecay_Value.setStyleSheet("color: rgb(250, 250, 250);")
 
+    def _apply_GECI(self) -> None:
+        """
+        Push the selected GECI preset into the live imaging parameter cache.
 
-    def _apply_GECI(self):
+        Reads the indicator chemistry from ``Parameters_GECI.GECI`` rather than
+        re-parsing the QLabel texts, so the labels remain a pure view of the
+        model and cannot corrupt it through locale-dependent float formatting.
+
+        Notes
+        -----
+        The previous implementation transposed three keys
+        (``dff_max`` <- tau_rise, ``Ind_tau_rise_ms`` <- tau_decay,
+        ``Ind_tau_decay_ms`` <- dff_max), silently swapping the indicator
+        kinetics with the saturation amplitude.
         """
-        Writes the selected indicator and its key parameters to UI labels.
-        """
+        name = self.ui.Imaging_GECI_comboBox.currentText()
+        preset = Parameters_GECI.GECI.get(name, Parameters_GECI.GECI["Generic"])
+
+        self.indicator_name = name if name in Parameters_GECI.GECI else "Generic"
+        self.Kd_uM = float(preset["Kd_uM"])
+        self.hill_n = float(preset["hill_n"])
+        self.dff_max = float(preset["dff_max"])
+        self.Ind_tau_rise_ms = float(preset.get("Ind_tau_rise_ms", 50.0))
+        self.Ind_tau_decay_ms = float(preset.get("Ind_tau_decay_ms", 300.0))
+
         p = self._imaging_params
-        Kd_uM = float(self.ui.Imaging_GECI_ReadingsKd_Value.text())
-        hill_n = float(self.ui.Imaging_GECI_ReadingsAffinity_Value.text())
-        dff_max = float(self.ui.Imaging_GECI_ReadingsDFF_Value.text())
-        tau_rise = float(self.ui.Imaging_GECI_ReadingsRise_Value.text())
-        tau_decay = float(self.ui.Imaging_GECI_ReadingsDecay_Value.text())
-        p["DissociationConstant"]= Kd_uM
-        p["HillCoef"] = hill_n
-        p["dff_max"] = tau_rise
-        p["Ind_tau_rise_ms"] = tau_decay
-        p["Ind_tau_decay_ms"] = dff_max
+        p["DissociationConstant"] = self.Kd_uM
+        p["HillCoef"] = self.hill_n
+        p["dff_max"] = self.dff_max
+        p["Ind_tau_rise_ms"] = self.Ind_tau_rise_ms
+        p["Ind_tau_decay_ms"] = self.Ind_tau_decay_ms
+
+        if self.use_dff:
+            self._update_F0_from_baseline()
 
     def _update_photobleach(self, dt_ms: float, p: dict) -> None:
         dt_s = max(0.0, float(dt_ms)) / 1000.0
@@ -629,11 +595,10 @@ class ImagingGraph(QObject):
         frame_fluo = [None] * N_NEURONS
 
         for i in range(N_NEURONS):
-            # Vm_prev from buffer (last appended sample) if available; else use current
-            vm_prev = self.Vm_buffers[i][-1] if hasattr(self, "Vm_buffers") and len(self.Vm_buffers[i]) else self.VmData[i]
-
-            # 1) Spike detection (threshold crossing + refractory)
-            spike = self._detect_spike(vm_now=self.VmData[i], vm_prev=vm_prev, t_ms=t_ms, neuron_index=i)
+            # Explicit previous-sample state; no longer coupled to the display buffer
+            spike = self._detect_spike(vm_now=self.VmData[i], vm_prev=self._vm_prev[i],
+                                       t_ms=t_ms, neuron_index=i)
+            self._vm_prev[i] = self.VmData[i]
 
             # 2) Calcium transient (Wei rise/decay kernel; separate τrise and τdecay)
             self.CalciumData[i] = self._update_calcium(neuron_index=i, spike=spike, p=p, dt_ms=dt_ms)
@@ -728,27 +693,18 @@ class ImagingGraph(QObject):
         exp_d = np.exp(-dt_ms / tau_d)
         exp_dr = np.exp(-dt_ms / tau_dr)
 
-        # Spike amplitude per event (µM)
-        self.spikerise = float(p.get("SpikeRise", 0.1))  # slider value already scaled in _connect_parameters
-
-        # Baseline calcium (µM)
-        Cb = float(p.get("CalciumBaseline", 0.1))
+        spike_amplitude_uM = float(p.get("SpikeRise", 0.1))
+        baseline_uM = float(p.get("CalciumBaseline", 0.1))
 
         i = neuron_index
+        self._ca_xd[i] = self._ca_xd[i] * exp_d + spike_amplitude_uM * float(spike)
+        self._ca_xdr[i] = self._ca_xdr[i] * exp_dr + spike_amplitude_uM * float(spike)
 
-        # Update internal kernel states
-        self._ca_xd[i] = self._ca_xd[i] * exp_d + self.spikerise * float(spike)
-        self._ca_xdr[i] = self._ca_xdr[i] * exp_dr + self.spikerise * float(spike)
+        C = baseline_uM + (self._ca_xd[i] - self._ca_xdr[i])
 
-        # Construct calcium concentration
-        C = Cb + (self._ca_xd[i] - self._ca_xdr[i])
-
-        # Internal calcium noise (Gaussian)
-        # We reuse existing slider "NoiseScale" semantics, scaled by sqrt(dt_s).
-        self.Ca_noise_uM = float(p.get("NoiseScale", 0.0))
-        if self.Ca_noise_uM > 0:
-            dt_s = dt_ms / 1000.0
-            C += self.Ca_noise_uM * np.sqrt(dt_s) * np.random.normal()
+        noise_uM = float(p.get("NoiseScale", 0.0))
+        if noise_uM > 0.0:
+            C += noise_uM * np.sqrt(dt_ms / 1000.0) * self._rng.standard_normal()
 
         return max(float(C), 0.0)
 
@@ -952,7 +908,7 @@ class ImagingGraph(QObject):
         # Combine independent noises
         sigma = np.sqrt(sigma_floor ** 2 + sigma_shot ** 2 + sigma_pmt**2)
 
-        return float(F_mean + sigma * np.random.normal())
+        return float(F_mean + sigma * self._rng.standard_normal())
 
     # -------------------------------------------------------------------------
     # Baselines / ΔF/F0
@@ -1002,6 +958,13 @@ class ImagingGraph(QObject):
         This keeps ΔF/F0 stable and meaningful when the user changes:
           - Laser / PMT / FluoScale / FluoOffset
           - Kd / Hill n / dff_max / observation model
+
+        Notes
+        -----
+        The photobleaching factor ``bleach_B`` is deliberately excluded, so a
+        bleaching trace appears as a genuine downward drift in ΔF/F0 rather
+        than being silently normalised away.
+
         """
         if not self._imaging_params:
             return
@@ -1049,34 +1012,25 @@ class ImagingGraph(QObject):
         """Create rolling buffers for all plotted variables."""
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
-        self.Time_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
+        self.Time_buffer = RingBuffer(self._bufsize)
         self.Imagingx = (np.arange(self._bufsize) - (self._bufsize - 1)) * SAMPLE_INTERVAL
 
-        self.Stim_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
-        self.Trigger_buffer = collections.deque([0.0] * self._bufsize, self._bufsize)
+        self.Stim_buffer = RingBuffer(self._bufsize)
+        self.Trigger_buffer = RingBuffer(self._bufsize)
+        self.Calcium_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
+        self.Fluo_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
+        self.Vm_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
 
-        self.Calcium_buffers = [
-            collections.deque([0.0] * self._bufsize, self._bufsize)
-            for _ in range(N_NEURONS)
-        ]
-        self.Fluo_buffers = [
-            collections.deque([0.0] * self._bufsize, self._bufsize)
-            for _ in range(N_NEURONS)
-        ]
-        self.Vm_buffers = [
-            collections.deque([0.0] * self._bufsize, self._bufsize)
-            for _ in range(N_NEURONS)
-        ]
-
-        # Frame-sampled buffers
-        max_fps = max(1, self.ui.Imaging_FrameRate_Slider.maximum()*100)
+        max_fps = max(1.0, self.ui.Imaging_FrameRate_Slider.maximum() * FRAME_RATE_SCALE)
         self._frame_bufsize = int(TIME_WINDOW * max_fps / 1000.0) + 10
         self.FrameTime_buffer = collections.deque(maxlen=self._frame_bufsize)
-        self.Fluo_frame_buffers = [collections.deque(maxlen=self._frame_bufsize) for _ in range(N_NEURONS)]
+        self.Fluo_frame_buffers = [collections.deque(maxlen=self._frame_bufsize)
+                                   for _ in range(N_NEURONS)]
 
-        # Reset frame phase and spike refractory state
         self._frame_phase_ms = 0.0
         self._t_last_spike_ms[:] = -1e12
+        self._vm_prev[:] = 0.0
+
 
     def _append_buffers(self, t_ms):
         """Append latest model states to rolling buffers."""
@@ -1108,6 +1062,8 @@ class ImagingGraph(QObject):
         pw.showGrid(x=True, y=True)
 
         pi = pw.getPlotItem()
+        configure_scope(pi)
+
         pi.showAxis("right")
 
         ax_left = pi.getAxis("left")
@@ -1118,9 +1074,10 @@ class ImagingGraph(QObject):
         ax_bottom.setLabel("Time", units="ms")
 
         if self.use_dff:
-            ax_left.setLabel("ΔF/F0", units="")
+            ax_left.setLabel("ΔF/F0", units="%")   # traces are scaled by 100
         else:
             ax_left.setLabel("Fluorescence", units="a.u.")
+
         ax_right.setLabel("Stimulus / Vm", units="a.u. / mV")
 
         # Main ViewBox
@@ -1241,8 +1198,8 @@ class ImagingGraph(QObject):
         Buffers -> numpy arrays -> PyQtGraph curves.
         """
         ui = self.ui
-        t_arr = np.asarray(self.Time_buffer, dtype=float)
-        x = t_arr - t_arr[-1]  # last point at 0 ms, older negative
+        t_arr = self.Time_buffer.data
+        x = t_arr - t_arr[-1]
 
         # Calcium
         calcium_checks = [ui.Imaging_Calcium1_Checkbox, ui.Imaging_Calcium2_Checkbox, ui.Imaging_Calcium3_Checkbox]
@@ -1252,7 +1209,7 @@ class ImagingGraph(QObject):
             visible = calcium_checks[i].isChecked()
             calcium_curves[i].setVisible(visible)
             if visible:
-                calcium_curves[i].setData(x, list(self.Calcium_buffers[i]))
+                calcium_curves[i].setData(x, self.Calcium_buffers[i].data)
 
         # Fluorescence (or ΔF/F0)
         fluo_checks = [ui.Imaging_Fluorescence1_Checkbox, ui.Imaging_Fluorescence2_Checkbox, ui.Imaging_Fluorescence3_Checkbox]
@@ -1264,7 +1221,7 @@ class ImagingGraph(QObject):
             if not visible:
                 continue
 
-            y = np.asarray(self.Fluo_buffers[i], dtype=float)
+            y = self.Fluo_buffers[i].data
 
             if self.use_dff:
                 # Offset-corrected ΔF/F0 (kept from your original approach)
@@ -1284,13 +1241,13 @@ class ImagingGraph(QObject):
             visible = vm_checks[i].isChecked()
             vm_curves[i].setVisible(visible)
             if visible:
-                vm_curves[i].setData(x, list(self.Vm_buffers[i]))
+                vm_curves[i].setData(x, self.Vm_buffers[i].data)
 
         # Stimulus
         visible = ui.Imaging_Stimulus_Checkbox.isChecked()
         self.Stimcurve.setVisible(visible)
         if visible:
-            self.Stimcurve.setData(x, list(self.Stim_buffer))
+            self.Stimcurve.setData(x, self.Stim_buffer.data)
 
     # -------------------------------------------------------------------------
     # Recording
@@ -1483,33 +1440,26 @@ class ImagingGraph(QObject):
 
     def _export_csv(self):
         """
-        Write recorded imaging data to CSV.
+        Write the recorded imaging session to disk.
+
+        Three artefacts are produced, as documented in ``_handle_recording``
+        (the frame table and the metadata sidecar were previously accumulated
+        in memory and then discarded):
+
+        - ``<base>.csv``         : per-sample stream with frame-index mapping
+        - ``<base>_frames.csv``  : one row per camera frame
+        - ``<base>_meta.json``   : model parameters captured at record start
         """
         if (not hasattr(self, "_rec")) or (len(self._rec.get("t_ms", [])) == 0):
             return
 
-        base = str(self.ui.Imaging_SelectedFolderLabel.text()).strip()
-        if not base:
+        sample_path = resolve_csv_path(self.ui.Imaging_SelectedFolderLabel.text())
+        if sample_path is None:
             return
+        stem = sample_path.with_suffix("")
 
-        # If user typed ".csv" already, strip it to avoid ".csv.csv"
-        if base.lower().endswith(".csv"):
-            base = base[:-4]
-
-        # Build paths robustly
-        try:
-            from pathlib import Path
-            base_path = Path(base)
-            if str(base_path.parent) not in ("", "."):
-                base_path.parent.mkdir(parents=True, exist_ok=True)
-            sample_csv_path = str(base_path.with_suffix(".csv"))
-
-        except Exception:
-            # Fallback
-            sample_csv_path = f"{base}.csv"
-
-        # 1) Sample-rate CSV
-        df_samples = pd.DataFrame({
+        n = len(self._rec["t_ms"])
+        pd.DataFrame({
             "Time (ms)": self._rec["t_ms"],
             "Stim": self._rec["stim"],
             "Trigger": self._rec["trig"],
@@ -1522,12 +1472,28 @@ class ImagingGraph(QObject):
             "F1 (a.u.)": self._rec["F1"],
             "F2 (a.u.)": self._rec["F2"],
             "F3 (a.u.)": self._rec["F3"],
-            "FrameIdx": self._rec.get("frame_idx", [-1] * len(self._rec["t_ms"])),
-            "FrameTime (ms)": self._rec.get("frame_t_ms", [float("nan")] * len(self._rec["t_ms"])),
-        })
-        df_samples.to_csv(sample_csv_path, index=False)
+            "FrameIdx": self._rec.get("frame_idx", [-1] * n),
+            "FrameTime (ms)": self._rec.get("frame_t_ms", [float("nan")] * n),
+        }).to_csv(sample_path, index=False)
 
+        frames = getattr(self, "_rec_frames", None)
+        if frames and frames["frame_idx"]:
+            pd.DataFrame({
+                "FrameIdx": frames["frame_idx"],
+                "FrameTime (ms)": frames["t_frame_ms"],
+                "NearestSampleIdx": frames["sample_idx"],
+                "F1 (a.u.)": frames["F1"],
+                "F2 (a.u.)": frames["F2"],
+                "F3 (a.u.)": frames["F3"],
+            }).to_csv(str(stem) + "_frames.csv", index=False)
 
+        meta = getattr(self, "_rec_meta", None)
+        if meta:
+            meta["n_samples"] = n
+            meta["n_frames"] = len(frames["frame_idx"]) if frames else 0
+            meta["recording_stop_iso"] = datetime.datetime.now().isoformat(timespec="seconds")
+            with open(str(stem) + "_meta.json", "w", encoding="utf-8") as handle:
+                json.dump(meta, handle, indent=2)
 
     # -------------------------------------------------------------------------
     # UI Helpers
@@ -1546,7 +1512,7 @@ class ImagingGraph(QObject):
 
         def update(_=None):
             # Camera parameters
-            p["frame_rate"] = max(1, ui.Imaging_FrameRate_Slider.value()*100)
+            p["frame_rate"] = max(1.0, ui.Imaging_FrameRate_Slider.value() * FRAME_RATE_SCALE)
             p["PMT"] = ui.Imaging_PMT_Slider.value() / 100.0
             p["Laser"] = ui.Imaging_Laser_Slider.value() / 100.0
 
@@ -1664,6 +1630,7 @@ class ImagingGraph(QObject):
         # Reset plot objects
         self._plots_ready = False
         self._mainVB = None
+        self._vm_prev[:] = 0.0
 
         # Remove viewboxes/axes safely
         pi = self.ui.Imaging_Oscilloscope_widget.getPlotItem()

@@ -1,798 +1,843 @@
+"""
+Spikeling emulator: software Izhikevich model driving the emulator oscilloscope.
 
-########################################################################
-#                          Libraries import                            #
+The emulator integrates up to three Izhikevich neurons (one soma plus two
+presynaptic units) with forward Euler at a fixed 0.1 ms step, matching the
+firmware so that emulator and hardware traces are directly comparable:
+
+$$v_{k+1} = v_k + \\\\Delta t\\\\,(0.04 v_k^2 + 5 v_k + 140 - u_k + I_k)$$
+$$u_{k+1} = u_k + \\\\Delta t\\\\, a\\\\,(b\\\\,v_{k+1} - u_k)$$
+
+Architecture note
+-----------------
+All Qt widget reads and all random draws are hoisted out of the integration
+loop: the UI is sampled once per GUI tick into an ``EmulatorUISnapshot`` and
+the Gaussian current noise for the whole tick is drawn as a single block.
+At the maximum speed setting this removes ~3 x 10^5 Python/Qt boundary
+crossings and ~3 x 10^4 scalar RNG calls per tick.
+
+Reference
+---------
+Izhikevich, 2003, IEEE Transactions on Neural Networks
+"Simple Model of Spiking Neurons"
+"""
+
+from dataclasses import dataclass
 
 from PySide6.QtCore import QTimer
 import pyqtgraph as pg
 
-import collections
 import numpy as np
 import pandas as pd
 
 import Parameters_Settings as Settings
-import Graph_Imaging
+from graph_core import RingBuffer, configure_scope, resolve_csv_path, safe_reconnect
 
 
-Emulator_downsampling = 10
-Emulator_sampleinterval = 0.1
-Emulator_timewindow = 5000
-Emulator_timewindowdisplay = 500
-penwidth = 1
+# --- Display / buffering ---------------------------------------------------
+EMULATOR_SAMPLE_INTERVAL_MS = 0.1       # integration step, matches firmware dt
+EMULATOR_TIME_WINDOW_MS = 5000          # rolling buffer length
+EMULATOR_TIME_WINDOW_DISPLAY_MS = 500   # initial visible x-range
+PEN_WIDTH = 1
+N_EMULATOR_CHANNELS = 8
+
+# --- Speed control ---------------------------------------------------------
+# Integration steps executed per 50 ms GUI tick, indexed by the speed slider.
+STEPS_PER_UPDATE_BY_SLIDER = (10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000)
+# Steps per tick corresponding to "x 1.0" wall-clock speed (50 ms / 0.1 ms * 20).
+REALTIME_STEPS_PER_UPDATE = 10000
+GUI_TICK_MS = 50
+
+# --- Izhikevich bounds -----------------------------------------------------
+V_THRESHOLD_MV = 30.0
+V_PEAK_MV = 30.0
+V_MIN_MV = -110.0
+
+# --- Photodiode model ------------------------------------------------------
+PHOTODIODE_STIM_SCALE = 25.0     # stimulus (%) -> photocurrent (a.u.)
+PHOTODIODE_GAIN_SCALE = 0.5      # slider gain normalisation
+PHOTODIODE_DECAY_SCALE = 100000.0
+PHOTODIODE_RECOVERY_SCALE = 1000.0
+
+# --- Stimulus generator ----------------------------------------------------
+STIM_DUTY_CYCLE_STEPS = 500
+STIM_DUTY_CYCLE_MIN_STEPS = 10
+
+# --- Plot y-ranges ---------------------------------------------------------
+VM_MIN_MV, VM_MAX_MV = -90, 30
+CURRENT_MIN, CURRENT_MAX = -100, 100
+
+
+@dataclass(slots=True)
+class EmulatorUISnapshot:
+    """
+    Immutable snapshot of every emulator control, read once per GUI tick.
+
+    Sampling the controls once per tick rather than once per integration step
+    is physiologically indistinguishable, because the fastest possible slider
+    movement is orders of magnitude slower than one 50 ms tick.
+
+    Attributes
+    ----------
+    izh, izh_syn1, izh_syn2 : tuple of float
+        Izhikevich ``(a, b, c, d)`` parameters for the soma and both synapses.
+    stim_strength : float
+        Square-pulse amplitude (%).
+    stim_frequency : float
+        Square-pulse frequency index, clamped to ``[-100, 100]``.
+    stim_custom_enabled : bool
+        Whether a user-loaded waveform overrides the internal generator.
+    stim_custom_wave : sequence of float or None
+        The loaded waveform, or ``None`` when unavailable or empty.
+    stim_as_light, stim_as_current : bool
+        Somatic stimulus routing.
+    patch_clamp, noise_sigma : float
+        Somatic injected current (a.u.) and noise standard deviation.
+    photo_gain, photo_decay, photo_recovery : float
+        Somatic photodiode gain and adaptation rates, already slider-scaled.
+    syn_enabled, syn_patch_clamp, syn_noise_sigma, syn_gain, syn_decay : tuple
+        Per-synapse parameters, indexed ``[0] -> synapse 1``.
+    syn_as_current, syn_as_light : tuple of bool
+        Per-synapse stimulus routing.
+    syn_photo_gain, syn_photo_decay, syn_photo_recovery : tuple of float
+        Per-synapse photodiode parameters.
+    """
+
+    izh: tuple
+    izh_syn1: tuple
+    izh_syn2: tuple
+
+    stim_strength: float
+    stim_frequency: float
+    stim_custom_enabled: bool
+    stim_custom_wave: object
+    stim_as_light: bool
+    stim_as_current: bool
+
+    patch_clamp: float
+    noise_sigma: float
+    photo_gain: float
+    photo_decay: float
+    photo_recovery: float
+
+    syn_enabled: tuple
+    syn_patch_clamp: tuple
+    syn_noise_sigma: tuple
+    syn_gain: tuple
+    syn_decay: tuple
+    syn_as_current: tuple
+    syn_as_light: tuple
+    syn_photo_gain: tuple
+    syn_photo_decay: tuple
+    syn_photo_recovery: tuple
+
+    @classmethod
+    def from_ui(cls, ui) -> "EmulatorUISnapshot":
+        """
+        Read every emulator widget exactly once.
+
+        Parameters
+        ----------
+        ui : object
+            Generated Qt UI object owning the emulator widgets.
+
+        Returns
+        -------
+        EmulatorUISnapshot
+            Frozen parameter set valid for the current GUI tick.
+        """
+        wave = getattr(ui, "Emulatordf_yStim", None)
+        if wave is not None and len(wave) == 0:
+            wave = None
+
+        return cls(
+            izh=(ui.Emulator_a, ui.Emulator_b, ui.Emulator_c, ui.Emulator_d),
+            izh_syn1=(ui.Emulator_a1, ui.Emulator_b1, ui.Emulator_c1, ui.Emulator_d1),
+            izh_syn2=(ui.Emulator_a2, ui.Emulator_b2, ui.Emulator_c2, ui.Emulator_d2),
+
+            stim_strength=float(ui.Emulator_StimStrSlider.value()),
+            stim_frequency=float(max(-100, min(100, -ui.Emulator_StimFre_slider.value()))),
+            stim_custom_enabled=bool(ui.EmulatorStimCus_toggleButton.isChecked()),
+            stim_custom_wave=wave,
+            stim_as_light=bool(ui.EmulatorStimChoiceLight_toggleButton.isChecked()),
+            stim_as_current=bool(ui.EmulatorStimChoiceCurrent_toggleButton.isChecked()),
+
+            patch_clamp=float(ui.Emulator_PatchClamp_slider.value()),
+            noise_sigma=float(ui.Emulator_Noise_slider.value()) / 4.0,
+            photo_gain=float(ui.Emulator_PR_PhotoGain_slider.value()),
+            photo_decay=float(ui.Emulator_PR_Decay_slider.value()) / PHOTODIODE_DECAY_SCALE,
+            photo_recovery=float(ui.Emulator_PR_Recovery_slider.value()) / PHOTODIODE_RECOVERY_SCALE,
+
+            syn_enabled=(bool(ui.EmulatorSyn1_Synapse_toggleButton.isChecked()),
+                         bool(ui.EmulatorSyn2_Synapse_toggleButton.isChecked())),
+            syn_patch_clamp=(float(ui.Emulator_Syn1_PatchClamp_slider.value()),
+                             float(ui.Emulator_Syn2_PatchClamp_slider.value())),
+            syn_noise_sigma=(float(ui.Emulator_Syn1_Noise_slider.value()) / 4.0,
+                             float(ui.Emulator_Syn2_Noise_slider.value()) / 4.0),
+            syn_gain=(float(ui.Emulator_Synapse1_slider.value()),
+                      float(ui.Emulator_Synapse2_slider.value())),
+            syn_decay=(float(ui.Emulator_Synapse1_Decay_slider.value()) / 1000.0,
+                       float(ui.Emulator_Synapse2_Decay_slider.value()) / 1000.0),
+            syn_as_current=(bool(ui.EmulatorSyn1_StimDC_toggleButton.isChecked()),
+                            bool(ui.EmulatorSyn2_StimDC_toggleButton.isChecked())),
+            syn_as_light=(bool(ui.EmulatorSyn1_StimLight_toggleButton.isChecked()),
+                          bool(ui.EmulatorSyn2_StimLight_toggleButton.isChecked())),
+            syn_photo_gain=(float(ui.Emulator_Syn1_PR_PhotoGain_slider.value()),
+                            float(ui.Emulator_Syn2_PR_PhotoGain_slider.value())),
+            syn_photo_decay=(float(ui.Emulator_Syn1_PR_Decay_slider.value()) / PHOTODIODE_DECAY_SCALE,
+                             float(ui.Emulator_Syn2_PR_Decay_slider.value()) / PHOTODIODE_DECAY_SCALE),
+            syn_photo_recovery=(float(ui.Emulator_Syn1_PR_Recovery_slider.value()) / PHOTODIODE_RECOVERY_SCALE,
+                                float(ui.Emulator_Syn2_PR_Recovery_slider.value()) / PHOTODIODE_RECOVERY_SCALE),
+        )
+
+
+def izhikevich_step(v, u, i_total, izh, dt_ms):
+    """
+    Advance one Izhikevich neuron by a single forward-Euler step.
+
+    The recovery variable is updated from the *new* membrane potential
+    (sequential / Gauss-Seidel ordering) to stay bit-comparable with the
+    Spikeling firmware, which performs the same in-place update.
+
+    Parameters
+    ----------
+    v, u : float
+        Membrane potential (mV) and recovery variable.
+    i_total : float
+        Total input current (a.u.) applied during this step.
+    izh : tuple of float
+        Izhikevich ``(a, b, c, d)`` parameters.
+    dt_ms : float
+        Integration step in milliseconds.
+
+    Returns
+    -------
+    v_next : float
+        Updated membrane potential, reset and clamped.
+    u_next : float
+        Updated recovery variable.
+    spiked : bool
+        True on the step where the potential is rendered at its peak value.
+    """
+    a, b, c, d = izh
+
+    v = v + dt_ms * (0.04 * v * v + 5.0 * v + 140.0 - u + i_total)
+    u = u + dt_ms * (a * (b * v - u))
+
+    if v >= V_THRESHOLD_MV:
+        v = c
+        u = u + d
+    if v < V_MIN_MV:
+        v = V_MIN_MV
+
+    spiked = v >= 0.0
+    if spiked:
+        v = V_PEAK_MV
+
+    return v, u, spiked
+
+
+def photodiode_step(stimulus, gain, recovery, decay_rate, recovery_rate):
+    """
+    Advance the adapting photodiode model by one step.
+
+    The photocurrent is scaled by a slowly adapting availability term that is
+    depleted in proportion to the emitted current and relaxes back to unity,
+    reproducing the light adaptation of the Spikeling photodetector front end.
+
+    Parameters
+    ----------
+    stimulus : float
+        Stimulus state (%).
+    gain : float
+        Signed photodiode gain; the sign sets ON vs OFF polarity.
+    recovery : float
+        Current availability in ``[0, 1]``.
+    decay_rate, recovery_rate : float
+        Depletion and relaxation rates, already slider-scaled.
+
+    Returns
+    -------
+    current : float
+        Photodiode current for this step (a.u.).
+    recovery : float
+        Updated availability.
+    """
+    polarity = 1.0 if gain >= 0.0 else -1.0
+    current = (stimulus / PHOTODIODE_STIM_SCALE) * (gain / PHOTODIODE_GAIN_SCALE) * recovery
+
+    if recovery > 0.0:
+        recovery -= polarity * decay_rate * current
+    if recovery < 0.0:
+        recovery = 0.0
+    if recovery < 1.0:
+        recovery += recovery_rate
+
+    return current, recovery
+
 
 def EmulatorPlot(self):
+    """
+    Start or stop the emulator from the connect button.
+
+    Parameters
+    ----------
+    self : object
+        Main window owning ``self.ui`` and the emulator runtime state.
+    """
     if self.ui.Emulator_Connect_pushButton.isChecked():
         SetInitParameters(self)
         SetPlotCurve(self)
         SetPlot(self)
 
-        # QTimer for emulator GUI updates
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: UpdatePlot(self))
-        self.timer.start(50)
+        self.timer.start(GUI_TICK_MS)
+        return
+
+    self.ui.Emulator_Connect_pushButton.setText("Start Spikeling Emulator")
+    self.ui.Emulator_Connect_pushButton.setStyleSheet(
+        "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
+        "background-color: rgb" + str(tuple(Settings.DarkSolarized[2])) + ";\n"
+        "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
+        "border-radius: 10px;"
+    )
+
+    if hasattr(self, "timer"):
+        self.timer.stop()
+    self.ui.Emulator_Oscilloscope_widget.clear()
+    if hasattr(self, "Emulator_CurrentPlots"):
+        self.Emulator_CurrentPlots.clear()
+
+    self.ui.EmulatorConnectedFlag = False
+    self.recordflag = False
+
+
+def UpdatePlot(self):
+    """
+    Advance the emulator by one GUI tick and refresh the oscilloscope.
+
+    The speed slider selects how many 0.1 ms integration steps run per tick.
+    Controls are sampled once, noise is drawn as one block, the recording
+    state machine is evaluated once, and the scope is redrawn once, so the
+    only per-step work is the model itself.
+    """
+    speed_step = min(self.ui.Emulator_Speed_slider.value(),
+                     len(STEPS_PER_UPDATE_BY_SLIDER) - 1)
+    steps_per_update = STEPS_PER_UPDATE_BY_SLIDER[speed_step]
+    self.ui.Emulator_Speed_value.setText(
+        "x " + str(round(steps_per_update / REALTIME_STEPS_PER_UPDATE, 3))
+    )
+
+    # --- Once-per-tick UI sampling and RNG ------------------------------
+    ui_state = EmulatorUISnapshot.from_ui(self.ui)
+
+    noise_block = self._emulator_rng.standard_normal((steps_per_update, 3))
+    noise_block *= np.array([ui_state.noise_sigma,
+                             ui_state.syn_noise_sigma[0],
+                             ui_state.syn_noise_sigma[1]], dtype=float)
+
+    # Consume the one-shot custom-stimulus restart flag once per tick.
+    if getattr(self.ui, "StimCus_Flag", False):
+        self.EmulatorCusStimCounter = 0
+        self.Emulator_PendingStimTrigger = True
+        self.ui.StimCus_Flag = False
+
+    UpdateRecordingState(self)
+
+    # --- Downstream consumers -------------------------------------------
+    imaging_graph = getattr(self, "imaging_graph", None)
+    imaging_enabled = (imaging_graph is not None
+                       and getattr(self, "ImagingConnectionFlag", False)
+                       and imaging_graph.source_mode == "emulator")
+
+    extracellular_graph = getattr(self, "extracellular_graph", None)
+    extracellular_enabled = (extracellular_graph is not None
+                             and getattr(self, "ExtraCellularConnectionFlag", False)
+                             and extracellular_graph.source_mode == "emulator")
+
+    forward_batch = [] if (imaging_enabled or extracellular_enabled) else None
+
+    # --- Integration loop -------------------------------------------------
+    for step in range(steps_per_update):
+        vec8 = GetData(self, ui_state, noise_block[step])
+        self.ui.Emulator_Data = vec8
+
+        for channel in range(N_EMULATOR_CHANNELS):
+            self.Emulator_buffers[channel].append(vec8[channel])
+
+        if self.recordflag:
+            for channel in range(N_EMULATOR_CHANNELS):
+                self.EmulatorData[channel + 1].append(vec8[channel])
+
+        if forward_batch is not None:
+            forward_batch.append([self.Emulator_sim_time_ms] + vec8)
+
+    PlotCurve(self)
+
+    if forward_batch:
+        if imaging_enabled:
+            imaging_graph.on_emulator_data(forward_batch)
+        if extracellular_enabled:
+            extracellular_graph.on_emulator_data(forward_batch)
+
+
+def GetData(self, ui_state, noise_row):
+    """
+    Execute one emulator integration step.
+
+    Order of operations
+    -------------------
+    1. Soma membrane potential, driven by the current accumulated last step.
+    2. Stimulus waveform (custom file, or internal 50 % duty square pulse).
+    3. Somatic photodiode and direct-current routing.
+    4. Synapse 1: Izhikevich step, photodiode, post-synaptic current.
+    5. Synapse 2: identical, with its own parameter set.
+    6. Accumulate the total somatic current for the next step.
+
+    Fixes relative to the pre-refactor implementation
+    -------------------------------------------------
+    - Synapse 2 decay now reads ``syn_decay[1]``; the slider previously wrote
+      to a differently-spelled attribute and had no effect.
+    - Photodiode adaptation rates are applied on the step they are read,
+      instead of one step late.
+    - Synaptic spike flags are cleared when a synapse is disabled, so
+      re-enabling it no longer emits a phantom post-synaptic current.
+
+    Parameters
+    ----------
+    self : object
+        Main window holding the emulator state.
+    ui_state : EmulatorUISnapshot
+        Control values sampled once for the current GUI tick.
+    noise_row : numpy.ndarray
+        Pre-drawn Gaussian noise for this step, ordered
+        ``[soma, synapse 1, synapse 2]`` (a.u.).
+
+    Returns
+    -------
+    list of float
+        ``[Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]``.
+    """
+    dt = self.Emulator_timestep_ms
+
+    # ------------------------------------------------------------------
+    # 1) Soma membrane potential
+    # ------------------------------------------------------------------
+    self.Emulator_v, self.Emulator_u, _ = izhikevich_step(
+        self.Emulator_v, self.Emulator_u, self.Emulator_TotalCurrent_Data,
+        ui_state.izh, dt,
+    )
+    self.Emulator_Vm_Data = self.Emulator_v
+
+    # ------------------------------------------------------------------
+    # 2) Stimulus
+    # ------------------------------------------------------------------
+    self.Emulator_Trigger = 0
+
+    if ui_state.stim_custom_enabled and ui_state.stim_custom_wave is not None:
+        wave = ui_state.stim_custom_wave
+
+        if self.Emulator_PendingStimTrigger:
+            self.Emulator_Trigger = 1
+            self.Emulator_PendingStimTrigger = False
+
+        if self.EmulatorCusStimCounter >= len(wave):
+            self.EmulatorCusStimCounter = 0
+            self.Emulator_Trigger = 1
+
+        self.Emulator_Stimulus_Data = float(wave[self.EmulatorCusStimCounter])
+        self.EmulatorCusStimCounter += 1
 
     else:
-        self.ui.Emulator_Connect_pushButton.setText("Start Spikeling Emulator")
-        self.ui.Emulator_Connect_pushButton.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
-                                                          "background-color: rgb" + str(tuple(Settings.DarkSolarized[2])) + ";\n"
-                                                          "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
-                                                          "border-radius: 10px;"
-                                                          )
-        if hasattr(self, "timer"):
-            self.timer.stop()
-        self.ui.Emulator_Oscilloscope_widget.clear()
-        if hasattr(self, "Emulator_CurrentPlots"):
-            self.Emulator_CurrentPlots.clear()
-        self.ui.EmulatorConnectedFlag = False
+        if self.Emulator_StimTriggerEnable:
+            self.Emulator_Trigger = 1
+            self.Emulator_StimTriggerEnable = False
 
-
-    # -----------------------------------------------------------------
-    # Nested update function: runs at each QTimer tick
-    # -----------------------------------------------------------------
-    def UpdatePlot(self):
-        """
-        Advance the emulator and update the graph.
-
-        The Emulator_Speed_slider (0–5) controls how many simulation
-        timesteps (dt = 0.1 ms) we execute for each QTimer tick.
-        """
-
-        # 1) Map slider value -> how many simulation steps per GUI update
-        speed_step = self.ui.Emulator_Speed_slider.value()
-
-        steps_per_update_lookup = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
-        steps_per_update = steps_per_update_lookup[speed_step]
-        DT_Display = round(steps_per_update / 10000, 3)
-        self.ui.Emulator_Speed_value.setText("x " + str(DT_Display))
-
-        # 2) Run several simulation steps before we redraw
-        imaging_batch = []  # list of 9-field packets for imaging
-        extracellular_batch = []  # list of 9-field packets for extracellular
-
-        # Resolve imaging_graph once per tick
-        imaging_graph = getattr(self, "imaging_graph", None)
-        imaging_enabled = (
-                imaging_graph is not None
-                and getattr(self, "ImagingConnectionFlag", False)
-                and imaging_graph.source_mode == "emulator"
-        )
-        # Resolve extracellular_graph once per tick
-        extracellular_graph = getattr(self, "extracellular_graph", None)
-        extracellular_enabled = (
-                extracellular_graph is not None
-                and getattr(self, "ExtraCellularConnectionFlag", False)
-                and extracellular_graph.source_mode == "emulator"
+        half_period = self.Emulator_StimSteps // 2
+        self.Emulator_Stimulus_Data = (
+            ui_state.stim_strength if self.Emulator_StimCounter < half_period else 0.0
         )
 
-        for _ in range(steps_per_update):
-            vec8 = GetData(self)  # [Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
-            self.ui.Emulator_Data = vec8
+        self.Emulator_StimCounter += 1
+        if self.Emulator_StimCounter >= self.Emulator_StimSteps:
+            self.Emulator_StimCounter = 0
+            self.Emulator_StimTriggerEnable = True
+            steps = (self.Emulator_Stim_DutyCycle
+                     + (ui_state.stim_frequency * self.Emulator_Stim_DutyCycle) / 100.0
+                     + self.Emulator_Stim_DutyCycle_Min)
+            self.Emulator_StimSteps = max(1, int(steps))
 
-            BuffData(self)
-            SavePlotData(self)
+    stimulus = self.Emulator_Stimulus_Data
 
-
-            # 9-field packet shared by all downstream emulator-fed graphs:
-            # [t_ms, Vm0, Stim, Itot, Vm1, ISyn1, Vm2, ISyn2, Trigger]
-            pkt9 = [self.Emulator_sim_time_ms] + list(vec8)
-
-            if imaging_enabled:
-                imaging_batch.append(pkt9)
-
-            if extracellular_enabled:
-                extracellular_batch.append(pkt9)
-
-        # 3) Plot only once per GUI update (using the latest buffer contents)
-        PlotCurve(self)
-
-        # 4) Forward the whole batch once per GUI tick
-        if imaging_batch:
-            imaging_graph.on_emulator_data(imaging_batch)
-        if extracellular_batch:
-            extracellular_graph.on_emulator_data(extracellular_batch)
-
-    # Read Serial and return data array (7)
-    def GetData(self):
-
-        # Get Izhikevich variables
-        ################################################################
-        Emulator_a = self.ui.Emulator_a
-        Emulator_b = self.ui.Emulator_b
-        Emulator_c = self.ui.Emulator_c
-        Emulator_d = self.ui.Emulator_d
-
-
-        # Generate Vm
-        ################################################################
-
-        self.Emulator_v = self.Emulator_v + self.Emulator_timestep_ms * ( 0.04 * self.Emulator_v * self.Emulator_v + 5.0 * self.Emulator_v + 140.0 - self.Emulator_u + self.Emulator_TotalCurrent_Data )
-        self.Emulator_u = self.Emulator_u + self.Emulator_timestep_ms * ( Emulator_a * (Emulator_b * self.Emulator_v - self.Emulator_u) )
-
-        if self.Emulator_v >= self.Emulator_v_thresh:
-            self.Emulator_v = Emulator_c
-            self.Emulator_u = self.Emulator_u + Emulator_d
-
-        if self.Emulator_v < self.Emulator_v_min:
-            self.Emulator_v = self.Emulator_v_min
-
-        if self.Emulator_v >= 0:
-            self.Emulator_v = self.Emulator_v_peak
-
-        self.Emulator_Vm_Data = self.Emulator_v
-
-
-        # Generate Stimulus State
-        ################################################################
-
-        self.Emulator_Trigger = 0
-
-        use_custom_stim = (
-                self.ui.EmulatorStimCus_toggleButton.isChecked()
-                and hasattr(self.ui, "Emulatordf_yStim")
-                and len(self.ui.Emulatordf_yStim) > 0
+    # ------------------------------------------------------------------
+    # 3) Somatic stimulus routing
+    # ------------------------------------------------------------------
+    if ui_state.stim_as_light:
+        self.Emulator_Photodiode_Value, self.Photodiode_Recovery = photodiode_step(
+            stimulus, ui_state.photo_gain, self.Photodiode_Recovery,
+            ui_state.photo_decay, ui_state.photo_recovery,
         )
+    else:
+        self.Emulator_Photodiode_Value = 0.0
 
-        if use_custom_stim:
-            if getattr(self.ui, "StimCus_Flag", False):
-                self.EmulatorCusStimCounter = 0
-                self.Emulator_Trigger = 1
-                self.ui.StimCus_Flag = False
+    direct_current = stimulus if ui_state.stim_as_current else 0.0
 
-            # Safe wrap-around
-            if self.EmulatorCusStimCounter >= len(self.ui.Emulatordf_yStim):
-                self.EmulatorCusStimCounter = 0
-                self.Emulator_Trigger = 1
+    # ------------------------------------------------------------------
+    # 4) Synapse 1
+    # ------------------------------------------------------------------
+    if ui_state.syn_enabled[0]:
+        self.Emulator_v1, self.Emulator_u1, spiked1 = izhikevich_step(
+            self.Emulator_v1, self.Emulator_u1, self.Emulator_TotalCurrent1_Data,
+            ui_state.izh_syn1, dt,
+        )
+        self.Emulator_Vm_Data1 = self.Emulator_v1
 
-            self.EmulatorStimCusValue = self.ui.Emulatordf_yStim[self.EmulatorCusStimCounter]
-            self.EmulatorCusStimCounter += 1
-
-            self.Emulator_Stimulus_Data = float(self.EmulatorStimCusValue)
-
+        if ui_state.syn_as_light[0]:
+            photo1, self.EmulatorSyn1_Photodiode_Recovery = photodiode_step(
+                stimulus, ui_state.syn_photo_gain[0],
+                self.EmulatorSyn1_Photodiode_Recovery,
+                ui_state.syn_photo_decay[0], ui_state.syn_photo_recovery[0],
+            )
         else:
-            # Fallback to internal square-pulse generator
-            # Read UI
-            self.Emulator_StimulusStrength_Value = self.ui.Emulator_StimStrSlider.value()
-            self.Emulator_StimulusFrequency_Value = -self.ui.Emulator_StimFre_slider.value()  # match stim.freq direction
+            photo1 = 0.0
+        self.EmulatorSyn1_Photodiode_Value = photo1
 
-            # Constrain like the firmware effectively does (freq comes from ADC mapping)
-            self.Emulator_StimulusFrequency_Value = max(-100, min(100, int(self.Emulator_StimulusFrequency_Value)))
+        if spiked1:
+            self.Emulator_Syn1Input_Data += ui_state.syn_gain[0]
+        self.Emulator_Syn1Input_Data *= ui_state.syn_decay[0]
 
-            # ---- Trigger behavior (matches firmware trigger_enable logic) ----
-            # Firmware pulses trigger = 1 for one iteration at the *beginning* of the new period.
-            if getattr(self, "Emulator_StimTriggerEnable", False):
-                self.Emulator_Trigger = 1
-                self.Emulator_StimTriggerEnable = False
-            else:
-                self.Emulator_Trigger = 0
+        self.Emulator_TotalCurrent1_Data = (
+            ui_state.syn_patch_clamp[0]
+            + noise_row[1]
+            + (stimulus if ui_state.syn_as_current[0] else 0.0)
+            + photo1
+        )
+    else:
+        self.Emulator_Vm_Data1 = 0.0
+        self.Emulator_Syn1Input_Data = 0.0
+        self.Emulator_Spike1 = False
 
-            # ---- 50% duty waveform (matches stim.counter < stim.steps/2) ----
-            half_period = self.Emulator_StimSteps // 2  # integer division like C++ int/int
-            if self.Emulator_StimCounter < half_period:
-                self.Emulator_Stimulus_Data = self.Emulator_StimulusStrength_Value
-            else:
-                self.Emulator_Stimulus_Data = 0.0
+    # ------------------------------------------------------------------
+    # 5) Synapse 2
+    # ------------------------------------------------------------------
+    if ui_state.syn_enabled[1]:
+        self.Emulator_v2, self.Emulator_u2, spiked2 = izhikevich_step(
+            self.Emulator_v2, self.Emulator_u2, self.Emulator_TotalCurrent2_Data,
+            ui_state.izh_syn2, dt,
+        )
+        self.Emulator_Vm_Data2 = self.Emulator_v2
 
-            # Increment counter (matches stim.counter++)
-            self.Emulator_StimCounter += 1
-
-            # Period rollover (matches if (counter >= steps) { counter=0; trigger_enable=true; steps = ... })
-            if self.Emulator_StimCounter >= self.Emulator_StimSteps:
-                self.Emulator_StimCounter = 0
-                self.Emulator_StimTriggerEnable = True
-
-                s = (self.Emulator_Stim_DutyCycle
-                     + (self.Emulator_StimulusFrequency_Value * self.Emulator_Stim_DutyCycle) / 100.0
-                     + self.Emulator_Stim_DutyCycle_Min
-                )
-
-                self.Emulator_StimSteps = int(s)
-
-                if self.Emulator_StimSteps < 1:
-                    self.Emulator_StimSteps = 1
-
-        #Generate TotalCurrent Input
-        ################################################################
-
-        #PatchClamp
-        self.Emulator_InputCurrent_Value = self.ui.Emulator_PatchClamp_slider.value()
-
-
-        #Noise
-        self.Emulator_NoiseSlider = self.ui.Emulator_Noise_slider.value()
-        self.Emulator_Noise_Value = np.random.normal(0, self.Emulator_NoiseSlider/4)
-
-
-        #Photodiode
-        if self.ui.EmulatorStimChoiceLight_toggleButton.isChecked():
-            self.Emulator_I_Photodiode = self.Emulator_Stimulus_Data/25
-
-            self.Emulator_Photodiode_Gain = self.ui.Emulator_PR_PhotoGain_slider.value()
-            if self.Emulator_Photodiode_Gain >= 0:
-                self.Emulator_Photodiode_Polarity = 1
-            else:
-                self.Emulator_Photodiode_Polarity = -1
-
-            self.Emulator_Photodiode_Value = self.Emulator_I_Photodiode * self.Emulator_Photodiode_Gain/0.5 * self.Photodiode_Recovery
-
-            if self.Photodiode_Recovery > 0.0:
-                self.Photodiode_Recovery  -= self.Emulator_Photodiode_Polarity * self.Photodiode_Decay_value * self.Emulator_Photodiode_Value
-            if self.Photodiode_Recovery < 0.0:
-                self.Photodiode_Recovery = 0.0
-
-            if self.Photodiode_Recovery < 1.0:
-                self.Photodiode_Recovery += self.Photodiode_Recovery_value
-
-            self.Photodiode_Decay_value = self.ui.Emulator_PR_Decay_slider.value() / 100000.0
-
-            self.Photodiode_Recovery_value = self.ui.Emulator_PR_Recovery_slider.value() / 1000.0
-
-
+        if ui_state.syn_as_light[1]:
+            photo2, self.EmulatorSyn2_Photodiode_Recovery = photodiode_step(
+                stimulus, ui_state.syn_photo_gain[1],
+                self.EmulatorSyn2_Photodiode_Recovery,
+                ui_state.syn_photo_decay[1], ui_state.syn_photo_recovery[1],
+            )
         else:
-            self.Emulator_Photodiode_Value = 0.0
-
-
-
-        # Direct Current
-        ################################################################
-        if self.ui.EmulatorStimChoiceCurrent_toggleButton.isChecked():
-            self.Emulator_DirectCurrent_Value = self.Emulator_Stimulus_Data
-        else:
-            self.Emulator_DirectCurrent_Value = 0.0
-
-
-
-
-
-
-        ################################################################
-        ################################################################
-        # Synapse 1
-        ################################################################
-        ################################################################
-
-        if self.ui.EmulatorSyn1_Synapse_toggleButton.isChecked():
-
-            # Get Izhikevich variables
-            ################################################################
-            Emulator_a1 = self.ui.Emulator_a1
-            Emulator_b1 = self.ui.Emulator_b1
-            Emulator_c1 = self.ui.Emulator_c1
-            Emulator_d1 = self.ui.Emulator_d1
-
-
-            # PatchClamp
-            ################################################################
-            self.Emulator_Syn1_PatchClampCurrent_Value = self.ui.Emulator_Syn1_PatchClamp_slider.value()
-
-            # Noise
-            ################################################################
-
-            self.Emulator_Syn1_NoiseSlider_Value = self.ui.Emulator_Syn1_Noise_slider.value()
-            self.Emulator_Syn1_NoiseCurrent_Value = np.random.normal(0, self.Emulator_Syn1_NoiseSlider_Value / 4)
-
-            # Generate Vm for synapse 1
-            ################################################################
-
-            self.Emulator_v1 = self.Emulator_v1 + self.Emulator_timestep_ms * (0.04 * self.Emulator_v1 * self.Emulator_v1 + 5.0 * self.Emulator_v1 + 140.0 - self.Emulator_u1 + self.Emulator_TotalCurrent1_Data)
-            self.Emulator_u1 = self.Emulator_u1 + self.Emulator_timestep_ms * (Emulator_a1 * (Emulator_b1 * self.Emulator_v1 - self.Emulator_u1))
-
-            if self.Emulator_v1 >= self.Emulator_v_thresh:
-                self.Emulator_v1 = Emulator_c1
-                self.Emulator_u1 = self.Emulator_u1 + Emulator_d1
-
-            if self.Emulator_v1 < self.Emulator_v_min:
-                self.Emulator_v1 = self.Emulator_v_min
-
-            if self.Emulator_v1 >= 0:
-                self.Emulator_v1 = self.Emulator_v_peak
-                self.Emulator_Spike1 = True
-
-            self.Emulator_Vm_Data1 = self.Emulator_v1
-
-            # DirectCurrent Input for Synapse 1
-            #################################################################
-            if self.ui.EmulatorSyn1_StimDC_toggleButton.isChecked():
-                self.Emulator_Syn1_DirectCurrent_Value = self.Emulator_Stimulus_Data
-            else:
-                self.Emulator_Syn1_DirectCurrent_Value = 0.0
-
-            # Light Stimulation for Synapse 1
-            #################################################################
-            if self.ui.EmulatorSyn1_StimLight_toggleButton.isChecked():
-
-                self.EmulatorSyn1_I_Photodiode = self.Emulator_Stimulus_Data / 25
-
-                self.EmulatorSyn1_Photodiode_Gain = self.ui.Emulator_Syn1_PR_PhotoGain_slider.value()
-                if self.EmulatorSyn1_Photodiode_Gain >= 0:
-                    self.EmulatorSyn1_Photodiode_Polarity = 1
-                else:
-                    self.EmulatorSyn1_Photodiode_Polarity = -1
-
-                self.EmulatorSyn1_Photodiode_Value = self.EmulatorSyn1_I_Photodiode * self.EmulatorSyn1_Photodiode_Gain / 0.5 * self.EmulatorSyn1_Photodiode_Recovery
-
-                if self.EmulatorSyn1_Photodiode_Recovery > 0.0:
-                    self.EmulatorSyn1_Photodiode_Recovery -= self.EmulatorSyn1_Photodiode_Polarity * self.EmulatorSyn1_Photodiode_Decay_value * self.EmulatorSyn1_Photodiode_Value
-                if self.EmulatorSyn1_Photodiode_Recovery < 0.0:
-                    self.EmulatorSyn1_Photodiode_Recovery = 0.0
-
-                if self.EmulatorSyn1_Photodiode_Recovery < 1.0:
-                    self.EmulatorSyn1_Photodiode_Recovery += self.EmulatorSyn1_Photodiode_Recovery_value
-
-                self.EmulatorSyn1_Photodiode_Decay_value = self.ui.Emulator_Syn1_PR_Decay_slider.value() / 100000.0
-                self.EmulatorSyn1_Photodiode_Recovery_value = self.ui.Emulator_Syn1_PR_Recovery_slider.value() / 1000.0
-
-            else:
-                self.EmulatorSyn1_Photodiode_Value = 0.0
-
-
-            # Collect variables for synapse 1
-            ################################################################
-            self.Emulator_Syn1_Gain = self.ui.Emulator_Synapse1_slider.value()
-            self.Emulator_Syn1_Decay = self.ui.Emulator_Synapse1_Decay_slider.value() / 1000.0
-
-
-            # When a spike comes from synapse 1
-            ################################################################
-            if self.Emulator_Spike1 == True:
-                self.Emulator_Syn1Input_Data += self.Emulator_Syn1_Gain
-                self.Emulator_Spike1 = False
-
-            self.Emulator_Syn1Input_Data *= self.Emulator_Syn1_Decay
-
-            self.Emulator_TotalCurrent1_Data = self.Emulator_Syn1_PatchClampCurrent_Value + self.Emulator_Syn1_NoiseCurrent_Value + self.Emulator_Syn1_DirectCurrent_Value + self.EmulatorSyn1_Photodiode_Value
-
-
-        else:
-            self.Emulator_Vm_Data1 = 0.0
-            self.Emulator_Syn1Input_Data = 0.0
-
-        ################################################################
-        ################################################################
-        # Synapse 2
-        ################################################################
-        ################################################################
-
-        if self.ui.EmulatorSyn2_Synapse_toggleButton.isChecked():
-
-            # Get Izhikevich variables
-            ################################################################
-            Emulator_a2 = self.ui.Emulator_a2
-            Emulator_b2 = self.ui.Emulator_b2
-            Emulator_c2 = self.ui.Emulator_c2
-            Emulator_d2 = self.ui.Emulator_d2
-
-            # PatchClamp for synapse 2
-            ################################################################
-            self.Emulator_Syn2_PatchClampCurrent_Value = self.ui.Emulator_Syn2_PatchClamp_slider.value()
-
-            # Noise for synapse 2
-            ################################################################
-            self.Emulator_Syn2_NoiseSlider_Value = self.ui.Emulator_Syn2_Noise_slider.value()
-            self.Emulator_Syn2_NoiseCurrent_Value = np.random.normal(0, self.Emulator_Syn2_NoiseSlider_Value / 4)
-
-
-            # Generate Vm for synapse 2
-            ################################################################
-
-            self.Emulator_v2 = self.Emulator_v2 + self.Emulator_timestep_ms * (0.04 * self.Emulator_v2 * self.Emulator_v2 + 5.0 * self.Emulator_v2 + 140.0 - self.Emulator_u2 + self.Emulator_TotalCurrent2_Data)
-            self.Emulator_u2 = self.Emulator_u2 + self.Emulator_timestep_ms * (Emulator_a2 * (Emulator_b2 * self.Emulator_v2 - self.Emulator_u2))
-
-            if self.Emulator_v2 >= self.Emulator_v_thresh:
-                self.Emulator_v2 = Emulator_c2
-                self.Emulator_u2 = self.Emulator_u2 + Emulator_d2
-
-            if self.Emulator_v2 < self.Emulator_v_min:
-                self.Emulator_v2 = self.Emulator_v_min
-
-            if self.Emulator_v2 >= 0:
-                self.Emulator_v2 = self.Emulator_v_peak
-                self.Emulator_Spike2 = True
-
-            self.Emulator_Vm_Data2 = self.Emulator_v2
-
-            # DirectCurrent Input for Synapse 2
-            #################################################################
-            if self.ui.EmulatorSyn2_StimDC_toggleButton.isChecked():
-                self.Emulator_Syn2_DirectCurrent_Value = self.Emulator_Stimulus_Data
-            else:
-                self.Emulator_Syn2_DirectCurrent_Value = 0.0
-
-            # Light Stimulation for Synapse 2
-            #################################################################
-            if self.ui.EmulatorSyn2_StimLight_toggleButton.isChecked():
-
-                self.EmulatorSyn2_I_Photodiode = self.Emulator_Stimulus_Data / 25
-
-                self.EmulatorSyn2_Photodiode_Gain = self.ui.Emulator_Syn2_PR_PhotoGain_slider.value()
-                if self.EmulatorSyn2_Photodiode_Gain >= 0:
-                    self.EmulatorSyn2_Photodiode_Polarity = 1
-                else:
-                    self.EmulatorSyn2_Photodiode_Polarity = -1
-
-                self.EmulatorSyn2_Photodiode_Value = self.EmulatorSyn2_I_Photodiode * self.EmulatorSyn2_Photodiode_Gain / 0.5 * self.EmulatorSyn2_Photodiode_Recovery
-
-                if self.EmulatorSyn2_Photodiode_Recovery > 0.0:
-                    self.EmulatorSyn2_Photodiode_Recovery -= self.EmulatorSyn2_Photodiode_Polarity * self.EmulatorSyn2_Photodiode_Decay_value * self.EmulatorSyn2_Photodiode_Value
-                if self.EmulatorSyn2_Photodiode_Recovery < 0.0:
-                    self.EmulatorSyn2_Photodiode_Recovery = 0.0
-
-                if self.EmulatorSyn2_Photodiode_Recovery < 1.0:
-                    self.EmulatorSyn2_Photodiode_Recovery += self.EmulatorSyn2_Photodiode_Recovery_value
-
-                self.EmulatorSyn2_Photodiode_Decay_value = self.ui.Emulator_Syn2_PR_Decay_slider.value() / 100000.0
-                self.EmulatorSyn2_Photodiode_Recovery_value = self.ui.Emulator_Syn2_PR_Recovery_slider.value() / 1000.0
-
-
-            else:
-                self.EmulatorSyn2_Photodiode_Value = 0.0
-
-            # Collect variables for synapse 2
-            ################################################################
-            self.Emulator_Syn2_Gain = self.ui.Emulator_Synapse2_slider.value()
-            self.Emulator_Syn2Decay = self.ui.Emulator_Synapse2_Decay_slider.value() / 1000.0
-
-
-            # When a spike comes from synapse 2
-            ################################################################
-            if self.Emulator_Spike2 == True:
-                self.Emulator_Syn2Input_Data += self.Emulator_Syn2_Gain
-                self.Emulator_Spike2 = False
-
-            self.Emulator_Syn2Input_Data *= self.Emulator_Syn2_Decay
-
-            self.Emulator_TotalCurrent2_Data = self.Emulator_Syn2_PatchClampCurrent_Value + self.Emulator_Syn2_NoiseCurrent_Value + self.Emulator_Syn2_DirectCurrent_Value + self.EmulatorSyn2_Photodiode_Value
-
-
-        else:
-            self.Emulator_Vm_Data2 = 0.0
-            self.Emulator_Syn2Input_Data = 0.0
-
-
-
-
-        self.Emulator_TotalCurrent_Data = self.Emulator_InputCurrent_Value + self.Emulator_Noise_Value + self.Emulator_Photodiode_Value + self.Emulator_DirectCurrent_Value + self.Emulator_Syn1Input_Data + self.Emulator_Syn2Input_Data
-
-
-
-
-        self.ui.Emulator_data = []
-        self.ui.Emulator_data.append(self.Emulator_Vm_Data)
-        self.ui.Emulator_data.append(self.Emulator_Stimulus_Data)
-        self.ui.Emulator_data.append(self.Emulator_TotalCurrent_Data)
-        self.ui.Emulator_data.append(self.Emulator_Vm_Data1)
-        self.ui.Emulator_data.append(self.Emulator_Syn1Input_Data)
-        self.ui.Emulator_data.append(self.Emulator_Vm_Data2)
-        self.ui.Emulator_data.append(self.Emulator_Syn2Input_Data)
-        self.ui.Emulator_data.append(self.Emulator_Trigger)
-
-        # advance simulation clock by one integration step
-        self.Emulator_sim_time_ms += self.Emulator_timestep_ms  # 0.1 ms
-
-        return [
-            self.Emulator_Vm_Data,
-            self.Emulator_Stimulus_Data,
-            self.Emulator_TotalCurrent_Data,
-            self.Emulator_Vm_Data1,
-            self.Emulator_Syn1Input_Data,
-            self.Emulator_Vm_Data2,
-            self.Emulator_Syn2Input_Data,
-            self.Emulator_Trigger,
-        ]
-
-    # Append latest serial data point into buffer deque
-    def BuffData(self):
-        self.Emulator_databuffer0.append(self.ui.Emulator_Data[0])
-        self.Emulator_databuffer1.append(self.ui.Emulator_Data[1])
-        self.Emulator_databuffer2.append(self.ui.Emulator_Data[2])
-        self.Emulator_databuffer3.append(self.ui.Emulator_Data[3])
-        self.Emulator_databuffer4.append(self.ui.Emulator_Data[4])
-        self.Emulator_databuffer5.append(self.ui.Emulator_Data[5])
-        self.Emulator_databuffer6.append(self.ui.Emulator_Data[6])
-        self.Emulator_databuffer7.append(self.ui.Emulator_Data[7])
-
-
-
-    # If checked, plot latest buffer data points
-    def PlotCurve(self):
-        if self.ui.Emulator_VmCheckbox.isChecked():
-            self.Emulator_y0[:] = self.Emulator_databuffer0
-            self.Emulator_curve0.setData(self.Emulator_x, self.Emulator_y0)
-            self.Emulator_curve0.setVisible(True)
-        else:
-            self.Emulator_curve0.setVisible(False)
-
-        if self.ui.Emulator_StimulusCheckbox.isChecked():
-            self.Emulator_y1[:] = self.Emulator_databuffer1
-            self.Emulator_curve1.setData(self.Emulator_x, self.Emulator_y1)
-            self.Emulator_curve1.setVisible(True)
-        else:
-            self.Emulator_curve1.setVisible(False)
-
-        if self.ui.Emulator_InputCurrentCheckbox.isChecked():
-            self.Emulator_y2[:] = self.Emulator_databuffer2
-            self.Emulator_curve2.setData(self.Emulator_x, self.Emulator_y2)
-            self.Emulator_curve2.setVisible(True)
-        else:
-            self.Emulator_curve2.setVisible(False)
-
-        if self.ui.Emulator_Syn1VmCheckbox.isChecked():
-            self.Emulator_y3[:] = self.Emulator_databuffer3
-            self.Emulator_curve3.setData(self.Emulator_x, self.Emulator_y3)
-            self.Emulator_curve3.setVisible(True)
-        else:
-            self.Emulator_curve3.setVisible(False)
-
-        if self.ui.Emulator_Syn1InputCheckbox.isChecked():
-            self.Emulator_y4[:] = self.Emulator_databuffer4
-            self.Emulator_curve4.setData(self.Emulator_x, self.Emulator_y4)
-            self.Emulator_curve4.setVisible(True)
-        else:
-            self.Emulator_curve4.setVisible(False)
-
-        if self.ui.Emulator_Syn2VmCheckbox.isChecked():
-            self.Emulator_y5[:] = self.Emulator_databuffer5
-            self.Emulator_curve5.setData(self.Emulator_x, self.Emulator_y5)
-            self.Emulator_curve5.setVisible(True)
-        else:
-            self.Emulator_curve5.setVisible(False)
-
-        if self.ui.Emulator_Syn2InputCheckbox.isChecked():
-            self.Emulator_y6[:] = self.Emulator_databuffer6
-            self.Emulator_curve6.setData(self.Emulator_x, self.Emulator_y6)
-            self.Emulator_curve6.setVisible(True)
-        else:
-            self.Emulator_curve6.setVisible(False)
-
-
-
-
-def SavePlotData(self):
-    # Stop recording -> write out CSV
-    if (not self.ui.Emulator_DataRecording_Record_pushButton.isChecked()
-            and getattr(self, "recordflag", False)):
-
-        if len(self.EmulatorData[1]) == 0:
-            self.recordflag = False
+            photo2 = 0.0
+        self.EmulatorSyn2_Photodiode_Value = photo2
+
+        if spiked2:
+            self.Emulator_Syn2Input_Data += ui_state.syn_gain[1]
+        self.Emulator_Syn2Input_Data *= ui_state.syn_decay[1]   # BUGFIX
+
+        self.Emulator_TotalCurrent2_Data = (
+            ui_state.syn_patch_clamp[1]
+            + noise_row[2]
+            + (stimulus if ui_state.syn_as_current[1] else 0.0)
+            + photo2
+        )
+    else:
+        self.Emulator_Vm_Data2 = 0.0
+        self.Emulator_Syn2Input_Data = 0.0
+        self.Emulator_Spike2 = False
+
+    # ------------------------------------------------------------------
+    # 6) Total somatic current for the next step
+    # ------------------------------------------------------------------
+    self.Emulator_TotalCurrent_Data = (
+        ui_state.patch_clamp
+        + noise_row[0]
+        + self.Emulator_Photodiode_Value
+        + direct_current
+        + self.Emulator_Syn1Input_Data
+        + self.Emulator_Syn2Input_Data
+    )
+
+    self.Emulator_sim_time_ms += dt
+
+    return [
+        self.Emulator_Vm_Data,
+        self.Emulator_Stimulus_Data,
+        self.Emulator_TotalCurrent_Data,
+        self.Emulator_Vm_Data1,
+        self.Emulator_Syn1Input_Data,
+        self.Emulator_Vm_Data2,
+        self.Emulator_Syn2Input_Data,
+        float(self.Emulator_Trigger),
+    ]
+
+
+def PlotCurve(self):
+    """
+    Push the visible rolling buffers to their curves.
+
+    Reads go straight from the ``RingBuffer`` contiguous views, avoiding the
+    per-redraw deque-to-array copy of 7 x 50 000 samples.
+    """
+    ui = self.ui
+    channels = (
+        (ui.Emulator_VmCheckbox, self.Emulator_curve0, 0),
+        (ui.Emulator_StimulusCheckbox, self.Emulator_curve1, 1),
+        (ui.Emulator_InputCurrentCheckbox, self.Emulator_curve2, 2),
+        (ui.Emulator_Syn1VmCheckbox, self.Emulator_curve3, 3),
+        (ui.Emulator_Syn1InputCheckbox, self.Emulator_curve4, 4),
+        (ui.Emulator_Syn2VmCheckbox, self.Emulator_curve5, 5),
+        (ui.Emulator_Syn2InputCheckbox, self.Emulator_curve6, 6),
+    )
+    for checkbox, curve, index in channels:
+        visible = checkbox.isChecked()
+        curve.setVisible(visible)
+        if visible:
+            curve.setData(self.Emulator_x, self.Emulator_buffers[index].data)
+
+
+def UpdateViews(self):
+    """Keep the right-axis current ViewBox aligned with the main ViewBox."""
+    main_vb = self.ui.Emulator_Oscilloscope_widget.getViewBox()
+    self.Emulator_CurrentPlots.setGeometry(main_vb.sceneBoundingRect())
+    self.Emulator_CurrentPlots.linkedViewChanged(main_vb, self.Emulator_CurrentPlots.XAxis)
+
+
+def UpdateRecordingState(self):
+    """
+    Handle the record-button edges once per GUI tick.
+
+    Previously this ran per integration step (up to 10 000 ``isChecked()``
+    calls per tick) and overwrote existing files silently. It now mirrors the
+    confirm-overwrite flow already used by the Spikeling page.
+    """
+    checked = self.ui.Emulator_DataRecording_Record_pushButton.isChecked()
+
+    if checked and not self.recordflag:
+        path = resolve_csv_path(self.ui.Emulator_SelectedFolderLabel.text())
+        if path is None:
+            self.ui.Emulator_DataRecording_Record_pushButton.setChecked(False)
+            Settings.show_popup(
+                self, Title="Error: no file selected",
+                Text="Select a destination file before recording emulator data.",
+            )
             return
 
-        n = len(self.EmulatorData[1])
-        Dataset = np.empty((9, n), dtype=float)
+        if path.exists():
+            action, new_path = Settings.confirm_overwrite(self, path)
+            if action == "cancel":
+                self.ui.Emulator_DataRecording_Record_pushButton.setChecked(False)
+                return
+            if action == "rename":
+                path = new_path
 
-        # time axis
-        Dataset[0] = np.arange(n, dtype=float) * Emulator_sampleinterval
+        self.Emulator_RecordingPath = path
+        for row in self.EmulatorData:
+            row.clear()
+        self.recordflag = True
+        return
 
-        for j in range(1, 9):
-            Dataset[j] = np.array(self.EmulatorData[j], dtype=float)
-
-        df = pd.DataFrame({
-            'Time (ms)': Dataset[0],
-            'Spikeling Vm (mV)': Dataset[1],
-            'Stimulus (%)': Dataset[2],
-            'Total Current Input (a.u.)': Dataset[3],
-            'Synapse 1 Vm (mV)': Dataset[4],
-            'Synapse 1 Input (a.u.)': Dataset[5],
-            'Synapse 2 Vm (mV)': Dataset[6],
-            'Synapse 2 Input (a.u.)': Dataset[7],
-            'Trigger': Dataset[8],
-        })
-
-        self.Emulator_RecordingFileName = str(self.ui.Emulator_SelectedFolderLabel.text())
-        df.to_csv(self.Emulator_RecordingFileName + ".csv", index=False)
-
-        # reset state
+    if (not checked) and self.recordflag:
+        ExportEmulatorCsv(self)
         self.recordflag = False
         for row in self.EmulatorData:
             row.clear()
 
-    # While recording, append latest values
-    if self.ui.Emulator_DataRecording_Record_pushButton.isChecked():
-        self.recordflag = True
-        self.EmulatorData[1].append(self.Emulator_databuffer0[-1])
-        self.EmulatorData[2].append(self.Emulator_databuffer1[-1])
-        self.EmulatorData[3].append(self.Emulator_databuffer2[-1])
-        self.EmulatorData[4].append(self.Emulator_databuffer3[-1])
-        self.EmulatorData[5].append(self.Emulator_databuffer4[-1])
-        self.EmulatorData[6].append(self.Emulator_databuffer5[-1])
-        self.EmulatorData[7].append(self.Emulator_databuffer6[-1])
-        self.EmulatorData[8].append(self.Emulator_databuffer7[-1])
+
+def ExportEmulatorCsv(self):
+    """
+    Write the recorded emulator stream to CSV.
+
+    The time axis is reconstructed as ``k * dt`` because the emulator clock is
+    exact by construction; unlike the hardware stream, no sample can be lost.
+    """
+    n_samples = len(self.EmulatorData[1])
+    path = getattr(self, "Emulator_RecordingPath", None)
+    if n_samples == 0 or path is None:
+        return
+
+    columns = [
+        'Spikeling Vm (mV)', 'Stimulus (%)', 'Total Current Input (a.u.)',
+        'Synapse 1 Vm (mV)', 'Synapse 1 Input (a.u.)',
+        'Synapse 2 Vm (mV)', 'Synapse 2 Input (a.u.)', 'Trigger',
+    ]
+    frame = {'Time (ms)': np.arange(n_samples, dtype=float) * EMULATOR_SAMPLE_INTERVAL_MS}
+    frame.update({
+        name: np.asarray(self.EmulatorData[j + 1], dtype=float)
+        for j, name in enumerate(columns)
+    })
+
+    try:
+        pd.DataFrame(frame).to_csv(path, index=False)
+    except Exception as error:
+        Settings.show_popup(
+            self, Title="Error saving file",
+            Text=f"Could not save emulator recording to {path}.\nError: {error}",
+        )
 
 
 def SetInitParameters(self):
+    """Reset every emulator state variable to its cold-start value."""
     self.ui.EmulatorConnectedFlag = True
     self.recordflag = False
     self.Trigger = 0
     self.Emulator_sim_time_ms = 0.0
+    self.Emulator_RecordingPath = None
     self.ui.Emulator_Oscilloscope_widget.clear()
+
+    # Modern NumPy generator, ~4x faster than the legacy global RNG
+    self._emulator_rng = np.random.default_rng()
+
     if self.ui.Emulator_Connect_pushButton.isChecked():
         self.ui.Emulator_Connect_pushButton.setText("Stop Spikeling Emulator")
-        self.ui.Emulator_Connect_pushButton.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + ";\n"
-                                                          "background-color: rgb" + str(tuple(Settings.DarkSolarized[11])) + ";\n"
-                                                          "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
-                                                          "border-radius: 10px;"
-                                                           )
+        self.ui.Emulator_Connect_pushButton.setStyleSheet(
+            "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + ";\n"
+            "background-color: rgb" + str(tuple(Settings.DarkSolarized[11])) + ";\n"
+            "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
+            "border-radius: 10px;"
+        )
     else:
         self.ui.Emulator_Connect_pushButton.setText("Start Spikeling Emulator")
-        self.ui.Emulator_Connect_pushButton.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
-                                                          "background-color: rgb" + str(tuple(Settings.DarkSolarized[2])) + ";\n"
-                                                          "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
-                                                          "border-radius: 10px;"
-                                                           )
+        self.ui.Emulator_Connect_pushButton.setStyleSheet(
+            "color: rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
+            "background-color: rgb" + str(tuple(Settings.DarkSolarized[2])) + ";\n"
+            "border: 1px solid rgb" + str(tuple(Settings.DarkSolarized[14])) + ";\n"
+            "border-radius: 10px;"
+        )
 
-    self.ui.Emulator_a = 0.02
-    self.ui.Emulator_b = 0.2
-    self.ui.Emulator_c = -65.0
-    self.ui.Emulator_d = 8.0
+    # --- Soma ---------------------------------------------------------
+    self.ui.Emulator_a, self.ui.Emulator_b = 0.02, 0.2
+    self.ui.Emulator_c, self.ui.Emulator_d = -65.0, 8.0
 
-    self.Emulator_v = -65.0
-    self.Emulator_u = 0.0
-    self.Emulator_timestep_ms = 0.1
-    self.Emulator_v_thresh = 30.0
-    self.Emulator_v_peak = 30.0
-    self.Emulator_v_min = -110
-    self.Emulator_v_max = 100
+    self.Emulator_v, self.Emulator_u = -65.0, 0.0
+    self.Emulator_timestep_ms = EMULATOR_SAMPLE_INTERVAL_MS
+    self.Emulator_v_thresh = V_THRESHOLD_MV
+    self.Emulator_v_peak = V_PEAK_MV
+    self.Emulator_v_min = V_MIN_MV
 
+    self.Emulator_Vm_Data = -65.0
     self.Emulator_TotalCurrent_Data = 0.0
 
+    # --- Stimulus generator -------------------------------------------
     self.Emulator_Stimulus_Data = 0.0
     self.Emulator_StimCounter = 0
     self.Emulator_StimSteps = 1000
-    self.Emulator_Stim_DutyCycle = 500
-    self.Emulator_Stim_DutyCycle_Min = 10
-
-    self.Emulator_NoiseSlider = 0.0
-    self.Emulator_Noise_Value = 0.0
-
+    self.Emulator_Stim_DutyCycle = STIM_DUTY_CYCLE_STEPS
+    self.Emulator_Stim_DutyCycle_Min = STIM_DUTY_CYCLE_MIN_STEPS
     self.Emulator_Trigger = 0
 
-    self.Emulator_Photodiode_Value = 0
-    self.Emulator_I_Photodiode = 0
-    self.Emulator_Photodiode_Gain = 0
-    self.Emulator_Photodiode_Polarity = 1
+    # Custom-stimulus and trigger state (previously uninitialised)
+    self.EmulatorCusStimCounter = 0
+    self.Emulator_PendingStimTrigger = False
+    self.Emulator_StimTriggerEnable = False
+
+    # --- Somatic photodiode -------------------------------------------
+    self.Emulator_Photodiode_Value = 0.0
     self.Photodiode_Recovery = 1.0
-    self.Photodiode_Recovery_value = 0.025
-    self.Photodiode_Decay_value = 0.001
 
-    self.ui.Emulator_a1 = 0.02
-    self.ui.Emulator_b1 = 0.2
-    self.ui.Emulator_c1 = -65.0
-    self.ui.Emulator_d1 = 8.0
+    # --- Synapse 1 ------------------------------------------------------
+    self.ui.Emulator_a1, self.ui.Emulator_b1 = 0.02, 0.2
+    self.ui.Emulator_c1, self.ui.Emulator_d1 = -65.0, 8.0
+    self.Emulator_v1, self.Emulator_u1 = -65.0, 0.0
     self.Emulator_Vm_Data1 = 0.0
-    self.Emulator_v1 = -65.0
-    self.Emulator_u1 = 0.0
-    self.Emulator_Syn1_PatchClampCurrent_Value = 0.0
     self.Emulator_TotalCurrent1_Data = 0.0
-    self.EmulatorSyn1_Photodiode_Value = 0
-    self.EmulatorSyn1_I_Photodiode = 0
-    self.EmulatorSyn1_Photodiode_Gain = 0
-    self.EmulatorSyn1_Photodiode_Polarity = 1
-    self.EmulatorSyn1_Photodiode_Recovery = 1.0
-    self.EmulatorSyn1_Photodiode_Recovery_value = 0.025
-    self.EmulatorSyn1_Photodiode_Decay_value = 0.001
-    self.Emulator_Spike1 = False
     self.Emulator_Syn1Input_Data = 0.0
-    self.Emulator_Syn1_Gain = 0.0
-    self.Emulator_Syn1_Decay = 0.995
+    self.Emulator_Spike1 = False
+    self.EmulatorSyn1_Photodiode_Value = 0.0
+    self.EmulatorSyn1_Photodiode_Recovery = 1.0
 
-
-    self.ui.Emulator_a2 = 0.02
-    self.ui.Emulator_b2 = 0.2
-    self.ui.Emulator_c2 = -65.0
-    self.ui.Emulator_d2 = 8.0
+    # --- Synapse 2 ------------------------------------------------------
+    self.ui.Emulator_a2, self.ui.Emulator_b2 = 0.02, 0.2
+    self.ui.Emulator_c2, self.ui.Emulator_d2 = -65.0, 8.0
+    self.Emulator_v2, self.Emulator_u2 = -65.0, 0.0
     self.Emulator_Vm_Data2 = 0.0
-    self.Emulator_v2 = -65.0
-    self.Emulator_u2 = 0.0
-    self.Emulator_Syn2_PatchClampCurrent_Value = 0.0
     self.Emulator_TotalCurrent2_Data = 0.0
-    self.EmulatorSyn2_Photodiode_Value = 0
-    self.EmulatorSyn2_I_Photodiode = 0
-    self.EmulatorSyn2_Photodiode_Gain = 0
-    self.EmulatorSyn2_Photodiode_Polarity = 1
-    self.EmulatorSyn2_Photodiode_Recovery = 1.0
-    self.EmulatorSyn2_Photodiode_Recovery_value = 0.025
-    self.EmulatorSyn2_Photodiode_Decay_value = 0.001
-    self.Emulator_Spike2 = False
     self.Emulator_Syn2Input_Data = 0.0
-    self.Emulator_Syn2_Gain = 0.0
-    self.Emulator_Syn2_Decay = 0.995
+    self.Emulator_Spike2 = False
+    self.EmulatorSyn2_Photodiode_Value = 0.0
+    self.EmulatorSyn2_Photodiode_Recovery = 1.0
 
 
 def SetPlotCurve(self):
-    self._interval = Emulator_sampleinterval
-    self._bufsize = int(Emulator_timewindow / Emulator_sampleinterval)
+    """
+    Allocate the rolling display buffers and the recording accumulators.
 
-    self.Emulator_databuffer0 = collections.deque([0.0] * self._bufsize, self._bufsize)    # Set a double-ended queue 0.0 floats to self._bufsize entries, for a self._bufsize max length
-    self.Emulator_databuffer1 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer2 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer3 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer4 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer5 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer6 = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.Emulator_databuffer7 = collections.deque([0.0] * self._bufsize, self._bufsize)
+    One ``RingBuffer`` per stream replaces the previous deque plus staging
+    array pair, halving memory traffic per redraw.
+    """
+    self._bufsize = int(EMULATOR_TIME_WINDOW_MS / EMULATOR_SAMPLE_INTERVAL_MS)
 
+    self.Emulator_buffers = [RingBuffer(self._bufsize) for _ in range(N_EMULATOR_CHANNELS)]
+    self.Emulator_x = np.linspace(-EMULATOR_TIME_WINDOW_MS, 0.0, self._bufsize)
 
-    self.Emulator_x = np.linspace(-Emulator_timewindow, 0.0, self._bufsize)            # Create arrays of self._bufsize length
-    self.Emulator_y0 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y1 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y2 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y3 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y4 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y5 = np.zeros(self._bufsize, dtype=float)
-    self.Emulator_y6 = np.zeros(self._bufsize, dtype=float)
-
-
-    self.EmulatorData = []
-    for _ in range(9):
-        self.EmulatorData.append([])
+    # Index 0 is reserved for the reconstructed time axis at export time.
+    self.EmulatorData = [[] for _ in range(N_EMULATOR_CHANNELS + 1)]
 
 
 def SetPlot(self):
-    self.ui.Emulator_Oscilloscope_widget.showGrid(x=True, y=True)
-    self.ui.Emulator_Oscilloscope_widget.setRange(xRange=[-Emulator_timewindowdisplay, 0])
-    self.ui.Emulator_Oscilloscope_widget.setRange(yRange=[-90, 30])
-    self.ui.Emulator_Oscilloscope_widget.plotItem.setMouseEnabled(x=True, y=False)
-    self.ui.Emulator_Oscilloscope_widget.plotItem.vb.setLimits(xMin=-Emulator_timewindow,xMax=0)
-    self.ui.Emulator_Oscilloscope_widget.setLabel('left', 'Membrane potential', 'mV')
-    self.ui.Emulator_Oscilloscope_widget.setLabel('bottom', 'time', 'ms')
-    self.ui.Emulator_Oscilloscope_widget.setLabel('right', 'Current Input', 'a.u.')
+    """
+    Build the emulator oscilloscope: membrane potentials left, currents right.
 
-    # Secondary ViewBox for currents
-    self.Emulator_CurrentPlots = pg.ViewBox()
+    Peak-preserving downsampling and view clipping are enabled so the renderer
+    only rasterises the samples inside the visible x-range rather than the
+    full 50 000-sample buffer.
+    """
     pw = self.ui.Emulator_Oscilloscope_widget
+    plot_item = pw.getPlotItem()
+    configure_scope(plot_item)
 
+    pw.showGrid(x=True, y=True)
+    pw.setRange(xRange=[-EMULATOR_TIME_WINDOW_DISPLAY_MS, 0])
+    pw.setRange(yRange=[VM_MIN_MV, VM_MAX_MV])
+    plot_item.setMouseEnabled(x=True, y=False)
+    plot_item.vb.setLimits(xMin=-EMULATOR_TIME_WINDOW_MS, xMax=0)
+    pw.setLabel('left', 'Membrane potential', 'mV')
+    pw.setLabel('bottom', 'time', 'ms')
+    pw.setLabel('right', 'Current Input', 'a.u.')
+
+    # Secondary ViewBox carrying the currents on the right axis
+    self.Emulator_CurrentPlots = pg.ViewBox()
     pw.scene().addItem(self.Emulator_CurrentPlots)
     self.Emulator_CurrentPlots.setXLink(pw)
-    self.Emulator_CurrentPlots.setRange(yRange=[-100, 100])
+    self.Emulator_CurrentPlots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX])
     self.Emulator_CurrentPlots.setMouseEnabled(False, False)
-
-    # Link right axis to the currents ViewBox
     pw.getAxis("right").linkToView(self.Emulator_CurrentPlots)
 
-    # IMPORTANT: connect sigResized ONLY ONCE here
-    vb = pw.getViewBox()
-    vb.sigResized.connect(lambda: UpdateViews(self))
+    # A stable bound handler is required so repeated connect/disconnect cycles
+    # do not stack duplicate geometry updates on sigResized.
+    if not hasattr(self, "_emulator_update_views"):
+        self._emulator_update_views = lambda: UpdateViews(self)
+    safe_reconnect(pw.getViewBox().sigResized, self._emulator_update_views)
 
-    self.Emulator_curve0 = self.ui.Emulator_Oscilloscope_widget.plot(self.Emulator_x, self.Emulator_y0, pen=pg.mkPen(Settings.DarkSolarized[3], width=penwidth))
-    self.Emulator_curve0.clear()
-    self.Emulator_curve3 = self.ui.Emulator_Oscilloscope_widget.plot(self.Emulator_x, self.Emulator_y3, pen=pg.mkPen(Settings.DarkSolarized[6], width=penwidth))
-    self.Emulator_curve3.clear()
-    self.Emulator_curve5 = self.ui.Emulator_Oscilloscope_widget.plot(self.Emulator_x, self.Emulator_y5, pen=pg.mkPen(Settings.DarkSolarized[8], width=penwidth))
-    self.Emulator_curve5.clear()
+    zeros = np.zeros(self._bufsize, dtype=float)
 
-    self.Emulator_curve1 = pg.PlotCurveItem(self.Emulator_x, self.Emulator_y1, pen=pg.mkPen(Settings.DarkSolarized[5], width=penwidth))
-    self.Emulator_curve1.clear()
-    self.Emulator_curve2 = pg.PlotCurveItem(self.Emulator_x, self.Emulator_y2, pen=pg.mkPen(Settings.DarkSolarized[4], width=penwidth))
-    self.Emulator_curve2.clear()
-    self.Emulator_curve4 = pg.PlotCurveItem(self.Emulator_x, self.Emulator_y4, pen=pg.mkPen(Settings.DarkSolarized[7], width=penwidth))
-    self.Emulator_curve4.clear()
-    self.Emulator_curve6 = pg.PlotCurveItem(self.Emulator_x, self.Emulator_y6, pen=pg.mkPen(Settings.DarkSolarized[10], width=penwidth))
-    self.Emulator_curve6.clear()
+    # Membrane potentials on the main ViewBox
+    self.Emulator_curve0 = pw.plot(self.Emulator_x, zeros,
+                                   pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
+    self.Emulator_curve3 = pw.plot(self.Emulator_x, zeros,
+                                   pen=pg.mkPen(Settings.DarkSolarized[6], width=PEN_WIDTH, cosmetic=True))
+    self.Emulator_curve5 = pw.plot(self.Emulator_x, zeros,
+                                   pen=pg.mkPen(Settings.DarkSolarized[8], width=PEN_WIDTH, cosmetic=True))
 
-    self.Emulator_CurrentPlots.addItem(self.Emulator_curve1)
-    self.Emulator_CurrentPlots.addItem(self.Emulator_curve2)
-    self.Emulator_CurrentPlots.addItem(self.Emulator_curve4)
-    self.Emulator_CurrentPlots.addItem(self.Emulator_curve6)
+    # Stimulus and currents on the secondary ViewBox
+    self.Emulator_curve1 = pg.PlotCurveItem(self.Emulator_x, zeros,
+                                            pen=pg.mkPen(Settings.DarkSolarized[5], width=PEN_WIDTH, cosmetic=True))
+    self.Emulator_curve2 = pg.PlotCurveItem(self.Emulator_x, zeros,
+                                            pen=pg.mkPen(Settings.DarkSolarized[4], width=PEN_WIDTH, cosmetic=True))
+    self.Emulator_curve4 = pg.PlotCurveItem(self.Emulator_x, zeros,
+                                            pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
+    self.Emulator_curve6 = pg.PlotCurveItem(self.Emulator_x, zeros,
+                                            pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
 
+    for curve in (self.Emulator_curve1, self.Emulator_curve2,
+                  self.Emulator_curve4, self.Emulator_curve6):
+        self.Emulator_CurrentPlots.addItem(curve)
 
-
-def UpdateViews(self):
-    self.Emulator_CurrentPlots.setGeometry(self.ui.Emulator_Oscilloscope_widget.getViewBox().sceneBoundingRect())
-    self.Emulator_CurrentPlots.linkedViewChanged(self.ui.Emulator_Oscilloscope_widget.getViewBox(), self.Emulator_CurrentPlots.XAxis)
+    UpdateViews(self)
