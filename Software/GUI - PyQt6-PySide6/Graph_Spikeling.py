@@ -16,6 +16,11 @@ import Parameters_Settings as Settings
 from serial_manager import serial_manager
 from graph_core import RingBuffer, configure_scope, safe_reconnect
 
+from PySide6.QtWidgets import QMessageBox
+
+from connection_supervisor import ConnectionState, SpikelingConnectionSupervisor
+from spikeling_discovery import discover_spikeling_ports
+
 serial_port = serial_manager
 
 # Constants
@@ -74,38 +79,19 @@ class SpikelingGraph(QObject):
         serial_manager.data_received.connect(self.on_data_received)
         serial_manager.connection_changed.connect(self.on_connection_changed)
         serial_manager.error_occurred.connect(self.on_error)
-
-
+        self.setup_auto_connection()
 
     # -------------------------------------------------------------------------
     # Connection Management
     # -------------------------------------------------------------------------
     def connect_device(self):
         """Called when connect button is checked."""
-        self.ui.Spikeling_Speed_slider.setEnabled(True)
-
-        port_name = self.ui.Spikeling_SelectPortComboBox.currentText()
-        if not serial_manager.configure_port(port_name):
-            self.ui.Spikeling_ConnectButton.setChecked(False)
-            return
-
-        if not serial_manager.open():
-            self.ui.Spikeling_ConnectButton.setChecked(False)
-            if self.parent.SerialFlag == False:
-                Settings.show_popup(self, Title="Error: Spikeling not connected",
-                                    Text="Spikeling first needs to be connected, then a COM port has to be selected and finally press the - Connect Spikeling Screen - button")
-            return
-
-        self.set_init_parameters()
-        self.set_plot()
-
-        self.parent.SerialFlag = True
-        self.stim_counter = 0
-
-        self.timer.start(10)   # 100 Hz GUI refresh
+        self.supervisor.start()
 
     def disconnect_device(self):
         """Called when connect button is unchecked."""
+        # user-initiated disconnect must not trigger auto-reconnect
+        self.supervisor.stop()
         self.ui.Spikeling_Speed_slider.setEnabled(False)
 
         self.cleanup()
@@ -228,6 +214,98 @@ class SpikelingGraph(QObject):
                 f"border: 1px solid rgb{tuple(Settings.DarkSolarized[14])};\n"
                 f"border-radius: 10px;"
             )
+    # -------------------------------------------------------------------------
+    # Automatic connection management
+    # -------------------------------------------------------------------------
+    def setup_auto_connection(self) -> None:
+        """
+        Install the hot-plug supervisor and its UI feedback.
+
+        Replaces the manual *select COM port then press Connect* flow: the board
+        is opened as soon as it is plugged in, and re-opened by itself after a
+        cable drop without restarting the GUI.
+        """
+        self.supervisor = SpikelingConnectionSupervisor(serial_manager, parent=self)
+        self.supervisor.register_state_restorer(self.restore_device_state)
+        self.supervisor.connected.connect(self.on_device_connected)
+        self.supervisor.reconnected.connect(self.on_device_reconnected)
+        self.supervisor.disconnected.connect(self.on_device_disconnected)
+        self._disconnect_dialog = None
+        self.supervisor.start()
+
+    def restore_device_state(self) -> None:
+        """
+        Re-send every GUI override to a freshly opened board.
+
+        The firmware always boots in potentiometer mode, so overrides issued
+        before the unplug are lost and must be replayed for the recording to
+        remain comparable across the disconnection.
+        """
+        serial_manager.write("CON\n")
+        if hasattr(self.parent, "ChangeSpeed"):
+            self.parent.ChangeSpeed()
+        for activator in ("SelectNeuronMode", "SelectPatchClampMode",
+                          "ActivateStimFre", "ActivateStimStr",
+                          "ActivatePhotoGain", "ActivatePRDecay", "ActivatePRRecovery",
+                          "ActivateInjectedCurrent", "ActivateNoiseLevel",
+                          "ActivateSynapticGain1", "ActivateSynapseDecay1",
+                          "ActivateSynapticGain2", "ActivateSynapseDecay2"):
+            handler = getattr(self.parent, activator, None)
+            if callable(handler):
+                handler()
+
+    def on_device_connected(self, port) -> None:
+        """Start acquisition on first successful connection."""
+        self.parent.SerialFlag = True
+        self.stim_counter = 0
+        self.ui.Spikeling_Speed_slider.setEnabled(True)
+        self.ui.Spikeling_SelectPortComboBox.setCurrentText(port.port_name)
+        self.set_init_parameters()
+        self.set_plot()
+        if not self.timer.isActive():
+            self.timer.start(10)
+
+    def on_device_reconnected(self, port) -> None:
+        """Resume acquisition after a hot-plug and dismiss the warning popup."""
+        if self._disconnect_dialog is not None:
+            self._disconnect_dialog.close()
+            self._disconnect_dialog = None
+        self.on_device_connected(port)
+
+    def on_device_disconnected(self, reason: str) -> None:
+        """
+        Freeze acquisition and warn the user, without blocking the event loop.
+
+        A non-modal dialog is used deliberately: a modal ``exec()`` would still
+        pump timers, but it would also trap the user if the board is replugged
+        while the dialog is up.
+        """
+        self.parent.SerialFlag = False
+        if self.timer.isActive():
+            self.timer.stop()
+        self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
+        self.ui.Spikeling_ConnectButton.setText("Reconnecting...")
+
+        if self._disconnect_dialog is None:
+            dialog = QMessageBox(self.parent)
+            dialog.setIcon(QMessageBox.Warning)
+            dialog.setWindowTitle("Spikeling disconnected")
+            dialog.setText(
+                f"The Spikeling board was disconnected ({reason}).\n\n"
+                "Plug the USB cable back in: the connection and all current "
+                "settings will be restored automatically."
+            )
+            dialog.setStandardButtons(QMessageBox.Ok)
+            dialog.finished.connect(lambda _: setattr(self, "_disconnect_dialog", None))
+            self._disconnect_dialog = dialog
+            dialog.open()
+
+    def populate_port_combobox(self) -> None:
+        """Fill the port selector with detected boards, for manual override only."""
+        combo = self.ui.Spikeling_SelectPortComboBox
+        combo.clear()
+        for port in discover_spikeling_ports(serial_manager.identity):
+            combo.addItem(port.label, userData=port)
 
 
 

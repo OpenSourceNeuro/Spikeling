@@ -12,6 +12,16 @@ from collections import deque
 import Parameters_Settings
 import struct
 
+from spikeling_discovery import SpikelingPort, find_port_by_serial_number
+
+# Errors that mean "the cable/board went away"; anything else is recoverable.
+FATAL_SERIAL_ERRORS = frozenset((
+    QSerialPort.SerialPortError.ResourceError,
+    QSerialPort.SerialPortError.DeviceNotFoundError,
+    QSerialPort.SerialPortError.PermissionError,
+    QSerialPort.SerialPortError.UnsupportedOperationError,
+))
+
 # Binary sample packet from Spikeling firmware
 SPIKELING_HEADER = b'\xAA\x55'
 SPIKELING_HEADER_LEN = len(SPIKELING_HEADER)
@@ -34,6 +44,7 @@ class SerialPortManager(QObject):
     error_occurred = Signal(str)
     connection_changed = Signal(bool)
     data_received = Signal(list)  # Signal emitted when valid data is received
+    device_lost = Signal(str)   # emitted once when the link dies unexpectedly
 
     _instance = None
 
@@ -59,6 +70,8 @@ class SerialPortManager(QObject):
 
         # Connect the readyRead signal to the data handler
         self._serial_port.readyRead.connect(self._handle_ready_read)
+        self._identity = ""                 # USB serial number of the open board
+        self._serial_port.errorOccurred.connect(self._on_serial_error)
 
     @property
     def is_open(self):
@@ -363,6 +376,68 @@ class SerialPortManager(QObject):
             QSerialPort: The serial port object
         """
         return self._serial_port
+
+    # -------------------------------------------------------------------------
+    # Hot-plug support
+    # -------------------------------------------------------------------------
+    @property
+    def identity(self) -> str:
+        """USB serial number of the board currently or most recently opened."""
+        return self._identity
+
+    def open_port(self, port: SpikelingPort, assert_dtr: bool = True) -> bool:
+        """
+        Configure and open a discovered Spikeling port in one step.
+
+        Parameters
+        ----------
+        port : SpikelingPort
+            Descriptor returned by :func:`spikeling_discovery.discover_spikeling_ports`.
+        assert_dtr : bool, optional
+            Raise DTR/RTS after opening. The ESP32-S3 native USB CDC does not
+            reset on DTR, so asserting it is safe and keeps external USB-UART
+            bridges from floating; set ``False`` for bridges wired to EN/BOOT.
+
+        Returns
+        -------
+        bool
+            ``True`` when the port is open and the input buffers are clean.
+        """
+        if not self.configure_port(port.port_name):
+            return False
+        if not self.open():
+            return False
+
+        self._identity = port.serial_number
+        self._serial_port.setDataTerminalReady(assert_dtr)
+        self._serial_port.setRequestToSend(False)
+        self._serial_port.clear(QSerialPort.AllDirections)
+        self.clear_buffer()
+        return True
+
+    def is_device_still_present(self) -> bool:
+        """Check that the pinned board is still enumerated by the operating system."""
+        return find_port_by_serial_number(self._identity) is not None if self._identity else False
+
+    def _on_serial_error(self, error) -> None:
+        """
+        Close the link and announce the loss when the OS reports a fatal error.
+
+        ``QSerialPort`` keeps reporting :class:`ResourceError` until the port is
+        closed, so the port is torn down here rather than left half-open.
+        """
+        if error == QSerialPort.SerialPortError.NoError:
+            return
+        if error not in FATAL_SERIAL_ERRORS:
+            self.error_occurred.emit(f"Serial error: {self._serial_port.errorString()}")
+            return
+
+        message = self._serial_port.errorString() or "Device removed"
+        self._serial_port.clearError()
+        was_open = self._serial_port.isOpen()
+        self.close()
+        if was_open:
+            self.device_lost.emit(message)
 
 
 # Create a global instance of the serial port manager
