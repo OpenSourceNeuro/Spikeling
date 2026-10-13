@@ -3,7 +3,20 @@ name: Build and Release Spikeling GUI
 on:
   push:
     tags: ["v*.*.*"]
-  workflow_dispatch:          # manual dry runs, no tag required
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag for the release (blank = artifact-only dry run). Use e.g. v0.0.0-test.1"
+        required: false
+        default: ""
+      publish:
+        description: "Publish the release (leave unchecked to stop at the draft)"
+        type: boolean
+        default: false
+      prerelease:
+        description: "Mark as pre-release (keeps it off the repo front page)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -14,22 +27,92 @@ env:
 
 concurrency:
   group: release-${{ github.ref }}
-  cancel-in-progress: false   # never cancel a half-uploaded release
+  cancel-in-progress: false
 
 jobs:
   # ---------------------------------------------------------------------
+  # Resolve tag / publish / prerelease once, so every downstream job reads
+  # the same values instead of re-deriving them from scattered expressions.
+  # ---------------------------------------------------------------------
+  setup:
+    name: Resolve release parameters
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+      version: ${{ steps.resolve.outputs.version }}
+      is_release: ${{ steps.resolve.outputs.is_release }}
+      publish: ${{ steps.resolve.outputs.publish }}
+      prerelease: ${{ steps.resolve.outputs.prerelease }}
+    steps:
+      - id: resolve
+        shell: bash
+        # Inputs are passed through env rather than interpolated into the
+        # script body, so a tag containing shell metacharacters cannot execute.
+        env:
+          INPUT_TAG: ${{ inputs.release_tag }}
+          INPUT_PUBLISH: ${{ inputs.publish }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            # Tag push: always a real, published, non-pre release.
+            tag="${GITHUB_REF_NAME}"
+            publish="true"
+            prerelease="false"
+          else
+            tag="${INPUT_TAG:-}"
+            publish="${INPUT_PUBLISH:-false}"
+            prerelease="${INPUT_PRERELEASE:-true}"
+          fi
+
+          if [ -n "$tag" ]; then
+            is_release="true"
+            version="$tag"
+          else
+            # No tag: build and expose artifacts only, never touch Releases.
+            is_release="false"
+            publish="false"
+            version="dev-${GITHUB_SHA::7}"
+          fi
+
+          {
+            echo "tag=$tag"
+            echo "version=$version"
+            echo "is_release=$is_release"
+            echo "publish=$publish"
+            echo "prerelease=$prerelease"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Release plan"
+            echo "| field | value |"
+            echo "|---|---|"
+            echo "| version | \`$version\` |"
+            echo "| create release | $is_release |"
+            echo "| publish | $publish |"
+            echo "| pre-release | $prerelease |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ---------------------------------------------------------------------
   # Draft release, created once so the three build jobs have a target.
-  # Skipped on workflow_dispatch: a dispatch run has no tag to attach to.
   # ---------------------------------------------------------------------
   create-release:
     name: Create draft release
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: [setup]
+    if: needs.setup.outputs.is_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ needs.setup.outputs.tag }}
+          # The tag may not exist yet on a manual run; the Releases API creates
+          # it at this commit. Tags created with GITHUB_TOKEN do not re-trigger
+          # the push event, so there is no recursion.
+          target_commitish: ${{ github.sha }}
           draft: true
+          prerelease: ${{ needs.setup.outputs.prerelease == 'true' }}
+          make_latest: false
           generate_release_notes: true
 
   # ---------------------------------------------------------------------
@@ -37,12 +120,15 @@ jobs:
   # ---------------------------------------------------------------------
   build:
     name: Build ${{ matrix.label }}
-    needs: [create-release]
-    # `always()` is required because create-release is *skipped* on dispatch
-    # runs, and a skipped dependency would otherwise skip this job too.
-    if: always() && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped')
+    needs: [setup, create-release]
+    # create-release is *skipped* on a tagless dry run, and a skipped
+    # dependency would otherwise skip this job too.
+    if: >-
+      always()
+      && needs.setup.result == 'success'
+      && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped')
     strategy:
-      fail-fast: false        # a Windows failure must not hide a Linux one
+      fail-fast: false
       matrix:
         include:
           - os: macos-latest
@@ -60,7 +146,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        shell: bash           # one dialect on all three runners
+        shell: bash
         working-directory: ${{ env.GUI_DIR }}
 
     steps:
@@ -68,7 +154,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true           # harmless if LFS is unused
+          lfs: true
           persist-credentials: false
 
       - name: Set up Python
@@ -84,8 +170,6 @@ jobs:
           pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 \
                                      pyqtgraph==0.13.7 pyserial==3.5
 
-      # Fails the build when an asset was never committed, rather than
-      # shipping a binary that silently falls back to placeholder graphics.
       - name: Verify assets are present in the checkout
         run: |
           set -euo pipefail
@@ -96,7 +180,6 @@ jobs:
           frames=$(find resources/geci -name 'frame_*.png' | wc -l | tr -d ' ')
           echo "GECI turntable frames: $frames"
           [ "$frames" -gt 0 ] || { echo "::error::no turntable frames committed"; exit 1; }
-          # Guard against Git LFS pointer files being shipped instead of PNGs.
           if head -c 40 "resources/Spiky1.png" | grep -q 'git-lfs'; then
             echo "::error::LFS pointer checked out, not the image"; exit 1
           fi
@@ -104,8 +187,6 @@ jobs:
       - name: Build with PyInstaller
         run: pyinstaller --clean --log-level=INFO "${{ matrix.spec }}"
 
-      # The CArchive table of contents stores entry names as plain bytes, so a
-      # substring scan is version-independent, unlike the reader API.
       - name: Verify assets landed inside the binary
         env:
           BINARY: dist/${{ matrix.binary }}
@@ -114,24 +195,20 @@ jobs:
           import os, pathlib, sys
 
           REQUIRED = ("resources/geci", "resources/Spiky1.png")
-
           blob = pathlib.Path(os.environ["BINARY"]).read_bytes()
 
           def embedded(logical_name: str) -> bool:
               """
               Test both separator conventions.
 
-              PyInstaller stores CArchive entry names with the separator of the
-              *build host*, so a Windows bundle carries "resources\\geci" where
-              the POSIX bundles carry "resources/geci". Probing both keeps one
-              matrix step valid on all three runners.
+              PyInstaller records CArchive entry names with the separator of
+              the build host, so a Windows bundle carries "resources\\geci"
+              where the POSIX bundles carry "resources/geci".
               """
-              posix = logical_name.encode()
-              windows = logical_name.replace("/", "\\").encode()
-              return posix in blob or windows in blob
+              return (logical_name.encode() in blob
+                      or logical_name.replace("/", "\\").encode() in blob)
 
-          missing = [name for name in REQUIRED if not embedded(name)]
-
+          missing = [n for n in REQUIRED if not embedded(n)]
           print(f"binary: {len(blob) / 1e6:.1f} MB")
           if missing:
               sys.exit(f"::error::not embedded: {missing}")
@@ -139,27 +216,29 @@ jobs:
           PY
 
       - name: Package
+        env:
+          VERSION: ${{ needs.setup.outputs.version }}
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME}"
           rm -rf release out && mkdir -p release out
           cp "dist/${{ matrix.binary }}" release/
           chmod +x "release/${{ matrix.binary }}" || true
           cp -r Recordings Neurons Stimuli release/
           python -c "import shutil,sys; shutil.make_archive(sys.argv[1],'zip','release')" \
-                 "out/Spikeling-${version}-${{ matrix.label }}"
+                 "out/Spikeling-${VERSION}-${{ matrix.label }}"
+          rm -rf release
           ls -lh out/
 
       - name: Upload to draft release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: needs.setup.outputs.is_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ needs.setup.outputs.tag }}
           draft: true
-          files: ${{ env.GUI_DIR }}/out/Spikeling-${{ github.ref_name }}-${{ matrix.label }}.zip
+          files: ${{ env.GUI_DIR }}/out/Spikeling-${{ needs.setup.outputs.version }}-${{ matrix.label }}.zip
 
       - name: Upload dry-run artifact
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        if: needs.setup.outputs.is_release != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: Spikeling-${{ matrix.label }}-dryrun
@@ -167,15 +246,28 @@ jobs:
           retention-days: 7
 
   # ---------------------------------------------------------------------
-  # Only now does the release become visible to users.
+  # Only now does the release become visible.
   # ---------------------------------------------------------------------
   publish:
     name: Publish release
-    needs: [build]
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: [setup, build]
+    if: needs.setup.outputs.is_release == 'true' && needs.setup.outputs.publish == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Flip draft to published
-        run: gh release edit "${GITHUB_REF_NAME}" --draft=false --repo "${GITHUB_REPOSITORY}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.setup.outputs.tag }}
+          PRERELEASE: ${{ needs.setup.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          if [ "$PRERELEASE" = "true" ]; then
+            # --latest=false keeps a test build off the repository front page.
+            gh release edit "$TAG" --draft=false --prerelease --latest=false \
+                                   --repo "$GITHUB_REPOSITORY"
+          else
+            gh release edit "$TAG" --draft=false --latest \
+                                   --repo "$GITHUB_REPOSITORY"
+          fi
+          echo "Published: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${TAG}" \
+            >> "$GITHUB_STEP_SUMMARY"
