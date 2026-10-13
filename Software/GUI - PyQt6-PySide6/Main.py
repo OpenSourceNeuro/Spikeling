@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         def moveWindow(event):
             # Restore before moving
             if returnStatus() == 1:
-                maximize_restore(self)
+                maximise_restore(self)
 
             # If left-clicked, move window
             if event.buttons() == Qt.LeftButton:
