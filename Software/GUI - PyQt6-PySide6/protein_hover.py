@@ -9,7 +9,6 @@ one ``setPixmap`` per tick and adds no 3D dependency to the application.
 from __future__ import annotations
 
 from collections import OrderedDict
-import sys
 from pathlib import Path
 
 from PySide6.QtCore import QEvent, QModelIndex, QObject, QPoint, Qt, QTimer
@@ -20,17 +19,7 @@ import Parameters_GECI
 import Parameters_Settings as Settings
 from Parameters_GECI_Structures import GECI_STRUCTURES
 
-def application_resource_root() -> Path:
-    """
-    Return the directory holding bundled resources.
-
-    Resolves to ``sys._MEIPASS`` inside a PyInstaller one-file bundle and to
-    the module directory when running from source, so asset lookup no longer
-    depends on the working directory the GUI was launched from.
-    """
-    bundle_directory = getattr(sys, "_MEIPASS", None)
-    return Path(bundle_directory) if bundle_directory else Path(__file__).resolve().parent
-
+from resource_path import application_resource_root
 
 SPRITE_ROOT = application_resource_root() / "resources" / "geci"
 FRAME_INTERVAL_MS = 100
@@ -68,7 +57,10 @@ class TurntableSpriteCache:
             self._cache.move_to_end(geci_name)
             return self._cache[geci_name]
 
-        paths = sorted((self.root / geci_name).glob("frame_*.png"))
+        directory = self.root / geci_name
+        paths = sorted(directory.glob("frame_*.png"))
+        if not paths:
+            print(f"[resources] no turntable frames under {directory}")
         frames: list[QPixmap] = []
         for path in paths:
             pixmap = QPixmap(str(path))

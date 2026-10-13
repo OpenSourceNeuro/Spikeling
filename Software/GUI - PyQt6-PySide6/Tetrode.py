@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-import math
 import sys
 import types
 from dataclasses import dataclass
+from pathlib import Path
+
+from resource_path import load_pixmap
 
 from PySide6.QtCore import QObject, QPoint, QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QPainterPath, QPixmap
@@ -208,7 +210,7 @@ class NeuronItem(QGraphicsObject):
         self.png_path = png_path
         self.image_size = image_size
         self.image_opacity = 0.75
-        self.pixmap = QPixmap(png_path) if png_path else QPixmap()
+        self.pixmap = load_pixmap(png_path) if png_path else QPixmap()
 
         if not self.pixmap.isNull():
             self.anchor_x_px = float(anchor_x_px) if anchor_x_px is not None else self.pixmap.width() / 2.0
@@ -817,26 +819,18 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self.neuron_main = NeuronItem(
             "Main Neuron",
-            png_path="resources/Spiky1.png",
-            image_size=300.0,
-            anchor_x_px=500,
-            anchor_y_px=500,
+            png_path=Path("resources") / "Spiky1.png",
+            image_size=300.0, anchor_x_px=500, anchor_y_px=500,
         )
-
         self.neuron_aux1 = NeuronItem(
             "Aux Neuron 1",
-            png_path="resources/Spiky2.png",
-            image_size=300.0,
-            anchor_x_px=500,
-            anchor_y_px=500,
+            png_path=Path("resources") / "Spiky2.png",
+            image_size=300.0, anchor_x_px=500, anchor_y_px=500,
         )
-
         self.neuron_aux2 = NeuronItem(
             "Aux Neuron 2",
-            png_path="resources/Spiky3.png",
-            image_size=300.0,
-            anchor_x_px=500,
-            anchor_y_px=500,
+            png_path=Path("resources") / "Spiky3.png",
+            image_size=300.0, anchor_x_px=500, anchor_y_px=500,
         )
 
         self.tetrode_item = TetrodeItem(contact_spacing=25.0)

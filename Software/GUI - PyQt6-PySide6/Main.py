@@ -24,6 +24,7 @@ from Tetrode import TetrodeGeometryWindow
 import Parameters_ToggleButtons as ToggleButtons
 import Parameters_NavigationButtons as NavigationButtons
 import Parameters_Sliders as Sliders
+from resource_path import resource_path
 
 GlobalState = 0
 
@@ -102,7 +103,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_Spikeling()
         self.ui.setupUi(self)
 
-        self.setWindowIcon(QIcon("Spikeling.ico"))
+        self.setWindowIcon(QIcon(str(resource_path("Spikeling.ico"))))
 
         self.aux_window = QtWidgets.QMainWindow()
         self.ui_aux = Ui_AdvancedParameters()
@@ -224,6 +225,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("Spikeling.ico"))
+    app.setWindowIcon(QIcon(str(resource_path("Spikeling.ico"))))
     window = SplashScreen()
     sys.exit(app.exec())

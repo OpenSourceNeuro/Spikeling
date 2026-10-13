@@ -1,33 +1,44 @@
 # -*- mode: python ; coding: utf-8 -*-
-import os,sys
+import os, sys
 from PySide6 import QtCore
+from PyInstaller.building.datastruct import Tree
 
 block_cipher = None
 
+try:
+    spec_dir = SPECPATH
+except NameError:
+    spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
 plugin_path = QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.PluginsPath)
 qt_plugins = []
-for plugin_type in ['platforms', 'imageformats']:
+for plugin_type in ['platforms', 'imageformats', 'xcbglintegrations']:
     src = os.path.join(plugin_path, plugin_type)
     if os.path.exists(src):
         qt_plugins.append((src, os.path.join('PySide6/Qt/plugins', plugin_type)))
 
+app_datas = []
+icon_file = os.path.join(spec_dir, 'Spikeling.ico')
+if os.path.exists(icon_file):
+    app_datas.append((icon_file, '.'))
+
 hidden_imports = [
     'PySide6.QtCore',
     'PySide6.QtGui',
-    'PySide6.QtWidgets'
+    'PySide6.QtWidgets',
+    'PySide6.QtSerialPort',
 ]
-
-spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 a = Analysis(
     [os.path.join(spec_dir, 'Main.py')],
     pathex=[spec_dir],
     binaries=[],
-    datas=[] + qt_plugins,   # remove or adjust depending on platform
+    datas=qt_plugins + app_datas,
     hiddenimports=hidden_imports,
     hookspath=[],
     runtime_hooks=[],
     excludes=[
+        'geometry_view',
         'PySide6.QtQml',
         'PySide6.QtQuick',
         'PySide6.QtQuickControls2',
@@ -47,7 +58,7 @@ a = Analysis(
         'PySide6.QtWebSockets',
         'PySide6.QtXml',
         'PySide6.QtXmlPatterns',
-        'PySide6.QtTest'
+        'PySide6.QtTest',
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
@@ -55,6 +66,13 @@ a = Analysis(
     noarchive=False,
 )
 
+# Linux runners are case-sensitive: "Resources/" or "Spiky1.PNG" will build
+# clean on Windows/macOS and silently ship nothing here.
+a.datas += Tree(
+    os.path.join(spec_dir, 'resources'),
+    prefix='resources',
+    excludes=['*.psd', '*.blend', '*.xcf', '*.ai', '.DS_Store', 'Thumbs.db'],
+)
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 

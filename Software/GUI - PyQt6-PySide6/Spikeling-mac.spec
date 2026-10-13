@@ -1,10 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
-import os,sys
+import os, sys
 from PySide6 import QtCore
+from PyInstaller.building.datastruct import Tree
 
 block_cipher = None
 
-# Only include essential Qt plugins: platforms + imageformats
+try:
+    spec_dir = SPECPATH
+except NameError:
+    spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
 plugin_path = QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.PluginsPath)
 qt_plugins = []
 for plugin_type in ['platforms', 'imageformats']:
@@ -12,25 +17,38 @@ for plugin_type in ['platforms', 'imageformats']:
     if os.path.exists(src):
         qt_plugins.append((src, os.path.join('PySide6/Qt/plugins', plugin_type)))
 
-# Hidden imports
+# The previous spec pointed at 'GUI/PyQt/Spikeling.icns', a path relative to the
+# working directory that no longer exists under the current repository layout.
+# Resolve against the spec directory and degrade gracefully instead.
+icon_file = next(
+    (os.path.join(spec_dir, name)
+     for name in ('Spikeling.icns', 'Spikeling.ico')
+     if os.path.exists(os.path.join(spec_dir, name))),
+    None,
+)
+
+app_datas = []
+runtime_icon = os.path.join(spec_dir, 'Spikeling.ico')
+if os.path.exists(runtime_icon):
+    app_datas.append((runtime_icon, '.'))
+
 hidden_imports = [
     'PySide6.QtCore',
     'PySide6.QtGui',
-    'PySide6.QtWidgets'
+    'PySide6.QtWidgets',
+    'PySide6.QtSerialPort',
 ]
-
-
-spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 a = Analysis(
     [os.path.join(spec_dir, 'Main.py')],
     pathex=[spec_dir],
     binaries=[],
-    datas=[] + qt_plugins,   # remove or adjust depending on platform
+    datas=qt_plugins + app_datas,
     hiddenimports=hidden_imports,
     hookspath=[],
     runtime_hooks=[],
     excludes=[
+        'geometry_view',
         'PySide6.QtQml',
         'PySide6.QtQuick',
         'PySide6.QtQuickControls2',
@@ -50,7 +68,7 @@ a = Analysis(
         'PySide6.QtWebSockets',
         'PySide6.QtXml',
         'PySide6.QtXmlPatterns',
-        'PySide6.QtTest'
+        'PySide6.QtTest',
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
@@ -58,6 +76,11 @@ a = Analysis(
     noarchive=False,
 )
 
+a.datas += Tree(
+    os.path.join(spec_dir, 'resources'),
+    prefix='resources',
+    excludes=['*.psd', '*.blend', '*.xcf', '*.ai', '.DS_Store', 'Thumbs.db'],
+)
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
@@ -76,5 +99,5 @@ exe = EXE(
     noupx=True,
     runtime_tmpdir=None,
     console=False,
-    icon='GUI/PyQt/Spikeling.icns',
+    icon=icon_file,
 )
