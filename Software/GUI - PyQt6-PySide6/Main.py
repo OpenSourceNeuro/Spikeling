@@ -183,6 +183,10 @@ class MainWindow(QMainWindow):
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
 
+        from protein_hover import GeciHoverController
+
+        self.geci_hover = GeciHoverController(self.ui.Imaging_GECI_comboBox, self)
+
         self.SerialFlag = False
         self.ui.NeuronRecordFolderFlag = False
 
