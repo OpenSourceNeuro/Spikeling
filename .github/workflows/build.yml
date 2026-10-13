@@ -112,12 +112,29 @@ jobs:
         run: |
           python - <<'PY'
           import os, pathlib, sys
+
+          REQUIRED = ("resources/geci", "resources/Spiky1.png")
+
           blob = pathlib.Path(os.environ["BINARY"]).read_bytes()
-          missing = [n for n in (b"resources/geci", b"Spiky1.png") if n not in blob]
-          size_mb = len(blob) / 1e6
-          print(f"binary: {size_mb:.1f} MB")
+
+          def embedded(logical_name: str) -> bool:
+              """
+              Test both separator conventions.
+
+              PyInstaller stores CArchive entry names with the separator of the
+              *build host*, so a Windows bundle carries "resources\\geci" where
+              the POSIX bundles carry "resources/geci". Probing both keeps one
+              matrix step valid on all three runners.
+              """
+              posix = logical_name.encode()
+              windows = logical_name.replace("/", "\\").encode()
+              return posix in blob or windows in blob
+
+          missing = [name for name in REQUIRED if not embedded(name)]
+
+          print(f"binary: {len(blob) / 1e6:.1f} MB")
           if missing:
-              sys.exit(f"::error::not embedded: {[m.decode() for m in missing]}")
+              sys.exit(f"::error::not embedded: {missing}")
           print("asset entries confirmed in bundle")
           PY
 
