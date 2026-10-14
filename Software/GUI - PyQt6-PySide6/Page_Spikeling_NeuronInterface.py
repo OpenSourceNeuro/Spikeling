@@ -16,6 +16,7 @@ import pandas as pd
 import Parameters_Settings as Settings
 import Parameters_NavigationButtons as NavigationButtons
 from Parameters_Izhikevich import IzhikevichNeurons
+from connection_supervisor import ConnectionState
 
 
 # Use the global serial_manager instance
@@ -35,11 +36,31 @@ class Spikeling():
 
     # Serial Port Functions
     def ChangePort(self):
-        global serial_port
+        """
+        Handle a manual port selection from the combo box.
+
+        Notes
+        -----
+        A no-op whenever the connection supervisor owns the link. The
+        supervisor is reached through ``spikeling_graph``, which constructs
+        it in ``setup_auto_connection``; probing ``self`` directly finds
+        nothing, because ``self`` is the main window here.
+
+        Reopening the port on an index change also cascades:
+        ``configure_port`` emits ``connection_changed(False)``, which
+        ``SpikelingGraph.on_connection_changed`` routes to
+        ``disconnect_device``, which calls ``supervisor.stop()`` and disables
+        reconnection for the rest of the session.
+        """
+        graph = getattr(self, "spikeling_graph", None)
+        supervisor = getattr(graph, "supervisor", None)
+        if supervisor is not None and supervisor.state is not ConnectionState.IDLE:
+            return
+
         self.COM = self.ui.Spikeling_SelectPortComboBox.currentText()
-        self.BaudRate = Settings.BaudRate
-        serial_port.configure_port(self.COM)
-        if serial_port.open():
+        if not self.COM:
+            return
+        if serial_port.configure_port(self.COM) and serial_port.open():
             serial_port.write('CON' + '\n')
         self.ui.Spikeling_ConnectButton.setChecked(False)
 

@@ -112,16 +112,27 @@ class SpikelingGraph(QObject):
         """
         Reflect the serial manager state on the connect button.
 
-        ``setChecked`` is issued with signals blocked because the toggled slot
-        calls back into ``disconnect_device``, which re-enters this handler.
-        """
-        if not is_connected:
-            self.disconnect_device()
+        Parameters
+        ----------
+        is_connected : bool
+            New port state reported by the manager.
 
+        Notes
+        -----
+        An unexpected close must not call :meth:`disconnect_device`: that is
+        the user-initiated path and it stops the supervisor, which would
+        disable hot-plug recovery permanently. Unexpected losses reach the
+        supervisor through ``device_lost`` instead.
+        """
         button = self.ui.Spikeling_ConnectButton
         was_blocked = button.blockSignals(True)
         button.setChecked(is_connected)
         button.blockSignals(was_blocked)
+
+        if not is_connected:
+            if self.timer.isActive():
+                self.timer.stop()
+            self.parent.SerialFlag = False
 
     def on_error(self, message: str):
         """Handle serial errors."""
@@ -255,11 +266,40 @@ class SpikelingGraph(QObject):
                 handler()
 
     def on_device_connected(self, port) -> None:
-        """Start acquisition on first successful connection."""
+        """
+        Start acquisition on a validated connection.
+
+        Parameters
+        ----------
+        port : spikeling_discovery.SpikelingPort
+            Descriptor of the board that passed the handshake.
+
+        Notes
+        -----
+        The combo-box update is signal-blocked. ``currentIndexChanged`` is
+        wired to ``Page_Spikeling_NeuronInterface.Spikeling.ChangePort``,
+        which closes and reopens the port; letting it fire here tears down
+        the link the supervisor has just validated. The failure was
+        platform-specific because the reopen went through
+        :meth:`SerialPortManager.open`, and only the Linux tty layer raises
+        DTR implicitly -- without it the ESP32-S3 CDC stack discards every
+        write. It was also once-only, because ``setCurrentText`` emits
+        nothing when the index is already correct, which is why the link
+        survived after a manual board reset.
+        """
         self.parent.SerialFlag = True
         self.stim_counter = 0
         self.ui.Spikeling_Speed_slider.setEnabled(True)
-        self.ui.Spikeling_SelectPortComboBox.setCurrentText(port.port_name)
+
+        combo = self.ui.Spikeling_SelectPortComboBox
+        index = combo.findText(port.port_name)
+        if index < 0:
+            combo.addItem(port.port_name)
+            index = combo.count() - 1
+        was_blocked = combo.blockSignals(True)
+        combo.setCurrentIndex(index)
+        combo.blockSignals(was_blocked)
+
         self.set_init_parameters()
         self.set_plot()
         if not self.timer.isActive():

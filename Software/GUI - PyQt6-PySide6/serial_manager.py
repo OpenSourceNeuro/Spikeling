@@ -45,6 +45,7 @@ class SerialPortManager(QObject):
     connection_changed = Signal(bool)
     data_received = Signal(list)  # Signal emitted when valid data is received
     device_lost = Signal(str)   # emitted once when the link dies unexpectedly
+    manual_action_required = Signal(str)
 
     _instance = None
 
@@ -85,22 +86,30 @@ class SerialPortManager(QObject):
 
     def configure_port(self, port_name):
         """
-        Configure the serial port with the specified port name.
+        Configure the serial port, closing any existing connection first.
 
-        Args:
-            port_name (str): The name of the port to configure
+        Parameters
+        ----------
+        port_name : str
+            System port name, e.g. ``"COM7"`` or ``"ttyACM0"``.
 
-        Returns:
-            bool: True if configuration was successful, False otherwise
+        Returns
+        -------
+        bool
+            True when configuration succeeded.
+
+        Notes
+        -----
+        The close is routed through :meth:`close` so that
+        ``connection_changed(False)`` is emitted. Closing the underlying
+        ``QSerialPort`` directly left observers -- including the connection
+        supervisor -- believing a link was live after it had been torn down.
         """
         try:
-            # Close the port if it's already open
             if self._serial_port.isOpen():
-                self._serial_port.close()
+                self.close()
 
             self._port_name = port_name
-
-            # Configure the port
             self._serial_port.setPortName(self._port_name)
             self._serial_port.setBaudRate(self._baud_rate)
             self._serial_port.setDataBits(QSerialPort.Data8)
@@ -116,21 +125,43 @@ class SerialPortManager(QObject):
 
     def open(self):
         """
-        Open the serial port.
+        Open the configured serial port with the modem lines in a known state.
 
-        Returns:
-            bool: True if the port was successfully opened, False otherwise
+        Returns
+        -------
+        bool
+            True when the port opened successfully.
+
+        Notes
+        -----
+        DTR is asserted here rather than only in :meth:`open_port`, because
+        every open path must leave the line state identical. The ESP32-S3
+        streams over native USB CDC: TinyUSB reports the interface connected,
+        and ``USBCDC::write`` therefore emits bytes, only while the host holds
+        DTR. The Linux tty layer raises it implicitly on ``open()``, so a path
+        that forgets it still works there; Qt on Windows initialises the DCB
+        with ``DTR_CONTROL_DISABLE``, leaving a healthy-looking handle on a
+        board that transmits nothing.
+
+        RTS is held low. On boards routing DTR/RTS to EN/IO0 through an
+        auto-reset circuit, asserting both latches the chip into download
+        mode, and TinyUSB inspects only DTR.
         """
         if not self._port_name:
             self.error_occurred.emit("No port selected")
             return False
 
         try:
-            # Open the port
             if not self._serial_port.open(QSerialPort.ReadWrite):
-                error_msg = f"Failed to open port {self._port_name}: {self._serial_port.errorString()}"
+                error_msg = (f"Failed to open port {self._port_name}: "
+                             f"{self._serial_port.errorString()}")
                 self.error_occurred.emit(error_msg)
                 return False
+
+            self._serial_port.setDataTerminalReady(True)
+            self._serial_port.setRequestToSend(False)
+            self._serial_port.clear(QSerialPort.AllDirections)
+            self._buffer.clear()
 
             self.connection_changed.emit(True)
             return True

@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         # Custom Navigation bar movement
         self.ui.header_widget.mouseMoveEvent = moveWindow
 
-        # Replace sliders with TickSliders
+        # Replace sliders with TiEmulatorConnectionFlagckSliders
         Sliders.configure_sliders(self)
 
         # Generate toggle buttons
@@ -183,6 +183,9 @@ class MainWindow(QMainWindow):
 
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
+        self.spikeling_graph.supervisor.manual_action_required.connect(
+            lambda text: QtWidgets.QMessageBox.information(self, "Spikeling not responding", text)
+        )
 
         from protein_hover import GeciHoverController
 
