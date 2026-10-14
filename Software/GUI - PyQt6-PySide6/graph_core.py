@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import NamedTuple, Optional, Sequence
 
 import numpy as np
-import pyqtgraph as pg
+from PySide6.QtCore import QTimer
 
 
 # =============================================================================
@@ -246,3 +246,72 @@ def resolve_csv_path(base: str) -> Optional[Path]:
     if str(path.parent) not in ("", "."):
         path.parent.mkdir(parents=True, exist_ok=True)
     return path
+
+def apply_scope_timebase(plot_item, window_ms, display_ms,
+                         y_range=None, *, reassert=True) -> None:
+    """
+    Pin an oscilloscope to an exact initial time window.
+
+    Three failure modes are addressed together, because each one silently
+    changes the apparent sweep speed of a trace:
+
+    1. ``ViewBox`` autoranges on the x-axis by default. The curve arrays span
+       the whole rolling buffer, so an autorange pass triggered after the
+       explicit range call snaps the view from the intended display window to
+       the full buffer length. Whether that pass runs depends on when the
+       widget first receives a valid geometry, which differs between a source
+       run and a frozen one-file build.
+    2. ``setRange`` without ``padding`` falls back to ``suggestPadding``,
+       which scales as ``1/sqrt(width_px)`` and is clipped to ``[0.02, 0.1]``.
+       The resulting window therefore depends on the widget's pixel width at
+       call time: a 250 ms request renders as 275-300 ms.
+    3. The first real resize can arrive after this function returns, so the
+       range is re-applied once the event loop has laid the widget out.
+
+    Parameters
+    ----------
+    plot_item : pyqtgraph.PlotItem
+        Target plot item.
+    window_ms : float
+        Full rolling-buffer length (ms); becomes the pan limit.
+    display_ms : float
+        Initially visible window (ms); must not exceed ``window_ms``.
+    y_range : tuple of float, optional
+        ``(low, high)`` applied with zero padding and autorange disabled.
+        Omit to leave the y-axis untouched, e.g. when a page deliberately
+        autoscales.
+    reassert : bool, optional
+        Re-apply the x-range on the next event-loop iteration.
+
+    Notes
+    -----
+    Mirrors the convention already used by the imaging and extracellular
+    pages, which do not exhibit the startup discrepancy.
+
+    Examples
+    --------
+    >>> apply_scope_timebase(plot_item, 2000, 250, y_range=(-100, 40))
+    """
+    view_box = plot_item.getViewBox()
+    x_min = -abs(float(min(display_ms, window_ms)))
+
+    view_box.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
+    view_box.setLimits(xMin=-abs(float(window_ms)), xMax=0.0)
+    view_box.setXRange(x_min, 0.0, padding=0.0)
+
+    if y_range is not None:
+        view_box.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
+        view_box.setYRange(float(y_range[0]), float(y_range[1]), padding=0.0)
+
+    if not reassert:
+        return
+
+    def restore_timebase() -> None:
+        """Re-apply the window after the first layout pass."""
+        try:
+            view_box.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
+            view_box.setXRange(x_min, 0.0, padding=0.0)
+        except RuntimeError:
+            pass  # widget destroyed before the event loop ran
+
+    QTimer.singleShot(0, restore_timebase)

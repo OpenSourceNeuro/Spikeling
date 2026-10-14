@@ -31,8 +31,8 @@ import numpy as np
 import pandas as pd
 
 import Parameters_Settings as Settings
-from graph_core import RingBuffer, configure_scope, resolve_csv_path, safe_reconnect
-
+from graph_core import (RingBuffer, apply_scope_timebase, configure_scope,
+                        resolve_csv_path, safe_reconnect)
 
 # --- Display / buffering ---------------------------------------------------
 EMULATOR_SAMPLE_INTERVAL_MS = 0.1       # integration step, matches firmware dt

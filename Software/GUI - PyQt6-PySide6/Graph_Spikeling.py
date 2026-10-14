@@ -14,7 +14,7 @@ import pandas as pd
 
 import Parameters_Settings as Settings
 from serial_manager import serial_manager
-from graph_core import RingBuffer, configure_scope, safe_reconnect
+from graph_core import RingBuffer, apply_scope_timebase, configure_scope, safe_reconnect
 
 from PySide6.QtWidgets import QMessageBox
 
@@ -315,48 +315,39 @@ class SpikelingGraph(QObject):
 
     def set_plot(self):
         """
-        Set up the plot widget and curves.
-        """
-        # Main plot setup
-        pw = self.ui.Spikeling_Oscilloscope_widget
+        Build the Spikeling oscilloscope: Vm on the left axis, currents right.
 
-        # Get the main plot item and its viewbox
+        The timebase is pinned through :func:`graph_core.apply_scope_timebase`
+        rather than ``setRange``, so the initial window is exactly
+        ``TIME_WINDOW_DISPLAY`` regardless of widget geometry or launch mode.
+        """
+        pw = self.ui.Spikeling_Oscilloscope_widget
         plot_item = pw.getPlotItem()
         vb = plot_item.getViewBox()
 
-        # Enable mouse interactions: X only
         plot_item.setMouseEnabled(x=True, y=False)
-        vb.setMouseEnabled(x=True, y=False)
-
-        # Limit how far you can pan/zoom
-        vb.setLimits(xMin=-TIME_WINDOW, xMax=0)
-
-        # Initial visible range
         pw.showGrid(x=True, y=True)
-        pw.setRange(xRange=[-TIME_WINDOW_DISPLAY, 0],
-                    yRange=[VM_MIN, VM_MAX])
-
-        # Set axis labels
         pw.setLabel('left', 'Membrane potential', 'mV')
         pw.setLabel('bottom', 'time', 'ms')
         pw.setLabel('right', 'Current Input', 'a.u.')
         pw.setAntialiasing(True)
 
-        # -----------------------------
-        # Setup secondary ViewBox (currents on right axis)
-        # -----------------------------
-        self.current_plots = pg.ViewBox()
+        configure_scope(plot_item)
+        apply_scope_timebase(plot_item, TIME_WINDOW, TIME_WINDOW_DISPLAY,
+                             y_range=(VM_MIN, VM_MAX))
 
+        # --- Secondary ViewBox: currents on the right axis ----------------
+        self.current_plots = pg.ViewBox()
         self.current_plots.setMouseEnabled(x=False, y=False)
         self.current_plots.setMenuEnabled(False)
-
         pw.scene().addItem(self.current_plots)
+        self.current_plots.setXLink(pw)
 
-        self.current_plots.setXLink(pw) # Link X of the secondary view to the main viewbox
-        self.current_plots.setRange(yRange=[CURRENT_MIN, CURRENT_MAX]) # Fix its Y-range to current min/max
-        pw.getAxis("right").linkToView(self.current_plots) # Link the right axis to the secondary viewbox
-
-        configure_scope(plot_item)
+        # Zero padding here too: a padded current axis makes a +/-100 a.u.
+        # trace render at a height that depends on the widget size.
+        self.current_plots.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
+        self.current_plots.setYRange(CURRENT_MIN, CURRENT_MAX, padding=0.0)
+        pw.getAxis("right").linkToView(self.current_plots)
 
         zeros = np.zeros(self._bufsize, dtype=float)
         self.curve0 = pw.plot(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[3], width=PEN_WIDTH, cosmetic=True))
@@ -368,11 +359,8 @@ class SpikelingGraph(QObject):
         self.curve4 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
         self.curve6 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
 
-        # Add current and stimulus curves to the secondary plot (right y-axis)
-        self.current_plots.addItem(self.curve1)
-        self.current_plots.addItem(self.curve2)
-        self.current_plots.addItem(self.curve4)
-        self.current_plots.addItem(self.curve6)
+        for curve in (self.curve1, self.curve2, self.curve4, self.curve6):
+            self.current_plots.addItem(curve)
 
         self._update_views()
         safe_reconnect(pw.getViewBox().sigResized, self._update_views)
