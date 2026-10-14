@@ -13,7 +13,7 @@ from typing import NamedTuple, Optional, Sequence
 
 import numpy as np
 from PySide6.QtCore import QTimer
-
+import pyqtgraph as pg
 
 # =============================================================================
 # Rolling buffer
