@@ -342,6 +342,9 @@ class SpikelingGraph(QObject):
         self.current_plots.setMenuEnabled(False)
         pw.scene().addItem(self.current_plots)
         self.current_plots.setXLink(pw)
+        self._timebase = apply_scope_timebase(plot_item, TIME_WINDOW,
+                                              TIME_WINDOW_DISPLAY,
+                                              y_range=(VM_MIN, VM_MAX))
 
         # Zero padding here too: a padded current axis makes a +/-100 a.u.
         # trace render at a height that depends on the widget size.

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import NamedTuple, Optional, Sequence
 
 import numpy as np
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QObject, QTimer
 import pyqtgraph as pg
 
 # =============================================================================
@@ -247,26 +247,121 @@ def resolve_csv_path(base: str) -> Optional[Path]:
         path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
+
+class ScopeTimebase(QObject):
+    """
+    Latch holding an oscilloscope at its intended time window until the user pans.
+
+    A one-shot deferral cannot pin the x-range reliably: the event that
+    overrides it has no bounded arrival time. On the emulator page the right
+    menu animates its width for 200 ms after the page is shown, and the first
+    GUI tick pushes 50 000-point arrays into the curves 50 ms after start.
+    Either can schedule an autorange pass long after a ``singleShot(0)``
+    callback has run.
+
+    This object instead monitors ``sigRangeChanged`` and restores the
+    requested window whenever something widens it, then disarms itself
+    permanently on the first ``sigRangeChangedManually`` so that deliberate
+    panning and zooming behave normally.
+
+    Parameters
+    ----------
+    view_box : pyqtgraph.ViewBox
+        Monitored view box.
+    x_min : float
+        Left edge of the intended window (negative, milliseconds).
+    tolerance : float, optional
+        Fractional width mismatch tolerated before snapping back. Guards
+        against an enforcement loop driven by floating-point noise.
+
+    Attributes
+    ----------
+    armed : bool
+        ``False`` once the user has interacted; no further correction occurs.
+
+    Notes
+    -----
+    The instance must be retained by the caller. A ``QObject`` whose only
+    reference is a signal connection is garbage collected, which silently
+    drops the enforcement.
+    """
+
+    def __init__(self, view_box, x_min: float, tolerance: float = 0.01) -> None:
+        super().__init__()
+        self._view_box = view_box
+        self._x_min = float(x_min)
+        self._tolerance = float(tolerance)
+        self._applying = False
+        self.armed = True
+
+        view_box.sigRangeChanged.connect(self._on_range_changed)
+        view_box.sigRangeChangedManually.connect(self.release)
+
+    def apply(self) -> None:
+        """Force the view back to the intended window."""
+        if self._applying:
+            return
+        self._applying = True
+        try:
+            self._view_box.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
+            self._view_box.setXRange(self._x_min, 0.0, padding=0.0)
+        except RuntimeError:
+            self.release()          # widget destroyed
+        finally:
+            self._applying = False
+
+    def release(self, *_) -> None:
+        """Stop enforcing; the user now owns the x-axis."""
+        self.armed = False
+
+    def stop(self) -> None:
+        """Disarm and detach from the view box, e.g. when tearing down a page."""
+        self.release()
+        for signal in (self._view_box.sigRangeChanged,
+                       self._view_box.sigRangeChangedManually):
+            try:
+                signal.disconnect(self._on_range_changed)
+            except (RuntimeError, TypeError):
+                pass
+            try:
+                signal.disconnect(self.release)
+            except (RuntimeError, TypeError):
+                pass
+
+    def _on_range_changed(self, *_) -> None:
+        """Snap back if the visible width drifted from the requested one."""
+        if not self.armed or self._applying:
+            return
+        try:
+            (left, right), _ = self._view_box.viewRange()
+        except RuntimeError:
+            self.release()
+            return
+
+        expected = abs(self._x_min)
+        actual = abs(right - left)
+        if expected <= 0.0:
+            return
+        if abs(actual - expected) / expected > self._tolerance:
+            self.apply()
+
+
 def apply_scope_timebase(plot_item, window_ms, display_ms,
-                         y_range=None, *, reassert=True) -> None:
+                         y_range=None) -> ScopeTimebase:
     """
     Pin an oscilloscope to an exact initial time window.
 
-    Three failure modes are addressed together, because each one silently
-    changes the apparent sweep speed of a trace:
+    Three failure modes are addressed together, because each silently changes
+    the apparent sweep speed of a trace:
 
-    1. ``ViewBox`` autoranges on the x-axis by default. The curve arrays span
-       the whole rolling buffer, so an autorange pass triggered after the
-       explicit range call snaps the view from the intended display window to
-       the full buffer length. Whether that pass runs depends on when the
-       widget first receives a valid geometry, which differs between a source
-       run and a frozen one-file build.
+    1. ``ViewBox`` autoranges on the x-axis by default, and the curve arrays
+       span the whole rolling buffer. An autorange pass that runs after the
+       explicit range call snaps the view to the full buffer length.
     2. ``setRange`` without ``padding`` falls back to ``suggestPadding``,
-       which scales as ``1/sqrt(width_px)`` and is clipped to ``[0.02, 0.1]``.
-       The resulting window therefore depends on the widget's pixel width at
-       call time: a 250 ms request renders as 275-300 ms.
-    3. The first real resize can arrive after this function returns, so the
-       range is re-applied once the event loop has laid the widget out.
+       which scales as ``1/sqrt(width_px)`` clipped to ``[0.02, 0.1]``, so a
+       250 ms request renders as 275-300 ms depending on widget width.
+    3. The disturbing event may arrive arbitrarily late: menu animations and
+       the first bulk ``setData`` both outlive a next-iteration deferral.
 
     Parameters
     ----------
@@ -278,40 +373,29 @@ def apply_scope_timebase(plot_item, window_ms, display_ms,
         Initially visible window (ms); must not exceed ``window_ms``.
     y_range : tuple of float, optional
         ``(low, high)`` applied with zero padding and autorange disabled.
-        Omit to leave the y-axis untouched, e.g. when a page deliberately
-        autoscales.
-    reassert : bool, optional
-        Re-apply the x-range on the next event-loop iteration.
 
-    Notes
-    -----
-    Mirrors the convention already used by the imaging and extracellular
-    pages, which do not exhibit the startup discrepancy.
+    Returns
+    -------
+    ScopeTimebase
+        Active latch. **Must be stored by the caller**, otherwise it is
+        garbage collected and enforcement is lost.
 
     Examples
     --------
-    >>> apply_scope_timebase(plot_item, 2000, 250, y_range=(-100, 40))
+    >>> self._timebase = apply_scope_timebase(plot_item, 5000, 500,
+    ...                                       y_range=(-90, 30))
     """
     view_box = plot_item.getViewBox()
     x_min = -abs(float(min(display_ms, window_ms)))
 
     view_box.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
     view_box.setLimits(xMin=-abs(float(window_ms)), xMax=0.0)
-    view_box.setXRange(x_min, 0.0, padding=0.0)
 
     if y_range is not None:
         view_box.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
         view_box.setYRange(float(y_range[0]), float(y_range[1]), padding=0.0)
 
-    if not reassert:
-        return
-
-    def restore_timebase() -> None:
-        """Re-apply the window after the first layout pass."""
-        try:
-            view_box.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
-            view_box.setXRange(x_min, 0.0, padding=0.0)
-        except RuntimeError:
-            pass  # widget destroyed before the event loop ran
-
-    QTimer.singleShot(0, restore_timebase)
+    latch = ScopeTimebase(view_box, x_min)
+    latch.apply()
+    QTimer.singleShot(0, latch.apply)
+    return latch

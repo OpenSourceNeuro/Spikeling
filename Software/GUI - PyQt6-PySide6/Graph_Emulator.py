@@ -305,6 +305,12 @@ def EmulatorPlot(self):
 
     if hasattr(self, "timer"):
         self.timer.stop()
+
+    timebase = getattr(self, "Emulator_timebase", None)
+    if timebase is not None:
+        timebase.stop()
+        self.Emulator_timebase = None
+
     self.ui.Emulator_Oscilloscope_widget.clear()
     if hasattr(self, "Emulator_CurrentPlots"):
         self.Emulator_CurrentPlots.clear()
@@ -841,3 +847,11 @@ def SetPlot(self):
         self.Emulator_CurrentPlots.addItem(curve)
 
     UpdateViews(self)
+
+    # Armed last, once every curve is attached: the latch then observes the
+    # autorange passes triggered by the right-menu animation and by the first
+    # 50 000-sample setData, both of which outlive a next-iteration deferral.
+    self.Emulator_timebase = apply_scope_timebase(
+        plot_item, EMULATOR_TIME_WINDOW_MS, EMULATOR_TIME_WINDOW_DISPLAY_MS,
+        y_range=(VM_MIN_MV, VM_MAX_MV),
+    )
