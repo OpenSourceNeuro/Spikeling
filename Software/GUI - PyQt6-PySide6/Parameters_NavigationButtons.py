@@ -500,8 +500,10 @@ def Buttons(self):
     self.ui.Imaging_Linear_toggleButton.toggled.connect(self.imaging_page.Linear_toggleButton)
     self.ui.Imaging_Equilibrium_toggleButton.toggled.connect(self.imaging_page.Equilibrium_toggleButton)
     self.ui.Imaging_Logistic_toggleButton.toggled.connect(self.imaging_page.Logistic_toggleButton)
-    self.ui.Imaging_GECI_comboBox.currentIndexChanged.connect(lambda: Graph_Imaging.ImagingGraph.SelectGECI(self))
-    self.ui.Imaging_GECI_pushButton.clicked.connect(self.imaging_graph._apply_GECI)
+    # GECI selector + Apply button are wired by the controller itself
+    self.imaging_graph.bind_geci_controls()
+    self.imaging_graph.SelectGECI()
+
     self.ui.Imaging_FrameRate_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFrameRate(self))
     self.ui.Imaging_FrameRate_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFrameRate(self))
     self.ui.Imaging_PMT_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePMT(self))
