@@ -55,6 +55,10 @@ from typing import Optional, Tuple
 # Mapping: UI slider -> (GECI preset key, slider counts per physical unit, fallback)
 # Scales mirror exactly the decoding performed in _connect_parameters.update(),
 # so the sliders remain the single source of truth for the live model.
+from typing import NamedTuple, Optional, Tuple
+
+import Parameters_GECI
+
 GECI_SLIDER_ENCODING = {
     "Imaging_kd_Slider":       ("Kd_uM",             10.0,   0.200),
     "Imaging_Hill_Slider":     ("hill_n",           100.0,   2.000),
@@ -62,6 +66,226 @@ GECI_SLIDER_ENCODING = {
     "Imaging_IndRise_Slider":  ("Ind_tau_rise_ms",    1.0,  50.000),
     "Imaging_IndDecay_Slider": ("Ind_tau_decay_ms",   1.0, 300.000),
 }
+
+class GeciSliderSpec(NamedTuple):
+    """
+    Encoding and admissible span of one fluorescence-tab slider.
+
+    Attributes
+    ----------
+    preset_key : str
+        Key into a ``Parameters_GECI.GECI`` entry.
+    counts_per_unit : float
+        Slider counts per physical unit. Sets the quantisation step: at
+        ``1000`` counts/µM a Kd of 0.144 µM is representable exactly, at the
+        previous ``10`` counts/µM it collapsed onto 0.1 µM.
+    fallback : float
+        Value used when a preset omits ``preset_key``.
+    floor_units, ceiling_units : float
+        Hard bounds in physical units. The applied range is widened further
+        whenever a preset, or the requested headroom, exceeds them, so no
+        indicator can ever be truncated by the widget.
+    """
+
+    preset_key: str
+    counts_per_unit: float
+    fallback: float
+    floor_units: float
+    ceiling_units: float
+
+
+# Slider ranges are derived from the preset table, never hard-coded in the .ui
+GECI_SLIDER_SPECS: dict[str, GeciSliderSpec] = {
+    "Imaging_kd_Slider":       GeciSliderSpec("Kd_uM",           1000.0,   0.200, 0.001,    5.0),
+    "Imaging_Hill_Slider":     GeciSliderSpec("hill_n",           100.0,   2.000, 0.100,   10.0),
+    "Imaging_DFF_Slider":      GeciSliderSpec("dff_max",           10.0,  20.000, 0.000,  100.0),
+    "Imaging_IndRise_Slider":  GeciSliderSpec("Ind_tau_rise_ms",    1.0,  50.000, 1.000, 1000.0),
+    "Imaging_IndDecay_Slider": GeciSliderSpec("Ind_tau_decay_ms",   1.0, 300.000, 1.000, 3000.0),
+}
+
+# Digits shown next to each slider, matched to its quantisation step
+GECI_READOUT_DECIMALS: dict[str, int] = {
+    "Imaging_kd_Slider": 3,
+    "Imaging_Hill_Slider": 2,
+    "Imaging_DFF_Slider": 1,
+    "Imaging_IndRise_Slider": 0,
+    "Imaging_IndDecay_Slider": 0,
+}
+
+
+def format_slider_units(ui, slider_name: str) -> str:
+    """
+    Render a fluorescence slider as a physical-unit string.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Ui object.
+    slider_name : str
+        Attribute name of the slider.
+
+    Returns
+    -------
+    str
+        Value formatted with the precision declared in
+        :data:`GECI_READOUT_DECIMALS`.
+    """
+    decimals = GECI_READOUT_DECIMALS.get(slider_name, 2)
+    return f"{slider_units(ui, slider_name):.{decimals}f}"
+
+
+def reset_slider_to_default(ui, slider_name: str, silent: bool = False) -> float:
+    """
+    Return a fluorescence slider to the preset-table default.
+
+    Replaces the raw-count defaults previously written by the ``Activate*``
+    handlers (``setValue(15)``, ``setValue(100)``, …), which encoded the old
+    divisors and would now mean 0.015 µM or 1.00 instead of 0.200 µM / 2.00.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Ui object.
+    slider_name : str
+        Attribute name of the slider.
+    silent : bool, optional
+        Suppress ``valueChanged``. Leave ``False`` so the imaging parameter
+        cache follows the reset.
+
+    Returns
+    -------
+    float
+        Default value in physical units.
+    """
+    spec = GECI_SLIDER_SPECS[slider_name]
+    slider = getattr(ui, slider_name, None)
+    if slider is None:
+        return spec.fallback
+    if silent:
+        return set_slider_units(slider, spec, spec.fallback)
+    counts = int(round(spec.fallback * spec.counts_per_unit))
+    slider.setValue(max(slider.minimum(), min(slider.maximum(), counts)))
+    return float(slider.value()) / spec.counts_per_unit
+
+# Multiplicative margin above the most extreme preset, so a user can explore
+# beyond the shipped indicators without the range being re-tuned by hand.
+GECI_RANGE_HEADROOM = 1.5
+GECI_SLIDER_TICKS = 11
+
+
+def slider_units(ui, slider_name: str) -> float:
+    """
+    Read a fluorescence slider in physical units.
+
+    Single decoding entry point: the ``/10``, ``/100`` divisors previously
+    scattered across the parameter cache and the UI read-out handlers are
+    replaced by the ``counts_per_unit`` field of :data:`GECI_SLIDER_SPECS`.
+
+    Parameters
+    ----------
+    ui : object
+        The generated Ui object holding the sliders.
+    slider_name : str
+        Attribute name of the slider, e.g. ``'Imaging_kd_Slider'``.
+
+    Returns
+    -------
+    float
+        Slider position converted to µM, ms or dimensionless units.
+    """
+    spec = GECI_SLIDER_SPECS[slider_name]
+    slider = getattr(ui, slider_name, None)
+    if slider is None:
+        return spec.fallback
+    return float(slider.value()) / spec.counts_per_unit
+
+
+def set_slider_units(slider, spec: GeciSliderSpec, value_units: float) -> float:
+    """
+    Write a physical value into ``slider`` without emitting ``valueChanged``.
+
+    Parameters
+    ----------
+    slider : PySide6.QtWidgets.QSlider
+        Target slider, addressed in raw counts.
+    spec : GeciSliderSpec
+        Encoding of that slider.
+    value_units : float
+        Desired value in physical units.
+
+    Returns
+    -------
+    float
+        Value effectively stored, in physical units (identical to the request
+        once :func:`configure_geci_slider_ranges` has run).
+    """
+    counts = int(round(value_units * spec.counts_per_unit))
+    counts = max(slider.minimum(), min(slider.maximum(), counts))
+    was_blocked = slider.blockSignals(True)
+    slider.setValue(counts)
+    slider.blockSignals(was_blocked)
+    return counts / spec.counts_per_unit
+
+
+def configure_geci_slider_ranges(ui, presets: Optional[dict] = None) -> dict:
+    """
+    Widen the fluorescence sliders so every GECI preset fits without clamping.
+
+    For each slider the span is
+
+    $$[\\min(\\text{floor}, \\min_i v_i),\\; \\max(\\text{ceiling}, \\gamma \\max_i v_i)]$$
+
+    with $ v_i $ the value of preset $ i $ and $ \\gamma $ the headroom factor.
+    The current position is preserved in physical units across the rescale.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Ui object.
+    presets : dict, optional
+        Indicator table; defaults to ``Parameters_GECI.GECI``.
+
+    Returns
+    -------
+    dict
+        ``{slider_name: (min_units, max_units)}`` actually applied.
+
+    Notes
+    -----
+    Must be called **after** ``Parameters_Sliders.configure_sliders``: that
+    helper replaces each widget by a :class:`TickSlider` and copies the range
+    from the Qt Designer original, which would otherwise overwrite this one.
+    """
+    presets = Parameters_GECI.GECI if presets is None else presets
+    applied: dict[str, Tuple[float, float]] = {}
+
+    for slider_name, spec in GECI_SLIDER_SPECS.items():
+        slider = getattr(ui, slider_name, None)
+        if slider is None:
+            continue
+
+        values = [float(p.get(spec.preset_key, spec.fallback)) for p in presets.values()]
+        min_units = min([spec.floor_units] + values)
+        max_units = max([spec.ceiling_units] + [GECI_RANGE_HEADROOM * v for v in values])
+
+        previous_units = float(slider.value()) / spec.counts_per_unit
+
+        was_blocked = slider.blockSignals(True)
+        slider.setRange(int(round(min_units * spec.counts_per_unit)),
+                        int(round(max_units * spec.counts_per_unit)))
+        slider.setSingleStep(max(1, int(round(spec.counts_per_unit / 100.0))))
+        slider.setPageStep(max(1, int(round(spec.counts_per_unit))))
+        slider.setValue(int(round(min(max(previous_units, min_units), max_units)
+                                  * spec.counts_per_unit)))
+        slider.blockSignals(was_blocked)
+
+        if hasattr(slider, "set_num_ticks"):
+            slider.set_num_ticks(GECI_SLIDER_TICKS)
+
+        applied[slider_name] = (min_units, max_units)
+
+    return applied
+
 
 
 def set_slider_silently(slider, value: float) -> float:
@@ -248,6 +472,7 @@ class ImagingGraph(QObject):
         """Activate imaging pipeline."""
         self._initialize_buffers()
         self._initialize_plot()
+        configure_geci_slider_ranges(self.ui)
         self._connect_parameters()
         self.apply_indicator_preset("Generic", update_ui=True)
         self._update_connect_button(True)
@@ -562,14 +787,70 @@ class ImagingGraph(QObject):
         if self.use_dff:
             self._update_F0_from_baseline()
 
+    def apply_geci_to_fluorescence_sliders(self, name: Optional[str] = None,
+                                           redraw: bool = True) -> dict:
+        """
+        Push the selected GECI preset onto the fluorescence-tab sliders.
+
+        The slider spans are re-derived from the whole preset table first, so
+        high-affinity (Kd = 0.141 µM) and low-affinity (Kd = 1.300 µM)
+        indicators, and ΔF/F0max from 3.9 to 60, are all representable: the
+        widget can no longer silently truncate an indicator's chemistry.
+
+        Parameters
+        ----------
+        name : str, optional
+            Indicator name; the combo box selection is used when omitted.
+        redraw : bool, optional
+            Refresh the oscilloscope so the new kinetics are immediately visible.
+
+        Returns
+        -------
+        dict
+            Values effectively applied, keyed as in ``Parameters_GECI.GECI``.
+
+        Notes
+        -----
+        Cellular calcium kinetics (``Imaging_CalciumRise/Decay_Slider``)
+        describe the cell, not the indicator, and are deliberately untouched.
+        """
+        resolved, preset = self._resolve_geci_preset(name)
+        self.indicator_name = resolved
+
+        configure_geci_slider_ranges(self.ui)
+
+        effective: dict[str, float] = {}
+        for slider_name, spec in GECI_SLIDER_SPECS.items():
+            requested = float(preset.get(spec.preset_key, spec.fallback))
+            slider = getattr(self.ui, slider_name, None)
+            effective[spec.preset_key] = (
+                requested if slider is None
+                else set_slider_units(slider, spec, requested)
+            )
+
+        self.Kd_uM = effective["Kd_uM"]
+        self.hill_n = effective["hill_n"]
+        self.dff_max = effective["dff_max"]
+        self.Ind_tau_rise_ms = effective["Ind_tau_rise_ms"]
+        self.Ind_tau_decay_ms = effective["Ind_tau_decay_ms"]
+
+        self._sync_imaging_params_from_ui()
+        self._refresh_geci_readouts(effective)
+        self._update_F0_from_baseline()
+
+        if redraw and self._plots_ready:
+            self._update_plots()
+
+        return effective
+
     def _refresh_geci_readouts(self, values: dict) -> None:
         """
-        Display the indicator chemistry that is actually in force.
+        Display the indicator chemistry currently in force.
 
         Parameters
         ----------
         values : dict
-            Effective (post-clamp) values keyed as in ``Parameters_GECI.GECI``.
+            Effective values keyed as in ``Parameters_GECI.GECI``.
         """
         readouts = (
             ("Imaging_GECI_ReadingsKd_Value",       f"{values['Kd_uM']:.3f}"),
@@ -584,70 +865,6 @@ class ImagingGraph(QObject):
                 continue
             label.setText(text)
             label.setStyleSheet("color: rgb(250, 250, 250);")
-
-    def apply_geci_to_fluorescence_sliders(self, name: Optional[str] = None,
-                                           redraw: bool = True) -> dict:
-        """
-        Push the selected GECI preset onto the Fluorescence-tab sliders.
-
-        Pressing *Apply* previously updated only ``_imaging_params``; the next
-        movement of any slider then re-read the stale widget positions and
-        silently reverted Kd, Hill n, ΔF/F0max and the indicator kinetics to the
-        previous indicator. Writing the preset *into the widgets* and then
-        re-deriving the parameter cache from them keeps model and UI consistent
-        by construction.
-
-        Parameters
-        ----------
-        name : str, optional
-            Indicator name; the combo box selection is used when omitted.
-        redraw : bool, optional
-            Refresh the oscilloscope immediately so the new kinetics are visible.
-
-        Returns
-        -------
-        dict
-            Effective values after clamping to the slider ranges, keyed as in
-            ``Parameters_GECI.GECI``.
-
-        Notes
-        -----
-        Cellular calcium kinetics (``Imaging_CalciumRise/Decay_Slider``) are
-        deliberately untouched: they describe the cell, not the indicator.
-        """
-        resolved, preset = self._resolve_geci_preset(name)
-        self.indicator_name = resolved
-
-        effective, truncated = {}, []
-        for slider_name, (key, scale, fallback) in GECI_SLIDER_ENCODING.items():
-            slider = getattr(self.ui, slider_name, None)
-            requested = float(preset.get(key, fallback))
-            if slider is None:
-                effective[key] = requested
-                continue
-            applied = set_slider_silently(slider, requested * scale) / scale
-            effective[key] = applied
-            if abs(applied - requested) > 1e-6:
-                truncated.append(f"{key}: {requested:g} -> {applied:g}")
-
-        # Mirror onto the attribute view used by the model defaults
-        self.Kd_uM = effective["Kd_uM"]
-        self.hill_n = effective["hill_n"]
-        self.dff_max = effective["dff_max"]
-        self.Ind_tau_rise_ms = effective["Ind_tau_rise_ms"]
-        self.Ind_tau_decay_ms = effective["Ind_tau_decay_ms"]
-
-        self._sync_imaging_params_from_ui()
-        self._refresh_geci_readouts(effective)
-        self._update_F0_from_baseline()
-
-        if truncated:
-            print(f"[Imaging] '{resolved}' clamped to slider range: {', '.join(truncated)}")
-
-        if redraw and self._plots_ready:
-            self._update_plots()
-
-        return effective
 
     def _apply_GECI(self) -> None:
         """Apply-button slot: load the combo-box indicator into the UI and model."""
@@ -1670,16 +1887,15 @@ class ImagingGraph(QObject):
             p["FluoNoiseSigma"] = ui.Imaging_FluoNoise_Slider.value() / 5000.0
             p["PhotoShotNoise"] = ui.Imaging_PhotoShotNoise_Slider.value() / 1e6
 
+            # Single decoding source: GECI_SLIDER_SPECS
             # Indicator saturation parameters (µM)
-            p["HillCoef"] = ui.Imaging_Hill_Slider.value() / 100.0
-            p["DissociationConstant"] = ui.Imaging_kd_Slider.value() / 10.0
-
             # Indicator kinetics (ms)
-            p["Ind_tau_rise_ms"] = float(ui.Imaging_IndRise_Slider.value())
-            p["Ind_tau_decay_ms"] = float(ui.Imaging_IndDecay_Slider.value())
-
             # Indicator dynamics max ΔF/F0
-            p["dff_max"] = float(ui.Imaging_DFF_Slider.value()) / 10.0
+            p["DissociationConstant"] = slider_units(ui, "Imaging_kd_Slider")
+            p["HillCoef"] = slider_units(ui, "Imaging_Hill_Slider")
+            p["Ind_tau_rise_ms"] = slider_units(ui, "Imaging_IndRise_Slider")
+            p["Ind_tau_decay_ms"] = slider_units(ui, "Imaging_IndDecay_Slider")
+            p["dff_max"] = slider_units(ui, "Imaging_DFF_Slider")
 
             # Optional sigmoid params (kept configurable via dict even if no UI exists yet)
             p["Sig_k"] = float(getattr(self, "sig_k", 10.0))
