@@ -45,7 +45,7 @@ import Parameters_Settings as Settings
 
 PALETTE_SIZE = 21
 ORGANISATION = "Spikeling"
-APPLICATION = "Spikeling GUI"
+APPLICATION = "SpikelingGUI"
 SETTINGS_KEY = "appearance/theme"
 
 OSH_LOGO_RGB = [0, 153, 176]
@@ -779,7 +779,16 @@ class ThemeManager(QObject):
     def __init__(self, organisation: str = ORGANISATION,
                  application: str = APPLICATION, parent=None) -> None:
         super().__init__(parent)
-        self._settings = QSettings(organisation, application)
+        # IniFormat rather than NativeFormat: identical, inspectable behaviour
+        # on all three platforms, and it bypasses the macOS preferences daemon,
+        # which does not reliably flush for an unsigned, zip-distributed binary.
+        self._settings = QSettings(
+            QSettings.Format.IniFormat,
+            QSettings.Scope.UserScope,
+            organisation,
+            application,
+        )
+
         self._active: ThemeState = default_state()
         self._pending: ThemeState = self._active.copy()
 

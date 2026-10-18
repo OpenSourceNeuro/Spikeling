@@ -10,7 +10,7 @@ block_cipher = None
 try:
     spec_dir = SPECPATH
 except NameError:
-    spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    spec_dir = os.path.abspath(SPECPATH)
 
 # Qt plugins
 plugin_path = QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.PluginsPath)
@@ -31,6 +31,8 @@ hidden_imports = [
     'PySide6.QtGui',
     'PySide6.QtWidgets',
     'PySide6.QtSerialPort',   # used by serial_manager
+    'theme_manager',
+    'Page_Settings',
 ]
 
 a = Analysis(
@@ -70,6 +72,20 @@ a = Analysis(
     noarchive=False,
 )
 
+# --- Bundle sanity check --------------------------------------------------
+# A missing module here produces an application that launches normally and
+# then does nothing on the Settings page, which is far more expensive to
+# diagnose than a red CI job.
+_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis'}
+_bundled_modules = {entry[0] for entry in a.pure}
+_missing_modules = _required_modules - _bundled_modules
+if _missing_modules:
+    raise SystemExit(
+        f"[spec] These modules were not collected into the bundle: "
+        f"{sorted(_missing_modules)}. Check that they live next to Main.py "
+        f"and are imported at module level."
+    )
+
 # Asset tree: resources/Spiky*.png (tetrode scene) and
 # resources/geci/<indicator>/frame_*.png (rotating protein previews).
 # Mirrored verbatim under the bundle root, which is what resource_path() reads.
@@ -92,7 +108,8 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False,              # UPX mangles Qt plugin payloads on some runners
+    upx=False, # UPX mangles Qt plugin payloads on some runners
+    noupx=True,
     console=False,
     icon=icon_file if os.path.exists(icon_file) else None,
 )

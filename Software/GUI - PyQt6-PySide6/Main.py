@@ -239,8 +239,14 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    # Load the stored palette before any widget exists, so toggles, sliders and
-    # plots are constructed with the user's colours rather than the factory ones.
+
+    # Fusion honours QPalette and QSS identically on all three platforms; the
+    # native Windows style ignores the palette for most widgets, which would
+    # leave the custom theme half-applied on the Windows build only.
+    app.setStyle("Fusion")
+
+    # Load the stored palette before any widget exists, so toggles, sliders
+    # and plot pens are constructed with the user's colours and trace width.
     theme_manager.apply(app=app)
 
     app.setWindowIcon(QIcon(str(resource_path("Spikeling.ico"))))
