@@ -7,6 +7,8 @@ from PySide6.QtCore import QSize
 
 import Parameters_Settings as Settings
 import Parameters_NavigationButtons as NavigationButtons
+import Graph_Imaging
+from Graph_Imaging import GECI_SLIDER_SPECS
 
 
 
@@ -387,95 +389,60 @@ class Imaging():
     # Fluorescence parameters
     # ------------------------------------------------------------------
 
-    # Indicator affinity kd
+    # Indicator affinity Kd (µM)
     def Activatekd(self):
-        if self.ui.Imaging_kd_toggleButton.isChecked():
-            self.ui.Imaging_kd_Slider.setEnabled(True)
-            self.kdValue = self.ui.Imaging_kd_Slider.value()
-            self.ui.Imaging_kd_Readings.setText(str(self.kdValue / 100))
-            self.ui.Imaging_kd_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        else:
-            self.ui.Imaging_kd_Slider.setEnabled(False)
-            self.ui.Imaging_kd_Slider.setValue(15)
-            self.ui.Imaging_kd_Readings.setText('')
+        """Toggle the Kd slider; default comes from the GECI preset table."""
+        toggle_indicator_slider(self.ui, "Imaging_kd_toggleButton",
+                                "Imaging_kd_Slider", "Imaging_kd_Readings")
 
     def Getkd(self):
-        self.kdValue = self.ui.Imaging_kd_Slider.value()
-        self.ui.Imaging_kd_Readings.setText(str(self.kdValue / 100))
-        self.ui.Imaging_kd_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        """Display Kd in µM, decoded through the shared slider encoding."""
+        refresh_indicator_readout(self.ui, "Imaging_kd_Slider",
+                                  "Imaging_kd_Readings")
 
-
-    # Affinity (Hill constant)
+    # Cooperativity (Hill coefficient n)
     def ActivateHill(self):
-        if self.ui.Imaging_Hill_toggleButton.isChecked():
-            self.ui.Imaging_Hill_Slider.setEnabled(True)
-            self.HillValue = self.ui.Imaging_Hill_Slider.value()
-            self.ui.Imaging_Hill_Readings.setText(str(self.HillValue / 100))
-            self.ui.Imaging_Hill_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        else:
-            self.ui.Imaging_Hill_Slider.setEnabled(False)
-            self.ui.Imaging_Hill_Slider.setValue(100)
-            self.ui.Imaging_Hill_Readings.setText('')
+        """Toggle the Hill-coefficient slider."""
+        toggle_indicator_slider(self.ui, "Imaging_Hill_toggleButton",
+                                "Imaging_Hill_Slider", "Imaging_Hill_Readings")
 
     def GetHill(self):
-        self.HillValue = self.ui.Imaging_Hill_Slider.value()
-        self.ui.Imaging_Hill_Readings.setText(str(self.HillValue / 100))
-        self.ui.Imaging_Hill_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        """Display the dimensionless Hill coefficient."""
+        refresh_indicator_readout(self.ui, "Imaging_Hill_Slider",
+                                  "Imaging_Hill_Readings")
 
-
-    # Indicator rise: τ (ms)
+    # Indicator rise time constant (ms)
     def ActivateIndRise(self):
-        if self.ui.Imaging_IndRise_toggleButton.isChecked():
-            self.ui.Imaging_IndRise_Slider.setEnabled(True)
-            self.IndRiseValue = self.ui.Imaging_IndRise_Slider.value()
-            self.ui.Imaging_IndRise_Readings.setText(str(self.IndRiseValue))
-            self.ui.Imaging_IndRise_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        else:
-            self.ui.Imaging_IndRise_Slider.setEnabled(False)
-            self.ui.Imaging_IndRise_Slider.setValue(50)
-            self.ui.Imaging_IndRise_Readings.setText('')
+        """Toggle the indicator rise-τ slider."""
+        toggle_indicator_slider(self.ui, "Imaging_IndRise_toggleButton",
+                                "Imaging_IndRise_Slider", "Imaging_IndRise_Readings")
 
     def GetIndRise(self):
-        self.IndRiseValue = self.ui.Imaging_IndRise_Slider.value()
-        self.ui.Imaging_IndRise_Readings.setText(str(self.IndRiseValue))
-        self.ui.Imaging_IndRise_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        """Display the indicator rise time constant in ms."""
+        refresh_indicator_readout(self.ui, "Imaging_IndRise_Slider",
+                                  "Imaging_IndRise_Readings")
 
-
-    # Indicator decay: τ (ms)
+    # Indicator decay time constant (ms)
     def ActivateIndDecay(self):
-        if self.ui.Imaging_IndDecay_toggleButton.isChecked():
-            self.ui.Imaging_IndDecay_Slider.setEnabled(True)
-            self.IndDecayValue = self.ui.Imaging_IndDecay_Slider.value()
-            self.ui.Imaging_IndDecay_Readings.setText(str(self.IndDecayValue))
-            self.ui.Imaging_IndDecay_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        else:
-            self.ui.Imaging_IndDecay_Slider.setEnabled(False)
-            self.ui.Imaging_IndDecay_Slider.setValue(300)
-            self.ui.Imaging_IndDecay_Readings.setText('')
+        """Toggle the indicator decay-τ slider."""
+        toggle_indicator_slider(self.ui, "Imaging_IndDecay_toggleButton",
+                                "Imaging_IndDecay_Slider", "Imaging_IndDecay_Readings")
 
     def GetIndDecay(self):
-        self.IndDecayValue = self.ui.Imaging_IndDecay_Slider.value()
-        self.ui.Imaging_IndDecay_Readings.setText(str(self.IndDecayValue))
-        self.ui.Imaging_IndDecay_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+        """Display the indicator decay time constant in ms."""
+        refresh_indicator_readout(self.ui, "Imaging_IndDecay_Slider",
+                                  "Imaging_IndDecay_Readings")
 
-
-    # Dynamic range (Max ΔF/F₀)
+    # Dynamic range (max ΔF/F0 at saturation)
     def ActivateDFF(self):
-        if self.ui.Imaging_DFF_toggleButton.isChecked():
-            self.ui.Imaging_DFF_Slider.setEnabled(True)
-            self.DFFValue = self.ui.Imaging_DFF_Slider.value()
-            self.ui.Imaging_DFF_Readings.setText(str(self.DFFValue))
-            self.ui.Imaging_DFF_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        else:
-            self.ui.Imaging_DFF_Slider.setEnabled(False)
-            self.ui.Imaging_DFF_Slider.setValue(20)
-            self.ui.Imaging_DFF_Readings.setText('')
+        """Toggle the ΔF/F0max slider."""
+        toggle_indicator_slider(self.ui, "Imaging_DFF_toggleButton",
+                                "Imaging_DFF_Slider", "Imaging_DFF_Readings")
 
     def GetDFF(self):
-        self.DFFValue = self.ui.Imaging_DFF_Slider.value()
-        self.ui.Imaging_DFF_Readings.setText(str(self.DFFValue))
-        self.ui.Imaging_DFF_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-
+        """Display the saturation amplitude ΔF/F0max."""
+        refresh_indicator_readout(self.ui, "Imaging_DFF_Slider",
+                                  "Imaging_DFF_Readings")
 
     # Brightness / Gain
     def ActivateFluoScale(self):
@@ -548,8 +515,56 @@ class Imaging():
         self.ui.Imaging_PhotoShotNoise_Readings.setText(str(self.PSNValue / 1000000))
         self.ui.Imaging_PhotoShotNoise_Readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
 
+# ----------------------------------------------------------------------
+# Indicator-chemistry sliders (shared Kd / Hill / ΔF/F0max / τ handlers)
+# ----------------------------------------------------------------------
+
+READOUT_STYLE = ("color: rgb" + str(tuple(Settings.DarkSolarized[4]))
+                 + "; font: 700 10pt;")
 
 
+def refresh_indicator_readout(ui, slider_name: str, label_name: str) -> None:
+    """
+    Display one indicator slider in physical units.
+
+    Module-level rather than a method because the ``Activate*``/``Get*``
+    handlers are connected as unbound functions receiving the main window as
+    ``self``, so instance helpers of :class:`Imaging` are unreachable from them.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Ui object.
+    slider_name, label_name : str
+        Attribute names of the slider and of its read-out label.
+    """
+    label = getattr(ui, label_name, None)
+    if label is None:
+        return
+    label.setText(Graph_Imaging.format_slider_units(ui, slider_name))
+    label.setStyleSheet(READOUT_STYLE)
 
 
+def toggle_indicator_slider(ui, toggle_name: str, slider_name: str,
+                            label_name: str) -> None:
+    """
+    Enable one indicator slider, or disable it and restore its default.
 
+    Parameters
+    ----------
+    ui : object
+        Generated Ui object.
+    toggle_name, slider_name, label_name : str
+        Attribute names of the :class:`PyToggle`, the slider and the label.
+    """
+    enabled = getattr(ui, toggle_name).isChecked()
+    getattr(ui, slider_name).setEnabled(enabled)
+
+    if enabled:
+        refresh_indicator_readout(ui, slider_name, label_name)
+        return
+
+    Graph_Imaging.reset_slider_to_default(ui, slider_name)
+    label = getattr(ui, label_name, None)
+    if label is not None:
+        label.setText('')

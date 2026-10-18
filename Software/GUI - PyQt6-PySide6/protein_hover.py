@@ -20,6 +20,7 @@ import Parameters_Settings as Settings
 from Parameters_GECI_Structures import GECI_STRUCTURES
 
 from resource_path import application_resource_root
+from geci_parameter_panel import GeciParameterPanel
 
 SPRITE_ROOT = application_resource_root() / "resources" / "geci"
 FRAME_INTERVAL_MS = 100
@@ -116,19 +117,14 @@ class RotatingProteinPreview(QWidget):
         self.title_label.setStyleSheet(
             f"color: rgb{tuple(Settings.DarkSolarized[3])}; font: 700 11pt; background: transparent;")
 
-        self.caption_label = QLabel(container)
-        self.caption_label.setAlignment(Qt.AlignCenter)
-        self.caption_label.setWordWrap(True)
-        self.caption_label.setFixedWidth(PREVIEW_SIZE_PX)
-        self.caption_label.setStyleSheet(
-            f"color: rgb{tuple(Settings.DarkSolarized[14])}; font: 400 8pt; background: transparent;")
+        self.parameters_panel = GeciParameterPanel(PREVIEW_SIZE_PX, parent=container)
 
         inner = QVBoxLayout(container)
         inner.setContentsMargins(10, 8, 10, 8)
-        inner.setSpacing(4)
+        inner.setSpacing(6)
         inner.addWidget(self.image_label)
         inner.addWidget(self.title_label)
-        inner.addWidget(self.caption_label)
+        inner.addWidget(self.parameters_panel)
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -146,14 +142,13 @@ class RotatingProteinPreview(QWidget):
         missing asset degrades gracefully instead of breaking the hover.
         """
         meta = GECI_STRUCTURES.get(geci_name)
-        preset = Parameters_GECI.GECI.get(geci_name, {})
 
         self.title_label.setText(geci_name)
-        kd = preset.get("Kd_uM")
-        chemistry = f"Kd = {kd:.3f} µM · n = {preset.get('hill_n', 0):.1f}" if kd else ""
-        caption = meta.caption if meta else "No structural data"
-        scaffold = meta.scaffold if meta else ""
-        self.caption_label.setText(f"{scaffold}<br>{caption}<br>{chemistry}")
+        self.parameters_panel.set_indicator(geci_name)
+
+        # Structural provenance moves to a tooltip: it is context, not data
+        self.image_label.setToolTip(
+            f"{meta.scaffold} — {meta.caption}" if meta else "No structural data")
 
         self._frames = self._cache.frames(geci_name)
         self._frame_index = 0

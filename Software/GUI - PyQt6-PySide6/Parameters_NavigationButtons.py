@@ -116,8 +116,6 @@ def GetNeuronParameters(self):
 def CloseNeuronParameters(self):
     self.aux_window.close()
 
-
-
 def openTetrodeWindow(self):
     self.tetrode_window.show()
     self.tetrode_window.raise_()
@@ -500,8 +498,14 @@ def Buttons(self):
     self.ui.Imaging_Linear_toggleButton.toggled.connect(self.imaging_page.Linear_toggleButton)
     self.ui.Imaging_Equilibrium_toggleButton.toggled.connect(self.imaging_page.Equilibrium_toggleButton)
     self.ui.Imaging_Logistic_toggleButton.toggled.connect(self.imaging_page.Logistic_toggleButton)
-    self.ui.Imaging_GECI_comboBox.currentIndexChanged.connect(lambda: Graph_Imaging.ImagingGraph.SelectGECI(self))
-    self.ui.Imaging_GECI_pushButton.clicked.connect(self.imaging_graph._apply_GECI)
+    # GECI selector + Apply button are wired by the controller itself
+    self.imaging_graph.bind_geci_controls()
+    # Size the fluorescence sliders to the full GECI library, then preview
+    Graph_Imaging.configure_geci_slider_ranges(self.ui)
+    for _slider_name in Graph_Imaging.GECI_SLIDER_SPECS:
+        _label_name = _slider_name.replace("_Slider", "_Readings")
+        Page_Imaging_ImagingSimulation.refresh_indicator_readout(self.ui, _slider_name, _label_name)
+    self.imaging_graph.SelectGECI()
     self.ui.Imaging_FrameRate_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFrameRate(self))
     self.ui.Imaging_FrameRate_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFrameRate(self))
     self.ui.Imaging_PMT_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePMT(self))
