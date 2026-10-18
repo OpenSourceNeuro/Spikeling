@@ -31,6 +31,8 @@ from theme_manager import (
     ThemeRole, contrast_of, mix, theme_manager,
 )
 
+from pathlib import Path
+import sys
 
 SWATCH_SIZE = (116, 28)
 ACTION_BUTTON_SIZE = (150, 34)
@@ -142,6 +144,31 @@ class ColourSwatchButton(QPushButton):
             self.manager.set_colour(self.role.key, chosen.name())
             self.refresh()
 
+
+def default_theme_directory() -> str:
+    """
+    Return a writable directory for theme import/export dialogs.
+
+    The relative ``./`` default is unusable in a frozen build: the working
+    directory is the launch location, which is ``/`` when a macOS bundle is
+    opened from Finder. Prefers the folder holding the executable, which is
+    where the release zip also places ``Recordings``, ``Neurons`` and
+    ``Stimuli``, and falls back to the user's home directory.
+
+    Returns
+    -------
+    str
+        Absolute path to an existing, writable directory.
+    """
+    if getattr(sys, "frozen", False):
+        candidate = Path(sys.executable).resolve().parent
+    else:
+        candidate = Path(__file__).resolve().parent
+
+    import os
+    if candidate.is_dir() and os.access(candidate, os.W_OK):
+        return str(candidate)
+    return str(Path.home())
 
 class SettingsPage:
     """
@@ -498,19 +525,20 @@ class SettingsPage:
 
     def ExportTheme(self) -> None:
         """Write the staged theme to a user-selected ``.json`` file."""
+        suggested = str(Path(default_theme_directory()) / "spikeling_theme.json")
         path, _ = QFileDialog.getSaveFileName(
-            self.parent, "Save theme", "./spikeling_theme.json", "JSON files (*.json)")
+            self.parent, "Save theme", suggested, "JSON files (*.json)")
         if path:
             self.manager.export_to(path)
 
     def ImportTheme(self) -> None:
         """Stage a theme from a user-selected ``.json`` file."""
         path, _ = QFileDialog.getOpenFileName(
-            self.parent, "Load theme", ".", "JSON files (*.json)")
+            self.parent, "Load theme", default_theme_directory(),
+            "JSON files (*.json)")
         if path:
             self.manager.import_from(path)
             self._sync_controls()
-
 
 def ShowPage(self) -> None:
     """Display the Settings page from a ``MainWindow`` instance."""

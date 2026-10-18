@@ -8,7 +8,7 @@ block_cipher = None
 try:
     spec_dir = SPECPATH
 except NameError:
-    spec_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    spec_dir = os.path.abspath(SPECPATH)
 
 plugin_path = QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.PluginsPath)
 qt_plugins = []
@@ -37,6 +37,8 @@ hidden_imports = [
     'PySide6.QtGui',
     'PySide6.QtWidgets',
     'PySide6.QtSerialPort',
+    'theme_manager',
+    'Page_Settings',
 ]
 
 a = Analysis(
@@ -75,6 +77,20 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
+# --- Bundle sanity check --------------------------------------------------
+# A missing module here produces an application that launches normally and
+# then does nothing on the Settings page, which is far more expensive to
+# diagnose than a red CI job.
+_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis'}
+_bundled_modules = {entry[0] for entry in a.pure}
+_missing_modules = _required_modules - _bundled_modules
+if _missing_modules:
+    raise SystemExit(
+        f"[spec] These modules were not collected into the bundle: "
+        f"{sorted(_missing_modules)}. Check that they live next to Main.py "
+        f"and are imported at module level."
+    )
 
 a.datas += Tree(
     os.path.join(spec_dir, 'resources'),

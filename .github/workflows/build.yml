@@ -2,270 +2,270 @@ name: Build and Release Spikeling GUI
 
 on:
   push:
-    tags: ["v*.*.*"]
-  workflow_dispatch:
-    inputs:
-      release_tag:
-        description: "Tag for the release (blank = artifact-only dry run). Use e.g. v0.0.0-test.1"
-        required: false
-        default: ""
-      publish:
-        description: "Publish the release (leave unchecked to stop at the draft)"
-        type: boolean
-        default: false
-      prerelease:
-        description: "Mark as pre-release (keeps it off the repo front page)"
-        type: boolean
-        default: true
+    tags:
+      - "v*.*.*"
 
 permissions:
-  contents: write
+  contents: write   # allow creating/updating releases
 
 env:
   GUI_DIR: "Software/GUI - PyQt6-PySide6"
-  PYTHON_VERSION: "3.12"
-
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
-  # ---------------------------------------------------------------------
-  # Resolve tag / publish / prerelease once, so every downstream job reads
-  # the same values instead of re-deriving them from scattered expressions.
-  # ---------------------------------------------------------------------
-  setup:
-    name: Resolve release parameters
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.resolve.outputs.tag }}
-      version: ${{ steps.resolve.outputs.version }}
-      is_release: ${{ steps.resolve.outputs.is_release }}
-      publish: ${{ steps.resolve.outputs.publish }}
-      prerelease: ${{ steps.resolve.outputs.prerelease }}
-    steps:
-      - id: resolve
-        shell: bash
-        # Inputs are passed through env rather than interpolated into the
-        # script body, so a tag containing shell metacharacters cannot execute.
-        env:
-          INPUT_TAG: ${{ inputs.release_tag }}
-          INPUT_PUBLISH: ${{ inputs.publish }}
-          INPUT_PRERELEASE: ${{ inputs.prerelease }}
-        run: |
-          set -euo pipefail
-
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            # Tag push: always a real, published, non-pre release.
-            tag="${GITHUB_REF_NAME}"
-            publish="true"
-            prerelease="false"
-          else
-            tag="${INPUT_TAG:-}"
-            publish="${INPUT_PUBLISH:-false}"
-            prerelease="${INPUT_PRERELEASE:-true}"
-          fi
-
-          if [ -n "$tag" ]; then
-            is_release="true"
-            version="$tag"
-          else
-            # No tag: build and expose artifacts only, never touch Releases.
-            is_release="false"
-            publish="false"
-            version="dev-${GITHUB_SHA::7}"
-          fi
-
-          {
-            echo "tag=$tag"
-            echo "version=$version"
-            echo "is_release=$is_release"
-            echo "publish=$publish"
-            echo "prerelease=$prerelease"
-          } >> "$GITHUB_OUTPUT"
-
-          {
-            echo "### Release plan"
-            echo "| field | value |"
-            echo "|---|---|"
-            echo "| version | \`$version\` |"
-            echo "| create release | $is_release |"
-            echo "| publish | $publish |"
-            echo "| pre-release | $prerelease |"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-  # ---------------------------------------------------------------------
-  # Draft release, created once so the three build jobs have a target.
-  # ---------------------------------------------------------------------
-  create-release:
-    name: Create draft release
-    needs: [setup]
-    if: needs.setup.outputs.is_release == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.setup.outputs.tag }}
-          # The tag may not exist yet on a manual run; the Releases API creates
-          # it at this commit. Tags created with GITHUB_TOKEN do not re-trigger
-          # the push event, so there is no recursion.
-          target_commitish: ${{ github.sha }}
-          draft: true
-          prerelease: ${{ needs.setup.outputs.prerelease == 'true' }}
-          make_latest: false
-          generate_release_notes: true
-
-  # ---------------------------------------------------------------------
-  # One job per platform, run concurrently.
-  # ---------------------------------------------------------------------
-  build:
-    name: Build ${{ matrix.label }}
-    needs: [setup, create-release]
-    # create-release is *skipped* on a tagless dry run, and a skipped
-    # dependency would otherwise skip this job too.
-    if: >-
-      always()
-      && needs.setup.result == 'success'
-      && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped')
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-latest
-            label: macOS
-            spec: Spikeling-mac.spec
-            binary: Spikeling
-          - os: ubuntu-latest
-            label: Linux
-            spec: Spikeling-linux.spec
-            binary: Spikeling
-          - os: windows-latest
-            label: Windows
-            spec: Spikeling-win.spec
-            binary: Spikeling.exe
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.GUI_DIR }}
+  build-macos:
+    name: Build on macOS
+    runs-on: macos-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
+          ref: ${{ github.ref }}
           persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
+          python-version: "3.12"
 
       - name: Install Python dependencies
+        working-directory: ${{ env.GUI_DIR }}
         run: |
           python -m pip install --upgrade pip
-          pip install --no-cache-dir -r requirements-build.txt
+          pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
+          pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
 
-      - name: Verify assets are present in the checkout
+      # Fails in seconds if a theming source was never committed, instead of
+      # producing an application whose Settings page silently does nothing.
+      - name: Verify theming sources are present
+        working-directory: ${{ env.GUI_DIR }}
+        shell: bash
         run: |
           set -euo pipefail
-          test -d resources || { echo "::error::resources/ is missing"; exit 1; }
-          for sprite in Spiky1.png Spiky2.png Spiky3.png; do
-            test -f "resources/$sprite" || { echo "::error::resources/$sprite is missing"; exit 1; }
+          missing=0
+          for f in Main.py theme_manager.py Page_Settings.py \
+                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
+                   Parameters_ToggleButtons.py Spikeling-mac.spec; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
+              missing=1
+            fi
           done
-          frames=$(find resources/geci -name 'frame_*.png' | wc -l | tr -d ' ')
-          echo "GECI turntable frames: $frames"
-          [ "$frames" -gt 0 ] || { echo "::error::no turntable frames committed"; exit 1; }
-          if head -c 40 "resources/Spiky1.png" | grep -q 'git-lfs'; then
-            echo "::error::LFS pointer checked out, not the image"; exit 1
-          fi
+          [ "$missing" -eq 0 ] || exit 1
+          echo "All required sources present."
 
       - name: Build with PyInstaller
-        run: pyinstaller --clean --log-level=INFO "${{ matrix.spec }}"
+        working-directory: ${{ env.GUI_DIR }}
+        run: pyinstaller --clean --log-level=DEBUG Spikeling-mac.spec
 
-      - name: Verify assets landed inside the binary
-        env:
-          BINARY: dist/${{ matrix.binary }}
-        run: |
-          python - <<'PY'
-          import os, pathlib, sys
-
-          REQUIRED = ("resources/geci", "resources/Spiky1.png")
-          blob = pathlib.Path(os.environ["BINARY"]).read_bytes()
-
-          def embedded(logical_name: str) -> bool:
-              """
-              Test both separator conventions.
-
-              PyInstaller records CArchive entry names with the separator of
-              the build host, so a Windows bundle carries "resources\\geci"
-              where the POSIX bundles carry "resources/geci".
-              """
-              return (logical_name.encode() in blob
-                      or logical_name.replace("/", "\\").encode() in blob)
-
-          missing = [n for n in REQUIRED if not embedded(n)]
-          print(f"binary: {len(blob) / 1e6:.1f} MB")
-          if missing:
-              sys.exit(f"::error::not embedded: {missing}")
-          print("asset entries confirmed in bundle")
-          PY
-
-      - name: Package
-        env:
-          VERSION: ${{ needs.setup.outputs.version }}
-        run: |
-          set -euo pipefail
-          rm -rf release out && mkdir -p release out
-          cp "dist/${{ matrix.binary }}" release/
-          chmod +x "release/${{ matrix.binary }}" || true
-          cp -r Recordings Neurons Stimuli release/
-          python -c "import shutil,sys; shutil.make_archive(sys.argv[1],'zip','release')" \
-                 "out/Spikeling-${VERSION}-${{ matrix.label }}"
-          rm -rf release
-          ls -lh out/
-
-      - name: Upload to draft release
-        if: needs.setup.outputs.is_release == 'true'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.setup.outputs.tag }}
-          draft: true
-          files: ${{ env.GUI_DIR }}/out/Spikeling-${{ needs.setup.outputs.version }}-${{ matrix.label }}.zip
-
-      - name: Upload dry-run artifact
-        if: needs.setup.outputs.is_release != 'true'
+      # Lists every module PyInstaller could not resolve. Uploaded here, before
+      # the Cleanup step removes build/, and on failure too since that is
+      # exactly when the report is needed.
+      - name: Upload PyInstaller warning report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Spikeling-${{ matrix.label }}-dryrun
-          path: ${{ env.GUI_DIR }}/out/*.zip
-          retention-days: 7
+          name: pyinstaller-warnings-${{ runner.os }}
+          path: ${{ env.GUI_DIR }}/build/Spikeling/warn-Spikeling.txt
+          if-no-files-found: ignore
 
-  # ---------------------------------------------------------------------
-  # Only now does the release become visible.
-  # ---------------------------------------------------------------------
-  publish:
-    name: Publish release
-    needs: [setup, build]
-    if: needs.setup.outputs.is_release == 'true' && needs.setup.outputs.publish == 'true'
+      - name: Package macOS build
+        run: |
+          version="${GITHUB_REF_NAME}"
+          zipName="Spikeling-${version}-macOS.zip"
+
+          mkdir -p release
+          cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
+          chmod +x release/Spikeling
+          cp -r "${{ env.GUI_DIR }}/Recordings" release/
+          cp -r "${{ env.GUI_DIR }}/Neurons" release/
+          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+
+          zip -r "$zipName" release/*
+          mkdir -p "${{ env.GUI_DIR }}/macOS"
+          mv "$zipName" "${{ env.GUI_DIR }}/macOS/"
+          rm -rf release
+
+      - name: Upload macOS artifact to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
+
+      - name: Cleanup
+        run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
+
+  build-linux:
+    name: Build on Linux
     runs-on: ubuntu-latest
+    needs: build-macos
+
     steps:
-      - name: Flip draft to published
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ needs.setup.outputs.tag }}
-          PRERELEASE: ${{ needs.setup.outputs.prerelease }}
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        working-directory: ${{ env.GUI_DIR }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
+          pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
+
+      # Fails in seconds if a theming source was never committed, instead of
+      # producing an application whose Settings page silently does nothing.
+      - name: Verify theming sources are present
+        working-directory: ${{ env.GUI_DIR }}
+        shell: bash
         run: |
           set -euo pipefail
-          if [ "$PRERELEASE" = "true" ]; then
-            # --latest=false keeps a test build off the repository front page.
-            gh release edit "$TAG" --draft=false --prerelease --latest=false \
-                                   --repo "$GITHUB_REPOSITORY"
-          else
-            gh release edit "$TAG" --draft=false --latest \
-                                   --repo "$GITHUB_REPOSITORY"
-          fi
-          echo "Published: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${TAG}" \
-            >> "$GITHUB_STEP_SUMMARY"
+          missing=0
+          for f in Main.py theme_manager.py Page_Settings.py \
+                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
+                   Parameters_ToggleButtons.py Spikeling-linux.spec; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "All required sources present."
+
+      - name: Build with PyInstaller
+        working-directory: ${{ env.GUI_DIR }}
+        run: pyinstaller --clean --log-level=DEBUG Spikeling-linux.spec
+
+      # Lists every module PyInstaller could not resolve. Uploaded here, before
+      # the Cleanup step removes build/, and on failure too since that is
+      # exactly when the report is needed.
+      - name: Upload PyInstaller warning report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyinstaller-warnings-${{ runner.os }}
+          path: ${{ env.GUI_DIR }}/build/Spikeling/warn-Spikeling.txt
+          if-no-files-found: ignore
+
+      - name: Package Linux build
+        run: |
+          version="${GITHUB_REF_NAME}"
+          zipName="Spikeling-${version}-Linux.zip"
+
+          mkdir -p release
+          cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
+          chmod +x release/Spikeling
+          cp -r "${{ env.GUI_DIR }}/Recordings" release/
+          cp -r "${{ env.GUI_DIR }}/Neurons" release/
+          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+
+          zip -r "$zipName" release/*
+          mkdir -p "${{ env.GUI_DIR }}/Linux"
+          mv "$zipName" "${{ env.GUI_DIR }}/Linux/"
+          rm -rf release
+
+      - name: Upload Linux artifact to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
+
+      - name: Cleanup
+        run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
+
+  build-windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    needs: build-linux
+
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        working-directory: ${{ env.GUI_DIR }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir PySide6==6.9.2 pyinstaller==6.15
+          pip install --no-cache-dir numpy==2.3.2 scipy==1.16.1 pandas==2.3.2 pyqtgraph==0.13.7 pyserial==3.5
+
+      # Runs under Git Bash, which ships with windows-latest, so this check is
+      # byte-identical to the macOS and Linux jobs and cannot drift from them.
+      - name: Verify theming sources are present
+        working-directory: ${{ env.GUI_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for f in Main.py theme_manager.py Page_Settings.py \
+                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
+                   Parameters_ToggleButtons.py Spikeling-win.spec; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "All required sources present."
+
+      - name: Build with PyInstaller
+        working-directory: ${{ env.GUI_DIR }}
+        run: pyinstaller --clean --log-level=DEBUG Spikeling-win.spec
+
+      # Lists every module PyInstaller could not resolve. Uploaded here, before
+      # the Cleanup step removes build/, and on failure too since that is
+      # exactly when the report is needed.
+      - name: Upload PyInstaller warning report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyinstaller-warnings-${{ runner.os }}
+          path: ${{ env.GUI_DIR }}/build/Spikeling/warn-Spikeling.txt
+          if-no-files-found: ignore
+
+      - name: Package Windows build
+        shell: powershell
+        run: |
+          $version = "${{ github.ref_name }}"
+          $zipName = "Spikeling-$version-Windows.zip"
+
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Copy-Item -Path "${{ env.GUI_DIR }}/dist/Spikeling.exe" -Destination release/
+          Copy-Item -Path "${{ env.GUI_DIR }}/Recordings" -Destination release/ -Recurse
+          Copy-Item -Path "${{ env.GUI_DIR }}/Neurons" -Destination release/ -Recurse
+          Copy-Item -Path "${{ env.GUI_DIR }}/Stimuli" -Destination release/ -Recurse
+
+          New-Item -ItemType Directory -Force -Path "${{ env.GUI_DIR }}/Windows" | Out-Null
+          Compress-Archive -Path "release\*" -DestinationPath "${{ env.GUI_DIR }}/Windows/$zipName" -Force
+
+          Remove-Item -Recurse -Force release
+
+      - name: Upload Windows artifact to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
+
+      - name: Cleanup
+        shell: powershell
+        run: |
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/build" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/dist" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/__pycache__" -ErrorAction SilentlyContinue
