@@ -4,6 +4,14 @@ on:
   push:
     tags:
       - "v*.*.*"
+  # Manual trigger: shows the "Run workflow" button on the Actions page.
+  # The button only appears once this file exists on the default branch.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version label for the archives (blank = dev-<run number>)"
+        required: false
+        default: ""
 
 permissions:
   contents: write   # allow creating/updating releases
@@ -11,13 +19,23 @@ permissions:
 env:
   GUI_DIR: "Software/GUI - PyQt6-PySide6"
 
+  # Archive label. A tag push uses the tag itself; a manual run uses the typed
+  # value, or a dev-<run number> fallback. Without this, a manual run would
+  # name its archives after the branch and try to publish a release tagged
+  # "main", which is exactly the accident the tag-only trigger prevented.
+  RELEASE_VERSION: >-
+    ${{ startsWith(github.ref, 'refs/tags/')
+        && github.ref_name
+        || (github.event.inputs.version
+            || format('dev-{0}', github.run_number)) }}
+
 jobs:
   build-macos:
     name: Build on macOS
     runs-on: macos-latest
 
     steps:
-      - name: Checkout tagged source
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -72,7 +90,7 @@ jobs:
 
       - name: Package macOS build
         run: |
-          version="${GITHUB_REF_NAME}"
+          version="${RELEASE_VERSION}"
           zipName="Spikeling-${version}-macOS.zip"
 
           mkdir -p release
@@ -87,13 +105,25 @@ jobs:
           mv "$zipName" "${{ env.GUI_DIR }}/macOS/"
           rm -rf release
 
+      # Manual runs end here: the zip is downloadable from the run summary.
+      - name: Upload macOS archive as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Spikeling-${{ env.RELEASE_VERSION }}-macOS
+          path: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ env.RELEASE_VERSION }}-macOS.zip
+          if-no-files-found: error
+
+      # Publishing is restricted to tag pushes, so a manual test build can
+      # never overwrite or create a public release.
       - name: Upload macOS artifact to release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
 
       - name: Cleanup
+        if: always()
         run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
 
   build-linux:
@@ -102,7 +132,7 @@ jobs:
     needs: build-macos
 
     steps:
-      - name: Checkout tagged source
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -157,7 +187,7 @@ jobs:
 
       - name: Package Linux build
         run: |
-          version="${GITHUB_REF_NAME}"
+          version="${RELEASE_VERSION}"
           zipName="Spikeling-${version}-Linux.zip"
 
           mkdir -p release
@@ -172,13 +202,25 @@ jobs:
           mv "$zipName" "${{ env.GUI_DIR }}/Linux/"
           rm -rf release
 
+      # Manual runs end here: the zip is downloadable from the run summary.
+      - name: Upload Linux archive as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Spikeling-${{ env.RELEASE_VERSION }}-Linux
+          path: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ env.RELEASE_VERSION }}-Linux.zip
+          if-no-files-found: error
+
+      # Publishing is restricted to tag pushes, so a manual test build can
+      # never overwrite or create a public release.
       - name: Upload Linux artifact to release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
 
       - name: Cleanup
+        if: always()
         run: rm -rf "${{ env.GUI_DIR }}/build" "${{ env.GUI_DIR }}/dist" "${{ env.GUI_DIR }}/__pycache__"
 
   build-windows:
@@ -187,7 +229,7 @@ jobs:
     needs: build-linux
 
     steps:
-      - name: Checkout tagged source
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -243,7 +285,7 @@ jobs:
       - name: Package Windows build
         shell: powershell
         run: |
-          $version = "${{ github.ref_name }}"
+          $version = "${{ env.RELEASE_VERSION }}"
           $zipName = "Spikeling-$version-Windows.zip"
 
           New-Item -ItemType Directory -Force -Path release | Out-Null
@@ -257,13 +299,25 @@ jobs:
 
           Remove-Item -Recurse -Force release
 
+      # Manual runs end here: the zip is downloadable from the run summary.
+      - name: Upload Windows archive as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Spikeling-${{ env.RELEASE_VERSION }}-Windows
+          path: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ env.RELEASE_VERSION }}-Windows.zip
+          if-no-files-found: error
+
+      # Publishing is restricted to tag pushes, so a manual test build can
+      # never overwrite or create a public release.
       - name: Upload Windows artifact to release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
 
       - name: Cleanup
+        if: always()
         shell: powershell
         run: |
           Remove-Item -Recurse -Force "${{ env.GUI_DIR }}/build" -ErrorAction SilentlyContinue
