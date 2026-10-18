@@ -251,19 +251,38 @@ class SpikelingGraph(QObject):
         The firmware always boots in potentiometer mode, so overrides issued
         before the unplug are lost and must be replayed for the recording to
         remain comparable across the disconnection.
+
+        Notes
+        -----
+        This previously resolved the handlers with
+        ``getattr(self.parent, name)``, but they are defined on
+        ``Page_Spikeling_NeuronInterface.Spikeling``, not on the main window,
+        so every lookup returned ``None`` and nothing was ever replayed,
+        including the ``DT`` loop period. They are now resolved on the page
+        class and invoked with the main window as ``self``, matching how the
+        navigation buttons call them.
+
+        The import is local because ``Page_Spikeling_NeuronInterface``
+        imports ``Parameters_NavigationButtons``, which imports this module.
         """
+        from Page_Spikeling_NeuronInterface import Spikeling as SpikelingPage
+
         serial_manager.write("CON\n")
-        if hasattr(self.parent, "ChangeSpeed"):
-            self.parent.ChangeSpeed()
-        for activator in ("SelectNeuronMode", "SelectPatchClampMode",
-                          "ActivateStimFre", "ActivateStimStr",
-                          "ActivatePhotoGain", "ActivatePRDecay", "ActivatePRRecovery",
-                          "ActivateInjectedCurrent", "ActivateNoiseLevel",
-                          "ActivateSynapticGain1", "ActivateSynapseDecay1",
-                          "ActivateSynapticGain2", "ActivateSynapseDecay2"):
-            handler = getattr(self.parent, activator, None)
-            if callable(handler):
-                handler()
+
+        for name in ("ChangeSpeed",
+                     "SelectNeuronMode", "SelectPatchClampMode",
+                     "ActivateStimFre", "ActivateStimStr",
+                     "ActivatePhotoGain", "ActivatePRDecay", "ActivatePRRecovery",
+                     "ActivateInjectedCurrent", "ActivateNoiseLevel",
+                     "ActivateSynapticGain1", "ActivateSynapseDecay1",
+                     "ActivateSynapticGain2", "ActivateSynapseDecay2"):
+            handler = getattr(SpikelingPage, name, None)
+            if not callable(handler):
+                continue
+            try:
+                handler(self.parent)
+            except Exception as error:   # one broken restorer must not kill the link
+                print(f"State restore failed for {name}: {error}")
 
     def on_device_connected(self, port) -> None:
         """

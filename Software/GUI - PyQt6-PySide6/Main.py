@@ -177,8 +177,14 @@ class MainWindow(QMainWindow):
         # Custom Navigation bar movement
         self.ui.header_widget.mouseMoveEvent = moveWindow
 
-        # Replace sliders with TiEmulatorConnectionFlagckSliders
+        # Replace sliders with TickSliders
         Sliders.configure_sliders(self)
+
+        # Put both speed sliders on the shared ladder at the same rung. Runs
+        # before NavigationButtons.Buttons connects valueChanged, so seeding
+        # the default cannot emit a serial write to a closed port.
+        import speed_model
+        speed_model.apply_speed_sliders(self.ui)
 
         # Generate toggle buttons
         ToggleButtons.Buttons(self)
