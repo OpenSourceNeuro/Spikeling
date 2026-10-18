@@ -3,15 +3,32 @@ name: Build and Release Spikeling GUI
 on:
   push:
     tags:
+      # Matches stable tags (v1.2.3) and pre-release tags (v1.2.3-rc.1),
+      # since '*' also matches '-' and '.'. The second pattern covers
+      # two-component pre-releases such as v1.2-beta.
       - "v*.*.*"
+      - "v*.*-*"
   # Manual trigger: shows the "Run workflow" button on the Actions page.
   # The button only appears once this file exists on the default branch.
+  #
+  # The ref dropdown lists tags as well as branches. Selecting a tag makes the
+  # run publish a release, which is what gives the release_type input below
+  # something to act on; selecting a branch produces artifacts only.
   workflow_dispatch:
     inputs:
       version:
         description: "Version label for the archives (blank = dev-<run number>)"
         required: false
         default: ""
+      release_type:
+        description: "Release channel (only applies when running from a tag)"
+        required: false
+        default: "auto"
+        type: choice
+        options:
+          - auto        # pre-release when the tag carries a '-' suffix
+          - prerelease  # force pre-release
+          - stable      # force full release
 
 permissions:
   contents: write   # allow creating/updating releases
@@ -29,6 +46,18 @@ env:
         || (github.event.inputs.version
             || format('dev-{0}', github.run_number)) }}
 
+  # Pre-release flag, resolved once and reused by all three jobs.
+  #
+  # Auto-detection keys on the semantic-versioning pre-release separator: a
+  # '-' in the tag (v1.2.3-rc.1) means "not production". This keeps tagging
+  # the single source of truth, so a release cannot be mislabelled by
+  # forgetting to tick a box. The explicit choices exist to override a tag
+  # that was named against the convention.
+  IS_PRERELEASE: >-
+    ${{ github.event.inputs.release_type == 'prerelease'
+        || (github.event.inputs.release_type != 'stable'
+            && contains(github.ref_name, '-')) }}
+
 jobs:
   build-macos:
     name: Build on macOS
@@ -41,6 +70,22 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
           persist-credentials: false
+
+      # Written to the run summary so the release channel is visible before
+      # anything is published, rather than discovered on the Releases page.
+      - name: Report build configuration
+        shell: bash
+        run: |
+          {
+            echo "### Build configuration"
+            echo ""
+            echo "| Setting | Value |"
+            echo "| --- | --- |"
+            echo "| Ref | \`${{ github.ref }}\` |"
+            echo "| Version label | \`${RELEASE_VERSION}\` |"
+            echo "| Publishes a release | ${{ startsWith(github.ref, 'refs/tags/') && 'yes' || 'no (artifacts only)' }} |"
+            echo "| Pre-release | ${IS_PRERELEASE} |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -105,7 +150,7 @@ jobs:
           mv "$zipName" "${{ env.GUI_DIR }}/macOS/"
           rm -rf release
 
-      # Manual runs end here: the zip is downloadable from the run summary.
+      # Branch runs end here: the zip is downloadable from the run summary.
       - name: Upload macOS archive as workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -113,13 +158,17 @@ jobs:
           path: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ env.RELEASE_VERSION }}-macOS.zip
           if-no-files-found: error
 
-      # Publishing is restricted to tag pushes, so a manual test build can
-      # never overwrite or create a public release.
+      # Publishing is restricted to tag refs, so a branch test build can never
+      # overwrite or create a public release. make_latest is suppressed for a
+      # pre-release: a release candidate must not become the download the
+      # project page offers by default.
       - name: Upload macOS artifact to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
+          make_latest: ${{ env.IS_PRERELEASE != 'true' }}
           files: ${{ env.GUI_DIR }}/macOS/Spikeling-${{ github.ref_name }}-macOS.zip
 
       - name: Cleanup
@@ -202,7 +251,7 @@ jobs:
           mv "$zipName" "${{ env.GUI_DIR }}/Linux/"
           rm -rf release
 
-      # Manual runs end here: the zip is downloadable from the run summary.
+      # Branch runs end here: the zip is downloadable from the run summary.
       - name: Upload Linux archive as workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -210,13 +259,17 @@ jobs:
           path: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ env.RELEASE_VERSION }}-Linux.zip
           if-no-files-found: error
 
-      # Publishing is restricted to tag pushes, so a manual test build can
-      # never overwrite or create a public release.
+      # Publishing is restricted to tag refs, so a branch test build can never
+      # overwrite or create a public release. make_latest is suppressed for a
+      # pre-release: a release candidate must not become the download the
+      # project page offers by default.
       - name: Upload Linux artifact to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
+          make_latest: ${{ env.IS_PRERELEASE != 'true' }}
           files: ${{ env.GUI_DIR }}/Linux/Spikeling-${{ github.ref_name }}-Linux.zip
 
       - name: Cleanup
@@ -299,7 +352,7 @@ jobs:
 
           Remove-Item -Recurse -Force release
 
-      # Manual runs end here: the zip is downloadable from the run summary.
+      # Branch runs end here: the zip is downloadable from the run summary.
       - name: Upload Windows archive as workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -307,13 +360,17 @@ jobs:
           path: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ env.RELEASE_VERSION }}-Windows.zip
           if-no-files-found: error
 
-      # Publishing is restricted to tag pushes, so a manual test build can
-      # never overwrite or create a public release.
+      # Publishing is restricted to tag refs, so a branch test build can never
+      # overwrite or create a public release. make_latest is suppressed for a
+      # pre-release: a release candidate must not become the download the
+      # project page offers by default.
       - name: Upload Windows artifact to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
+          make_latest: ${{ env.IS_PRERELEASE != 'true' }}
           files: ${{ env.GUI_DIR }}/Windows/Spikeling-${{ github.ref_name }}-Windows.zip
 
       - name: Cleanup
