@@ -1,33 +1,428 @@
-
 ########################################################################
 #                          Libraries import                            #
 
 from PySide6.QtWidgets import QFileDialog
 import pyqtgraph as pg
-#from pyqtgraph.metaarray import *
 import pyqtgraph.exporters
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 import Parameters_Settings as Settings
+from theme_manager import theme_manager
+
+
+# =============================================================================
+# Panel layout
+# =============================================================================
+# Oscilloscope widgets per stacked page, as (page, row) -> column count. Used
+# to tag every canvas with its background role without hard-coding 36 names.
+ANALYSIS_WIDGET_LAYOUT = {1: (4, 3, 3), 2: (4, 4, 4), 3: (4, 4, 4)}
+
+# Analysis canvases keep the lighter panel colour that visually separates them
+# from the live oscilloscopes; the role is resolved per theme, not frozen.
+ANALYSIS_BACKGROUND_ROLE = "panel_background"
+
+SAMPLES_PER_MS = 10.0
+
+# Per-neuron signal mapping. ``vm`` and ``current`` name the ``df_DataAnalysis``
+# arrays prepared by DisplayRawData; the roles are the *same* ones driving the
+# live scopes, so a recorded trace keeps the colour it was acquired with.
+NEURON_PANELS = (
+    {"vm": "y0", "vm_role": "neuron_vm",
+     "current": "y1", "current_role": "neuron_current",
+     "rate": "spike_rate0", "marks": "spike_points0Plot"},
+    {"vm": "y3", "vm_role": "neuron_syn1_vm",
+     "current": "y4", "current_role": "neuron_syn1_input",
+     "rate": "spike_rate1", "marks": "spike_points1Plot"},
+    {"vm": "y5", "vm_role": "neuron_syn2_vm",
+     "current": "y6", "current_role": "neuron_syn2_input",
+     "rate": "spike_rate2", "marks": "spike_points2Plot"},
+)
+
+# Raw-data page: (widget suffix, ((array, role), ...), left label, bottom label)
+RAW_PANELS = (
+    ("1_0_0", (("y0", "neuron_vm"),), "Membrane Voltage (mV)", None),
+    ("1_0_1", (("y1", "neuron_current"),), "Input Current (a.u.)", None),
+    ("1_0_2", (("y2", "neuron_stimulus"),), "Intensity", None),
+    ("1_0_3", (("y6", "neuron_syn2_input"), ("y4", "neuron_syn1_input")),
+     "Synaptic Current (a.u.)", "Time (ms)"),
+
+    ("1_1_0", (("y3", "neuron_syn1_vm"),), "Membrane Voltage (mV)", None),
+    ("1_1_1", (("y4", "neuron_syn1_input"),), "Synaptic Input (a.u.)", None),
+    ("1_1_2", (("y2", "neuron_stimulus"),), "Intensity", "Time (ms)"),
+
+    ("1_2_0", (("y5", "neuron_syn2_vm"),), "Membrane Voltage (mV)", None),
+    ("1_2_1", (("y6", "neuron_syn2_input"),), "Synaptic Input (a.u.)", None),
+    ("1_2_2", (("y2", "neuron_stimulus"),), "Intensity", "Time (ms)"),
+)
+
+# Mean traces are drawn at this multiple of the global trace width, so they
+# stay readable on top of the repetitions whatever thickness the user picks.
+MEAN_WIDTH_SCALE = 2.0
+RASTER_SYMBOL_SIZE = 5
+
+
+def analysis_plot_widgets(ui):
+    """
+    Yield every data-analysis oscilloscope widget present on the UI.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Qt UI object.
+
+    Yields
+    ------
+    pyqtgraph.PlotWidget
+        Existing analysis canvases, skipping any the UI file does not define.
+    """
+    for page, column_counts in ANALYSIS_WIDGET_LAYOUT.items():
+        for row, count in enumerate(column_counts):
+            for column in range(count):
+                name = f"Spikeling_DataAnalysis_Oscilloscope_widget{page}_{row}_{column}"
+                widget = getattr(ui, name, None)
+                if widget is not None:
+                    yield widget
+
+
+def prepare_panel(ui, suffix, left_label=None, bottom_label=None, show_y_grid=True):
+    """
+    Clear one analysis canvas and apply its axes and grid.
+
+    Parameters
+    ----------
+    ui : object
+        Generated Qt UI object.
+    suffix : str
+        Widget suffix, e.g. ``'2_1_3'``.
+    left_label, bottom_label : str, optional
+        Axis labels; the bottom tick values are hidden when no bottom label is
+        given, which is what stacks the panels into one shared time axis.
+    show_y_grid : bool, optional
+        Disabled for raster panels, where horizontal rules compete with the
+        spike rows.
+
+    Returns
+    -------
+    pyqtgraph.PlotWidget or None
+        The prepared widget, or ``None`` when the UI has no such panel.
+    """
+    widget = getattr(ui, f"Spikeling_DataAnalysis_Oscilloscope_widget{suffix}", None)
+    if widget is None:
+        return None
+
+    widget.clear()
+    widget.showGrid(x=True, y=show_y_grid)
+    widget.getAxis("bottom").setStyle(showValues=bottom_label is not None)
+
+    if left_label:
+        widget.setLabel("left", left_label)
+    if bottom_label:
+        widget.setLabel("bottom", bottom_label)
+    return widget
+
+
+def stack_repetitions(x, rows):
+    """
+    Flatten stimulus repetitions into one NaN-separated polyline.
+
+    Drawing N repetitions as N separate curves costs N scene-graph items and N
+    theme updates. A single item carrying ``NaN`` breaks renders identically
+    with ``connect='finite'`` and collapses a 100-loop overlay to one item.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Shared time axis of length ``n``.
+    rows : numpy.ndarray
+        Repetitions of shape ``(n_loops, n)``.
+
+    Returns
+    -------
+    x_flat, y_flat : numpy.ndarray
+        Coordinates to pass with ``connect='finite'``.
+    """
+    rows = np.asarray(rows, dtype=float)
+    if rows.ndim != 2 or rows.size == 0:
+        return np.empty(0), np.empty(0)
+
+    gap = np.full((rows.shape[0], 1), np.nan)
+    y_flat = np.concatenate([rows, gap], axis=1).ravel()
+    x_flat = np.tile(np.append(np.asarray(x, dtype=float), np.nan), rows.shape[0])
+    return x_flat, y_flat
+
+
+def flatten_raster(loops):
+    """
+    Flatten per-loop spike times into scatter coordinates.
+
+    Parameters
+    ----------
+    loops : sequence of sequence of float
+        Spike times, one list per repetition.
+
+    Returns
+    -------
+    times, rows : numpy.ndarray
+        Spike time and repetition index of every event.
+    """
+    times, rows = [], []
+    for index, spikes in enumerate(loops):
+        if not len(spikes):
+            continue
+        times.extend(float(t) for t in spikes)
+        rows.extend([index] * len(spikes))
+    return np.asarray(times, dtype=float), np.asarray(rows, dtype=float)
 
 
 class Spikeling103():
 
     def ShowPage(self):
+        """
+        Display the data-analysis page and bind its canvases to the theme.
+
+        The background colour is applied through
+        :meth:`theme_manager.ThemeManager.set_plot_background_role` rather than
+        ``setBackground``, so the panels follow later theme changes instead of
+        freezing the colour that happened to be active on first display.
+        """
         self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_103)
-        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setBackground(Settings.DarkSolarized[1])
+        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(
+            self.ui.page_103_1_0)
+
+        for widget in analysis_plot_widgets(self.ui):
+            theme_manager.set_plot_background_role(widget, ANALYSIS_BACKGROUND_ROLE)
+
+        theme_manager.style_traces()
+
+    # -------------------------------------------------------------------------
+    # Raw data
+    # -------------------------------------------------------------------------
+
+    def DisplayRawData(self):
+        """
+        Plot the loaded recording across the three raw-data panels.
+
+        Each trace is drawn with the *same* theme role as its live counterpart,
+        so a recording is visually continuous with the oscilloscope it came
+        from. The synapse 2 current previously used an unrelated palette slot
+        and no longer does.
+        """
+        ui = self.ui
+        ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(ui.page_103_1_0)
+
+        ui.df_DataAnalysis_x = ui.df_DataAnalysis_Timing
+        ui.df_DataAnalysis_y0 = ui.df_DataAnalysis_Vm
+        ui.df_DataAnalysis_y1 = ui.df_DataAnalysis_ITotal
+        ui.df_DataAnalysis_y2 = ui.df_DataAnalysis_Stimulus
+        ui.df_DataAnalysis_y3 = ui.df_DataAnalysis_Synapse1Vm
+        ui.df_DataAnalysis_y4 = ui.df_DataAnalysis_Synapse1Input
+        ui.df_DataAnalysis_y5 = ui.df_DataAnalysis_Synapse2Vm
+        ui.df_DataAnalysis_y6 = ui.df_DataAnalysis_Synapse2Input
+
+        x = ui.df_DataAnalysis_x
+
+        for suffix, traces, left_label, bottom_label in RAW_PANELS:
+            widget = prepare_panel(ui, suffix, left_label, bottom_label)
+            if widget is None:
+                continue
+            for array_name, role in traces:
+                theme_manager.themed_plot(
+                    widget, x, getattr(ui, f"df_DataAnalysis_{array_name}"), role)
+
+        ui.Spikeling_DataAnalysis_Spike_lineEdit.setEnabled(True)
+        ui.Spikeling_DataAnalysis_Spike_Display_pushButton.setEnabled(True)
+
+        theme_manager.style_traces()
+
+    # -------------------------------------------------------------------------
+    # Spike detection
+    # -------------------------------------------------------------------------
+
+    def FindSpike(self):
+        """
+        Detect spikes on the three neurons and plot rate, Vm and markers.
+
+        Detection is an upward threshold crossing on each membrane potential,
+        and the instantaneous rate is the reciprocal of the interval to the
+        next spike, held until that spike occurs.
+
+        Notes
+        -----
+        The synapse 2 panel previously plotted the synapse 1 membrane
+        potential; it now shows its own trace.
+        """
+        ui = self.ui
+        ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(ui.page_103_2_0)
+
+        threshold = float(ui.Spikeling_DataAnalysis_Spike_lineEdit.text())
+        x = np.asarray(ui.df_DataAnalysis_x, dtype=float)
+
+        self.spike_points0, self.spike_points1, self.spike_points2 = [], [], []
+        spike_lists = (self.spike_points0, self.spike_points1, self.spike_points2)
+
+        for neuron, panel in enumerate(NEURON_PANELS):
+            trace = np.asarray(getattr(ui, f"df_DataAnalysis_{panel['vm']}"), dtype=float)
+            crossings = np.flatnonzero((trace[1:] > threshold) & (trace[:-1] <= threshold)) + 1
+            spike_lists[neuron].extend(int(index) for index in crossings)
+
+            rate = np.zeros(trace.size, dtype=float)
+            for start, stop in zip(crossings[:-1], crossings[1:]):
+                rate[start:stop] = SAMPLES_PER_MS * 1000.0 / (stop - start)
+            setattr(ui, panel["rate"], rate)
+            setattr(self, panel["marks"], crossings / SAMPLES_PER_MS)
+
+        self.n_spikes0 = len(self.spike_points0)
+        self.n_spikes1 = len(self.spike_points1)
+        self.n_spikes2 = len(self.spike_points2)
+        ui.Spikeling_DataAnalysis_Spike_result_label.setText(
+            f"{self.n_spikes0} spikes detected")
+
+        for neuron, panel in enumerate(NEURON_PANELS):
+            rate = getattr(ui, panel["rate"])
+            marks = getattr(self, panel["marks"])
+            vm = getattr(ui, f"df_DataAnalysis_{panel['vm']}")
+            current = getattr(ui, f"df_DataAnalysis_{panel['current']}")
+
+            widget = prepare_panel(ui, f"2_{neuron}_0", "Spike Rate (Hz)")
+            if widget is not None:
+                theme_manager.themed_plot(widget, x, rate, "analysis_spike_rate")
+
+            widget = prepare_panel(ui, f"2_{neuron}_1", "Membrane Voltage (mV)")
+            if widget is not None:
+                theme_manager.themed_plot(widget, x, vm, panel["vm_role"])
+                theme_manager.themed_plot(
+                    widget, marks, np.full(marks.size, 45.0), panel["vm_role"],
+                    symbol="o", symbol_size=RASTER_SYMBOL_SIZE)
+
+            label = "Input Current (a.u.)" if neuron == 0 else "Synaptic Input (a.u.)"
+            widget = prepare_panel(ui, f"2_{neuron}_2", label)
+            if widget is not None:
+                theme_manager.themed_plot(widget, x, current, panel["current_role"])
+
+            widget = prepare_panel(ui, f"2_{neuron}_3", "Intensity", "Time (ms)")
+            if widget is not None:
+                theme_manager.themed_plot(
+                    widget, x, ui.df_DataAnalysis_y2, "neuron_stimulus")
+
+        ui.Spikeling_DataAnalysis_Average_Display_pushButton.setEnabled(True)
+        ui.Spikeling_DataAnalysis_Average_Save_pushButton.setEnabled(True)
+
+        theme_manager.style_traces()
+
+    # -------------------------------------------------------------------------
+    # Stimulus-locked averages
+    # -------------------------------------------------------------------------
+
+    def AverageTraces(self):
+        """
+        Segment the recording on the stimulus trigger and average the repeats.
+
+        For every neuron the page shows, from top to bottom: instantaneous
+        rate, a spike raster, membrane potential and input current, each with
+        the individual repetitions behind the mean.
+
+        Notes
+        -----
+        Repetitions are drawn as one ``NaN``-separated polyline per panel
+        rather than one curve per repeat, which keeps a 100-repeat overlay at
+        a single scene-graph item. The last repetition is now included on all
+        three neurons; two of them previously stopped one short.
+        """
+        ui = self.ui
+        ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(ui.page_103_3_0)
+
+        trigger = np.asarray(ui.df_DataAnalysis_Trigger, dtype=float)
+        x_full = np.asarray(ui.df_DataAnalysis_x, dtype=float)
+
+        self.stimulus_times = np.flatnonzero(trigger[:-1] == 1).tolist()
+        if len(self.stimulus_times) < 2:
+            ui.Spikeling_DataAnalysis_Average_label.setText("No repeated stimulus found")
+            return
+
+        self.loop_duration = self.stimulus_times[1] - self.stimulus_times[0]
+        starts = self.stimulus_times[:-1]
+        ui.StimLoop_x = np.linspace(0, self.loop_duration / SAMPLES_PER_MS - 1,
+                                    self.loop_duration)
+
+        def segment(array):
+            """Stack one signal into ``(n_loops, loop_duration)``."""
+            values = np.asarray(array, dtype=float)
+            return np.vstack([values[s:s + self.loop_duration] for s in starts])
+
+        self.Stim_loops = segment(ui.df_DataAnalysis_y2)
+        ui.Spikeling_DataAnalysis_Average_label.setText(
+            f"{len(self.Stim_loops)} loops "
+            f"({self.loop_duration / SAMPLES_PER_MS}ms each)")
+
+        rate_means, vm_means, current_means, raster_loops = [], [], [], []
+
+        for neuron, panel in enumerate(NEURON_PANELS):
+            rate_loops = segment(getattr(ui, panel["rate"]))
+            vm_loops = segment(getattr(ui, f"df_DataAnalysis_{panel['vm']}"))
+            current_loops = segment(getattr(ui, f"df_DataAnalysis_{panel['current']}"))
+
+            spike_indices = (self.spike_points0, self.spike_points1,
+                             self.spike_points2)[neuron]
+            loops = [
+                [x_full[s] - x_full[start] for s in spike_indices
+                 if start < s < start + self.loop_duration]
+                for start in starts
+            ]
+            raster_loops.append(loops)
+
+            rate_means.append(np.mean(rate_loops, axis=0))
+            vm_means.append(np.mean(vm_loops, axis=0))
+            current_means.append(np.mean(current_loops, axis=0))
+
+            # --- Spike rate ------------------------------------------------
+            widget = prepare_panel(ui, f"3_{neuron}_0", "Spike Rate (Hz)")
+            if widget is not None:
+                flat_x, flat_y = stack_repetitions(ui.StimLoop_x, rate_loops)
+                theme_manager.themed_plot(widget, flat_x, flat_y, "analysis_loop",
+                                          connect="finite")
+                theme_manager.themed_plot(widget, ui.StimLoop_x, rate_means[neuron],
+                                          "analysis_spike_rate",
+                                          width_scale=MEAN_WIDTH_SCALE)
+
+            # --- Raster ----------------------------------------------------
+            widget = prepare_panel(ui, f"3_{neuron}_1", "Loops", show_y_grid=False)
+            if widget is not None:
+                times, rows = flatten_raster(loops)
+                theme_manager.themed_plot(widget, times, rows, panel["vm_role"],
+                                          symbol="o", symbol_size=RASTER_SYMBOL_SIZE)
+                widget.setXRange(0, self.loop_duration / SAMPLES_PER_MS)
+
+            # --- Membrane potential -----------------------------------------
+            widget = prepare_panel(ui, f"3_{neuron}_2", "Membrane Voltage (mV)")
+            if widget is not None:
+                flat_x, flat_y = stack_repetitions(ui.StimLoop_x, vm_loops)
+                theme_manager.themed_plot(widget, flat_x, flat_y, "analysis_loop",
+                                          connect="finite")
+                theme_manager.themed_plot(widget, ui.StimLoop_x, vm_means[neuron],
+                                          panel["vm_role"],
+                                          width_scale=MEAN_WIDTH_SCALE)
+
+            # --- Current -----------------------------------------------------
+            widget = prepare_panel(ui, f"3_{neuron}_3", "Input Current (a.u.)",
+                                   "Time (ms)")
+            if widget is not None:
+                flat_x, flat_y = stack_repetitions(ui.StimLoop_x, current_loops)
+                theme_manager.themed_plot(widget, flat_x, flat_y, "analysis_loop",
+                                          connect="finite")
+                theme_manager.themed_plot(widget, ui.StimLoop_x, current_means[neuron],
+                                          panel["current_role"],
+                                          width_scale=MEAN_WIDTH_SCALE)
+
+        # Attribute names kept for the existing Save* exporters.
+        self.SpikeRate_mean, self.SpikeRate1_mean, self.SpikeRate2_mean = rate_means
+        self.Vm0_mean, self.Vm1_mean, self.Vm2_mean = vm_means
+        self.ITotal_mean, self.ISynapse1_mean, self.ISynapse2_mean = current_means
+        self.Spike0_loops, self.Spike1_loops, self.Spike2_loops = raster_loops
+        self.Stim_mean = np.mean(self.Stim_loops, axis=0)
+
+        theme_manager.style_traces()
 
     def LoadData(self):
         FileName = QFileDialog.getOpenFileName(caption='Select recording file to load',
@@ -46,532 +441,6 @@ class Spikeling103():
         self.df_DataAnalysis_Synapse2Vm = Df["Synapse 2 Vm (mV)"]
         self.df_DataAnalysis_Synapse2Input = Df["Synapse 2 Input (a.u.)"]
         self.df_DataAnalysis_Trigger = Df["Trigger"]
-
-    def DisplayRawData(self):
-        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_1_0)
-
-        self.ui.df_DataAnalysis_x = self.ui.df_DataAnalysis_Timing
-
-        self.ui.df_DataAnalysis_y0 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y0 = self.ui.df_DataAnalysis_Vm
-
-        self.ui.df_DataAnalysis_y1 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y1 = self.ui.df_DataAnalysis_ITotal
-
-        self.ui.df_DataAnalysis_y2 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y2 = self.ui.df_DataAnalysis_Stimulus
-
-        self.ui.df_DataAnalysis_y3 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y3 = self.ui.df_DataAnalysis_Synapse1Vm
-
-        self.ui.df_DataAnalysis_y4 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y4 = self.ui.df_DataAnalysis_Synapse1Input
-
-        self.ui.df_DataAnalysis_y5 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y5 = self.ui.df_DataAnalysis_Synapse2Vm
-
-        self.ui.df_DataAnalysis_y6 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.df_DataAnalysis_y6 = self.ui.df_DataAnalysis_Synapse2Input
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
-                                                         pen=(Settings.DarkSolarized[3]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
-                                                         pen=(Settings.DarkSolarized[4]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
-                                                         pen=(Settings.DarkSolarized[9]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
-                                                         pen=(Settings.DarkSolarized[7]))
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
-                                                         pen=(Settings.DarkSolarized[6]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
-                                                         pen=(Settings.DarkSolarized[7]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y5,
-                                                         pen=(Settings.DarkSolarized[8]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
-                                                         pen=(Settings.DarkSolarized[9]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_1.setLabel('left', 'Input Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_2.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setLabel('left', 'Synaptic Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_0_3.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_1.setLabel('left', 'Synaptic Input (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_1_2.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_0.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_1.setLabel('left', 'Synaptic Input (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Spike_lineEdit.setEnabled(True)
-        self.ui.Spikeling_DataAnalysis_Spike_Display_pushButton.setEnabled(True)
-
-    def FindSpike(self):
-        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_2_0)
-
-        self.spike_threshold = self.ui.Spikeling_DataAnalysis_Spike_lineEdit.text()
-
-        self.n_spikes0 = 0
-        self.spike_points0 = []
-        self.n_spikes1 = 0
-        self.spike_points1 = []
-        self.n_spikes2 = 0
-        self.spike_points2 = []
-
-        for x in range(1, len(self.ui.df_DataAnalysis_Vm) - 1):
-            if (self.ui.df_DataAnalysis_Vm[x] > int(self.spike_threshold) and self.ui.df_DataAnalysis_Vm[x - 1] < int(self.spike_threshold)):  # looks for all instances where subsequent Vm points jump from <10 to >10
-                self.spike_points0.append(x)
-                self.n_spikes0 += 1
-        for x in range(1, len(self.ui.df_DataAnalysis_Synapse1Vm) - 1):
-            if (self.ui.df_DataAnalysis_Synapse1Vm[x] > int(self.spike_threshold) and self.ui.df_DataAnalysis_Synapse1Vm[x - 1] < int(self.spike_threshold)):  # looks for all instances where subsequent Vm points jump from <10 to >10
-                self.spike_points1.append(x)
-                self.n_spikes1 += 1
-        for x in range(1, len(self.ui.df_DataAnalysis_Synapse2Vm) - 1):
-            if (self.ui.df_DataAnalysis_Synapse2Vm[x] > int(self.spike_threshold) and self.ui.df_DataAnalysis_Synapse2Vm[x - 1] < int(self.spike_threshold)):  # looks for all instances where subsequent Vm points jump from <10 to >10
-                self.spike_points2.append(x)
-                self.n_spikes2 += 1
-
-        self.ui.Spikeling_DataAnalysis_Spike_result_label.setText(str(self.n_spikes0) + " spikes detected")
-
-        # Compute spike rate
-        self.ui.spike_rate0 = np.zeros(len(self.ui.df_DataAnalysis_Vm))
-        self.ui.spike_rate1 = np.zeros(len(self.ui.df_DataAnalysis_Synapse1Vm))
-        self.ui.spike_rate2 = np.zeros(len(self.ui.df_DataAnalysis_Synapse2Vm))
-
-        for x in range(0, self.n_spikes0 - 1):
-            self.current_rate0 = 1 / (self.spike_points0[x + 1] - self.spike_points0[x]) * 10000
-            self.ui.spike_rate0[self.spike_points0[x]:self.spike_points0[x + 1]] = self.current_rate0
-
-        for x in range(0, self.n_spikes1 - 1):
-            self.current_rate1 = 1 / (self.spike_points1[x + 1] - self.spike_points1[x]) * 10000
-            self.ui.spike_rate1[self.spike_points1[x]:self.spike_points1[x + 1]] = self.current_rate1
-
-        for x in range(0, self.n_spikes2 - 1):
-            self.current_rate2 = 1 / (self.spike_points2[x + 1] - self.spike_points2[x]) * 10000
-            self.ui.spike_rate2[self.spike_points2[x]:self.spike_points2[x + 1]] = self.current_rate2
-
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setBackground(Settings.DarkSolarized[1])
-
-        self.spike_points0Plot = np.zeros(self.n_spikes0)
-        self.spike_points1Plot = np.zeros(self.n_spikes1)
-        self.spike_points2Plot = np.zeros(self.n_spikes2)
-
-        for i in range (self.n_spikes0):
-            self.spike_points0Plot[i] = self.spike_points0[i] /10
-
-        for i in range (self.n_spikes1):
-            self.spike_points1Plot[i] = self.spike_points1[i] /10
-
-        for i in range (self.n_spikes2):
-            self.spike_points2Plot[i] = self.spike_points2[i] /10
-        self.ui.ySpike0 = np.zeros(len(self.spike_points0))
-
-
-        for i in range(len(self.spike_points0)):
-            self.ui.ySpike0[i] = 45
-
-        self.ui.ySpike1 = np.zeros(len(self.spike_points1))
-        for i in range(len(self.spike_points1)):
-            self.ui.ySpike1[i] = 45
-
-        self.ui.ySpike2 = np.zeros(len(self.spike_points2))
-        for i in range(len(self.spike_points2)):
-            self.ui.ySpike2[i] = 45
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate0,
-                                                           pen=(Settings.DarkSolarized[15]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.spike_points0Plot, y=self.ui.ySpike0, pen=None,
-                                                           symbol='o', symbolBrush=tuple(Settings.DarkSolarized[3]), symbolSize=3)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y0,
-                                                           pen=(Settings.DarkSolarized[3]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y1,
-                                                           pen=(Settings.DarkSolarized[4]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate1,
-                                                           pen=(Settings.DarkSolarized[15]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.spike_points1Plot, y=self.ui.ySpike1, pen=None,
-                                                           symbol='o', symbolBrush=tuple(Settings.DarkSolarized[6]),symbolSize=3)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
-                                                           pen=(Settings.DarkSolarized[6]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y4,
-                                                           pen=(Settings.DarkSolarized[7]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.spike_rate2,
-                                                           pen=(Settings.DarkSolarized[15]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.spike_points2Plot, y=self.ui.ySpike2, pen=None,
-                                                           symbol='o', symbolBrush=tuple(Settings.DarkSolarized[8]),symbolSize=3)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y3,
-                                                           pen=(Settings.DarkSolarized[8]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y6,
-                                                           pen=(Settings.DarkSolarized[9]))
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.plot(x=self.ui.df_DataAnalysis_x, y=self.ui.df_DataAnalysis_y2,
-                                                           pen=(Settings.DarkSolarized[5]))
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_2.setLabel('left', 'Input Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_0_3.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_2.setLabel('left', 'Spike Input (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_1_3.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_1.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_2.setLabel('left', 'Spike Input (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setLabel('left', 'Intensity')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget2_2_3.setLabel('bottom', 'Time (ms)')
-
-        self.ui.Spikeling_DataAnalysis_Average_Display_pushButton.setEnabled(True)
-        self.ui.Spikeling_DataAnalysis_Average_Save_pushButton.setEnabled(True)
-
-
-
-    def AverageTraces(self):
-    # Display Average traces frame for the main neuron
-        self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(self.ui.page_103_3_0)
-
-    # Set all plots background
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.setBackground(Settings.DarkSolarized[1])
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setBackground(Settings.DarkSolarized[1])
-
-    # Determine single stimulus length
-        self.stimulus_times = []
-        for x in range(0, len(self.ui.df_DataAnalysis_x) - 1):                           # Goes through each timepoint
-            if (self.ui.df_DataAnalysis_Trigger[x] == 1):
-                self.stimulus_times.append(x)                                             # Make a list of times  when stimulus increased
-        self.loop_duration = self.stimulus_times[1] - self.stimulus_times[0]              # Compute arraylength for single stimulus
-
-    # Generate looped arrays
-        self.Spikerate0_loops = []
-        self.Spikerate1_loops = []
-        self.Spikerate2_loops = []
-        self.Vm0_loops = []
-        self.Vm1_loops = []
-        self.Vm2_loops = []
-        self.Spike0_loops = []
-        self.Spike1_loops = []
-        self.Spike2_loops = []
-        self.ITotal_loops = []
-        self.ISynpase1_loops = []
-        self.ISynpase2_loops = []
-        self.Stim_loops = []
-
-
-    # Looping spike rate traces
-        self.Spikerate0_loops = np.vstack(
-            [self.ui.spike_rate0[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.Spikerate1_loops = np.vstack(
-            [self.ui.spike_rate1[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.Spikerate2_loops = np.vstack(
-            [self.ui.spike_rate2[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-
-    # Looping Vm traces
-        self.Vm0_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y0[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.Vm1_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y3[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.Vm2_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y5[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-
-    # Looping Current traces (total and synaptic)
-        self.ITotal_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y1[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.ISynapse1_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y4[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-        self.ISynapse2_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y6[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-
-    # Calculate the number of loops
-        self.Stim_loops = np.vstack(
-            [self.ui.df_DataAnalysis_y2[x:x + self.loop_duration] for x in self.stimulus_times[:-1]])
-
-    # Compute main neuron spike
-        for i, x in enumerate(self.stimulus_times[:-1]):
-            self.Spike0_loops.append(
-                [self.ui.df_DataAnalysis_x[sp] - self.ui.df_DataAnalysis_x[x] for sp in self.spike_points0 if sp > x and sp < x + self.loop_duration])
-    # Compute auxiliary neuron 1 spike
-        for i, x in enumerate(self.stimulus_times[:-1]):
-            self.Spike1_loops.append(
-                [self.ui.df_DataAnalysis_x[sp] - self.ui.df_DataAnalysis_x[x] for sp in self.spike_points1 if sp > x and sp < x + self.loop_duration])
-    # Compute auxiliary neuron 2 spike
-        for i, x in enumerate(self.stimulus_times[:-1]):
-            self.Spike2_loops.append(
-                [self.ui.df_DataAnalysis_x[sp] - self.ui.df_DataAnalysis_x[x] for sp in self.spike_points2 if sp > x and sp < x + self.loop_duration])
-
-
-    # Print the number of loops on app
-        self.ui.Spikeling_DataAnalysis_Average_label.setText(
-            str(len(self.Stim_loops)) + " loops (" + str(self.loop_duration/10) + "ms each)")
-
-
-    ##########
-    # Average Traces Plotting
-    ##########
-
-    # Generate looped x array
-        self.ui.StimLoop_x = np.linspace(0, self.loop_duration/10 - 1, self.loop_duration)
-
-
-    # Page 103_3_0:
-    # Clear previous traces
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.clear()
-    # Set graph display parameters
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.showGrid(x=True, y=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setLabel('left', 'Loops')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.setLabel('bottom', 'Time (ms)')
-
-    # For all Loops:
-        for i in range(0, len(self.Stim_loops)):
-        # Display all Spike rate loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate0_loops[i], pen=(Settings.DarkSolarized[11]))
-        # Display all Spikes within loops
-            self.ui.ySpikeLoops0 = np.zeros(len(self.Spike0_loops[i]))
-            for j in range(len(self.Spike0_loops[i])):
-                self.ui.ySpikeLoops0[j] = i
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.plot(x=self.Spike0_loops[i], y=self.ui.ySpikeLoops0, pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[3]), symbolSize=5)
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_1.setXRange(0, self.loop_duration/10)
-        # Display all Vm loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_loops[i], pen=(Settings.DarkSolarized[11]))
-        # Display all I_Total loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_loops[i], pen=(Settings.DarkSolarized[11]))
-
-    # Compute average traces
-        self.SpikeRate_mean = np.mean(self.Spikerate0_loops, axis=0)
-        self.Vm0_mean = np.mean(self.Vm0_loops, axis=0)
-        self.ITotal_mean = np.mean(self.ITotal_loops, axis=0)
-        self.Stim_mean = np.mean(self.Stim_loops, axis=0)
-
-    # Display Spike rate Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate_mean, pen={'color':tuple(Settings.DarkSolarized[15]), 'width':3})
-    # Display Vm Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_2.plot(x=self.ui.StimLoop_x, y=self.Vm0_mean, pen={'color':(Settings.DarkSolarized[3]), 'width':3})
-    # Display Current Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_0_3.plot(x=self.ui.StimLoop_x, y=self.ITotal_mean, pen={'color':(Settings.DarkSolarized[4]), 'width':3})
-
-    # Page 103_3_1:
-    # Clear previous traces
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.clear()
-    # Set graph display parameters
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.showGrid(x=True, y=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setLabel('left', 'Loops')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.setLabel('bottom', 'Time (ms)')
-
-    # For all loops
-        for i in range(0, len(self.Stim_loops) - 1):
-        # Display all Spike rate loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate1_loops[i], pen=(Settings.DarkSolarized[11]))
-        # Display all Spikes within loops
-            self.ui.ySpikeLoops1 = np.zeros(len(self.Spike1_loops[i]))
-            for j in range(len(self.Spike1_loops[i])):
-                self.ui.ySpikeLoops1[j] = i
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.plot(x=self.Spike1_loops[i], y=self.ui.ySpikeLoops1,
-                                                               pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[6]),symbolSize=5)
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_1.setXRange(0, self.loop_duration)
-
-        # Display all Vm loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_loops[i],
-                                                               pen=(Settings.DarkSolarized[11]))
-        # Display Synaptic 1 Current
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_loops[i],
-                                                               pen=(Settings.DarkSolarized[11]))
-
-    # Compute average traces
-        self.SpikeRate1_mean = np.mean(self.Spikerate1_loops, axis=0)
-        self.Vm1_mean = np.mean(self.Vm1_loops, axis=0)
-        self.ISynapse1_mean = np.mean(self.ISynapse1_loops, axis=0)
-
-    # Display Spike rate Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate1_mean,
-                                                           pen={'color': tuple(Settings.DarkSolarized[15]), 'width': 3})
-    # Display Vm Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_2.plot(x=self.ui.StimLoop_x, y=self.Vm1_mean,
-                                                           pen={'color': (Settings.DarkSolarized[6]), 'width': 3})
-    # Display Current Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_1_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse1_mean,
-                                                           pen={'color': (Settings.DarkSolarized[7]), 'width': 3})
-
-    # Page 103_3_2:
-    # Clear previous traces
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.clear()
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.clear()
-    # Set graph display parameters
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.showGrid(x=True, y=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.getAxis('bottom').setStyle(showValues=False)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.showGrid(x=True, y=True)
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.setLabel('left', 'Spike Rate (Hz)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setLabel('left', 'Loops')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.setLabel('left', 'Membrane Voltage (mV)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setLabel('left', 'Input Current (a.u.)')
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.setLabel('bottom', 'Time (ms)')
-
-    # For all loops
-        for i in range(0, len(self.Stim_loops) - 1):
-        # Display all Spike rate loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.Spikerate2_loops[i],
-                                                               pen=(Settings.DarkSolarized[11]))
-
-            self.ui.ySpikeLoops2 = np.zeros(len(self.Spike2_loops[i]))
-            for j in range(len(self.Spike2_loops[i])):
-                self.ui.ySpikeLoops2[j] = i
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.plot(x=self.Spike2_loops[i], y=self.ui.ySpikeLoops2,
-                                                               pen=None, symbol='o', symbolBrush=tuple(Settings.DarkSolarized[8]),symbolSize=5)
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_1.setXRange(0, self.loop_duration)
-
-        # Display all Vm loops
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_loops[i],
-                                                               pen=(Settings.DarkSolarized[11]))
-        # Display Synaptic 2 Current
-            self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_loops[i],
-                                                               pen=(Settings.DarkSolarized[11]))
-    # Compute average traces
-        self.SpikeRate2_mean = np.mean(self.Spikerate2_loops, axis=0)
-        self.Vm2_mean = np.mean(self.Vm2_loops, axis=0)
-        self.ISynapse2_mean = np.mean(self.ISynapse2_loops, axis=0)
-
-    # Display Spike rate Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_0.plot(x=self.ui.StimLoop_x, y=self.SpikeRate2_mean,
-                                                           pen={'color': tuple(Settings.DarkSolarized[15]), 'width': 3})
-    # Display Vm Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_2.plot(x=self.ui.StimLoop_x, y=self.Vm2_mean,
-                                                           pen={'color': (Settings.DarkSolarized[8]), 'width': 3})
-    # Display Current Average Trace
-        self.ui.Spikeling_DataAnalysis_Oscilloscope_widget3_2_3.plot(x=self.ui.StimLoop_x, y=self.ISynapse2_mean,
-                                                           pen={'color': (Settings.DarkSolarized[9]), 'width': 3})
-
-
 
     def SaveRawDataImage(self):
         FolderName = QFileDialog.getExistingDirectory(caption='Select folder to save graphs on screen',
