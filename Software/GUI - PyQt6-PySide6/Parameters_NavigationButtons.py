@@ -628,8 +628,6 @@ def Buttons(self):
     self.ui.SaveNeuronPushButton.clicked.connect(lambda: Page_NeuronGenerator.NeuronGenerator.SaveNeuron(self))
 
 
-
-
 ########################################################################
 # Stimulus Generator Page - page501
     # Display Page_StimulusGenerator
@@ -644,17 +642,11 @@ def Buttons(self):
     self.ui.Chirp_comboBox.currentIndexChanged.connect(lambda: Page_StimulusGenerator.ChangeChirpParameter(self))
 
 
-
+    ########################################################################
+    # Settings
+    self.ui.SettingsMenu_pushButton.clicked.connect(lambda: Page_Settings.ShowPage(self))
 
     ########################################################################
-# Settings - page601
-    # Display Settings
-    self.ui.SettingsMenu_pushButton.clicked.connect(lambda: Page601.ShowPage(self))
-
-
-
-
-########################################################################
 # About - page701
     # Display Info page
     self.ui.AboutMenu_pushButton.clicked.connect(lambda: Page_About.ShowPage(self))

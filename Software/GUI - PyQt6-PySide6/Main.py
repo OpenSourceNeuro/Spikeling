@@ -25,6 +25,8 @@ import Parameters_ToggleButtons as ToggleButtons
 import Parameters_NavigationButtons as NavigationButtons
 import Parameters_Sliders as Sliders
 from resource_path import resource_path
+from theme_manager import theme_manager
+from Page_Settings import SettingsPage
 
 GlobalState = 0
 
@@ -183,6 +185,15 @@ class MainWindow(QMainWindow):
 
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
+
+        # Theme: register every window so inline style sheets, plot canvases and
+        # animated toggles are all re-themed, then expose the Settings controller.
+        self.settings_page = SettingsPage(self, theme_manager)
+        theme_manager.bind(app=QApplication.instance(), window=self)
+        theme_manager.bind(window=self.aux_window)
+        theme_manager.bind(window=self.tetrode_window)
+        theme_manager.repaint()
+
         self.spikeling_graph.supervisor.manual_action_required.connect(
             lambda text: QtWidgets.QMessageBox.information(self, "Spikeling not responding", text)
         )
@@ -228,6 +239,10 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    # Load the stored palette before any widget exists, so toggles, sliders and
+    # plots are constructed with the user's colours rather than the factory ones.
+    theme_manager.apply(app=app)
+
     app.setWindowIcon(QIcon(str(resource_path("Spikeling.ico"))))
     window = SplashScreen()
     sys.exit(app.exec())
