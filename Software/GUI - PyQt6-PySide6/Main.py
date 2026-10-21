@@ -27,6 +27,7 @@ import Parameters_Sliders as Sliders
 from resource_path import resource_path
 from theme_manager import theme_manager
 from Page_Settings import SettingsPage
+from Page_GitHub import GitHubPage
 
 GlobalState = 0
 
@@ -177,8 +178,14 @@ class MainWindow(QMainWindow):
         # Custom Navigation bar movement
         self.ui.header_widget.mouseMoveEvent = moveWindow
 
-        # Replace sliders with TiEmulatorConnectionFlagckSliders
+        # Replace sliders with TickSliders
         Sliders.configure_sliders(self)
+
+        # Put both speed sliders on the shared ladder at the same rung. Runs
+        # before NavigationButtons.Buttons connects valueChanged, so seeding
+        # the default cannot emit a serial write to a closed port.
+        import speed_model
+        speed_model.apply_speed_sliders(self.ui)
 
         # Generate toggle buttons
         ToggleButtons.Buttons(self)
@@ -189,10 +196,14 @@ class MainWindow(QMainWindow):
         # Theme: register every window so inline style sheets, plot canvases and
         # animated toggles are all re-themed, then expose the Settings controller.
         self.settings_page = SettingsPage(self, theme_manager)
+
         theme_manager.bind(app=QApplication.instance(), window=self)
         theme_manager.bind(window=self.aux_window)
         theme_manager.bind(window=self.tetrode_window)
         theme_manager.repaint()
+
+        self.settings_page = SettingsPage(self, theme_manager)
+        self.github_page = GitHubPage(self)
 
         self.spikeling_graph.supervisor.manual_action_required.connect(
             lambda text: QtWidgets.QMessageBox.information(self, "Spikeling not responding", text)
@@ -221,9 +232,6 @@ class MainWindow(QMainWindow):
         self.ui.Exercise3_OpeningFlag = True
         self.ui.Exercise4_OpeningFlag = True
         self.ui.Exercise5_OpeningFlag = True
-
-
-
 
     # Display
         self.show()

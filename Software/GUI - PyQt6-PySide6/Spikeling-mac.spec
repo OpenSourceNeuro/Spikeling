@@ -10,9 +10,14 @@ try:
 except NameError:
     spec_dir = os.path.abspath(SPECPATH)
 
+# Qt resolves HTTPS through a TLS backend plugin loaded at runtime. Omitting
+# the 'tls' directory produces a binary where every network request fails
+# with UnknownNetworkError and no further diagnostic, which is precisely the
+# failure mode the update checker would hit. 'networkinformation' lets Qt
+# detect offline state instead of hanging until timeout.
 plugin_path = QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.PluginsPath)
 qt_plugins = []
-for plugin_type in ['platforms', 'imageformats']:
+for plugin_type in ['platforms', 'imageformats', 'tls', 'networkinformation']:
     src = os.path.join(plugin_path, plugin_type)
     if os.path.exists(src):
         qt_plugins.append((src, os.path.join('PySide6/Qt/plugins', plugin_type)))
@@ -36,9 +41,13 @@ hidden_imports = [
     'PySide6.QtCore',
     'PySide6.QtGui',
     'PySide6.QtWidgets',
-    'PySide6.QtSerialPort',
+    'PySide6.QtNetwork',
     'theme_manager',
     'Page_Settings',
+    'Page_GitHub',
+    'update_service',
+    'update_installer',
+    'version',
 ]
 
 a = Analysis(
@@ -82,7 +91,9 @@ a = Analysis(
 # A missing module here produces an application that launches normally and
 # then does nothing on the Settings page, which is far more expensive to
 # diagnose than a red CI job.
-_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis'}
+_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis',
+                     'Page_GitHub', 'update_service', 'update_installer', 'version'}
+
 _bundled_modules = {entry[0] for entry in a.pure}
 _missing_modules = _required_modules - _bundled_modules
 if _missing_modules:

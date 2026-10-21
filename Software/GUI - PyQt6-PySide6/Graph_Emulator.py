@@ -34,6 +34,15 @@ import Parameters_Settings as Settings
 from graph_core import (RingBuffer, apply_scope_timebase, configure_scope,
                         resolve_csv_path, safe_reconnect)
 
+import speed_model as speed
+
+# --- Speed control ---------------------------------------------------------
+# STEPS_PER_UPDATE_BY_SLIDER, REALTIME_STEPS_PER_UPDATE and GUI_TICK_MS have
+# moved to speed_model, which the hardware page shares. The old denominator
+# of 10000 was 20x the correct GUI_TICK_MS / dt = 500, so every emulator
+# speed was reported twenty times too slow.
+GUI_TICK_MS = int(speed.GUI_TICK_MS)
+
 # --- Display / buffering ---------------------------------------------------
 EMULATOR_SAMPLE_INTERVAL_MS = 0.1       # integration step, matches firmware dt
 EMULATOR_TIME_WINDOW_MS = 5000          # rolling buffer length
@@ -323,17 +332,16 @@ def UpdatePlot(self):
     """
     Advance the emulator by one GUI tick and refresh the oscilloscope.
 
-    The speed slider selects how many 0.1 ms integration steps run per tick.
-    Controls are sampled once, noise is drawn as one block, the recording
-    state machine is evaluated once, and the scope is redrawn once, so the
-    only per-step work is the model itself.
+    The speed slider indexes the ladder shared with the hardware page, so the
+    same position yields the same displayed factor on both. Fractional step
+    counts (2.5 per tick at ``x 0.005``) are carried by
+    :class:`speed_model.FractionalStepScheduler` rather than truncated, which
+    would otherwise run the model up to 20 % slow.
     """
-    speed_step = min(self.ui.Emulator_Speed_slider.value(),
-                     len(STEPS_PER_UPDATE_BY_SLIDER) - 1)
-    steps_per_update = STEPS_PER_UPDATE_BY_SLIDER[speed_step]
-    self.ui.Emulator_Speed_value.setText(
-        "x " + str(round(steps_per_update / REALTIME_STEPS_PER_UPDATE, 3))
-    )
+    setting = speed.setting_for_index(self.ui.Emulator_Speed_slider.value())
+    steps_per_update = self._emulator_step_scheduler.take(
+        setting.emulator_steps_per_tick)
+    self.ui.Emulator_Speed_value.setText(setting.label)
 
     # --- Once-per-tick UI sampling and RNG ------------------------------
     ui_state = EmulatorUISnapshot.from_ui(self.ui)
@@ -700,6 +708,10 @@ def SetInitParameters(self):
 
     # Modern NumPy generator, ~4x faster than the legacy global RNG
     self._emulator_rng = np.random.default_rng()
+
+    # Carries fractional step counts across ticks so slow settings keep an
+    # exact mean rate instead of truncating toward zero.
+    self._emulator_step_scheduler = speed.FractionalStepScheduler()
 
     if self.ui.Emulator_Connect_pushButton.isChecked():
         self.ui.Emulator_Connect_pushButton.setText("Stop Spikeling Emulator")
