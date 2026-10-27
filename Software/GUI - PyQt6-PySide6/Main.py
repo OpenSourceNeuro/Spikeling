@@ -202,7 +202,6 @@ class MainWindow(QMainWindow):
         theme_manager.bind(window=self.tetrode_window)
         theme_manager.repaint()
 
-        self.settings_page = SettingsPage(self, theme_manager)
         self.github_page = GitHubPage(self)
 
         self.spikeling_graph.supervisor.manual_action_required.connect(
