@@ -18,8 +18,15 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 try:
     from PySide6.QtWidgets import QApplication, QComboBox, QPushButton, QVBoxLayout, QWidget
-except ImportError:
+    QT_IMPORT_ERROR = None
+except ImportError as error:
     QApplication = None
+    QT_IMPORT_ERROR = error
+
+# A Qt job must never report a green check if every real GUI test was skipped.
+# Standard-library-only local test runs still skip optional Qt dependencies.
+if os.environ.get("STP_REQUIRE_QT") == "1" and QApplication is None:
+    raise RuntimeError(f"PySide6.QtWidgets failed to load: {QT_IMPORT_ERROR}") from QT_IMPORT_ERROR
 
 GUI_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(GUI_ROOT))
