@@ -8,6 +8,7 @@
 /*                         Librairies import                         */ 
                                                                       
 #include "Izhikevich_parameters.h"
+#include "STP_functions.h"                                                  // Event-driven short-term plasticity (Off/STF/STD/Combined)
 #include <Arduino.h>
 #include <esp_system.h>
 #include <SPI.h>
@@ -612,6 +613,7 @@ struct Synapse {
   PotFilter pot_filt;                                       // Filter state for Synapse gain pot ADC (median + IIR + deadband)
   // --- Gain (synaptic weight)
   float    gain;                                            // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
+  STPState stp;                                             // Independent transient release/utilisation state for this synapse
   int16_t  pot_value;                                       // Raw ADC reading (0..4095)
   float    pot_scaling;                                     // Counts-per-gain-unit
   // --- State
