@@ -284,6 +284,11 @@ class SpikelingGraph(QObject):
             except Exception as error:   # one broken restorer must not kill the link
                 print(f"State restore failed for {name}: {error}")
 
+        # STP modes are held by the GUI; a fresh board always starts in Off.
+        stp_controls = getattr(self.parent, "stp_controls", None)
+        if stp_controls is not None:
+            stp_controls.replay_hardware()
+
     def on_device_connected(self, port) -> None:
         """
         Start acquisition on a validated connection.
