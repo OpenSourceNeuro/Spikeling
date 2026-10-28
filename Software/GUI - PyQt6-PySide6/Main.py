@@ -28,6 +28,7 @@ from resource_path import resource_path
 from theme_manager import theme_manager
 from Page_Settings import SettingsPage
 from Page_GitHub import GitHubPage
+from stp_controls import STPControls
 
 GlobalState = 0
 
@@ -192,6 +193,10 @@ class MainWindow(QMainWindow):
 
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
+
+        # Short-term plasticity controls for each hardware and emulator synapse.
+        # Created dynamically so Qt Designer's generated files remain untouched.
+        self.stp_controls = STPControls(self)
 
         # Theme: register every window so inline style sheets, plot canvases and
         # animated toggles are all re-themed, then expose the Settings controller.
