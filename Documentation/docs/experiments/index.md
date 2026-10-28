@@ -35,10 +35,13 @@ If you need conceptual background first, see:
 4. **[Synapses and inputs](synapses-and-inputs.md)**  
    Build synapses (axon → synapse), demonstrate excitation vs inhibition, and observe temporal summation.
 
-5. **[Network with two units](network-two-units.md)**  
+5. **[Short-term plasticity](short-term-plasticity.md)**  
+   Measure paired-pulse facilitation, depression, train dynamics and recovery, using the optional STP presets.
+
+6. **[Network with two units](network-two-units.md)**  
    Create minimal network motifs and map presynaptic activity to postsynaptic output.
 
-6. **[Stimulus recipes](stimulus-recipes.md)**  
+7. **[Stimulus recipes](stimulus-recipes.md)**  
    A cookbook of stimuli (steps, sine/triangle, chirps, noise, light flicker) with “what it teaches” guidance.
 
 ---
