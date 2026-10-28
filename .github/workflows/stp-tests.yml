@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       QT_QPA_PLATFORM: offscreen
+      STP_REQUIRE_QT: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
