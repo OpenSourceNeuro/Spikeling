@@ -13,7 +13,8 @@ current time course independently.
 
 from PySide6.QtCore import QObject, QEvent
 from PySide6.QtWidgets import (QDialog, QPushButton, QComboBox, QFormLayout,
-                               QGroupBox, QVBoxLayout, QHBoxLayout, QLabel)
+                               QGroupBox, QVBoxLayout, QHBoxLayout, QLabel,
+                               QBoxLayout, QGridLayout)
 
 from serial_manager import serial_manager
 
@@ -54,8 +55,12 @@ class STPControls(QObject):
         # Use native layouts where possible; otherwise anchor to the lower
         # right corner and reposition when the containing page is resized.
         layout = page.layout()
-        if layout is not None and hasattr(layout, "addWidget"):
+        if isinstance(layout, QBoxLayout):
             layout.addWidget(button)
+        elif isinstance(layout, QFormLayout):
+            layout.addRow(button)
+        elif isinstance(layout, QGridLayout):
+            layout.addWidget(button, layout.rowCount(), 0, 1, max(1, layout.columnCount()))
         else:
             button.setFixedHeight(28)
             page.installEventFilter(self)
