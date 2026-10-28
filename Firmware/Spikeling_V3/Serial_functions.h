@@ -25,6 +25,8 @@ static inline bool readNextInt(int &out) {
 
 
 
+#include "VoltageClamp_commands.h"
+
 static inline void setFloatParam(bool &usePotFlag, float &param, float scale = 1.0f) {
   usePotFlag = false;
   float val;
@@ -71,7 +73,9 @@ inline void applyNeuronParameters(float a, float b, float c, float d, float v_re
   patch.I_clamp = 0.0f;
 
   if (clampMode == ClampMode::VoltageClamp) {
-    patch.v_hold = constrain(neuron.v_rest, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_hold = constrain(neuron.v_rest, vc::command_min, vc::command_max);
+    voltageClamp.cell.reset(neuron.v);
+    voltageClamp.source = vc::Source::Hardware;
     patch.v_cmd  = patch.v_hold;
     patch.v_step = 0.0f;
   }
@@ -185,70 +189,43 @@ inline void PDRecovery_off(){
 
 inline void patch_on() {
   float val;
-  if (!readNextFloat(val)) return;
-
   if (clampMode == ClampMode::VoltageClamp) {
-    // In V-clamp, PC1 sets the holding potential (Vhold). The "Current In" knob is ignored as an injected current.
-    const float old_hold = patch.v_hold;
-
-    pot.use_patch_pot = false;  // GUI overrides the voltage-command potentiometer in VC mode
-    patch.v_hold = val;
-    patch.v_cmd  = constrain(patch.v_hold + patch.v_step, neuron.Vm_min, neuron.Vm_peak);  // keep v_cmd coherent immediately
-    patch.current_input = 0.0f;  // No disturbance current labs: ensure current injection is not active in VC mode
-
-    // Only reset PI history if the command actually changed (prevents "strobing" the integrator if GUI re-sends same value).
-    if (fabsf(patch.v_hold - old_hold) > 0.05f) {
-      patch.e_int   = 0.0f;
-      patch.I_clamp = 0.0f;
-    }
+    voltageClamp.command_ok = vcReadFloat(val) && vcNoMoreArguments() &&
+                              vcSetHolding(val, vc::Source::Hardware);
     return;
-  } 
-  else {
-    pot.use_patch_pot = false;                      // GUI overrides the current-command potentiometer in CC mode
-    patch.current_clamp = val;
   }
+  // Preserve the original current-clamp command and parsing behaviour.
+  if (!readNextFloat(val)) return;
+  pot.use_patch_pot = false;
+  patch.current_clamp = val;
 }
 inline void patch_off() {
-  pot.use_patch_pot = true;    // re-enable voltage pot (VC hold pot)
+  pot.use_patch_pot = true;
+  if (clampMode == ClampMode::VoltageClamp) voltageClamp.source = vc::Source::Hardware;
 }
-
-
-
-inline void VClampMode(){
-  int val;
-  if (readNextInt(val)) {
-    setClampMode(val ? ClampMode::VoltageClamp : ClampMode::CurrentClamp);
-  }
+inline void VClampMode() {
+  float value;
+  voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) && vcNoMoreArguments();
+  if (voltageClamp.command_ok)
+    setClampMode(value ? ClampMode::VoltageClamp : ClampMode::CurrentClamp);
 }
-
-inline void VPID_set(){
-  float kp;
-  if (readNextFloat(kp)) patch.Kp = kp;
-  float ki;
-  if (readNextFloat(ki)) patch.Ki = ki;
+inline void VPID_set() {
+  // The passive equivalent circuit has no PI gains. Flag the obsolete command.
+  voltageClamp.command_ok = false;
 }
-
-inline void VILIM_set(){
-  float mn, mx;
-  if (readNextFloat(mn) && readNextFloat(mx)) {
-    patch.I_min = mn;
-    patch.I_max = mx;
-  }
+inline void VILIM_set() { VCLimits(); }  // VC current limits now have explicit nA units.
+inline void VSpan_set() {
+  float value;
+  voltageClamp.command_ok = vcReadFloat(value) && value > 0 && value <= 190 && vcNoMoreArguments();
+  if (voltageClamp.command_ok) patch.v_cmd_span = value;
 }
-
-inline void VSpan_set(){
-  float span;
-  if (readNextFloat(span)) {
-    patch.v_cmd_span = span;
-  }
+inline void VClampReset() {
+  patch.e_int = 0;
+  patch.I_clamp = 0;
+  voltageClamp.cell.reset(neuron.v);
+  voltageClamp.source = vc::Source::Hardware;
+  voltageClamp.command_ok = true;
 }
-
-inline void VClampReset(){
-  patch.e_int = 0.0f;
-  patch.I_clamp = 0.0f;
-}
-
-
 
 inline void Noise_on(){
   setFloatParam(pot.use_noise_pot, noise.current);
@@ -355,6 +332,13 @@ inline void SerialFunctions(){
   SCmd.addCommand("PR0",PDRecovery_off);
   SCmd.addCommand("PC1",patch_on);
   SCmd.addCommand("PC0",patch_off);
+  SCmd.addCommand("VCMD",VCommand);        // Absolute Vcmd; ignores Current-In voltage steps.
+  SCmd.addCommand("VCINFO",VCInfo);        // Explicit prototype/version/units query.
+  SCmd.addCommand("VCP",VCParameters);     // Cm[pF] Rm[MOhm] Rs[MOhm] EL[mV]
+  SCmd.addCommand("VCL",VCLimits);         // Imin[nA] Imax[nA]
+  SCmd.addCommand("VCI",VCIdeal);          // 0=finite access (default), 1=ideal
+  SCmd.addCommand("VCT",VCDiagnostics);    // 1=CSV diagnostic stream, 0=legacy frames
+  SCmd.addCommand("VSTEP",VCStep);        // absolute target[mV] delay[ms] duration[ms]
   SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
   SCmd.addCommand("VPID",VPID_set);         
   SCmd.addCommand("VIL",VILIM_set);        

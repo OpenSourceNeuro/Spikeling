@@ -1,6 +1,7 @@
 #pragma once  
    
 #include "Serial_functions.h"
+#include "Pharmacology_release.h"
 
 
 
@@ -54,7 +55,7 @@ inline void update_ToggleButtons() {
 
 inline void update_PatchInput() {
 
-/*   -- In VoltageClamp mode, the patch knob defines a command voltage (v_cmd), and a PI controller --   */  
+/*   -- In VoltageClamp mode, the patch knob defines a command voltage (v_cmd), selects the VC solver --   */
   if (clampMode == ClampMode::VoltageClamp) {                                                 // If we are in Voltage Clamp mode:
     if (!pot.use_patch_pot) return;                                                             // If GUI is overriding v_cmd, don't read the pot
     
@@ -75,7 +76,7 @@ inline void update_PatchInput() {
     patch.frac = constrain(patch.frac, -1.0f, 1.0f);                                            // Safety clamp (numerical stability + ensures predictable mapping).
 
     patch.v_hold = neuron.v_rest + patch.frac * patch.v_cmd_span;                               // Map the normalised knob position to an absolute command voltage.
-    patch.v_cmd = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);                       // Ensure Vcmd cannot exceed model bounds
+    patch.v_cmd = constrain(patch.v_hold, vc::command_min, vc::command_max);                    // VC range is independent of the spike-display peak
   } 
 
 /*          -- In CurrentClamp mode, the patch knob directly injects current (I-clamp style) --          */
@@ -275,8 +276,8 @@ inline void update_AllCurrent() {
 
 /*              --  Select the “primary command current” based on clamp mode  --              */
   if (clampMode == ClampMode::VoltageClamp) {                                                 // If we are in voltage clamp mode
-    patch.i_command = patch.I_clamp;                                                            // The command is the PI controller output current that enforces Vcmd.
-    patch.i_current = 0.0f;                                                                     // Ignore Current-In to keep VC protocols clean
+    patch.i_command = 0.0f;                                                                     // VC consumes shared inputs before computing clamp current.
+    patch.i_current = 0.0f;                                                                     // Current-In is a VC voltage command, not a second injected current.
   }
 /*                               --  Current-In contribution  --                               */
   else{                                                                                       // If we are in current clamp mode
@@ -285,7 +286,7 @@ inline void update_AllCurrent() {
   }
 
 /*           --  Sum all current sources into the neuron’s total injected current  --           */
-  neuron.total_current = patch.i_command                                                      // Primary command: pot current (CC) or PI output (VC)
+  neuron.total_current = patch.i_command                                                      // CC command; zero in passive VC
                        + patch.i_current                                                      // External Current-In injection (CC only)
                        + PD.current                                                           // Photodiode / light input contribution
                        + syn1.current                                                         // Synapse 1 current contribution
@@ -527,7 +528,7 @@ inline void neutralise_StimulusCurrentIn() {
 
   if (clampMode == ClampMode::VoltageClamp) {
     patch.v_step = 0.0f;
-    patch.v_cmd  = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_cmd  = constrain(patch.v_hold, vc::command_min, vc::command_max);
   }
 }
 
@@ -626,7 +627,7 @@ inline void update_StimulusCurrentIn() {
 
     if (currentInSign == 0.0f) {
       patch.v_step = 0.0f;
-      patch.v_cmd  = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);
+      patch.v_cmd  = constrain(patch.v_hold, vc::command_min, vc::command_max);
       patch.current_input = 0.0f;
       stim.state = (int)lroundf(patch.v_cmd);
       return;
@@ -639,8 +640,8 @@ inline void update_StimulusCurrentIn() {
 
     patch.v_step = currentInSign * patch.magnitude;
     patch.v_cmd  = constrain(patch.v_hold + patch.v_step,
-                             neuron.Vm_min,
-                             neuron.Vm_peak);
+                             vc::command_min,
+                             vc::command_max);
 
     patch.current_input = 0.0f;
     stim.state = (int)lroundf(patch.v_cmd);
@@ -659,46 +660,30 @@ inline void update_StimulusCurrentIn() {
 
 
 
-inline void update_VoltageClampPI() {                                                           
-
-  if (clampMode != ClampMode::VoltageClamp) {                                                 // If we are NOT in voltage clamp mode...
-    patch.I_clamp = 0.0f;                                                                       // Force PI output to 0 (not used in current clamp mode).
-    patch.e_int   = 0.0f;                                                                       // Reset the integrator so it does not accumulate while inactive.
-    return;                                                                                     // Exit early; nothing else to do.
-  }
-
-/*                     ---- Error computation: command minus measured ----                     */
-  pi.e = patch.v_cmd - neuron.v;                                                                // If e > 0, Vm is below command -> controller should inject depolarizing current 
-
-/*                       ---- Proportional term (a.u.): p = Kp * e ----                        */
-  pi.p = patch.Kp * pi.e;                                                                       // Proportional output current: reacts immediately to the present error. Kp in [uA/mV] so P is [uA]
-
-/*            --- Integral term (a.u.) computed from CURRENT integrator state ----             */ 
-  pi.i_hold = patch.Ki * patch.e_int;                                                           // Integral output current computed from the proposed integrator state. e_int in [mV*ms], Ki in [uA/(mV*ms)] so I is [uA]
-
-/*                ---- Unsaturated PI output (a.u.) using held integrator ----                 */
-  pi.out_unsat_hold = pi.p + pi.i_hold;                                                         // PI output current before applying compliance (saturation). [uA]
-
-/*                   ---- Apply compliance limits (actuator saturation) ----                   */
-  pi.out_sat = constrain(pi.out_unsat_hold, patch.I_min, patch.I_max);
-
-/*                                 ---- Anti-windup logic ----                                 */
-  pi.saturated_high = (pi.out_unsat_hold > patch.I_max);
-  pi.saturated_low  = (pi.out_unsat_hold < patch.I_min);
-
-/*                           ---- Commit the integrator update ----                            */
-  pi.allow_integrate =  (!pi.saturated_high && !pi.saturated_low) ||
-                        (pi.saturated_high && (pi.e < 0.0f)) ||
-                        (pi.saturated_low  && (pi.e > 0.0f));
-  if (pi.allow_integrate) {
-      patch.e_int += pi.e * neuron.dt_ms;                                                       // Candidate integrator update (mV * model-ms)
-  }
-  
-/*                ---- Final output computed from COMMITTED integrator state ----               */
-  pi.i_final = patch.Ki * patch.e_int;
-  pi.out_unsat = pi.p + pi.i_final;
-  pi.out_sat = constrain (pi.out_unsat, patch.I_min, patch.I_max);
-  patch.I_clamp = pi.out_sat;
+inline void update_PassiveVoltageClamp() {
+  patch.v_cmd = voltageClamp.command(patch.v_cmd, patch.v_hold);
+  vc::Inputs input;
+  input.inward_nA = neuron.total_current * vc::Runtime::nA_per_legacy_unit;
+  const uint32_t started = micros();
+  const bool ok = voltageClamp.cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode);
+  voltageClamp.solve_us = micros() - started;
+  voltageClamp.flags = voltageClamp.command_ok ? 0 : vc::RejectedCommand;
+  if (!ok) voltageClamp.flags |= vc::SolverFault;
+  const auto& sample = voltageClamp.cell.sample();
+  neuron.v = sample.voltage_mV;
+  // Retain the original recovery relaxation, without generating Izhikevich spikes in VC.
+  neuron.u += neuron.dt_ms * neuron.a * (neuron.b * neuron.v - neuron.u);
+  neuron.spike = false;
+  patch.I_clamp = sample.clamp_nA;
+  stim.state = static_cast<int>(lroundf(patch.v_cmd));
+  if (sample.saturated_fraction > 0) voltageClamp.flags |= vc::Compliance;
+  if (neuron.v < neuron.Vm_min || neuron.v > neuron.Vm_max) voltageClamp.flags |= vc::DisplayRange;
+  if (sample.clamp_nA*I_SCALE > 32767 || sample.clamp_nA*I_SCALE < -32768)
+    voltageClamp.flags |= vc::PacketRange;
+  // The passive milestone has no drug-sensitive channels. Never imply compatibility.
+  if (pharmacology.enabled) voltageClamp.flags |= vc::UnsupportedPharmacology;
+  if (voltageClamp.previous_loop_us >= timing.step_us) voltageClamp.flags |= vc::LoopDeadline;
+  ++voltageClamp.tick;
 }
 
 
@@ -707,7 +692,9 @@ inline void update_VoltageClampPI() {
 /*                                       Spike and Axon output                                           */
 
 inline void update_Spike() {
-  if (clampMode == ClampMode::VoltageClamp) {                                                   // If we are in Voltage Clamp mode. 
+  if (voltageClamp.rearm_spike_output && neuron.v < neuron.Vm_spike)
+    voltageClamp.rearm_spike_output = false;
+  if (clampMode == ClampMode::VoltageClamp || voltageClamp.rearm_spike_output) {                  // No synthetic spike event at a clamp-mode transition.
     neuron.v_out = neuron.v;                                                                      // Export the model voltage directly as the output voltage. In voltage clamp we do not generate spike events; we simply report the clamped Vm.
     digitalWrite(axon.pin_digital, LOW);                                                          // Force the axon digital output LOW so no TTL “spike” pulses are emitted. Force the axon digital output LOW so no TTL “spike” pulses are emitted interpreting clamp plateaus/steps as spikes.
     digitalWrite(pins.gpio.spike, LOW);                                                           // Force the spike-indicator GPIO LOW (typically drives a LED / buzzer logic). Avoid “false spike” signals during voltage clamp.
@@ -771,16 +758,35 @@ inline int16_t q_round(float x) {
 
 
 inline void send_SamplePacket() {
+  if (clampMode == ClampMode::VoltageClamp && voltageClamp.diagnostic) {
+    // Explicitly selected diagnostic protocol: interval-end state, mean currents.
+    const auto& value = voltageClamp.cell.sample();
+    Serial.print("VC1,");
+    Serial.print(static_cast<uint32_t>(voltageClamp.tick)); Serial.print(',');
+    Serial.print(double(voltageClamp.tick)*neuron.dt_ms, 6); Serial.print(',');
+    Serial.print(patch.v_cmd, 6); Serial.print(',');
+    Serial.print(value.voltage_mV, 6); Serial.print(',');
+    Serial.print(value.clamp_nA, 6); Serial.print(',');
+    Serial.print(value.capacitive_nA, 6); Serial.print(',');
+    Serial.print(value.leak_nA, 6); Serial.print(',');
+    Serial.print(value.input_nA, 6); Serial.print(',');
+    Serial.print(voltageClamp.flags); Serial.print(',');
+    Serial.print(voltageClamp.solve_us); Serial.print(',');
+    Serial.println(voltageClamp.previous_loop_us);
+    return;
+  }
   pkt.v_q         = q_round(neuron.v_out * V_SCALE);                                            // Membrane Potential
   pkt.stim_state  = (int16_t)stim.state;                                                        // Stimulus State  
   patch.I_for_gui = (clampMode == ClampMode::VoltageClamp)                                      // Depending on the Patch Clamp mode:
-                  ? patch.I_clamp                                                                 // In VC: report the clamp amplifier output current (PI output).
+                  ? patch.I_clamp                                                                 // In VC: interval-average passive clamp current (nA).
                   : neuron.total_current;                                                         // In CC: keep reporting the full injected current (command + syn + PD + noise).
   pkt.Itot_q      = q_round(patch.I_for_gui * I_SCALE);                                         // Current In
   pkt.syn1_vm_q   = q_round(syn1.Vm * SYN_V_SCALE);                                             // Synapse 1 Membrane Potential
-  pkt.Isyn1_q     = q_round(syn1.current * I_SCALE);                                            // Synapse 1 Current
+  pkt.Isyn1_q     = q_round((clampMode == ClampMode::VoltageClamp
+                    ? syn1.current * vc::Runtime::nA_per_legacy_unit : syn1.current) * I_SCALE); // nA in VC; original a.u. in CC
   pkt.syn2_vm_q   = q_round(syn2.Vm * SYN_V_SCALE);                                             // Synapse 2 Membrane Potential
-  pkt.Isyn2_q     = q_round(syn2.current * I_SCALE);                                            // Synapse 2 Current
+  pkt.Isyn2_q     = q_round((clampMode == ClampMode::VoltageClamp
+                    ? syn2.current * vc::Runtime::nA_per_legacy_unit : syn2.current) * I_SCALE); // nA in VC; original a.u. in CC
   pkt.trigger_q   = (int16_t)stim.trigger;                                                      // Trigger
 
   const uint8_t header[2] = { 0xAA, 0x55 };
