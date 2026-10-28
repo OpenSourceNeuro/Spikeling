@@ -169,7 +169,7 @@ class SpikelingGraph(QObject):
         if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
             # spikeling_data[0] will be time (added on export)
             for index, value in enumerate(values):
-                self.databuffers[index].append(value)
+                self.spikeling_data[index + 1].append(value)
 
         self.step_custom_stimulus_on_packet()
 
@@ -283,6 +283,11 @@ class SpikelingGraph(QObject):
                 handler(self.parent)
             except Exception as error:   # one broken restorer must not kill the link
                 print(f"State restore failed for {name}: {error}")
+
+        # STP modes are held by the GUI; a fresh board always starts in Off.
+        stp_controls = getattr(self.parent, "stp_controls", None)
+        if stp_controls is not None:
+            stp_controls.replay_hardware()
 
     def on_device_connected(self, port) -> None:
         """

@@ -35,6 +35,7 @@ from graph_core import (RingBuffer, apply_scope_timebase, configure_scope,
                         resolve_csv_path, safe_reconnect)
 
 import speed_model as speed
+from stp_model import STPState
 
 # --- Speed control ---------------------------------------------------------
 # STEPS_PER_UPDATE_BY_SLIDER, REALTIME_STEPS_PER_UPDATE and GUI_TICK_MS have
@@ -134,6 +135,7 @@ class EmulatorUISnapshot:
     syn_noise_sigma: tuple
     syn_gain: tuple
     syn_decay: tuple
+    stp_mode: tuple
     syn_as_current: tuple
     syn_as_light: tuple
     syn_photo_gain: tuple
@@ -187,6 +189,8 @@ class EmulatorUISnapshot:
                       float(ui.Emulator_Synapse2_slider.value())),
             syn_decay=(float(ui.Emulator_Synapse1_Decay_slider.value()) / 1000.0,
                        float(ui.Emulator_Synapse2_Decay_slider.value()) / 1000.0),
+            stp_mode=(int(getattr(ui, 'stp_mode_emulator1', 0)),
+                      int(getattr(ui, 'stp_mode_emulator2', 0))),
             syn_as_current=(bool(ui.EmulatorSyn1_StimDC_toggleButton.isChecked()),
                             bool(ui.EmulatorSyn2_StimDC_toggleButton.isChecked())),
             syn_as_light=(bool(ui.EmulatorSyn1_StimLight_toggleButton.isChecked()),
@@ -518,7 +522,9 @@ def GetData(self, ui_state, noise_row):
         self.EmulatorSyn1_Photodiode_Value = photo1
 
         if spiked1:
-            self.Emulator_Syn1Input_Data += ui_state.syn_gain[0]
+            self.Emulator_Syn1Input_Data += (ui_state.syn_gain[0] *
+                                             self._emulator_stp[0].spike_multiplier(
+                                                 self.Emulator_sim_time_ms, ui_state.stp_mode[0]))
         self.Emulator_Syn1Input_Data *= ui_state.syn_decay[0]
 
         self.Emulator_TotalCurrent1_Data = (
@@ -553,7 +559,9 @@ def GetData(self, ui_state, noise_row):
         self.EmulatorSyn2_Photodiode_Value = photo2
 
         if spiked2:
-            self.Emulator_Syn2Input_Data += ui_state.syn_gain[1]
+            self.Emulator_Syn2Input_Data += (ui_state.syn_gain[1] *
+                                             self._emulator_stp[1].spike_multiplier(
+                                                 self.Emulator_sim_time_ms, ui_state.stp_mode[1]))
         self.Emulator_Syn2Input_Data *= ui_state.syn_decay[1]   # BUGFIX
 
         self.Emulator_TotalCurrent2_Data = (
@@ -703,6 +711,7 @@ def SetInitParameters(self):
     self.recordflag = False
     self.Trigger = 0
     self.Emulator_sim_time_ms = 0.0
+    self._emulator_stp = [STPState(), STPState()]   # Transient synaptic history is independent per presynaptic connection
     self.Emulator_RecordingPath = None
     self.ui.Emulator_Oscilloscope_widget.clear()
 

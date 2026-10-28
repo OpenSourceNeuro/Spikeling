@@ -295,6 +295,26 @@ inline void Syn2Decay_off(){
 
 
 
+// // // // // // // // // // // // // // // // // // // // // // // //
+//                     Short-term plasticity                         //
+
+inline void SetSTPMode(Synapse &syn) {
+  int mode;                                                                                     // Requested preset: 0 Off, 1 Facilitation, 2 Depression, 3 Combined
+  if (!readNextInt(mode)) return;                                                               // Keep current behaviour if the command has no argument
+  if (mode < 0 || mode > 3) return;                                                             // Reject invalid preset numbers
+  STP_setMode(syn.stp, (uint8_t)mode);                                                           // Apply preset and reset only this synapse's transient state
+}
+
+inline void Syn1STPMode() {
+  SetSTPMode(syn1);                                                                             // Set Synapse 1 short-term plasticity
+}
+
+inline void Syn2STPMode() {
+  SetSTPMode(syn2);                                                                             // Set Synapse 2 short-term plasticity
+}
+
+
+
 inline void Buzzer_on(){
   spike.Buzzer_enable = true;
 }
@@ -362,6 +382,8 @@ inline void SerialFunctions(){
   SCmd.addCommand("VRS",VClampReset);       
   SCmd.addCommand("NO1",Noise_on);
   SCmd.addCommand("NO0",Noise_off);
+  SCmd.addCommand("STP1",Syn1STPMode);                                                      // Synapse 1 STP mode: 0 Off, 1 STF, 2 STD, 3 Combined
+  SCmd.addCommand("STP2",Syn2STPMode);                                                      // Synapse 2 STP mode; selecting a mode resets its transient state
   SCmd.addCommand("SG11",Syn1Gain_on);
   SCmd.addCommand("SG10",Syn1Gain_off);
   SCmd.addCommand("SD11",Syn1Decay_on);
