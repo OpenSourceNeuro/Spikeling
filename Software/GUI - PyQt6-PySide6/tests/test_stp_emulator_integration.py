@@ -26,13 +26,24 @@ def load_real_emulator_step(spike1_steps, spike2_steps):
     if len(functions) != 1:
         raise AssertionError("Cannot locate unique production GetData implementation")
 
-    count = [0]
+    soma_frame = [-1]
     spikes = (set(spike1_steps), set(spike2_steps))
 
     def deterministic_neuron(v, u, i, izh, dt):
-        frame, neuron = divmod(count[0], 3)
-        count[0] += 1
-        return v, u, (neuron in (1, 2) and frame in spikes[neuron - 1])
+        # The soma always advances, but disabled synapses are not evaluated.
+        # Identify the source by its distinct dummy model parameter rather
+        # than assuming exactly three calls per integration step.
+        marker = izh[0]
+        if marker == 0.02:
+            soma_frame[0] += 1
+            spiked = False
+        elif marker == 0.03:
+            spiked = soma_frame[0] in spikes[0]
+        elif marker == 0.04:
+            spiked = soma_frame[0] in spikes[1]
+        else:
+            raise AssertionError(f"Unexpected test neuron marker: {marker}")
+        return v, u, spiked
 
     env = {"izhikevich_step": deterministic_neuron,
            "photodiode_step": lambda *_: (0.0, 1.0)}
@@ -65,8 +76,8 @@ def snapshot(modes=(OFF, OFF), gains=(5.0, -4.0),
     """Snapshot of controls used in the step function."""
     return SimpleNamespace(
         izh=(0.02, 0.2, -65.0, 8.0),
-        izh_syn1=(0.02, 0.2, -65.0, 8.0),
-        izh_syn2=(0.02, 0.2, -65.0, 8.0),
+        izh_syn1=(0.03, 0.2, -65.0, 8.0),
+        izh_syn2=(0.04, 0.2, -65.0, 8.0),
         stim_custom_enabled=False, stim_custom_wave=None,
         stim_strength=0.0, stim_frequency=0.0,
         stim_as_light=False, stim_as_current=False,
