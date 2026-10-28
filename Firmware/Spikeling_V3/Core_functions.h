@@ -251,7 +251,7 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
     }
   }
   if (syn.risingEdge == true){                                                                // If Spike on Synapse is detected
-    syn.current += syn.gain;                                                                    // Generates Synaptic current by incrementing Synaptic Amplification
+    syn.current += syn.gain * STP_spikeMultiplier(syn.stp, stpStepCount, neuron.dt_ms);          // Add spike-triggered current, scaled by short-term plasticity (1.0 when off)
   }
   
   if (syn.decay_enable == true){                                                              // If the GUI Synaptic Decay 1 is disabled: 
