@@ -25,6 +25,9 @@ jobs:
         run: |
           g++ -std=c++17 -Wall -Wextra -pedantic Firmware/Spikeling_V3/tests/stp_model_smoke.cpp -o /tmp/stp_smoke
           /tmp/stp_smoke
+      - name: Syntax-check changed GUI Python modules
+        working-directory: 'Software/GUI - PyQt6-PySide6'
+        run: python3 -m py_compile Main.py Graph_Emulator.py Graph_Spikeling.py stp_controls.py stp_model.py
       - name: Run Python emulator model unit tests
         working-directory: 'Software/GUI - PyQt6-PySide6'
         run: python3 -m unittest discover -s tests -p test_stp_model.py
