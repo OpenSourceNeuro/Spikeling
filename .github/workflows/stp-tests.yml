@@ -1,0 +1,30 @@
+name: Short-term plasticity reference tests
+
+on:
+  push:
+    paths:
+      - 'Firmware/Spikeling_V3/STP_functions.h'
+      - 'Firmware/Spikeling_V3/tests/stp_model_smoke.cpp'
+      - 'Software/GUI - PyQt6-PySide6/stp_model.py'
+      - 'Software/GUI - PyQt6-PySide6/tests/test_stp_model.py'
+      - '.github/workflows/stp-tests.yml'
+  pull_request:
+    paths:
+      - 'Firmware/Spikeling_V3/STP_functions.h'
+      - 'Firmware/Spikeling_V3/tests/stp_model_smoke.cpp'
+      - 'Software/GUI - PyQt6-PySide6/stp_model.py'
+      - 'Software/GUI - PyQt6-PySide6/tests/test_stp_model.py'
+      - '.github/workflows/stp-tests.yml'
+
+jobs:
+  model-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and run C++ firmware model smoke test
+        run: |
+          g++ -std=c++17 -Wall -Wextra -pedantic Firmware/Spikeling_V3/tests/stp_model_smoke.cpp -o /tmp/stp_smoke
+          /tmp/stp_smoke
+      - name: Run Python emulator model unit tests
+        working-directory: 'Software/GUI - PyQt6-PySide6'
+        run: python3 -m unittest discover -s tests -p test_stp_model.py
