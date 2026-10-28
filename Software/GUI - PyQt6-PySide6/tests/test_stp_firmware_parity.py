@@ -173,7 +173,7 @@ class TestFirmwarePythonParity(unittest.TestCase):
     def test_invalid_firmware_mode_is_ignored(self):
         result = self.run_cpp(["M 0 2", "E 0 0 0.1", "M 0 9", "Q 0"])
         self.assertEqual(result[-1][0], DEPRESSION)
-        self.assertEqual(result[-1][2], 0.6)  # x depleted by U=0.4 at first spike
+        self.assertAlmostEqual(result[-1][2], 0.6, delta=1e-6)  # x depleted by U=0.4 at first spike
 
 
 if __name__ == "__main__":
