@@ -72,7 +72,10 @@ class TestSTPClosedForm(unittest.TestCase):
                 state = STPState()
                 self.assertEqual(state.spike_multiplier(137.0, mode), 1.0)
                 self.assertEqual(state.mode, mode)
-                self.assertTrue(state.has_event)
+                if mode != OFF:
+                    self.assertTrue(state.has_event)
+                else:
+                    self.assertFalse(state.has_event)  # Disabled synapses deliberately track no plasticity history
 
     def test_closed_form_paired_pulses_across_intervals(self):
         for mode in PRESETS:
