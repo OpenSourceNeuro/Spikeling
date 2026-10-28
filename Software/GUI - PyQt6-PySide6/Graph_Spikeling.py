@@ -169,7 +169,7 @@ class SpikelingGraph(QObject):
         if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
             # spikeling_data[0] will be time (added on export)
             for index, value in enumerate(values):
-                self.databuffers[index].append(value)
+                self.spikeling_data[index + 1].append(value)
 
         self.step_custom_stimulus_on_packet()
 
