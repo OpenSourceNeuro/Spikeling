@@ -1,10 +1,10 @@
-# Start here: active voltage-clamp timing fix (Windows)
+# Start here: finite-access voltage-clamp timing revision (Windows)
 
-Your first active run passed the current equations and Na/K response checks,
-but ran at 384.8 Hz because its loops exceeded 2 ms. This revision replaces
-repeated HH gating exponentials with a precomputed table and interpolation.
-Model parameters, four internal steps and test tolerances are unchanged.
-The optimised timing still needs testing on your ESP32-S3. Repeat ONE case first.
+The ideal active step, TTX and TEA cases passed on your board. The finite-access
+case passed its waveform/model checks but recorded one 2.048 ms loop against
+the 2 ms period. This revision reuses one voltage exponential for the exact
+endpoint and interval mean, retaining all four internal steps and test limits.
+Its new physical timing is not yet verified. Repeat ONLY the finite-access case.
 
 ## 1. Keep the working passive firmware
 
@@ -52,35 +52,35 @@ needed on your PC to run these hardware tests.
 - Disconnect Current-In and incoming synaptic cables.
 - Close the GUI, Serial Monitor and other programs using COM13.
 
-The script selects ideal active VC and a -70 mV holding potential. It controls
+The finite-access case selects active VC with 5 MOhm access and a -70 mV hold. It controls
 Vcmd during this test, so leave the physical knobs unchanged. It uses 0.1 model
 ms per 2 ms hardware tick: 1 model ms lasts 20 ms of wall time.
 
-## 5. Run ONLY the first active-step case
+## 5. Repeat ONLY the finite-access case
 
 ```powershell
-& $vcPython .\Firmware\tools\run_active_vc_tests.py COM13 --case 01_active_step
+& $vcPython .\Firmware\tools\run_active_vc_tests.py COM13 --case 04_access_resistance
 ```
 
 Allow roughly ten seconds, plus plotting time. Dependencies are unchanged;
-if the previous installation succeeded, the pip command above is optional. The programme checks for the new gates=2 identity, then
+if the previous installation succeeded, the pip command above is optional. The programme checks for the new gates=2,voltage=2 identity, then
 conditions the model, then applies a -70 to -20 mV step lasting 20 model ms.
 It records the return to -70 mV and checks the entire response and clock.
 No GUI command or additional serial command is needed.
 
 Expected observations:
 
-1. Vm follows the imposed step exactly in this IDEAL-clamp case.
+1. Vm approaches the imposed step gradually; ionic currents produce command-tracking error.
 2. Brief capacitive currents appear at the voltage changes.
 3. Sodium current becomes negative (inward), peaks early and then inactivates.
 4. Potassium current becomes positive (outward) more slowly and persists.
 5. At the end, the runner requests original CC, pharmacology OFF, access-clamp
    defaults and Patch knob control, and checks that binary streaming resumes.
 
-This implementation's software reference predicts an approximately -3.1 nA
-sodium peak and +2.0 nA late potassium current for that step. These are designed
-model values, not calibration targets for a biological neuron. A nonzero holding
-current in the active cell is expected even when external inputs are quiet.
+The previous finite-access run gave about -3.16 nA peak Na current and +1.43 nA
+late K current, with late Vm near -26.92 mV at a -20 mV command. These are model
+values, not biological calibration targets. Such departures from Vcmd are an
+intended finite-access effect; they are compared with the coupled ODE reference.
 
 The PASS checks include: all samples present, currents agreeing with an independent
 reference, current conservation, bounded gates, 500 Hz within 2% globally and in
@@ -88,13 +88,13 @@ complete one-second windows, and no firmware diagnostic flags. Any deadline flag
 fails the run even if the numerical currents look correct. PC timestamps measure
 average cadence; individual output jitter would require an oscilloscope.
 
-## 6. Send the first result before changing the setup
+## 6. Send the finite-access result before changing the setup
 
 A new vc_active_TIMESTAMP folder is created. Send:
 
 - Its TOP-LEVEL report.json (includes CC-stream cleanup and the case results).
-- 01_active_step/recording.png.
-- If anything fails, also 01_active_step/recording.csv.
+- 04_access_resistance/recording.png.
+- 04_access_resistance/recording.csv.
 
 Then reopen the GUI and check ordinary Patch-controlled CC firing. Binary-stream
 resumption alone does not prove normal physical firing or calibrated DAC output.
@@ -102,9 +102,10 @@ If the active test reports overruns, keep its files; do not hide the fault by
 changing the timing or ignoring flags. Return to the known working passive
 sketch if you need the device immediately for teaching.
 
-## Subsequent checks, after the first case passes
+## Subsequent checks, after the finite-access case passes
 
-These cases are ready, but they are not required for the first report:
+The first three cases already passed on the earlier revision. After the access
+rerun passes, cases 05 to 08 are the next new physical checks:
 
 | Case | Purpose |
 | --- | --- |

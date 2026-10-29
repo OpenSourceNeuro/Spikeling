@@ -76,16 +76,17 @@ class Cell {
     if (mode == Mode::Ideal) {
       v = command;              // Ideal step charge is represented as an output-bin mean.
     } else {
+      const double ga = 1.0/p.access_MOhm;
       double remaining = dt_ms, integral_v = 0;
-      const double left = command - p.maximum_nA*p.access_MOhm;
-      const double right = command - p.minimum_nA*p.access_MOhm;
+      const double left = command - double(p.maximum_nA)*p.access_MOhm;
+      const double right = command - double(p.minimum_nA)*p.access_MOhm;
       for (unsigned segment = 0; segment < 6 && remaining > 1e-12; ++segment) {
-        const double access = clip((command-v)/p.access_MOhm, p.minimum_nA, p.maximum_nA);
+        const double access = clip((command-v)*ga, p.minimum_nA, p.maximum_nA);
         const double derivative = (access + bi - gi*v)/cm;
         const bool high = v < left-1e-9 || (std::fabs(v-left) <= 1e-9 && derivative < 0);
         const bool low = v > right+1e-9 || (std::fabs(v-right) <= 1e-9 && derivative > 0);
-        const double a = gi + ((high || low) ? 0 : 1.0/p.access_MOhm);
-        const double b = bi + (high ? p.maximum_nA : low ? p.minimum_nA : command/p.access_MOhm);
+        const double a = gi + ((high || low) ? 0 : ga);
+        const double b = bi + (high ? p.maximum_nA : low ? p.minimum_nA : double(command)*ga);
         const double boundary = high ? left : low ? right : derivative > 0 ? right : left;
         double duration = remaining, end, average;
         linear(v, a, b, duration, cm, end, average);
@@ -125,8 +126,11 @@ class Cell {
                      double& end, double& mean) {
     const double equilibrium = b/a;
     const double z = a*dt/cm;
-    end = equilibrium+(v-equilibrium)*std::exp(-z);
-    mean = equilibrium+(v-equilibrium)*(-std::expm1(-z))/z;
+    // One expm1 supplies both the exact endpoint and interval mean. Reusing
+    // exp(-z)-1 avoids a second slow exponential without changing the RC ODE.
+    const double change = std::expm1(-z);
+    end = v+(v-equilibrium)*change;
+    mean = equilibrium+(v-equilibrium)*(-change)/z;
   }
 };
 

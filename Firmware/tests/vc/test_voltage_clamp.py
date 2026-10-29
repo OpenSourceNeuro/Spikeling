@@ -61,6 +61,30 @@ def diagnostic(script):
 
 
 class PortablePhysics(unittest.TestCase):
+    def test_rc_endpoint_mean_and_charge_across_parameter_ranges(self):
+        # Extended precision reference checks the physical interval solution,
+        # including slow charging and near-instant settling. The recorded float
+        # Vm is the next interval's initial condition, as on the device.
+        commands=np.r_[np.repeat(-70.,5),np.repeat(-69.,10),np.repeat(-71.,10)]
+        ld=np.longdouble
+        for cm in (1,20,100,1000):
+            for rm in (10,500,10000):
+                for rs in (.1,5,100):
+                    for dt in (.0001,.1,1):
+                        x=cell(commands,cm=cm,rm=rm,rs=rs,dt=dt,current=.01,imin=-100,imax=100)
+                        initial=np.r_[-70.,x[:-1,0].astype(np.float32)].astype(ld)
+                        cap=ld(np.float32(cm))/1000
+                        gl=1/ld(np.float32(rm));ga=1/ld(np.float32(rs))
+                        delta=ld(np.float32(dt));inward=ld(np.float32(.01))
+                        eq=(commands.astype(ld)*ga-70*gl+inward)/(gl+ga)
+                        z=(gl+ga)*delta/cap
+                        endpoint=eq+(initial-eq)*np.exp(-z)
+                        mean=eq+(initial-eq)*(-np.expm1(-z))/z
+                        np.testing.assert_allclose(x[:,0],endpoint,atol=8e-6,rtol=0)
+                        np.testing.assert_allclose(x[:,1],(commands-mean)*ga,atol=2e-6,rtol=0)
+                        np.testing.assert_allclose(x[:,2],cap*(endpoint-initial)/delta,atol=2e-6,rtol=0)
+                        np.testing.assert_allclose(x[:,3],gl*(mean+70),atol=2e-6,rtol=0)
+
     def test_passive_rc_matches_analytic(self):
         for rs in [.1,2,5,20,100]:
             x=cell(np.repeat(-60.,100),rs=rs)

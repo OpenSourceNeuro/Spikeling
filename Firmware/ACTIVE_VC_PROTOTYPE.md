@@ -8,7 +8,10 @@ first ideal-clamp active step on the physical board on 30 October 2026:
 500.075 Hz, zero deadline flags, and all numerical/response checks passing.
 Single-dose ideal-clamp TTX (92 nM) and TEA (5 mM) tests also pass on the
 physical board, with selective 1/11 current scaling and no deadline flags.
-Physical finite-access, reversal and combined pharmacology tests remain pending.
+The first finite-access recording passes the coupled-model numerical checks,
+but one 2.048 ms loop exceeds the 2 ms budget. The subsequent voltage=2
+revision removes a redundant voltage exponential; its board rerun is pending.
+Physical reversal and combined pharmacology tests also remain pending.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching
@@ -57,6 +60,9 @@ output tick while retaining the same four internal steps. General nonstandard
 timesteps use the analytic fallback. The table is generated reproducibly by
 Firmware/tools/generate_vc_gate_table.py at the fixed model temperature 6.3 C.
 No temperature or timestep setting can silently reinterpret this table.
+The voltage=2 revision reuses a single expm1 result for both the exact voltage
+endpoint and mean, halving voltage-solver exponentials. Access conductance is
+computed once per internal step and reused in double precision.
 Each frozen-conductance membrane step reuses the
 validated exact passive/access/compliance solver. Failed internal steps leave
 membrane and gate states unchanged and raise solver flag 4. Active steps reject
@@ -114,7 +120,7 @@ not sample release again inside the membrane solver.
 - `VCA 0|1`: select passive or active VC. No change to membrane charge.
 - `VCINFO`: passive identity remains VC-PASSIVE-1; active identity is VC-ACTIVE-1.
   Both include units and `clock=2`; the timing-optimised active version also
-  includes `gates=2`. Runner version 1.1 requires this marker.
+  includes `gates=2,voltage=2`. Runner version 1.2 requires both markers.
 - Passive CSV remains VC1 with its existing fields.
 - Active CSV is VC2: sequence,time_ms,command_mV,voltage_mV,clamp_nA,
   capacitive_nA,leak_nA,input_nA,flags,solve_us,previous_loop_us,

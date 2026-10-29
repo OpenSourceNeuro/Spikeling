@@ -234,8 +234,8 @@ class GateOptimisation(unittest.TestCase):
         self.assertEqual(self.count(),0)
 
     def test_access_hot_path_retains_only_exact_voltage_exponentials(self):
-        self.assertEqual(self.count(analytic=True,mode='access'),80)
-        self.assertEqual(self.count(mode='access'),8)
+        self.assertEqual(self.count(analytic=True,mode='access'),76)
+        self.assertEqual(self.count(mode='access'),4)
 
     def test_nonstandard_dt_uses_analytic_fallback(self):
         self.assertEqual(self.count(dt=.08),72)

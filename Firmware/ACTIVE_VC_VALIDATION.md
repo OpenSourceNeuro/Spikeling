@@ -1,4 +1,9 @@
-# Active VC timing correction — 30 October 2026
+# Active VC verification and access-timing revision — 30 October 2026
+
+The current voltage=2 revision passes 70 software tests and the ESP32 build.
+Its finite-access timing still needs a physical rerun. Earlier physical results
+below identify the firmware revision used; a numerical PASS alone is not a
+complete timing PASS.
 
 ## Physical rerun: first active step PASS
 
@@ -52,6 +57,63 @@ and both top-level reports confirm return to CC binary streaming. These are
 selected-dose checks of the implemented educational pharmacology, not a new
 biological potency calibration or validation of all drug combinations.
 
+## Finite access: numerical PASS, one deadline failure
+
+The physical 04_access_resistance run at ddabb4a contains 1,703 contiguous
+samples and quiet inputs. Both reports and independent CSV re-analysis agree:
+
+| Check | Physical finite-access recording |
+| --- | ---: |
+| Average rate / complete one-second windows | 499.8511 Hz / 499.7708 to 499.8996 Hz |
+| Median / maximum previous loop | 1,905 / 2,048 microseconds |
+| Median / maximum solver | 531 / 567 microseconds |
+| Deadline flags / all other diagnostic flags | 1 / 0 |
+| Maximum coupled-reference Vm error | 0.0298423 mV |
+| Maximum clamp-current reference error | 0.0030423 nA |
+| Maximum gate reference error | 0.0003433 |
+| Maximum current-balance residual | 0.000002 nA |
+| Late step Vm / command | -26.91563 / -20 mV |
+| Late clamp current | 1.38312 nA |
+| CC binary stream after cleanup | Resumed |
+
+The 18.5447 mV maximum deviation from Vcmd includes early capacitive lag;
+it is not the numerical solver error. The late approximately 6.916 mV offset
+matches 5 MOhm times 1.383 nA. The Na-associated overshoot, altered gating and
+late K-related offset agree with the independent coupled ODE. The only failed
+criterion is one genuine 48-microsecond deadline overrun. Average rate alone
+does not make this a PASS; the small nominal timing margin warrants improvement.
+
+## Second timing revision: voltage=2
+
+The shared passive/access solver previously computed exp(-z) for the endpoint
+and expm1(-z) separately for the exact interval mean. It now computes q=expm1(-z)
+once, using the mathematically equivalent formulas:
+
+    V_end  = V_start + (V_start - V_equilibrium) * q
+    V_mean = V_equilibrium + (V_start - V_equilibrium) * (-q) / z
+
+This retains the analytic RC/access/compliance solution and all four active
+substeps. A normal active access tick now uses four voltage special-function
+calls rather than eight; ideal mode still uses none. The model parameters,
+gate table, current averaging, current limits, shared inputs and acceptance
+criteria are unchanged. Cached double-precision access conductance also removes
+repeated divisions and avoids premature float rounding of Vcmd/Rs, exposed by
+the new extended parameter sweep at very low access resistance.
+
+**70 native tests PASS**, including every earlier test and a new long-double
+reference sweep of endpoint voltage, mean current and capacitive charge across
+108 combinations of Cm, Rm, Rs and numerical dt. Compiler output confirms
+405,265 program bytes, 24,224 global bytes and 303,456 remaining bytes with
+ESP32 Arduino core 3.3.12 and the existing target. The four-call hot path is
+verified by wrapped exp/expm1 counters. These are software/build checks, not a
+measurement of the new board execution time. The eight-case simulated serial
+workflow is checked separately.
+
+The active identity adds voltage=2; runner 1.2 requires it alongside gates=2.
+The original finite-access CSV remains a FAIL under the updated analyser,
+with one deadline flag. No timing threshold or numerical tolerance is relaxed.
+Physical verification of this voltage=2 revision is pending.
+
 ## Original failure on the physical ESP32-S3
 
 The uploaded 01_active_step recording from original active commit 6f37a74
@@ -79,7 +141,7 @@ the diagnostic columns refer to different ticks. PC receive gaps do not explain
 away the device's measured 2.6 ms loops. The sodium transient and delayed
 potassium response already pass; the complete test correctly remains FAIL.
 
-## Firmware change
+## First timing revision: gates=2
 
 Normal HH gate updates now interpolate equilibrium values and exponential
 update fractions from a 0.25 mV grid over -250..250 mV at fixed 6.3 C.
@@ -106,7 +168,7 @@ The physical rerun above verifies the first ideal protocol; further protocols
 still require their own board timing checks.
 The 2 ms period, 500 Hz target and deadline-failure rule have not been relaxed.
 
-## Verification
+## Software checks for the first timing revision
 
 - **69 native tests PASS**, including all original 63 regression/model/analyser
   checks and six new optimisation checks.
@@ -136,12 +198,11 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Keep the verified ddabb4a firmware installed. Run 04_access_resistance using
-runner 1.1 and the same quiet-input setup. This selects a finite 5 MOhm access
-resistance; voltage lag and current-dependent departure from Vcmd are expected.
-Numerical agreement is assessed against the coupled finite-access ODE reference,
-not against exact equality of Vm and Vcmd. Send its report, CSV and plot.
-Then test reversals, holding-voltage inactivation and potassium tails.
+Upload the complete voltage=2 revision and repeat ONLY 04_access_resistance
+with runner 1.2, retaining the same quiet-input setup. Send its top-level report,
+CSV and plot. A visible command-tracking error is expected; numerical agreement
+is judged against the finite-access reference. After timing passes, continue
+with reversals, holding-voltage inactivation and potassium tails.
 Required outcomes remain 500 Hz within 2%, loop duration below 2 ms, zero deadline
 flags and all existing waveform/numerical checks passing. Check actual knob-
 controlled CC firing in the GUI after cleanup; resumed binary data alone is not

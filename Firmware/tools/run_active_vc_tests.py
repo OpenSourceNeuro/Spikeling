@@ -18,7 +18,7 @@ from run_vc_hardware_tests import send, check_binary_stream
 from verify_vc_clock import clock_metrics
 import vc_hh_reference as reference
 
-VERSION = '1.1'
+VERSION = '1.2'
 FIELDS = ['sequence','time_ms','command_mV','voltage_mV','clamp_nA','capacitive_nA',
           'leak_nA','input_nA','flags','solve_us','previous_loop_us','sodium_nA',
           'potassium_nA','receptor_nA','m','h','n']
@@ -66,9 +66,9 @@ def identity(stream):
     while time.monotonic()<end:
         line = stream.readline()
         if (b'VC-ACTIVE-1,' in line and b'clock=2' in line.strip().split(b',') and
-            b'gates=2' in line.strip().split(b',')):
+            b'gates=2' in line.strip().split(b',') and b'voltage=2' in line.strip().split(b',')):
             return line[line.index(b'VC-ACTIVE-1,'):].decode('ascii').strip()
-    raise RuntimeError('No active gates=2 reply. Upload the complete timing-optimised active prototype first.')
+    raise RuntimeError('No active voltage=2 reply. Upload the complete access-timing revision first.')
 
 
 def assess(rows, case):
