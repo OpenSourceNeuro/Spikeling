@@ -6,7 +6,9 @@ The passive prototype passed the user's RC, input and clock bench checks on
 failed the 2 ms timing budget. The optimised revision at ddabb4a passed the
 first ideal-clamp active step on the physical board on 30 October 2026:
 500.075 Hz, zero deadline flags, and all numerical/response checks passing.
-Physical blocker, finite-access and reversal tests remain pending.
+Single-dose ideal-clamp TTX (92 nM) and TEA (5 mM) tests also pass on the
+physical board, with selective 1/11 current scaling and no deadline flags.
+Physical finite-access, reversal and combined pharmacology tests remain pending.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching

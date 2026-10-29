@@ -27,6 +27,31 @@ protocols have not yet been run physically. PC receive timestamps establish
 average cadence, not individual output edge jitter. Actual normal CC firing,
 TTL edges and DAC calibration are separate physical observations.
 
+## Physical TTX and TEA checks: PASS
+
+The 02_TTX and 03_TEA physical recordings at ddabb4a pass all numerical,
+response, continuity, input and timing checks. Independent CSV re-analysis
+confirms both reports. The following compares each 200-sample ideal-clamp pulse
+with the earlier control at the same -70 to -20 mV command:
+
+| Condition | Peak inward Na, nA | Late outward K, nA | Update rate, Hz | Maximum loop, microseconds |
+| --- | ---: | ---: | ---: | ---: |
+| Control | -3.084861 | 1.995735 | 500.0752 | 1667 |
+| TTX 92 nM | -0.280442 | 1.995735 | 499.9851 | 1679 |
+| TEA 5 mM | -3.084862 | 0.181430 | 500.0018 | 1665 |
+
+Both blockers leave the expected 1/11 (9.09%) of their targeted current,
+a 90.91% reduction under the existing illustrative Hill model. Maximum waveform
+error relative to this scaling is 0.0000005455 nA for either targeted component.
+The preserved K trace changes by 0 nA under TTX; the preserved Na trace differs
+by at most 0.000001 nA under TEA. Recorded m/h/n traces are unchanged across
+the pulse at the CSV precision, as expected when ideal Vm is imposed.
+
+TTX has 1,701 contiguous samples; TEA has 1,704. Every diagnostic flag is zero,
+and both top-level reports confirm return to CC binary streaming. These are
+selected-dose checks of the implemented educational pharmacology, not a new
+biological potency calibration or validation of all drug combinations.
+
 ## Original failure on the physical ESP32-S3
 
 The uploaded 01_active_step recording from original active commit 6f37a74
@@ -111,13 +136,12 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Keep the verified ddabb4a firmware installed. Run 02_TTX and 03_TEA using
-runner 1.1 and the same quiet-input setup. TTX at 92 nM should leave 1/11 of
-the ideal-clamp Na current; TEA at 5 mM should leave 1/11 of delayed K current
-under the existing illustrative Hill model. The unblocked component should
-retain its control waveform at the same imposed voltage. Then test finite
-5 MOhm access resistance, reversals, inactivation and K tails. Send each
-case's report and plot, adding its CSV if a check fails.
+Keep the verified ddabb4a firmware installed. Run 04_access_resistance using
+runner 1.1 and the same quiet-input setup. This selects a finite 5 MOhm access
+resistance; voltage lag and current-dependent departure from Vcmd are expected.
+Numerical agreement is assessed against the coupled finite-access ODE reference,
+not against exact equality of Vm and Vcmd. Send its report, CSV and plot.
+Then test reversals, holding-voltage inactivation and potassium tails.
 Required outcomes remain 500 Hz within 2%, loop duration below 2 ms, zero deadline
 flags and all existing waveform/numerical checks passing. Check actual knob-
 controlled CC firing in the GUI after cleanup; resumed binary data alone is not
