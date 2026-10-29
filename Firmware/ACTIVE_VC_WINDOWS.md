@@ -1,9 +1,10 @@
-# Start here: active voltage-clamp prototype (Windows)
+# Start here: active voltage-clamp timing fix (Windows)
 
-Your passive RC model, input response and 500 Hz clock have passed the planned
-bench checks. The next stage adds voltage-gated sodium and potassium currents.
-This is a new experimental firmware, not a release. Its active timing still
-needs testing on your ESP32-S3. Start with ONE case, then inspect the result.
+Your first active run passed the current equations and Na/K response checks,
+but ran at 384.8 Hz because its loops exceeded 2 ms. This revision replaces
+repeated HH gating exponentials with a precomputed table and interpolation.
+Model parameters, four internal steps and test tolerances are unchanged.
+The optimised timing still needs testing on your ESP32-S3. Repeat ONE case first.
 
 ## 1. Keep the working passive firmware
 
@@ -61,7 +62,8 @@ ms per 2 ms hardware tick: 1 model ms lasts 20 ms of wall time.
 & $vcPython .\Firmware\tools\run_active_vc_tests.py COM13 --case 01_active_step
 ```
 
-Allow roughly ten seconds, plus first-run plotting time. The programme first
+Allow roughly ten seconds, plus plotting time. Dependencies are unchanged;
+if the previous installation succeeded, the pip command above is optional. The programme checks for the new gates=2 identity, then
 conditions the model, then applies a -70 to -20 mV step lasting 20 model ms.
 It records the return to -70 mV and checks the entire response and clock.
 No GUI command or additional serial command is needed.
@@ -122,7 +124,7 @@ Run one case by substituting its name after --case. To run all eight:
 
 The full run typically takes about a minute and stops at the first failed case.
 The script deliberately clears drug doses and receptor selections for repeatable
-tests; it does not restore an earlier drug experiment. First upload always boots
+tests; it does not restore an earlier drug experiment. The firmware always boots
 into original CC with pharmacology OFF.
 
 ## Scope of this stage

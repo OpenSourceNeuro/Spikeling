@@ -2,7 +2,8 @@
 
 This experimental firmware extends the passive prototype at `08212b9`.
 The passive prototype passed the user's RC, input and clock bench checks on
-29 October 2026. The new active model has not yet been tested on that board.
+29 October 2026. The initial active model passed its current/shape checks on that board, but
+failed the 2 ms timing budget. The optimised revision still needs a board rerun.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching
@@ -43,8 +44,15 @@ E_L=-70 mV and Rs=5 MOhm keep the validated passive defaults.
 These combined parameters are an educational choice, not a fitted preparation.
 Na reversal is +50 mV; K reversal is -77 mV. Command range remains -110..+80 mV.
 
-The membrane uses four internal steps per 0.1 ms output bin. Gate half-steps
-use exponential updates; each frozen-conductance membrane step reuses the
+The membrane uses four internal steps per 0.1 ms output bin. Normal gate
+half-steps use equilibrium values and exponential update fractions precomputed
+on a 0.25 mV grid over -250..+250 mV, with linear interpolation. The 48,024-byte
+constant table resides in flash. It avoids 72 gate exp/expm1 calls per normal
+output tick while retaining the same four internal steps. General nonstandard
+timesteps use the analytic fallback. The table is generated reproducibly by
+Firmware/tools/generate_vc_gate_table.py at the fixed model temperature 6.3 C.
+No temperature or timestep setting can silently reinterpret this table.
+Each frozen-conductance membrane step reuses the
 validated exact passive/access/compliance solver. Failed internal steps leave
 membrane and gate states unchanged and raise solver flag 4. Active steps reject
 Vm outside -250..+250 mV rather than silently clipping it. This is a supported
@@ -100,7 +108,8 @@ not sample release again inside the membrane solver.
 
 - `VCA 0|1`: select passive or active VC. No change to membrane charge.
 - `VCINFO`: passive identity remains VC-PASSIVE-1; active identity is VC-ACTIVE-1.
-  Both include units and `clock=2`.
+  Both include units and `clock=2`; the timing-optimised active version also
+  includes `gates=2`. Runner version 1.1 requires this marker.
 - Passive CSV remains VC1 with its existing fields.
 - Active CSV is VC2: sequence,time_ms,command_mV,voltage_mV,clamp_nA,
   capacitive_nA,leak_nA,input_nA,flags,solve_us,previous_loop_us,

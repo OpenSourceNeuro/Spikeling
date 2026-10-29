@@ -2,6 +2,7 @@
 Requires numpy, scipy and g++; run with the existing passive regression suite.
 """
 import importlib.util
+import math
 from io import StringIO
 from pathlib import Path
 import subprocess
@@ -20,6 +21,12 @@ def setUpModule():
                     str(base.HERE/'active_cell_driver.cpp'),'-o',str(base.TMP/'active')],
                    check=True,capture_output=True,text=True)
     base.compile_sketch(base.SKETCH,base.TMP/'active_sketch',True)
+    for analytic in (False,True):
+        args=['g++','-std=c++17','-O2','-fno-builtin-exp','-fno-builtin-expm1',
+              '-I',str(base.SKETCH),str(base.HERE/'active_gate_probe.cpp'),
+              '-Wl,--wrap=exp','-Wl,--wrap=expm1','-o',str(base.TMP/('gate_analytic' if analytic else 'gate_fast'))]
+        if analytic:args+=['-DVC_ANALYTIC_GATES']
+        subprocess.run(args,check=True,capture_output=True,text=True)
 
 
 def active(commands,ideal=True,rs=5,minimum=-20,maximum=20,na=1,k=1,current=0,g=0,ge=0,dt=.1):
@@ -215,3 +222,47 @@ class HardwareAnalysis(unittest.TestCase):
     def test_sample_gap_is_rejected(self):
         rows=self.rows[:200]+self.rows[201:]
         with self.assertRaises(ValueError):self.tool.assess(rows,self.tool.CASES[0])
+
+
+class GateOptimisation(unittest.TestCase):
+    def count(self,analytic=False,mode='ideal',dt=.1):
+        return int(subprocess.check_output([str(base.TMP/('gate_analytic' if analytic else 'gate_fast')),
+                       mode,str(dt)],input=b'-20\n'))
+
+    def test_ideal_hot_path_eliminates_all_72_gate_special_functions(self):
+        self.assertEqual(self.count(analytic=True),72)
+        self.assertEqual(self.count(),0)
+
+    def test_access_hot_path_retains_only_exact_voltage_exponentials(self):
+        self.assertEqual(self.count(analytic=True,mode='access'),80)
+        self.assertEqual(self.count(mode='access'),8)
+
+    def test_nonstandard_dt_uses_analytic_fallback(self):
+        self.assertEqual(self.count(dt=.08),72)
+        x=active([-20]*50,dt=.08);state=ref.initial()
+        for r in x:
+            state,y=ref.advance(state,-20,dt=.08)
+            self.assertLess(abs(r[1]-y['clamp_nA']),.003)
+
+    def test_dense_table_interpolation_agrees_with_analytic_rates(self):
+        volts=np.r_[-250.,250.,-55.,-40.,np.arange(-250,250,.03125)+.015625]
+        data=''.join(f'{v:.8f}\n' for v in volts)
+        r=subprocess.run([str(base.TMP/'gate_fast'),'table'],input=data,text=True,capture_output=True,check=True)
+        actual=np.loadtxt(StringIO(r.stdout),delimiter=',')
+        expected=np.array([[*[a for a,b in ref.rates(v)],
+                            *[-math.expm1(-b*.0125) for a,b in ref.rates(v)]] for v in volts])
+        self.assertTrue(((actual>=0)&(actual<=1)).all())
+        self.assertLess(float(np.max(np.abs(actual[:,:3]-expected[:,:3]))),.00002)
+        self.assertLess(float(np.max(np.abs(actual[:,3:]-expected[:,3:]))),.00002)
+
+    def test_off_grid_protocol_matches_independent_current_reference(self):
+        cmds=np.repeat([-70.125,-55.125,-39.875,-20.125,.125,49.875,60.125,-69.875],60)
+        x=active(cmds);state=ref.initial()
+        for r,c in zip(x,cmds):
+            state,y=ref.advance(state,float(c))
+            self.assertLess(abs(r[1]-y['clamp_nA']),.003)
+            np.testing.assert_allclose(r[7:10],state[1:],atol=.00003,rtol=0)
+
+    def test_table_is_reproducible_from_generator(self):
+        subprocess.run([sys.executable,str(base.ROOT/'Firmware/tools/generate_vc_gate_table.py'),'--check'],
+                       check=True,capture_output=True,text=True)

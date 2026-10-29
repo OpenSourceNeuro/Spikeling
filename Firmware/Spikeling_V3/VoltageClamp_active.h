@@ -4,6 +4,7 @@
 // Maximal conductances are deliberately reduced to 240/72 nS for clear currents
 // in a 20 pF teaching cell. This is not a fitted squid or mammalian preparation.
 #include "VoltageClamp_passive.h"
+#include "VoltageClamp_gate_table.h"
 
 namespace vc {
 struct Gates { double m = 0, h = 1, n = 0; };
@@ -25,6 +26,42 @@ struct Kinetics {
     g.n = infinity.n+(g.n-infinity.n)*std::exp(-dt*rate.n);
   }
 };
+
+struct FastKinetics {
+  Gates infinity, fraction;
+  // Caller validates finite -250..250 mV. Endpoint selection stays in bounds.
+  static FastKinetics at(double voltage) {
+    const float position = (static_cast<float>(voltage)+250.0f)*4.0f;
+    const unsigned index = position >= gate_table_size-1 ? gate_table_size-2 :
+                           static_cast<unsigned>(position);
+    const float part = position-index;
+    const auto& a = gate_table[index]; const auto& b = gate_table[index+1];
+    const auto interpolate = [part](float x,float y) { return x+(y-x)*part; };
+    return {{interpolate(a.infinity[0],b.infinity[0]),
+             interpolate(a.infinity[1],b.infinity[1]),
+             interpolate(a.infinity[2],b.infinity[2])},
+            {interpolate(a.fraction[0],b.fraction[0]),
+             interpolate(a.fraction[1],b.fraction[1]),
+             interpolate(a.fraction[2],b.fraction[2])}};
+  }
+  void advance(Gates& g) const {
+    g.m += (infinity.m-g.m)*fraction.m;
+    g.h += (infinity.h-g.h)*fraction.h;
+    g.n += (infinity.n-g.n)*fraction.n;
+  }
+};
+
+inline void advanceGates(Gates& gates,double voltage,double half_step_ms) {
+#ifndef VC_ANALYTIC_GATES
+  if (std::fabs(half_step_ms-.0125) < 1e-9) {
+    FastKinetics::at(voltage).advance(gates);
+    return;
+  }
+#endif
+  // Preserve the general portable API for nonstandard numerical timesteps.
+  // VC_ANALYTIC_GATES is a host-regression switch, not the production default.
+  Kinetics::at(voltage).advance(gates,half_step_ms);
+}
 
 class ActiveCell {
  public:
@@ -53,7 +90,7 @@ class ActiveCell {
       const double old = next.membrane_.sample().voltage_mV;
       const double gate_v = mode == Mode::Ideal ? cmd : old;
       if (!std::isfinite(gate_v) || gate_v < -250 || gate_v > 250) return false;
-      Kinetics::at(gate_v).advance(next.gates_,h/2);
+      advanceGates(next.gates_,gate_v,h/2);
       const auto& g = next.gates_;
       const double gn = sodium_uS*sodium_reserve*g.m*g.m*g.m*g.h;
       const double gk = potassium_uS*potassium_reserve*g.n*g.n*g.n*g.n;
@@ -70,7 +107,7 @@ class ActiveCell {
       clamp += s.clamp_nA; cap += s.capacitive_nA; leak += s.leak_nA;
       receptor += input.conductance_uS*mean_v-input.conductance_E_nA;
       na += ina; k += ik; saturated += s.saturated_fraction;
-      Kinetics::at(mode == Mode::Ideal ? cmd : s.voltage_mV).advance(next.gates_,h/2);
+      advanceGates(next.gates_,mode == Mode::Ideal ? cmd : s.voltage_mV,h/2);
     }
     next.sample_ = next.membrane_.sample();
     next.sample_.clamp_nA = clamp/count; next.sample_.capacitive_nA = cap/count;

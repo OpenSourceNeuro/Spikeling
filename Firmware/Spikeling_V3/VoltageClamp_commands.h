@@ -13,7 +13,7 @@ inline bool vcReadFloat(float& value) {
 }
 inline void VCInfo() {
   // Explicit query only. Do not send while the desktop GUI owns the binary stream.
-  Serial.println(voltageClamp.active ? "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2" :
+  Serial.println(voltageClamp.active ? "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2" :
                                       "VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
 }
 inline bool vcNoMoreArguments() { return SCmd.next() == nullptr; }

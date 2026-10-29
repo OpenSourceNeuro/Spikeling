@@ -18,7 +18,7 @@ from run_vc_hardware_tests import send, check_binary_stream
 from verify_vc_clock import clock_metrics
 import vc_hh_reference as reference
 
-VERSION = '1.0'
+VERSION = '1.1'
 FIELDS = ['sequence','time_ms','command_mV','voltage_mV','clamp_nA','capacitive_nA',
           'leak_nA','input_nA','flags','solve_us','previous_loop_us','sodium_nA',
           'potassium_nA','receptor_nA','m','h','n']
@@ -65,9 +65,10 @@ def identity(stream):
     end = time.monotonic()+4
     while time.monotonic()<end:
         line = stream.readline()
-        if b'VC-ACTIVE-1,' in line and b'clock=2' in line.strip().split(b','):
+        if (b'VC-ACTIVE-1,' in line and b'clock=2' in line.strip().split(b',') and
+            b'gates=2' in line.strip().split(b',')):
             return line[line.index(b'VC-ACTIVE-1,'):].decode('ascii').strip()
-    raise RuntimeError('No VC-ACTIVE-1,clock=2 reply. Upload the complete active prototype first.')
+    raise RuntimeError('No active gates=2 reply. Upload the complete timing-optimised active prototype first.')
 
 
 def assess(rows, case):
@@ -261,6 +262,15 @@ def main():
                     (folder/'report.json').write_text(json.dumps(result,indent=2)+'\n')
             report['case_results'].append(result)
             print(('  PASS' if result['all_passed'] else '  FAIL')+' — '+str(folder.resolve()),flush=True)
+            if not result['all_passed']:
+                print('  Checks: '+', '.join(f'{k}={result.get(k)}' for k in
+                    ('sample_integrity_passed','quiet_inputs','numerical_passed','teaching_response_passed')),flush=True)
+                if 'clock' in result:
+                    print(f"  Clock: {result['clock']['updates_per_second']:.3f} Hz (target 500 +/-2%)",flush=True)
+                if 'diagnostics' in result:
+                    d=result['diagnostics']
+                    print(f"  Loop: max {d['max_previous_loop_us']:g} us; deadline flags {d['flag_counts']['loop_deadline']}",flush=True)
+                if 'error' in result:print('  Error: '+result['error'],flush=True)
             if not result['all_passed']:break
     except Exception as error:
         report['session_error']=str(error)
