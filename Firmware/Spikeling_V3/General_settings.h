@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "VoltageClamp.h"
+#include "Pharmacology_settings.h"
 
 
 
@@ -485,6 +486,11 @@ inline void setClampMode(ClampMode m) {
   // Re-anchor both handovers so the selected backend starts at its normal rate.
   synchroniseModelClock();
   voltageClamp.missed_wall_period = false;
+  // A handover cannot carry a half-committed pharmacology AP into CC outputs.
+  pharmacology.intrinsic.committed = false;
+  pharmacology.intrinsic.verified_event = false;
+  pharmacology.intrinsic.armed = true;
+  pharmacology.intrinsic.failed_passive = false;
 
   // Reset PI state when entering/exiting voltage clamp
   patch.e_int   = 0.0f;
@@ -497,13 +503,13 @@ inline void setClampMode(ClampMode m) {
     voltageClamp.tick = 0;
     voltageClamp.flags = 0;
     voltageClamp.previous_loop_us = 0;
-    voltageClamp.cell.reset(neuron.v);
+    voltageClamp.reset(neuron.v);
     patch.v_step = 0.0f;
     patch.v_hold = constrain(neuron.v, vc::command_min, vc::command_max);
     patch.v_cmd  = patch.v_hold;
   } else {
     // Continue from the presently simulated voltage, never an old pre-clamp Vm.
-    neuron.v = voltageClamp.cell.sample().voltage_mV;
+    neuron.v = voltageClamp.sample().voltage_mV;
     voltageClamp.rearm_spike_output = neuron.v >= neuron.Vm_spike;
     voltageClamp.diagnostic = false;
     pot.use_patch_pot = voltageClamp.cc_pot_enabled;

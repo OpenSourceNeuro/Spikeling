@@ -13,11 +13,17 @@ inline bool vcReadFloat(float& value) {
 }
 inline void VCInfo() {
   // Explicit query only. Do not send while the desktop GUI owns the binary stream.
-  Serial.println("VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
+  Serial.println(voltageClamp.active ? "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2" :
+                                      "VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
 }
 inline bool vcNoMoreArguments() { return SCmd.next() == nullptr; }
 inline bool vcValidCommand(float value) {
   return std::isfinite(value) && value >= vc::command_min && value <= vc::command_max;
+}
+inline void VCActive() {
+  float value;
+  voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) &&
+    vcNoMoreArguments() && voltageClamp.selectActive(value != 0);
 }
 inline bool vcSetHolding(float value, vc::Source source) {
   if (!vcValidCommand(value)) return voltageClamp.command_ok = false;

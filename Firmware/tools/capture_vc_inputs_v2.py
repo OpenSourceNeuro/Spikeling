@@ -127,8 +127,9 @@ def response(rows, kind):
 
 class BufferedCapture:
     """Read available byte batches on a dedicated thread throughout user prompts."""
-    def __init__(self, stream):
+    def __init__(self, stream, parser=parse_sample):
         self.stream = stream
+        self.parser = parser
         self.rows = []
         self.error = None
         self.stop_event = threading.Event()
@@ -188,7 +189,7 @@ class BufferedCapture:
                 with self.lock:
                     phase = self.phase
                 for line in lines:
-                    row = parse_sample(line)
+                    row = self.parser(line)
                     if row is not None:
                         last_valid = now
                         row['wall_s'] = now-self.started

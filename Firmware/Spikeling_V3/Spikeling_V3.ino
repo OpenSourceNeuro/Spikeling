@@ -60,6 +60,8 @@ void setup() {
   HardwareSettings();                                                                           // Initialise all components
   calibrate_PhotodiodeDark();                                                                   // Set dark baseline with stim outputs forced OFF
   SerialFunctions();                                                                            // Initialise Serial commands
+  pharmSeed(pharmacology.seed);
+  pharmResetIntrinsic(neuron.v);
   synchroniseModelClock();                                                                      // Calibration delays do not advance model time
   //setupWifiAP();
   //Mode_opening();
@@ -104,6 +106,10 @@ void loop() {
     update_Synapse(syn1, syn1.defaultdecay);                                                    // Sets Synapse 1 current
 
     update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current
+    if (pharmacology.enabled) {
+      pharmStepSynapse(0, syn1.risingEdge, syn1.gain, syn1.decay, neuron.v, neuron.dt_ms);
+      pharmStepSynapse(1, syn2.risingEdge, syn2.gain, syn2.decay, neuron.v, neuron.dt_ms);
+    }
 
     update_StimulusOutput();                                                                    // Determines Analog and Digital Values
     
@@ -121,6 +127,14 @@ void loop() {
 
     if (clampMode == ClampMode::VoltageClamp) {
       update_PassiveVoltageClamp();
+    } else if (pharmacology.enabled) {
+      pharmStepIntrinsic(neuron.v, neuron.u, neuron.a, neuron.b, neuron.c, neuron.d,
+                         neuron.dt_ms, neuron.total_current, false, neuron.Vm_peak);
+      if (neuron.v <= neuron.Vm_min) neuron.v = neuron.Vm_min;
+      if (voltageClamp.rearm_spike_output) {
+        pharmacology.intrinsic.verified_event = false;
+        if (neuron.v < neuron.Vm_spike) voltageClamp.rearm_spike_output = false;
+      }
     } else {
       // Original CC equations, sequential update order and spike reset.
       neuron.v = neuron.v + neuron.dt_ms*(0.04 * neuron.v * neuron.v + 5*neuron.v + 140 - neuron.u + neuron.total_current);
@@ -132,7 +146,9 @@ void loop() {
       if (neuron.v <= neuron.Vm_min) neuron.v = neuron.Vm_min;
     }
 
-    update_Spike();                                                                             // Handles spike related functions and hardware (LED + Buzzer) and generate Axon Digital and Analog output
+    if (pharmacology.enabled && clampMode == ClampMode::CurrentClamp)
+      pharmUpdateVerifiedSpikeOutput();
+    else update_Spike();
 
     send_SamplePacket();                                                                        // Quantize the current state data and send it as a compact binary frame.
     if (clampMode == ClampMode::VoltageClamp)

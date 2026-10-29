@@ -5,6 +5,7 @@
 
 
 inline SerialCommand SCmd;
+#include "Pharmacology_serial.h"
 
 
 
@@ -66,6 +67,7 @@ inline void applyNeuronParameters(float a, float b, float c, float d, float v_re
   neuron.v_out = neuron.v;
   neuron.total_current = 0.0f;
   neuron.spike = false;
+  pharmResetIntrinsic(neuron.v);
 
   // Reset clamp-related state as well, otherwise an old V-clamp / current state
   // can make it look as if the model immediately reverted or became unstable.
@@ -74,7 +76,7 @@ inline void applyNeuronParameters(float a, float b, float c, float d, float v_re
 
   if (clampMode == ClampMode::VoltageClamp) {
     patch.v_hold = constrain(neuron.v_rest, vc::command_min, vc::command_max);
-    voltageClamp.cell.reset(neuron.v);
+    voltageClamp.reset(neuron.v);
     voltageClamp.source = vc::Source::Hardware;
     patch.v_cmd  = patch.v_hold;
     patch.v_step = 0.0f;
@@ -222,7 +224,7 @@ inline void VSpan_set() {
 inline void VClampReset() {
   patch.e_int = 0;
   patch.I_clamp = 0;
-  voltageClamp.cell.reset(neuron.v);
+  voltageClamp.reset(neuron.v);
   voltageClamp.source = vc::Source::Hardware;
   voltageClamp.command_ok = true;
 }
@@ -333,6 +335,7 @@ inline void SerialFunctions(){
   SCmd.addCommand("PC1",patch_on);
   SCmd.addCommand("PC0",patch_off);
   SCmd.addCommand("VCMD",VCommand);        // Absolute Vcmd; ignores Current-In voltage steps.
+  SCmd.addCommand("VCA",VCActive);
   SCmd.addCommand("VCINFO",VCInfo);        // Explicit prototype/version/units query.
   SCmd.addCommand("VCP",VCParameters);     // Cm[pF] Rm[MOhm] Rs[MOhm] EL[mV]
   SCmd.addCommand("VCL",VCLimits);         // Imin[nA] Imax[nA]
@@ -340,6 +343,7 @@ inline void SerialFunctions(){
   SCmd.addCommand("VCT",VCDiagnostics);    // 1=CSV diagnostic stream, 0=legacy frames
   SCmd.addCommand("VSTEP",VCStep);        // absolute target[mV] delay[ms] duration[ms]
   SCmd.addCommand("VCM",VClampMode);        // 0=current clamp, 1=voltage clamp
+  SCmd.addCommand("PH",PharmSerialCommand);
   SCmd.addCommand("VPID",VPID_set);         
   SCmd.addCommand("VIL",VILIM_set);        
   SCmd.addCommand("VSP",VSpan_set);         

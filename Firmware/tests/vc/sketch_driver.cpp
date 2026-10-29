@@ -39,9 +39,9 @@ int main(){
     }else if(line[0]=='P'){
       if(line.size()>1){
         pharmacology.enabled=std::stoi(line.substr(1))!=0;
-        pharmSetDose(0,100);pharmSeed(123);
-      }else std::cout<<"PHARM,"<<pharmacology.enabled<<','<<pharmacology.dose[0]<<','
-                     <<pharmacology.syn[0].rng<<','<<pharmacology.syn[1].rng<<'\n';
+        pharmSetDrug(0,100);pharmSeed(123);
+      }else std::cout<<"PHARM,"<<pharmacology.enabled<<','<<pharmacology.concentration[0]<<','
+                     <<pharmacology.syn[0].rng_state<<','<<pharmacology.syn[1].rng_state<<'\n';
 #endif
     }
     for(uint8_t c:Serial.output)std::cout.put(char(c));
