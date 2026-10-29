@@ -1,6 +1,7 @@
 #pragma once  
 
 #include <cstdint>
+#include "VoltageClamp.h"
 
 
 
@@ -31,6 +32,11 @@ inline Timing timing{
  .lastStep_us =  0,
  .step_us     = 2000
 };
+
+inline void synchroniseModelClock() {
+  timing.current_us = micros();
+  timing.lastStep_us = timing.current_us;
+}
 
 
 
@@ -352,7 +358,7 @@ inline NeuronModel neuron = {
 /*                     Patch Clamp parameters                      */
 
 // Clamp mode: "CurrentClamp" mimics classical I-clamp (command current, observe Vm).
-// "VoltageClamp" enables a PI feedback controller that drives injected current so Vm tracks a command voltage.
+// "VoltageClamp" selects the passive equivalent-circuit prototype in VoltageClamp.h.
 
 enum class ClampMode : uint8_t { CurrentClamp = 0, VoltageClamp = 1 };
 inline ClampMode clampMode = ClampMode::CurrentClamp;
@@ -391,11 +397,11 @@ struct PatchClamp{
   float    v_step_max;                                      // Max |v_step| mapped from full-scale stimulus input (mV)
   float    i_command;                                       // Final command/injected current
   float    magnitude;
-  // --- Voltage clamp controller (PI)
+  // --- Legacy PI fields retained for now; unused by the passive VC backend
   float    Kp;                                              // Proportional gain (a.u. per mV error)
   float    Ki;                                              // Integral gain (a.u. per (mV*ms)) if dt is in ms
   float    e_int;                                           // Integrated voltage error (mV*ms)
-  float    I_clamp;                                         // Clamp current output (a.u.) computed by PI in VoltageClamp mode
+  float    I_clamp;                                         // Recorded interval-average clamp current (nA) in passive VC
   float    I_min;                                           // Compliance min (a.u.): clamp cannot inject below this
   float    I_max;                                           // Compliance max (a.u.): clamp cannot inject above this
   // --- GUI output
@@ -464,6 +470,9 @@ inline Integrator pi {
   .allow_integrate        = false
 };
 
+// Passive VC is independent of the Izhikevich state and shared input generators.
+inline vc::Runtime voltageClamp;
+
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -472,6 +481,10 @@ inline Integrator pi {
 inline void setClampMode(ClampMode m) {
   if (clampMode == m) return;
   clampMode = m;
+  // Boot/calibration/USB waits are wall time, never a backlog of model steps.
+  // Re-anchor both handovers so the selected backend starts at its normal rate.
+  synchroniseModelClock();
+  voltageClamp.missed_wall_period = false;
 
   // Reset PI state when entering/exiting voltage clamp
   patch.e_int   = 0.0f;
@@ -479,10 +492,21 @@ inline void setClampMode(ClampMode m) {
 
   // On entry to V-clamp, start by holding the present Vm (avoids sudden jumps)
   if (clampMode == ClampMode::VoltageClamp) {
+    voltageClamp.cc_pot_enabled = pot.use_patch_pot;
+    voltageClamp.source = vc::Source::Hardware;
+    voltageClamp.tick = 0;
+    voltageClamp.flags = 0;
+    voltageClamp.previous_loop_us = 0;
+    voltageClamp.cell.reset(neuron.v);
     patch.v_step = 0.0f;
-    patch.v_hold = constrain(neuron.v, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_hold = constrain(neuron.v, vc::command_min, vc::command_max);
     patch.v_cmd  = patch.v_hold;
   } else {
+    // Continue from the presently simulated voltage, never an old pre-clamp Vm.
+    neuron.v = voltageClamp.cell.sample().voltage_mV;
+    voltageClamp.rearm_spike_output = neuron.v >= neuron.Vm_spike;
+    voltageClamp.diagnostic = false;
+    pot.use_patch_pot = voltageClamp.cc_pot_enabled;
     // Leaving V-clamp: clear step so it won't “stick” next time
     patch.v_step = 0.0f;
   }
