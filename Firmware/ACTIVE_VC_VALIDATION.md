@@ -1,6 +1,33 @@
 # Active VC timing correction — 30 October 2026
 
-## Measured failure on the physical ESP32-S3
+## Physical rerun: first active step PASS
+
+The 01_active_step rerun with firmware identity clock=2,gates=2 and runner 1.1
+passes all checks. Both reports and independent re-analysis of the 1,702-sample
+CSV agree. The optimised firmware tested is ddabb4a.
+
+| Check | Optimised physical recording |
+| --- | ---: |
+| Average update rate | 500.0752 Hz |
+| Complete one-second windows | 499.9310 to 500.2049 Hz |
+| Median / maximum previous loop | 1,543 / 1,667 microseconds |
+| Median / maximum solver | 256 / 271 microseconds |
+| Deadline flags / other diagnostic flags | 0 / 0 |
+| Maximum Vm reference error, ideal clamp | 0 mV |
+| Maximum clamp-current reference error | 0.0007481 nA |
+| Maximum gate reference error | 0.0000005673 |
+| Peak inward Na / late outward K | -3.084861 / +1.995735 nA |
+| CC binary stream after cleanup | Resumed |
+
+The slowest recorded loop has 333 microseconds of margin against the 2 ms
+period. Median solver time falls from 1,252 to 256 microseconds, while the
+waveform/reference checks remain passing. This verifies the timing correction
+for this ideal-clamp protocol on the tested board; finite-access and blocker
+protocols have not yet been run physically. PC receive timestamps establish
+average cadence, not individual output edge jitter. Actual normal CC firing,
+TTL edges and DAC calibration are separate physical observations.
+
+## Original failure on the physical ESP32-S3
 
 The uploaded 01_active_step recording from original active commit 6f37a74
 contains 1,705 contiguous samples, with zero external input and no diagnostic
@@ -50,7 +77,8 @@ Linker-wrapped native call-count tests verify, for a normal 0.1 ms output tick:
 | Finite access | 72 gate + 8 voltage calls | 8 voltage calls |
 
 This counts expensive calls; it does NOT predict or measure ESP32 execution time.
-A physical rerun is required before declaring the timing problem resolved.
+The physical rerun above verifies the first ideal protocol; further protocols
+still require their own board timing checks.
 The 2 ms period, 500 Hz target and deadline-failure rule have not been relaxed.
 
 ## Verification
@@ -83,10 +111,13 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Upload the entire timing-optimised Spikeling_V3 sketch, then repeat only
-01_active_step using runner 1.1. Keep Patch centred, Noise minimum, PD gain zero
-and incoming signal cables disconnected; close the GUI and Serial Monitor.
-Send the top-level report.json, 01_active_step/recording.csv and recording.png.
+Keep the verified ddabb4a firmware installed. Run 02_TTX and 03_TEA using
+runner 1.1 and the same quiet-input setup. TTX at 92 nM should leave 1/11 of
+the ideal-clamp Na current; TEA at 5 mM should leave 1/11 of delayed K current
+under the existing illustrative Hill model. The unblocked component should
+retain its control waveform at the same imposed voltage. Then test finite
+5 MOhm access resistance, reversals, inactivation and K tails. Send each
+case's report and plot, adding its CSV if a check fails.
 Required outcomes remain 500 Hz within 2%, loop duration below 2 ms, zero deadline
 flags and all existing waveform/numerical checks passing. Check actual knob-
 controlled CC firing in the GUI after cleanup; resumed binary data alone is not

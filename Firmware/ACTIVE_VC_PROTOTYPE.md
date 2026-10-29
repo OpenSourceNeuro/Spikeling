@@ -3,7 +3,10 @@
 This experimental firmware extends the passive prototype at `08212b9`.
 The passive prototype passed the user's RC, input and clock bench checks on
 29 October 2026. The initial active model passed its current/shape checks on that board, but
-failed the 2 ms timing budget. The optimised revision still needs a board rerun.
+failed the 2 ms timing budget. The optimised revision at ddabb4a passed the
+first ideal-clamp active step on the physical board on 30 October 2026:
+500.075 Hz, zero deadline flags, and all numerical/response checks passing.
+Physical blocker, finite-access and reversal tests remain pending.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching
