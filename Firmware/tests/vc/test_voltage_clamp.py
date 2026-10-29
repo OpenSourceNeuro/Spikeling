@@ -117,6 +117,72 @@ class PortablePhysics(unittest.TestCase):
         self.assertGreater(x[-1,0],100)
 
 
+class ModelClock(unittest.TestCase):
+    def clocks(self, script):
+        return [[int(x) for x in row] for row in re.findall(rb'CLOCK,(\d+),(\d+),(\d+),(\d+)',sketch(script))]
+
+    def test_startup_does_not_accrue_calibration_time(self):
+        wall,last,period,tick=self.clocks('K\n')[0]
+        self.assertGreater(wall,0)  # The host stub models the real boot calibration delays.
+        self.assertEqual(last,wall)
+
+    def test_vc_entry_discards_old_cc_schedule_debt(self):
+        wall,last,period,tick=self.clocks('T1000000\n!VCM 1\nK\n')[0]
+        self.assertEqual(last,wall)
+        self.assertEqual(tick,0)
+
+    def test_vc_pause_advances_once_without_a_catchup_burst(self):
+        rows=self.clocks('!VCM 1\n!VCMD -70\nT1000000\nK\nL25\nK\nT1999\nK\nT1\nK\n')
+        self.assertEqual([r[3] for r in rows],[1,1,1,2])
+        self.assertEqual(rows[0][0],rows[0][1])
+
+    def test_vc_late_start_reports_deadline_even_when_solver_is_fast(self):
+        x=diagnostic('T1000000\nT2000\n')
+        self.assertEqual(list(x[:,8].astype(int)),[64,0])
+
+    def test_return_to_cc_reanchors_wall_clock(self):
+        rows=self.clocks('!VCM 1\nT1000000\n!VCM 0\nK\nL25\nK\n')
+        self.assertEqual(rows[0][0],rows[0][1])
+        self.assertEqual(rows[0],rows[1])
+
+    def test_vc_wraparound_keeps_two_millisecond_period(self):
+        wall=self.clocks('K\n')[0][0]
+        jump=(2**32-1000-wall)%2**32
+        rows=self.clocks(f'!VCM 1\nT{jump}\nK\nT2000\nK\nL10\nK\n')
+        self.assertEqual([r[3] for r in rows],[1,2,2])
+        self.assertEqual(rows[1][0],1000)
+
+
+class ClockAnalysis(unittest.TestCase):
+    def tool(self):
+        import sys
+        sys.path.insert(0,str(ROOT/'Firmware/tools'))
+        try:
+            import verify_vc_clock
+            return verify_vc_clock
+        finally:
+            sys.path.pop(0)
+
+    def test_usb_batching_preserves_500_hz_acceptance(self):
+        rows=[{'sequence':i+1,'wall_s':(i//4)*.008} for i in range(7000)]
+        self.assertTrue(self.tool().clock_metrics(rows)['passed'])
+
+    def test_fast_catchup_rate_fails_even_without_duration_flags(self):
+        rows=[{'sequence':i+1,'wall_s':i*.0015} for i in range(7000)]
+        result=self.tool().clock_metrics(rows)
+        self.assertFalse(result['passed'])
+        self.assertAlmostEqual(result['updates_per_second'],2000/3,places=6)
+
+    def test_early_burst_fails_when_global_average_is_within_tolerance(self):
+        wall=0.;rows=[]
+        for i in range(7000):
+            rows.append({'sequence':i+1,'wall_s':wall})
+            wall+=.0015 if i<300 else .002
+        result=self.tool().clock_metrics(rows)
+        self.assertLess(result['updates_per_second'],510)
+        self.assertFalse(result['passed'])
+
+
 class FirmwareIntegration(unittest.TestCase):
     def test_current_clamp_matches_original_packets_for_all_presets(self):
         for preset in range(20):
@@ -208,6 +274,7 @@ class FirmwareIntegration(unittest.TestCase):
 
     def test_explicit_identity_query(self):
         self.assertIn(b'VC-PASSIVE-1,mV,ms,nA,pF,MOhm',sketch('!VCINFO\n'))
+        self.assertIn(b',clock=2',sketch('!VCINFO\n'))
 
     def test_hardware_capture_validator_accepts_native_sketch_trace(self):
         tool=load_capture_tool()

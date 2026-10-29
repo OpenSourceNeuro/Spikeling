@@ -33,6 +33,11 @@ inline Timing timing{
  .step_us     = 2000
 };
 
+inline void synchroniseModelClock() {
+  timing.current_us = micros();
+  timing.lastStep_us = timing.current_us;
+}
+
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -476,6 +481,10 @@ inline vc::Runtime voltageClamp;
 inline void setClampMode(ClampMode m) {
   if (clampMode == m) return;
   clampMode = m;
+  // Boot/calibration/USB waits are wall time, never a backlog of model steps.
+  // Re-anchor both handovers so the selected backend starts at its normal rate.
+  synchroniseModelClock();
+  voltageClamp.missed_wall_period = false;
 
   // Reset PI state when entering/exiting voltage clamp
   patch.e_int   = 0.0f;

@@ -21,6 +21,16 @@ int main(){
     }else if(line[0]=='R'){
       unsigned count=std::stoul(line.substr(1));
       for(unsigned i=0;i<count;++i){host_us=timing.lastStep_us+timing.step_us;loop();}
+    }else if(line[0]=='T'){
+      // Advance actual host wall time, including long pauses and uint32 rollover.
+      host_us+=static_cast<uint32_t>(std::stoul(line.substr(1)));loop();
+    }else if(line[0]=='L'){
+      unsigned count=std::stoul(line.substr(1));
+      for(unsigned i=0;i<count;++i)loop();
+#ifdef VC_PROTOTYPE_TEST
+    }else if(line[0]=='K'){
+      std::cout<<"CLOCK,"<<host_us<<','<<timing.lastStep_us<<','<<timing.step_us<<','<<voltageClamp.tick<<'\n';
+#endif
     }else if(line[0]=='S'){
       std::cout<<"STATE,"<<neuron.v<<','<<neuron.u<<','<<int(clampMode)<<','
                <<host_gpio[pins.gpio.axon_d]<<','<<host_gpio[pins.gpio.spike]<<','

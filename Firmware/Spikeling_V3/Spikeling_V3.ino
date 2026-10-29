@@ -60,6 +60,7 @@ void setup() {
   HardwareSettings();                                                                           // Initialise all components
   calibrate_PhotodiodeDark();                                                                   // Set dark baseline with stim outputs forced OFF
   SerialFunctions();                                                                            // Initialise Serial commands
+  synchroniseModelClock();                                                                      // Calibration delays do not advance model time
   //setupWifiAP();
   //Mode_opening();
 }
@@ -75,8 +76,18 @@ void loop() {
 
   timing.current_us = micros();
 
-  if ((timing.current_us - timing.lastStep_us) >= timing.step_us) {                             // It the time since the last loop has treached the set loop refresh rate
-    timing.lastStep_us += timing.step_us;                                                       // keep steps evenly spaced
+  const uint32_t elapsed_us = timing.current_us - timing.lastStep_us;
+  if (elapsed_us >= timing.step_us) {
+    const bool wasVoltageClamp = clampMode == ClampMode::VoltageClamp;
+    voltageClamp.missed_wall_period = wasVoltageClamp &&
+      uint64_t(elapsed_us) >= 2ULL*timing.step_us;
+    if (wasVoltageClamp) {
+      // A late VC tick advances once. Never replay old wall time as an ADC/noise/
+      // synapse burst after USB backpressure or another scheduling pause.
+      timing.lastStep_us = timing.current_us;
+    } else {
+      timing.lastStep_us += timing.step_us;                                                     // Original CC cadence between handovers
+    }
 
     const uint32_t prototype_tick_started_us = micros();
     SCmd.readSerial();                                                                          // Reads Serial for external commands

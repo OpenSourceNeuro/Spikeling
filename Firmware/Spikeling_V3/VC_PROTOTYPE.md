@@ -9,6 +9,13 @@ No PCB modification is required. Axon analogue output remains Vm, the stimulus
 DAC remains stimulus output, and clamp current is available over USB. There is
 no physical current-monitor DAC output in this milestone.
 
+The 29 October clock correction identifies itself with `clock=2` at the end of
+VCINFO. It anchors the scheduler after boot calibration and both mode handovers.
+VC advances once after a late tick and waits for the next wall period; it never
+replays a backlog as a burst of ADC/noise/synapse updates. The original CC
+equations and between-handover scheduling remain in place. A stalled tick is
+reported, not interpreted as additional elapsed model time.
+
 ## What works, and what this milestone does not claim
 
 - Photodiode adaptation, noise and both incoming synapses advance once per model
@@ -75,8 +82,39 @@ arduino-cli compile --fqbn esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=cdc,Flash
 
 For Arduino IDE, use the same board settings and install the supplied libraries.
 Build/upload the complete sketch folder, including both new VoltageClamp headers.
-The prototype has been compiled for ESP32-S3; it has not been flashed or bench
-tested on a physical board by this development session.
+The prototype has been compiled for ESP32-S3. User-supplied recordings passed the
+initial eight-case passive battery and RC/noise-input comparisons. They exposed
+startup catch-up scheduling and incomplete photodiode recovery. The `clock=2`
+correction still needs its first physical-board clock check; host tests are not
+a substitute for that measurement.
+
+### Clock verification after uploading the correction
+
+With the GUI disconnected, Noise at minimum, PD gain zero, Patch centred and
+incoming cables disconnected:
+
+```bash
+python Firmware/tools/verify_vc_clock.py COM13
+```
+
+This tool requires `clock=2`, sets the wall period to 2,000 us, holds -70 mV for
+ten wall seconds and checks 500 updates/s globally and in one-second windows
+(+/-2% tolerance for PC receive timestamps). Equation agreement, diagnostic flags
+and clock cadence must all pass. This detects a fast catch-up burst even when
+each individual loop finishes within 2,000 us. An oscilloscope remains the check
+for precise analogue edge timing.
+
+The continuous input tool is also included:
+
+```bash
+python Firmware/tools/capture_vc_inputs_v2.py COM13 --input photodiode
+python Firmware/tools/capture_vc_inputs_v2.py COM13 --input noise
+```
+
+It uses buffered background acquisition and operator-confirmed phases. Version
+2.1 waits for a quiet half-second of input before starting the five-second
+recovery phase, printing measured input while it waits. A photodiode that still
+receives light is not silently accepted as a dark recovery.
 
 ## First board experiment
 
@@ -122,7 +160,7 @@ and physical TTL behaviour remain bench acceptance tasks.
 
 | Command | Meaning |
 | --- | --- |
-| VCINFO | Explicit text identity/units query: VC-PASSIVE-1,mV,ms,nA,pF,MOhm |
+| VCINFO | Explicit query: VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2 |
 | VCM 0 / 1 | Original Izhikevich CC / passive VC |
 | VCMD voltage | Absolute Vcmd; ignores Current-In voltage commands |
 | PC1 voltage | VC holding voltage, retaining Current-In voltage-step route |
@@ -171,7 +209,7 @@ previous_loop_us measures the preceding complete tick, including serial output.
 | 8 | Vm outside analogue/display mapping range |
 | 16 | Clamp current exceeds the legacy int16 current field |
 | 32 | Pharmacology enabled but unsupported by this passive milestone |
-| 64 | Preceding complete model tick took at least its scheduled wall period |
+| 64 | Previous tick exceeded its wall period, or VC started at least a whole period late |
 
 With VCT 0 the existing 0xAA55 + 16-byte payload remains unchanged in size/order.
 CC packets keep their original values and a.u. units. In VC all current fields
@@ -198,5 +236,7 @@ The numerical checks cover analytic RC charging, interval-average current,
 capacitive charge, Kirchhoff balance, compliance crossings, current input,
 conductance reversal and float tolerances. Integration checks cover commands,
 device timing, ADC command arbitration, handover, packet units, input continuity,
-pharmacology/RNG retention, and capture validation. Host doubles do not certify
+pharmacology/RNG retention, and capture validation. The 39-test suite also covers
+boot/mode clock anchoring, delayed ticks without catch-up, late-start flags,
+uint32 timer rollover and cadence analysis with batched USB timestamps. Host doubles do not certify
 physical IO, stochastic Gaussian distribution or board deadlines.

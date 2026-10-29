@@ -146,6 +146,7 @@ struct Runtime {
   uint64_t tick = 0;
   uint32_t solve_us = 0;
   uint32_t previous_loop_us = 0;
+  bool missed_wall_period = false;
   uint16_t flags = 0;
   // Explicit teaching conversion, not a measurement of biological current.
   static constexpr float nA_per_legacy_unit = 0.01f;

@@ -682,7 +682,8 @@ inline void update_PassiveVoltageClamp() {
     voltageClamp.flags |= vc::PacketRange;
   // The passive milestone has no drug-sensitive channels. Never imply compatibility.
   if (pharmacology.enabled) voltageClamp.flags |= vc::UnsupportedPharmacology;
-  if (voltageClamp.previous_loop_us >= timing.step_us) voltageClamp.flags |= vc::LoopDeadline;
+  if (voltageClamp.previous_loop_us >= timing.step_us || voltageClamp.missed_wall_period)
+    voltageClamp.flags |= vc::LoopDeadline;
   ++voltageClamp.tick;
 }
 
