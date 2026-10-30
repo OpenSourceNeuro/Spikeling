@@ -308,6 +308,42 @@ Evidence: vc_integration_20261030_094428_326236.zip, containing both reports,
 09_active_noise/recording.csv and recording.png.
 CSV SHA-256: 8f411a85ecf548676f851f009eec1f7087baf2b855c2a8bf051d1ce9c18b67b1.
 
+## Physical active-VC photodiode integration: PASS
+
+Case 10_active_photodiode with the installed 5c2e063 firmware and integration
+runner 1.0 passes on the board. Independent re-analysis confirms both reports
+from 12,522 contiguous samples over 25.0428 wall seconds. The command and Vm
+remain -70 mV throughout; all diagnostic flags are zero and CC binary streaming
+resumes after cleanup.
+
+| Check | Physical photodiode integration recording |
+| --- | ---: |
+| Average update rate | 499.9840 Hz |
+| Complete one-second window rates | 499.8757 to 501.3162 Hz |
+| Median / maximum previous loop | 1,473 / 1,555 microseconds |
+| Maximum solver | 283 microseconds |
+| Maximum clamp-current reference error | 0.0000008233 nA |
+| Maximum current-balance residual | 0.000001 nA |
+| Mean input: baseline / illuminated / recovery | 0.00001020 / 0.10124043 / 0.00252048 nA |
+| Mean clamp: baseline / illuminated / recovery | 0.00126885 / -0.09996126 / -0.00124131 nA |
+
+Illumination increases settled mean inward input by 0.10123023 nA and shifts
+clamp current by -0.10123011 nA. At every recorded sample, input plus clamp
+current remains within 0.000001 nA of the 0.001279 nA holding current needed
+for the fixed-voltage Na/K/leak membrane. This confirms compensating clamp
+current for the photodiode's shared input at ideal -70 mV.
+
+The recovery input has a 0.00252048 nA (2.52048 pA) mean residual, with
+0.00029499 nA standard deviation. Both pass the existing 0.003 nA quiet-phase
+limits; the recovery is not an exact return to the starting sensor baseline.
+This capture alone does not identify the cause of that small residual. No
+acceptance threshold was changed. The result does not calibrate sensor gain
+or establish noisy/light-driven finite-access behaviour.
+
+Evidence: vc_integration_20261030_095547_721716.zip, containing both reports,
+10_active_photodiode/recording.csv and recording.png.
+CSV SHA-256: df180048ce657596f722075b44d5d5a979b6b8a209d0792823f8c3ad9e64731f.
+
 ## Next board action
 
 After the eight core tests, the user confirmed that all knobs and functions work
@@ -316,9 +352,9 @@ post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
 Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py. Case 09 now passes; run
-10_active_photodiode next using the prompts in VC_INTEGRATION_WINDOWS.md. Cases 10 to 13
-cover photodiode input, Patch command routing, repeated mode transitions with
+runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 now pass;
+run 11_patch_command next using the prompts in VC_INTEGRATION_WINDOWS.md.
+Cases 11 to 13 cover Patch command routing, repeated mode transitions with
 stored half-block TTX/TEA doses, and 60 wall seconds of settled finite-access VC.
 The existing firmware model and all numerical/timing tolerances are unchanged.
 
@@ -332,7 +368,7 @@ capture; a deliberately missing signal must fail while cleanup still succeeds.
 None of these host checks measures the new cases on the physical board.
 
 The remaining integration stage is active-VC shared-input routing (Patch,
-photodiode, command input and both synapses), receptor pharmacology and release,
+external command input and both synapses), receptor pharmacology and release,
 preserved state during repeated mode transitions, and longer access-mode timing.
 These need suitable active-VC integration captures; the quiet-input core step
 recordings above do not test those behaviours. Keep current thresholds for
