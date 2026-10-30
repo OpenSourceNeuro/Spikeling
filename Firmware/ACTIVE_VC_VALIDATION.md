@@ -423,6 +423,45 @@ Evidence: vc_integration_20261030_100829_986219.zip, both reports and the case
 CSV/plot. CSV SHA-256:
 49b44ac45d0a8b2b43c0996c46bfe84f4e7c343e0727ca9b7db99fab6ada36c2.
 
+## Physical one-minute finite-access recording: PASS
+
+Case 13_access_stress at firmware 5c2e063 and integration runner 1.0 passes.
+Independent re-analysis confirms both live reports from 30,003 contiguous
+samples spanning 60.00656 wall seconds, with quiet inputs and a fixed -20 mV
+command through 5 MOhm access. All diagnostic flags are zero and CC binary
+streaming resumes after cleanup.
+
+| Check | Physical one-minute access recording |
+| --- | ---: |
+| Average rate / complete one-second windows | 499.9787 Hz / 499.7533 to 500.1174 Hz |
+| Median / 99th percentile / maximum previous loop | 1,721 / 1,746 / 1,800 microseconds |
+| Maximum solver | 488 microseconds |
+| Vm throughout capture, at CSV precision | -26.916933 mV |
+| Mean clamp current | 1.383387 nA |
+| Maximum settled coupled-reference Vm error | 0.00006314 mV |
+| Maximum clamp-current reference error | 0.00001223 nA |
+| Maximum gate reference error | 0.000005493 |
+| Maximum current-balance residual | 0.000001 nA |
+| Deadline flags / all other diagnostic flags | 0 / 0 |
+| CC binary streaming after cleanup | Resumed |
+
+The 6.916933 mV command-to-Vm offset agrees with Rs times clamp current
+(6.916935 mV). This is the intended series-resistance error; Vm is stationary
+at the recorded precision and the settled Na/K/access solution agrees with
+the independent ODE. The test validates this settled one-minute condition;
+transient accuracy is documented separately by case 04.
+
+The maximum recorded loop has 200 microseconds of margin. The earlier isolated
+22.9 ms Patch-test pause was not reproduced in this capture and remains an
+unresolved observation. This result does not establish a fix for that event,
+individual analogue/TTL edge jitter or every mixed-input condition.
+
+Evidence: vc_integration_20261030_101425_529160.zip, both reports and the case
+CSV/plot. CSV SHA-256:
+86749178db3719536d71a3504a6b8fdad3fe5b09285bf5840848e7ac277db22c.
+This archive contains only case 13; no physical case 12 switching recordings
+are included, so that result cannot yet be verified from the supplied evidence.
+
 ## Next board action
 
 After the eight core tests, the user confirmed that all knobs and functions work
@@ -431,13 +470,12 @@ post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
 Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 and the
-case 11 repeat pass; the first case 11 failure remains documented above.
-Run 12_mode_switching, then 13_access_stress, stopping if either fails. These
-automatic cases check five mode-transition cycles with stored half-block
-TTX/TEA doses, then 60 wall seconds of settled finite-access VC. Keep incoming
-cables disconnected and the GUI/Serial Monitor closed. Send both new result
-folders, retaining their top-level live reports and per-capture CSVs/plots.
+runner is Firmware/tools/run_vc_integration_tests.py. Cases 09, 10, the case 11
+repeat and case 13 pass; the first case 11 failure remains documented above.
+The case 12 evidence is still needed: send the existing 12_mode_switching result
+folder with its top-level live report and five cycle subfolders. If it has
+already been recorded, use that capture rather than repeating completed work.
+It tests stored half-block TTX/TEA doses across the mode-transition sequence.
 The existing firmware model and all numerical/timing tolerances are unchanged.
 
 The expanded native suite passes 84 tests: the original 70 and 14 integration
