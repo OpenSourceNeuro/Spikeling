@@ -523,10 +523,11 @@ Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
 passes. Case 15 NBQX now also has a verified passing repeat; its first timing
-FAIL remains recorded below and unresolved. Next is case 16 gabazine on
-Synapse 1 using the same setup. Cases 17 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
+Next is case 17 AMPA reversal on Synapse 1 using the same setup; cases 18 to 20
+follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Case 15 has a passing repeat; cases 16 to 20 remain pending.
+Cases 15 (repeat) and 16 pass; cases 17 to 20 remain pending.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -649,3 +650,20 @@ Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. The prior NBQX
 22.256 ms failure and earlier isolated Patch pause remain unresolved; this
 clean repeat is not a demonstrated permanent fix. Next is case 16 gabazine on
 Synapse 1, with the existing kit and firmware and automatic GABA-A selection.
+
+## Physical gabazine PASS
+
+The unchanged case-16 capture passes independent analysis of all 24,230
+contiguous samples over 48.45797 wall seconds: 500.000290 Hz, zero flags,
+maximum loop 1,620 us, Vm=-70 mV and resumed CC streaming. The outward-positive
+GABA-A contributions from 35 events per phase are +0.09900060781 /
++0.04950033568 / +0.09900060914 nA. Simulated 0.90 uM gabazine yields
+0.500000321 of control, with washout/control 1.000000013. An additional direct
+increment/decay check agrees. Numerical/current balance and settled recovery pass.
+
+Evidence: vc_synapse_20261030_203227_620637.zip; archive SHA-256
+5211c495de9960734dde6b083d347f683b9c9e4e8031af2b155d858c97958e32.
+Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. The earlier runtime
+pauses remain unresolved. Next is case 17 AMPA reversal on Synapse 1, with
+automatic -70/-20/+20 mV command phases and expected negative-to-positive
+synaptic event currents. Firmware, tools and all thresholds remain unchanged.

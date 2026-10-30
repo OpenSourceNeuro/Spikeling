@@ -6,8 +6,9 @@ The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
 Basic Synapse 1 and Synapse 2 now have verified passing physical captures
 (see below). Case 15 also has a verified passing NBQX repeat; its first timing
-FAIL remains recorded and unresolved. Case 16 gabazine is next; cases 16 to 20
-remain pending physical-board evidence.
+FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
+passing capture. Case 17 AMPA reversal is next; cases 17 to 20 remain pending
+physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -400,3 +401,60 @@ knobs fixed. At -70 mV with E_GABA=-80 mV, expected outward-positive event
 contributions are +0.099 / +0.0495 / +0.099 nA through control / simulated
 0.90 uM gabazine / washout. Maintain steady source firing through all three
 12-second phases and review the capture before reversal or NMDA/release tests.
+
+## Physical gabazine — overall PASS, 30 October 2026
+
+Case `16_gabazine --synapse 1`, runner 1.1 at 797f054 and unchanged 5c2e063
+firmware. Independent reanalysis of all **24,230 contiguous samples** over
+48.45797 wall seconds agrees with the live report within machine precision.
+All existing numerical, response, integrity, timing and cleanup criteria pass.
+
+At -70 mV with the explicitly configured E_GABA=-80 mV, receptor event currents
+are outward-positive. Simulated 0.90 uM gabazine halves the GABA-A contribution,
+and washout restores it:
+
+| Phase | Resolved settled events | Fitted event contribution (nA) | Expected (nA) |
+| --- | --- | --- | --- |
+| Control | 35 | +0.09900060781 | +0.099 |
+| Gabazine | 35 | +0.04950033568 | +0.0495 |
+| Washout | 35 | +0.09900060914 | +0.099 |
+
+Drug/control ratio is 0.500000321; washout/control is 1.000000013. Minimum
+resolved event interval is 0.308 wall seconds in all three settled phases.
+A separate direct current-increment check also finds 35 events per phase,
+with means +0.09900021 / +0.04950010 / +0.09900021 nA. Maximum non-event decay
+residual is 0.000001 nA; maximum waveform-fit residual is 0.000000855143 nA.
+These are agreement tests for the existing teaching model, not universal drug
+potencies or analogue current calibration.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 500.000290 Hz |
+| Complete one-second receive windows | 499.878142–500.210078 Hz |
+| Median / maximum previous loop | 1,493 / 1,620 us |
+| All diagnostic/deadline flags | Zero |
+| Command / Vm | -70 mV throughout |
+| Maximum independent clamp-reference error | 0.000000823227 nA |
+| Maximum current-balance error | 0.000001 nA |
+| Settled post-protocol receptor maximum | 0.000001 nA at export precision |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+Evidence: `vc_synapse_20261030_203227_620637.zip`, containing CSV, report and plot.
+Archive SHA-256:
+`5211c495de9960734dde6b083d347f683b9c9e4e8031af2b155d858c97958e32`.
+CSV SHA-256:
+`e845609a915481101f5e91ce9a367b6aaff549f49b3fe289d18036ef610d2a62`.
+
+Scope: specified GABA-A polarity, half-block, washout, timing and cleanup at
+ideal -70 mV clamp. The earlier NBQX 22.256 ms and Patch pauses remain unresolved;
+this clean run is not a demonstrated fix. No model, firmware, tool or threshold
+change is made. Source spike counts/release failures, receptor reversals and
+mixed-input/finite-access timing remain separate measurements.
+
+Next: case `17_ampa_reversal --synapse 1`, with the same wiring and source.
+The runner automatically restores AMPA selection, clears drugs and steps the
+holding command through -70, -20 and +20 mV for 12 seconds each. Expected
+contributions per event are -0.099, -0.0282857143 and +0.0282857143 nA. Maintain
+steady source firing until prompted to stop. The fitted zero crossing should
+be near 0 mV; received events are required at all three nonzero-driving-force
+points, so absence of a current at one voltage cannot alone pass a reversal test.
