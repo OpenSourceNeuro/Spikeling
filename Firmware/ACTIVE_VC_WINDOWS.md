@@ -5,9 +5,10 @@ case passed its waveform/model checks but recorded one 2.048 ms loop against
 the 2 ms period. This revision reuses one voltage exponential for the exact
 endpoint and interval mean, retaining all four internal steps and test limits.
 The physical finite-access rerun at 5c2e063 now passes: 499.907 Hz, no diagnostic
-flags and maximum loop 1.945 ms. If you already completed that passing rerun,
-keep this firmware and proceed to cases 05 to 08 below. Steps 1 to 6 describe
-installation and the access check for a fresh setup.
+flags and maximum loop 1.945 ms. Cases 05 to 08 now also pass on this revision.
+If you completed that sequence, keep the firmware installed and use the
+post-test checks below. Steps 1 to 6 describe installation and the access check
+for a fresh setup; the subsequent-case commands remain available for new boards.
 
 ## 1. Keep the working passive firmware
 
@@ -148,6 +149,24 @@ The full run typically takes about a minute and stops at the first failed case.
 The script deliberately clears drug doses and receptor selections for repeatable
 tests; it does not restore an earlier drug experiment. The firmware always boots
 into original CC with pharmacology OFF.
+
+## After completing the eight core cases
+
+The staged bench sequence now has passing recordings for cases 01 to 08,
+with cases 01 to 03 at ddabb4a and cases 04 to 08 at 5c2e063. The four newest
+recordings pass at about 500 Hz, with zero flags and maximum loops below 1.675 ms.
+No new upload or repeat of those cases is needed for the next integration stage.
+
+After Python exits, reopen the GUI on COM13. With quiet inputs, turn the Patch
+knob until ordinary CC firing starts, then turn it back until firing stops.
+Check the usual noise and photodiode responses in CC. The test cleanup requests
+CC, pharmacology OFF and Patch control; binary streaming alone does not verify
+normal firing on the display or physical outputs.
+
+Active-VC shared inputs, receptor/release pharmacology, repeated mode transitions
+and longer access-mode timing are the following bench stage. The core step
+runner above deliberately requires quiet inputs, so its PASS does not establish
+those combined behaviours. The detailed evidence is in ACTIVE_VC_VALIDATION.md.
 
 ## Scope of this stage
 

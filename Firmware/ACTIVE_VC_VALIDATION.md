@@ -1,10 +1,10 @@
 # Active VC verification and access-timing revision — 30 October 2026
 
-The current voltage=2 revision at 5c2e063 passes the physical finite-access
-rerun, 70 software tests and the ESP32 build. Earlier physical results below
-identify the firmware revision used; a numerical PASS alone is not a complete
-timing PASS. Reversals, holding-voltage inactivation, tails and combined
-pharmacology/IO are the next physical checks.
+All eight core active VC protocols now have passing physical recordings across
+the staged validation sequence: cases 01 to 03 at ddabb4a, and cases 04 to 08
+at voltage=2 revision 5c2e063. This is not a single eight-case run at one revision.
+The current code also passes 70 software tests and the ESP32 build. Combined
+pharmacology/IO, repeated mode transitions and longer timing checks remain.
 
 ## Physical rerun: first active step PASS
 
@@ -152,6 +152,47 @@ Evidence: report(20261030-070810).json (top-level live report),
 report(20261030-070817).json (case report), recording(8).csv and recording(10).png.
 CSV SHA-256: cbb1b53ca6e3af1f885d09286cc8960f566da598f00dc5c127e81a2b118d9eb2.
 
+## Physical reversal, inactivation and tail checks: PASS
+
+The four recordings in vc_active_20261030_082606.zip use runner 1.2 and
+clock=2,gates=2,voltage=2. Independent re-analysis of all four CSVs with the
+exact constant-voltage gate/product reference confirms every numerical,
+response, clock and diagnostic check. All 6,814 samples are contiguous within
+their respective recordings; every pulse has 200 samples and complete recovery.
+All flags are zero and all four top-level live reports confirm resumed CC
+binary streaming after cleanup.
+
+| Case | Recorded response | Update rate, Hz | Maximum loop, microseconds |
+| --- | --- | ---: | ---: |
+| 05_sodium_reversal | Na current is zero throughout the +50 mV pulse | 499.9957 | 1674 |
+| 06_sodium_inactivation | Peak Na -0.294541 nA after a -40 mV hold | 499.9433 | 1670 |
+| 07_above_sodium_reversal | Peak outward Na +1.160989 nA at +60 mV | 499.9403 | 1651 |
+| 08_potassium_tail | Initial inward K tail -0.440375 nA at -90 mV | 499.9628 | 1674 |
+
+The largest clamp-current reference error across these four recordings is
+0.0019513 nA, the largest gate error is below 0.000000548, and Vm follows the
+ideal command exactly. Current-balance residuals are at most 0.000002 nA.
+Complete one-second windows also pass the unchanged 500 Hz +/-2% criterion.
+
+For case 06, peak inward Na is 9.548% of the earlier -70 mV-hold control
+(-3.084861 nA), a 90.452% reduction. The pre-step h gate is 0.050441 versus
+0.754080 at -70 mV. This is holding-voltage inactivation with no blocker present;
+the drug-dependent gNa multiplier remains 1. At the sodium reversal potential,
+K and leak currents still contribute
+to total clamp current. At -90 mV, the K driving force is negative relative to
+the model's -77 mV K reversal; the inward tail decays to -0.000040 nA as n closes.
+
+These results complete the core Na/K/leak bench sequence. They do not establish
+combined receptor/blocker behaviour, active-VC physical input routing, repeated
+CC/VC handover, calibrated analogue output or long-duration timing robustness.
+No firmware adjustment or repetition of the completed cases is needed to
+proceed to integration checks.
+
+Evidence archive SHA-256:
+f9b7eb328a4f0af21cb539df14dc6c68e3dbb64a12108f21222104dfc7602ba3.
+The four source folders are vc_active_20261030_082606, _082623, _082639 and
+_082653; each contains its top-level live report, case report, CSV and plot.
+
 ## Original failure on the physical ESP32-S3
 
 The uploaded 01_active_step recording from original active commit 6f37a74
@@ -236,14 +277,18 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Keep the tested voltage=2 firmware installed and the same quiet-input setup.
-Run 05_sodium_reversal, 06_sodium_inactivation, 07_above_sodium_reversal and
-08_potassium_tail with runner 1.2; stop at the first failure and retain its files.
-Send the new result folders with their top-level reports, CSVs and plots.
-Required outcomes remain 500 Hz within 2%, loop duration below 2 ms, zero deadline
-flags and all existing waveform/numerical checks passing. Check actual knob-
-controlled CC firing in the GUI after cleanup; resumed binary data alone is not
-proof of physical firing, TTL timing or calibrated DAC output.
+Keep the tested voltage=2 firmware installed. After Python releases COM13,
+reopen the GUI and check that the Patch knob restores ordinary CC firing and
+can stop it again. Check the usual noise and photodiode responses in CC.
+Resumed binary data alone is not proof of physical firing, TTL timing or
+calibrated DAC output.
+
+The next integration stage is active-VC shared-input routing (Patch, noise,
+photodiode, command input and both synapses), receptor pharmacology and release,
+preserved state during repeated mode transitions, and longer access-mode timing.
+These need suitable active-VC integration captures; the quiet-input core step
+recordings above do not test those behaviours. Keep current thresholds for
+500 Hz cadence and diagnostic/deadline failures when adding those protocols.
 
 ## Model scope and sources
 

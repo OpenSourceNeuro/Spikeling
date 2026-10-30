@@ -13,8 +13,12 @@ but one 2.048 ms loop exceeds the 2 ms budget. The subsequent voltage=2
 revision at 5c2e063 removes a redundant voltage exponential and passes the
 physical access rerun: 499.907 Hz, zero diagnostic/deadline flags, maximum
 loop 1.945 ms, and all coupled-model numerical checks passing.
-Physical reversal, inactivation, tail and combined pharmacology/IO checks
-remain pending. See ACTIVE_VC_VALIDATION.md for the evidence and timing limits.
+Physical reversal, holding-voltage inactivation and potassium-tail cases also
+pass at 5c2e063: approximately 500 Hz, no diagnostic/deadline flags and maximum
+loops no greater than 1.674 ms. The staged sequence now has passing recordings
+for all eight core protocols. Combined pharmacology/IO, repeated handover and
+longer timing checks remain. See ACTIVE_VC_VALIDATION.md for the evidence and
+the firmware revision used for each recording.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching
