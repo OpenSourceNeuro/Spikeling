@@ -344,6 +344,52 @@ Evidence: vc_integration_20261030_095547_721716.zip, containing both reports,
 10_active_photodiode/recording.csv and recording.png.
 CSV SHA-256: df180048ce657596f722075b44d5d5a979b6b8a209d0792823f8c3ad9e64731f.
 
+## Physical Patch-command integration: response PASS, overall FAIL
+
+The first 11_patch_command run with firmware 5c2e063 and integration runner
+1.0 is a genuine timing failure. Independent re-analysis confirms the reports
+from all 10,082 contiguous samples over 20.18375 wall seconds.
+
+| Check | Physical Patch-command recording |
+| --- | ---: |
+| Settled command: baseline / clockwise / recovery | -70 / -46.259155 / -70 mV |
+| Clockwise command change | +23.740845 mV |
+| Vm command error | 0 mV |
+| Maximum clamp-current reference error | 0.00001493 nA |
+| Median / 99th percentile previous loop | 1,480 / 1,521 microseconds |
+| Maximum previous loop | 22,900 microseconds |
+| Deadline flags / all other diagnostic flags | 1 / 0 |
+| Overall rate / lowest one-second window | 499.4612 / 489.5273 Hz |
+| CC binary streaming after cleanup | Not confirmed (false in live report) |
+
+The flagged row at sequence 4158 reports the preceding 22.900 ms loop. The
+corresponding preceding row's measured HH solve is only 258 microseconds,
+leaving 22.642 ms outside that measured solver interval. The event is during
+baseline, 2.4397 seconds after capture start, with command and Vm still -70 mV.
+The command first changes at 6.9411 seconds, about 4.5 seconds later. All other
+recorded loops are at most 1,579 microseconds. This is an isolated wall-time
+pause rather than sustained HH compute overload or a pause coinciding with
+the knob movement. Existing diagnostics cannot distinguish serial blocking,
+other firmware/IO work or task pre-emption as its cause.
+
+The overall average lies inside 500 Hz +/-2%, but the affected one-second
+window is below the 490 Hz lower limit. The deadline and clock failures remain
+failures under unchanged thresholds. The full trace preserves sample order and
+matches the independent channel/current reference; this does not recover the
+missed wall time. The live report also fails to confirm binary streaming after
+cleanup. Its console cleanup sentence reports requested commands, not observed
+restoration; this second issue must not be reported as a successful return to CC.
+
+Retain this failure and repeat only case 11 once after a fresh USB boot and an
+operator check of ordinary CC in the GUI. Keep the firmware, test tool, timing
+thresholds and protocol unchanged. A repeated pause calls for additional
+firmware/transport timing instrumentation before assigning a cause or changing
+the biological model. A passing repeat would not erase this intermittent event.
+
+Evidence: vc_integration_20261030_100127_293521.zip, both reports and the case
+CSV/plot. CSV SHA-256:
+a00b4e9984c0d6e03290703c9452b7542a90011cb3a5228de4e4af320be26738.
+
 ## Next board action
 
 After the eight core tests, the user confirmed that all knobs and functions work
@@ -352,8 +398,10 @@ post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
 Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 now pass;
-run 11_patch_command next using the prompts in VC_INTEGRATION_WINDOWS.md.
+runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 pass;
+the first case 11 fails timing and does not confirm CC-stream cleanup. Reboot
+via USB, check normal CC in the GUI, close it, then repeat only 11_patch_command
+once using the same prompts in VC_INTEGRATION_WINDOWS.md. Retain both results.
 Cases 11 to 13 cover Patch command routing, repeated mode transitions with
 stored half-block TTX/TEA doses, and 60 wall seconds of settled finite-access VC.
 The existing firmware model and all numerical/timing tolerances are unchanged.
