@@ -521,11 +521,11 @@ of the completed protocols or firmware upload is needed for this milestone.
 The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
-verified passing physical capture with runner 1.1. Next, stop the source, move
-the receiving end to Synapse 2 and repeat case 14 with --synapse 2. Receptor/drug
-cases 15 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+verified passing physical capture with runner 1.1; the Synapse 2 repeat also
+passes. Next, stop the source, return the receiving end to Synapse 1 and run
+case 15 NBQX with --synapse 1. Cases 16 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Synapse 2 and cases 15 to 20 remain pending. The firmware model and all existing tolerances are unchanged.
+Cases 15 to 20 remain pending. The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
 integration analyser tests using the actual sketch with simulated ADC/clock/serial
@@ -587,3 +587,20 @@ See VC_SYNAPTIC_VALIDATION.md for all metrics, CSV hash and scope. Next board
 case is the same basic protocol on Synapse 2; receptor reversals and drug/release
 checks remain pending. This clean capture does not resolve the earlier isolated
 Patch pause. No firmware/tool/threshold change or new download is required.
+
+## Both basic physical synaptic inputs PASS
+
+The Synapse 2 case 14 capture also passes independent reanalysis with the same
+runner/firmware: all 23,460 samples are contiguous, cadence is 499.987518 Hz,
+all flags are zero, maximum loop is 1,535 us, Vm remains -70 mV and CC streaming
+resumes. Twenty settled-window events give -0.0990004464 nA per event versus
+-0.099 nA expected. Quiet baseline/recovery and a separate direct decay/increment
+check pass. The two input fits agree in event size at the selected model gain;
+source rates need not match and no independent source event count is available.
+
+Evidence: vc_synapse_20261030_200340_672425.zip; SHA-256
+44fc9726faf8e0a858c6cdceb0c003ca97cec1bc1676c1346326a3a8624baed1.
+See VC_SYNAPTIC_VALIDATION.md for full metrics and CSV hash. Next is case 15
+NBQX on Synapse 1 (control/drug/washout), using the same kit and firmware.
+Receptor/drug/release cases remain pending; neither this clean capture nor the
+startup fix resolves the earlier isolated Patch-loop pause.

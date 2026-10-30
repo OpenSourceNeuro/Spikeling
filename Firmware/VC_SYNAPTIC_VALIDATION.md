@@ -4,8 +4,8 @@
 no changes to `Firmware/Spikeling_V3` or its numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
-Basic Synapse 1 now has a verified passing physical capture (see below).
-Basic Synapse 2 and cases 15 to 20 remain pending physical-board evidence.
+Basic Synapse 1 and Synapse 2 now have verified passing physical captures
+(see below). Cases 15 to 20 remain pending physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -229,3 +229,52 @@ release qualification, receptor/drug selectivity result or finite-access
 synaptic timing result. Stop the source, move only the receiving cable end to
 Synapse 2 In, and repeat case 14 with `--synapse 2` before cases 15 to 20.
 Firmware, tools and all acceptance thresholds remain unchanged.
+
+## Physical basic Synapse 2 — PASS, 30 October 2026
+
+Case `14_synaptic_input --synapse 2`, runner 1.1 at 797f054, with unchanged
+5c2e063 firmware. Independent analysis of all **23,460 contiguous samples**
+agrees with the live report within machine-rounding precision. Recording
+length is 46.91917 wall seconds including operator changes; the active phase
+lasts 9.99830 seconds. All existing criteria pass.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 499.987518 Hz |
+| Complete one-second receive windows | 499.656148–500.251880 Hz |
+| Median / maximum previous loop | 1,383 / 1,535 us |
+| All diagnostic/deadline flags | Zero |
+| Vm / command | -70 mV throughout |
+| Resolved events in settled active window | 20; minimum interval 0.452 wall s |
+| Fitted event contribution | -0.0990004464 nA; expected -0.099 nA |
+| Maximum synaptic waveform fit residual | 0.000000748826 nA |
+| Maximum independent clamp-reference error | 0.000000823227 nA |
+| Maximum current-balance error | 0.000001 nA |
+| Quiet baseline / settled recovery receptor maximum | 0 / 0 nA at export precision |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+A separate direct difference check finds 20 increments averaging -0.09900004 nA,
+maximum increment error 0.00000004 nA and maximum non-event decay residual
+0.00000090 nA. Fitted Synapse 2 / Synapse 1 event-amplitude ratio is 0.9999991746
+at the same configured gain. This checks consistent model event size; it is not
+analogue gain calibration or an independent source spike-count comparison.
+Different mean currents or initial summed peaks are not interpreted as a gain
+change because the source rates/manual-change histories differ.
+
+Evidence: `vc_synapse_20261030_200340_672425.zip`, containing CSV, report and plot.
+Archive SHA-256:
+`44fc9726faf8e0a858c6cdceb0c003ca97cec1bc1676c1346326a3a8624baed1`.
+CSV SHA-256:
+`4c3feeef25897ee470bfaa8a320c53c37e31ecade09850f82226e45c46026e8f`.
+
+Both individual physical inputs now pass received AMPA-event tests at ideal
+-70 mV active VC, with quiet recovery, timing and resumed CC streaming. This
+is not simultaneous-input, finite-access, receptor-reversal, antagonist or
+stochastic release qualification. The earlier isolated Patch pause remains
+unresolved. Firmware, tools and thresholds are unchanged.
+
+Next board action: stop the source, return the receiving cable end to Synapse 1,
+then run `15_nbqx --synapse 1`. Keep source firing steady through all three
+12-second phases; the script applies simulated 0.30 uM NBQX and washout.
+Expected per-event AMPA contributions are -0.099, -0.0495 and -0.099 nA.
+Review that capture before proceeding to gabazine or other receptor/release tests.

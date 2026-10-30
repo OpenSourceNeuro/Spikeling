@@ -187,8 +187,10 @@ The user has a second Spikeling and stereo TRS cable. The Python-only cases
 NBQX/gabazine/APV and deterministic GVIA release scaling. Firmware remains at
 5c2e063. Case 14 on physical Synapse 1 now passes with runner 1.1: 21,670
 contiguous samples, 499.985491 Hz, zero flags, maximum loop 1,561 us, 22 resolved
-events and resumed CC streaming. Next is case 14 on Synapse 2; cases 15 to 20
-also remain pending. No new firmware or tool download is needed.
+events and resumed CC streaming. The Synapse 2 repeat also passes: 23,460
+contiguous samples, 499.987518 Hz, no flags, maximum loop 1,535 us and resumed
+CC streaming. Both inputs give the configured -0.099 nA event contribution.
+Next is case 15 NBQX on Synapse 1; cases 15 to 20 remain pending. No new firmware or tool download is needed.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
