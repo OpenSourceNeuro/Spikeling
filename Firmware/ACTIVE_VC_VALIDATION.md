@@ -522,11 +522,11 @@ The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
-passes. The first case 15 NBQX response is verified, but its run FAILS timing
-(see the detailed record below). Repeat case 15 on Synapse 1 once with the
-same setup. Cases 16 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+passes. Case 15 NBQX now also has a verified passing repeat; its first timing
+FAIL remains recorded below and unresolved. Next is case 16 gabazine on
+Synapse 1 using the same setup. Cases 17 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Case 15 awaits its timing repeat; cases 16 to 20 remain pending.
+Case 15 has a passing repeat; cases 16 to 20 remain pending.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -631,3 +631,21 @@ Full metrics, CSV hash and chronology are in VC_SYNAPTIC_VALIDATION.md. Repeat
 case 15 once with unchanged firmware/tools/criteria, preserving this FAIL.
 A clean repeat does not establish a permanent correction; another overrun calls
 for targeted IO/serial timing instrumentation before further qualification.
+
+## Physical NBQX repeat PASS; earlier timing failure retained
+
+The unchanged case-15 repeat passes independent analysis of all 26,409
+contiguous samples over 52.81661 wall seconds: 499.994257 Hz, no flags,
+maximum loop 1,607 us, Vm=-70 mV throughout and resumed CC streaming.
+There are 22 resolved events per settled phase, with contributions
+-0.09900054073 / -0.04950018797 / -0.09900054683 nA. Drug/control ratio is
+0.499999168; washout/control is 1.000000062. A separate direct recurrence check
+also agrees. The model's simulated 0.30 uM NBQX half-block and recovery are
+therefore verified in a complete passing capture under the original criteria.
+
+Evidence: vc_synapse_20261030_202600_819949.zip; archive SHA-256
+c87cf76bc33d189274e106a76ee71dba9a72cf4e35860102f265c44010a9c276.
+Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. The prior NBQX
+22.256 ms failure and earlier isolated Patch pause remain unresolved; this
+clean repeat is not a demonstrated permanent fix. Next is case 16 gabazine on
+Synapse 1, with the existing kit and firmware and automatic GABA-A selection.

@@ -5,8 +5,9 @@ no changes to `Firmware/Spikeling_V3` or its numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
 Basic Synapse 1 and Synapse 2 now have verified passing physical captures
-(see below). Case 15 now has a verified NBQX response but its first run FAILS
-timing; a repeat is next. Cases 16 to 20 remain pending physical-board evidence.
+(see below). Case 15 also has a verified passing NBQX repeat; its first timing
+FAIL remains recorded and unresolved. Case 16 gabazine is next; cases 16 to 20
+remain pending physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -348,3 +349,54 @@ source procedure. Retain this failed recording even if the repeat passes; a
 clean repeat cannot establish a permanent fix for the intermittent pause. If
 it recurs, isolate IO/serial/pre-emption timing with targeted instrumentation
 before advancing the board qualification. No model or threshold is changed.
+
+## Physical NBQX repeat — overall PASS, 30 October 2026
+
+Case `15_nbqx --synapse 1`, repeated with the same runner 1.1 at 797f054 and
+unchanged 5c2e063 firmware. Independent reanalysis of **26,409 contiguous
+samples** over 52.81661 wall seconds agrees with the live report. All existing
+response, membrane, integrity, timing and cleanup criteria pass.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 499.994257 Hz |
+| Complete one-second receive windows | 499.834944–500.356015 Hz |
+| Median / maximum previous loop | 1,488 / 1,607 us |
+| All diagnostic/deadline flags | Zero |
+| Command / Vm | -70 mV throughout |
+| Resolved events per settled phase | 22 / 22 / 22 |
+| Control event contribution | -0.09900054073 nA |
+| NBQX event contribution | -0.04950018797 nA |
+| Washout event contribution | -0.09900054683 nA |
+| Drug / control contribution ratio | 0.499999168 |
+| Washout / control contribution ratio | 1.000000062 |
+| Maximum synaptic waveform residual | 0.000000894134 nA |
+| Maximum independent clamp-reference error | 0.000000823227 nA |
+| Settled post-protocol receptor maximum | 0 nA at export precision |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+A separate direct current-increment/decay check finds 22 increments in every
+phase, averaging -0.09900013591 / -0.04949959000 / -0.09900018000 nA, with
+non-event decay residuals <=0.00000098 nA. Thus the expected simulated half-block
+and washout are verified per received event, not by unnormalised mean current.
+The control, drug and washout labelled phases last 12.06021, 12.05400 and
+12.01399 wall seconds. Dose is the model's illustrative 0.30 uM NBQX setting.
+
+Evidence: `vc_synapse_20261030_202600_819949.zip`, containing CSV, report and plot.
+Archive SHA-256:
+`c87cf76bc33d189274e106a76ee71dba9a72cf4e35860102f265c44010a9c276`.
+CSV SHA-256:
+`7be5cbc413a88d5d2ef068fe1582684cf845434372abff9bf5318c7176e0e727`.
+
+The first NBQX run remains FAIL for its 22.256 ms quiet-period loop. This clean
+repeat establishes a passing case-15 capture at unchanged criteria; it does not
+identify or permanently correct that intermittent pause or the earlier Patch
+pause. Keep those observations open during subsequent qualification. No model,
+firmware, tool or threshold change is made.
+
+Next: `16_gabazine --synapse 1`, using the same cable/source setup. The runner
+selects GABA-A and the required synaptic gain automatically; keep postsynaptic
+knobs fixed. At -70 mV with E_GABA=-80 mV, expected outward-positive event
+contributions are +0.099 / +0.0495 / +0.099 nA through control / simulated
+0.90 uM gabazine / washout. Maintain steady source firing through all three
+12-second phases and review the capture before reversal or NMDA/release tests.
