@@ -390,6 +390,39 @@ Evidence: vc_integration_20261030_100127_293521.zip, both reports and the case
 CSV/plot. CSV SHA-256:
 a00b4e9984c0d6e03290703c9452b7542a90011cb3a5228de4e4af320be26738.
 
+## Physical Patch-command repeat: PASS; intermittent pause remains open
+
+The requested repeat of 11_patch_command with the same firmware and runner
+passes all checks. Independent CSV re-analysis confirms both reports from
+9,202 contiguous samples over 18.40229 wall seconds. The valid clockwise knob
+excursion is larger than in the first recording; the independent reference uses
+each actual recorded command rather than assuming an identical waveform.
+
+| Check | Physical Patch-command repeat |
+| --- | ---: |
+| Settled command: baseline / clockwise / recovery | -70 / -35.216900 / -70 mV |
+| Clockwise command change | +34.783100 mV |
+| Vm command error | 0 mV |
+| Average rate / complete one-second windows | 499.9922 Hz / 499.7096 to 500.0592 Hz |
+| Median / maximum previous loop | 1,477 / 1,534 microseconds |
+| Maximum solver | 266 microseconds |
+| Deadline flags / all other diagnostic flags | 0 / 0 |
+| Maximum clamp-current reference error | 0.00002213 nA |
+| Maximum gate reference error | 0.000009247 |
+| Maximum current-balance residual | 0.000002 nA |
+| CC binary streaming after cleanup | Resumed |
+
+The first recording remains a timing FAIL with unconfirmed cleanup. The repeat
+provides a passing Patch-command and cleanup capture, but no firmware/tool change
+was made and the earlier pause's cause has not been identified. No fixed cause,
+permanent timing correction or reproducibility conclusion is inferred from a
+single clean repeat. Continue to the distinct mode-switch and longer access
+protocols; preserve their deadline evidence under the unchanged rules.
+
+Evidence: vc_integration_20261030_100829_986219.zip, both reports and the case
+CSV/plot. CSV SHA-256:
+49b44ac45d0a8b2b43c0996c46bfe84f4e7c343e0727ca9b7db99fab6ada36c2.
+
 ## Next board action
 
 After the eight core tests, the user confirmed that all knobs and functions work
@@ -398,12 +431,13 @@ post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
 Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 pass;
-the first case 11 fails timing and does not confirm CC-stream cleanup. Reboot
-via USB, check normal CC in the GUI, close it, then repeat only 11_patch_command
-once using the same prompts in VC_INTEGRATION_WINDOWS.md. Retain both results.
-Cases 11 to 13 cover Patch command routing, repeated mode transitions with
-stored half-block TTX/TEA doses, and 60 wall seconds of settled finite-access VC.
+runner is Firmware/tools/run_vc_integration_tests.py. Cases 09 and 10 and the
+case 11 repeat pass; the first case 11 failure remains documented above.
+Run 12_mode_switching, then 13_access_stress, stopping if either fails. These
+automatic cases check five mode-transition cycles with stored half-block
+TTX/TEA doses, then 60 wall seconds of settled finite-access VC. Keep incoming
+cables disconnected and the GUI/Serial Monitor closed. Send both new result
+folders, retaining their top-level live reports and per-capture CSVs/plots.
 The existing firmware model and all numerical/timing tolerances are unchanged.
 
 The expanded native suite passes 84 tests: the original 70 and 14 integration
