@@ -25,7 +25,8 @@ HERE = Path(__file__).resolve().parent
 TOOLS = ROOT / 'Firmware/tools'
 
 
-def exercise(executable, case, output, missing_signal=False, channel=1):
+def exercise(executable, case, output, missing_signal=False, channel=1,
+             drop_first_identity=False):
     master, slave = pty.openpty()
     tty.setraw(slave)
     port = os.ttyname(slave)
@@ -39,6 +40,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1):
         source_on = False
         source_counter = 0
         gpio = 38 if channel == 1 else 39
+        queries = 0
+        newline_free = False
         tick = time.monotonic()
         try:
             while not stop.is_set():
@@ -58,12 +61,22 @@ def exercise(executable, case, output, missing_signal=False, channel=1):
                     pending = lines.pop()
                     for line in lines:
                         if line.strip():
+                            if line.strip() == b'VCINFO':
+                                queries += 1
+                                if drop_first_identity and queries == 1:
+                                    newline_free = True
+                                    continue
+                                newline_free = False
                             native.stdin.write(b'!' + line.strip() + b'\n')
                     native.stdin.flush()
                 if native.stdout in readable:
                     data = os.read(native.stdout.fileno(), 65536)
                     if not data:
                         raise RuntimeError('Native sketch stopped')
+                    if newline_free:
+                        # Continuous newline-free binary is the observed hang
+                        # condition. Alter no samples in normal capture QA.
+                        data = data.replace(b'\n', b'\x00')
                     os.write(master, data)
                 now = time.monotonic()
                 if now >= tick:
@@ -116,6 +129,16 @@ def exercise(executable, case, output, missing_signal=False, channel=1):
     if errors:
         raise RuntimeError('; '.join(errors))
     report = json.loads((output / 'report.json').read_text())
+    if drop_first_identity:
+        assert code == 1 and not report['all_passed']
+        assert not report['capture_complete'] and 'analysis' not in report
+        assert report['startup_stage'] == 'checking_firmware_identity'
+        assert 'No matching VCINFO reply within 4 s' in report['error']
+        assert report['cc_binary_stream_resumed']
+        assert 'cleanup_error' not in report
+        return {'case': 'expected_missing_identity', 'workflow_checks_passed': True,
+                'all_passed': False, 'startup_timeout_detected': True,
+                'cc_binary_stream_resumed': True}
     expected = not missing_signal
     analysis = report.get('analysis', {})
     # A shared host can delay the paced bridge/PTY reader. Preserve the actual
@@ -158,10 +181,12 @@ def main():
         results.append(exercise(executable, case, output / case))
     results.append(exercise(executable, CASES[0], output / 'synapse_two', channel=2))
     results.append(exercise(executable, CASES[0], output / 'expected_missing_signal', missing_signal=True))
+    startup_fault = exercise(executable, CASES[0], output / 'expected_missing_identity',
+                             drop_first_identity=True)
     summary = {'execution': 'SIMULATED IO / externally paced native clock; NOT physical ESP32 timing',
                'all_workflow_checks_passed': True,
                'all_capture_checks_as_expected': all(r['all_passed'] == r['expected_capture_pass'] for r in results),
-               'results': results}
+               'results': results, 'startup_fault': startup_fault}
     (output / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
     print(json.dumps(summary, indent=2), flush=True)
     if not summary['all_capture_checks_as_expected']:

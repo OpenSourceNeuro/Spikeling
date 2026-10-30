@@ -556,3 +556,14 @@ kinetics: https://github.com/neuronsimulator/nrn/blob/master/src/nrnoc/hh.mod
 Our 0.25 mV grid, cached half-step fractions and interpolation-error bounds are
 implementation choices established by the checks above. This change optimises
 the existing educational model; it adds no new biological mechanisms.
+
+## Synaptic runner startup diagnosis and PC fix
+
+Runner 1.0 stalled before its first operator prompt on Windows. The user's
+faulthandler trace locates the wait in the active identity line read; the
+interrupted report confirms CC streaming resumed. Runner 1.1 replaces that
+line read with a bounded byte scan, drains startup output, paces configuration
+and logs its startup stage. The native suite now passes 113 tests including
+13 startup regressions. See VC_SYNAPTIC_VALIDATION.md for the demonstrated scope
+and the missing-reply/continuous-binary serial regression. No firmware, model
+or acceptance-threshold change is made; physical synaptic captures remain pending.

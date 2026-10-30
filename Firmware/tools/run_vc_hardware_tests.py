@@ -180,6 +180,98 @@ def send(stream, commands):
     stream.flush()
 
 
+def _read_before(stream, deadline):
+    """Bound each read by bytes and remaining wall time, including binary IO."""
+    remaining = deadline-time.monotonic()
+    if remaining <= 0:
+        return b''
+    previous = stream.timeout
+    try:
+        stream.timeout = min(.05, remaining)
+        return stream.read(min(512, max(1, stream.in_waiting)))
+    finally:
+        stream.timeout = previous
+
+
+def drain_serial(stream, seconds):
+    """Discard startup output while continuing to service the USB receive side."""
+    deadline = time.monotonic()+seconds
+    count = 0
+    while time.monotonic() < deadline:
+        count += len(_read_before(stream, deadline))
+    return count
+
+
+def send_paced(stream, commands, interval=.01, drain=False):
+    """Send short commands individually; never use an unbounded OS flush.
+
+    drain=True is only for startup/cleanup with NO background reader running.
+    Writes use the Serial object's configured write_timeout (2 s in the runner).
+    Pacing reduces receive-buffer pressure; it is not a command acknowledgement.
+    """
+    payloads = [(c+'\n').encode('ascii') for c in commands]
+    if any(len(p) > 32 or b'\n' in p[:-1] or b'\r' in p for p in payloads):
+        raise ValueError('Invalid command or command exceeds firmware buffer')
+    if not math.isfinite(interval) or interval < 0:
+        raise ValueError('Invalid command interval')
+    for payload in payloads:
+        if stream.write(payload) != len(payload):
+            raise IOError('Incomplete serial command write')
+        if drain:
+            drain_serial(stream, interval)
+        elif interval:
+            time.sleep(interval)
+
+
+def query_identity(stream, expected, required=(), timeout=4):
+    """Find a complete VCINFO reply among binary packets with a real deadline.
+
+    readline() can keep reading a continuous newline-free binary stream: its
+    per-read timeout is not an overall line deadline. All reads here are bounded.
+    A leading newline also terminates any old partial command before VCINFO.
+    """
+    deadline = time.monotonic()+timeout
+    send_paced(stream, ['', 'VCINFO'], interval=0)
+    buffer = bytearray()
+    received = 0
+    while time.monotonic() < deadline:
+        data = _read_before(stream, deadline)
+        received += len(data)
+        buffer.extend(data)
+        starts = [buffer.find(p) for p in (b'VC-ACTIVE-1,', b'VC-PASSIVE-1,')]
+        start = min((s for s in starts if s >= 0), default=-1)
+        if start >= 0:
+            end = buffer.find(b'\n', start)
+            if end >= 0:
+                reply = bytes(buffer[start:end]).strip()
+                del buffer[:end+1]
+                if reply.startswith((b'VC-ACTIVE-1,', b'VC-PASSIVE-1,')):
+                    fields = reply.split(b',')
+                    if reply.startswith(expected) and all(v in fields for v in required):
+                        return reply.decode('ascii')
+                    raise RuntimeError('Unexpected VCINFO reply: '+reply.decode('ascii', errors='replace'))
+        if len(buffer) > 8192:
+            del buffer[:-4096]
+    raise TimeoutError(f'No matching VCINFO reply within {timeout:g} s '
+                       f'({received} stream bytes received). Check postsynaptic port and connection.')
+
+
+def check_binary_stream_bounded(stream, timeout=2):
+    """Barrier after cleanup, then three complete 18-byte CC packets."""
+    stream.reset_input_buffer()
+    query_identity(stream, IDENTITY, timeout=timeout)
+    deadline = time.monotonic()+timeout
+    data = bytearray()
+    while time.monotonic() < deadline:
+        data.extend(_read_before(stream, deadline))
+        for offset in range(max(0, len(data)-53)):
+            if all(data[offset+k:offset+k+2] == b'\xaa\x55' for k in (0, 18, 36)):
+                return True
+        if len(data) > 8192:
+            del data[:-54]
+    return False
+
+
 def identity(stream, timeout=4):
     send(stream, ['VCINFO'])
     deadline = time.monotonic() + timeout

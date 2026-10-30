@@ -13,13 +13,14 @@ import time
 
 from capture_vc_inputs_v2 import BufferedCapture, diagnostics, hold_phase, wait_enter
 from run_active_vc_tests import identity, parse_sample, save_csv
-from run_vc_hardware_tests import send, check_binary_stream
+from run_vc_hardware_tests import (send_paced as send, drain_serial,
+                                   check_binary_stream_bounded as check_binary_stream)
 from run_vc_integration_tests import integrity, load_csv
 from verify_vc_clock import clock_metrics
 import vc_hh_reference as hh
 import vc_synapse_reference as syn
 
-VERSION = '1.0'
+VERSION = '1.1'
 CASES = ('14_synaptic_input', '15_nbqx', '16_gabazine', '17_ampa_reversal',
          '18_gaba_reversal', '19_nmda_apv', '20_gvia')
 CLEANUP = ['SG11 0', 'SG21 0', 'PH X', 'VCT 0', 'PH E 0', 'PH M 0',
@@ -66,7 +67,7 @@ def assess(rows, case):
             'membrane': model, 'synaptic_response': receptor}
 
 
-def configure(stream, case, channel):
+def configure(stream, case, channel, progress=None):
     config = syn.configuration(case)
     other = 3-channel
     commands = ['VCT 0', 'PH E 0', 'VCM 0', 'DT 2000', 'VCA 1', 'VCM 1',
@@ -79,7 +80,11 @@ def configure(stream, case, channel):
                  f'PH C {int(config["presynaptic"])}', f'PH F {channel} 0.35',
                  'PH L 1 0', 'PH L 2 0', 'PH E 1',
                  f'SG{channel}1 {config["gain_legacy"] * 4:g}', 'PH X']
-    send(stream, commands)
+    if progress:
+        progress('configuring', f'Sending {len(commands)} configuration commands individually ...')
+    send(stream, commands, drain=True)
+    if progress:
+        progress('checking_firmware_identity', 'Checking firmware identity (4 s deadline) ...')
     return identity(stream)
 
 
@@ -204,22 +209,30 @@ def main():
                        'stochastic release-failure statistics or physical TTL/DAC calibration.'}
     rows = []
     stream = recorder = None
+    def progress(stage, message):
+        report['startup_stage'] = stage
+        print(message, flush=True)
     try:
         if args.analyse:
             rows = load_csv(args.analyse)
         else:
             import serial
             print('Close GUI/Serial Monitor on the POSTSYNAPTIC port. The source remains in normal CC.', flush=True)
+            progress('opening_port', f'Opening {args.port} ...')
             stream = serial.Serial(args.port, 500000, timeout=.05, write_timeout=2)
-            time.sleep(2)
-            report['firmware_identity'] = configure(stream, args.case, args.synapse)
+            progress('draining_startup', 'Port open. Draining startup output for 2 seconds ...')
+            report['startup_bytes_drained'] = drain_serial(stream, 2)
+            report['firmware_identity'] = configure(stream, args.case, args.synapse, progress)
+            print('Firmware: '+report['firmware_identity'], flush=True)
             recorder = BufferedCapture(stream, parser=parse_sample)
             recorder.set_phase('setup')
             recorder.start()
             send(stream, ['VCT 1'])
+            progress('operator_capture', 'Starting synaptic capture ...')
             rows = capture(stream, recorder, args.case, args.synapse)
             report['pc_reader_metrics'] = dict(recorder.metrics)
         report['capture_complete'] = True
+        report['startup_stage'] = 'capture_complete'
         save_csv(output/'recording.csv', rows)
         report['analysis'] = assess(rows, args.case)
         if not args.no_plots:
@@ -241,7 +254,7 @@ def main():
                 report['reader_error'] = str(error)
         if stream is not None:
             try:
-                send(stream, CLEANUP)
+                send(stream, CLEANUP, drain=True)
                 report['cc_binary_stream_resumed'] = check_binary_stream(stream)
             except Exception as error:
                 report['cleanup_error'] = str(error)

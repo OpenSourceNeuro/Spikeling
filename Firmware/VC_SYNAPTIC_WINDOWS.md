@@ -5,6 +5,16 @@
 The source unit uses its usual working Izhikevich current-clamp firmware.
 No firmware upload is required for either unit.
 
+**Runner 1.1 startup fix:** extract this updated ZIP into a **new folder** and
+run from that folder. Keep using the existing `.venv-vc` Python executable; it
+can remain in your older `Spikeling_VC_Prototype_d245d07` folder. Do not run an
+older copy of the scripts from that folder. The complete tool set is included.
+
+This update replaces the initial line-based identity read with bounded byte
+reads and a true four-second reply deadline. It drains output during startup,
+sends configuration commands individually and shows each startup stage. It
+changes no firmware, model parameters or numerical/timing acceptance limits.
+
 Start with **14_synaptic_input on Synapse 1 only**. Send its results before
 moving to the receptor/drug sequence. These new cases have host validation;
 they still need measurements on the physical boards.
@@ -69,6 +79,12 @@ Follow the prompts in order:
    10 seconds. Do not adjust COM13's Patch or synapse knobs.
 3. When prompted, return the **SOURCE Patch** to centre so spikes stop, then
    press Enter. The script waits for quiet input and records recovery.
+
+Before the SOURCE prompt, runner 1.1 prints `Opening COM13`, then
+`Port open. Draining startup output for 2 seconds`, configuration progress,
+`Checking firmware identity (4 s deadline)` and the received firmware identity.
+If no valid reply arrives, it reports a timeout instead of waiting indefinitely.
+Keep the source quiet until the operator prompt appears.
 
 The script controls postsynaptic gain, decay, receptor, drug and holding-voltage
 settings. It keeps the serial reader running throughout prompts and plotting.

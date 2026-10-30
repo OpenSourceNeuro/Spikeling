@@ -14,7 +14,7 @@ import math
 from pathlib import Path
 import time
 from capture_vc_inputs_v2 import BufferedCapture, diagnostics, hold_phase
-from run_vc_hardware_tests import send, check_binary_stream
+from run_vc_hardware_tests import send, check_binary_stream, query_identity
 from verify_vc_clock import clock_metrics
 import vc_hh_reference as reference
 
@@ -61,14 +61,8 @@ def parse_sample(line):
 
 
 def identity(stream):
-    send(stream,['VCINFO'])
-    end = time.monotonic()+4
-    while time.monotonic()<end:
-        line = stream.readline()
-        if (b'VC-ACTIVE-1,' in line and b'clock=2' in line.strip().split(b',') and
-            b'gates=2' in line.strip().split(b',') and b'voltage=2' in line.strip().split(b',')):
-            return line[line.index(b'VC-ACTIVE-1,'):].decode('ascii').strip()
-    raise RuntimeError('No active voltage=2 reply. Upload the complete access-timing revision first.')
+    return query_identity(stream, b'VC-ACTIVE-1,',
+                          required=(b'clock=2', b'gates=2', b'voltage=2'))
 
 
 def assess(rows, case):

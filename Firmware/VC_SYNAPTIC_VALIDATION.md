@@ -131,3 +131,48 @@ captures as documented in ACTIVE_VC_VALIDATION.md. The earlier isolated Patch
 pause remains unresolved. This pack advances to physical synaptic/receptor
 validation; it does not establish mixed-input finite-access timing, output
 calibration, general pharmacological accuracy or a production-ready release.
+
+## Runner 1.1 startup correction — 30 October 2026
+
+The user's Windows traceback identifies `run_active_vc_tests.identity()` waiting
+inside pyserial's read called by `readline()`, beyond its nominal four-second
+outer deadline. The interrupted report at 18:30:15 UTC has capture_complete=false
+and cc_binary_stream_resumed=true. This is a PC handshake failure before the
+synaptic protocol, not a failed membrane experiment. The evidence does not
+establish why the requested identity reply was missed.
+
+A continuous binary stream can keep a line read alive without a newline. The
+new identity query scans bounded chunks (at most 512 bytes), limits every read
+to the remaining deadline (at most 50 ms), limits retained search data and
+restores the previous read timeout. It accepts split replies embedded among
+binary packets, checks all required firmware markers, and reports a wrong reply
+explicitly. A newline before VCINFO terminates a preceding partial command.
+
+The synaptic runner now drains the first two seconds of output instead of
+sleeping without reading. It sends the 36 configuration commands as separate
+short writes (10 ms intervals) with output drained between commands. The old
+configuration was one 296-byte burst. Pacing/draining reduces buffer pressure;
+it is not proof that buffer overflow caused the missed reply or an independent
+acknowledgement of each setting. Writes retain their two-second timeout and no
+unbounded OS flush is used in the new startup/cleanup path. During capture the
+background reader remains the only reader. Cleanup has its own bounded identity
+barrier and verifies three complete CC packets. Startup progress is printed and
+its latest stage is saved in the report.
+
+The complete native/host regression suite passes **113 tests** (21.647 s),
+including 13 new serial-startup tests. Faults cover continuous newline-free binary,
+silence, partial replies, wrong/missing version markers, incomplete writes,
+invalid commands, interrupted reads and missing CC packets. These are simulated
+serial/clock tests, not physical execution-time measurements.
+
+A real pyserial/PTY regression suppresses the first VCINFO reply and supplies
+newline-free binary output. The runner must time out at the identity stage,
+mark capture incomplete/FAIL, then resume CC streaming during cleanup. The
+normal basic Synapse 1, Synapse 2 and NBQX control/drug/washout workflows also
+pass every CLI criterion with the native sketch, plots, cadence and cleanup.
+The updated kit records their raw results separately
+from the original pack's nine workflows; any host cadence failure remains FAIL.
+
+Firmware and all membrane/receptor/pharmacology equations and acceptance
+thresholds remain unchanged. The updated PC startup still needs the user's
+COM13 verification before the first physical synaptic recording can proceed.
