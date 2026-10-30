@@ -140,7 +140,7 @@ class BufferedCapture:
         self.metrics = {'read_calls': 0, 'bytes_read': 0, 'max_waiting_bytes': 0,
                         'max_pc_read_gap_s': 0.}
         self.raw_limit = raw_limit
-        self.raw_chunk_limit = 250000
+        self.raw_chunk_limit = 600000
         self.raw_data = bytearray()
         self.raw_chunks = []
         if raw_limit:

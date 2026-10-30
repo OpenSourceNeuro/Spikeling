@@ -26,7 +26,8 @@ TOOLS = ROOT / 'Firmware/tools'
 
 
 def exercise(executable, case, output, missing_signal=False, channel=1,
-             drop_first_identity=False, timing_trace=False, inject_short_write=False):
+             drop_first_identity=False, timing_trace=False, inject_short_write=False,
+             phase_seconds=12):
     master, slave = pty.openpty()
     tty.setraw(slave)
     port = os.ttyname(slave)
@@ -98,6 +99,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
             '--case', case, '--output', str(output), '--synapse', str(channel)]
     if timing_trace:
         args.append('--timing-trace')
+    if phase_seconds != 12:
+        args += ['--phase-seconds', str(phase_seconds)]
     client = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                               stderr=subprocess.STDOUT, text=True, bufsize=1)
     lines = []
@@ -116,7 +119,7 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
     observer = threading.Thread(target=operator, daemon=True)
     observer.start()
     try:
-        code = client.wait(timeout=100)
+        code = client.wait(timeout=3*phase_seconds+65)
         observer.join(timeout=2)
     finally:
         if client.poll() is None:
@@ -140,6 +143,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
         assert report['timing_trace']['summary']['ticks'] > 0
         assert report['pc_reader_metrics']['raw_bytes_truncated'] == 0
         assert report['cc_binary_stream_resumed']
+    if phase_seconds > 12:
+        assert report['analysis']['extended_duration']['passed']
     if inject_short_write:
         assert code == 1 and not report['all_passed']
         assert report['error'] == 'Missing or duplicated device sample'

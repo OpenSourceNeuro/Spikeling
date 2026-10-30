@@ -12,9 +12,10 @@ passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
 reversal now also passes. Case 19 NMDA/APV also passes, with selective slow
 component block and preserved fast AMPA. Case 20 GVIA now has four operator
 FAILs (three loop-deadline failures and one sequence-integrity failure), now
-confirmed by independent CSV/report review. Pause ordinary case-20 reruns;
-the next action is one instrumented diagnostic capture after local Arduino
-Verify/upload. See VC_TIMING_DIAGNOSTICS_WINDOWS.md and the evidence below.
+confirmed by independent CSV/report review, followed by one verified PASS on
+the instrumented 3d78f06 firmware. Earlier failures remain unresolved. Next is
+one pre-defined extended diagnostic capture using that installed firmware;
+see VC_EXTENDED_DIAGNOSTICS_WINDOWS.md and the evidence below.
 
 ## Protocol and independent reference
 
@@ -798,3 +799,102 @@ source only, requiring local Arduino Verify before upload, with the tested
 instrumented case 20 after successful Verify/upload, then review its complete
 result folder; do not keep repeating for a clean outcome. Earlier NBQX/Patch
 pauses and the four GVIA failures all remain open.
+
+## First physical instrumented GVIA capture — PASS, 30 October 2026
+
+Case `20_gvia --synapse 1 --timing-trace`, runner 1.2 and diagnostic firmware
+3d78f06, identity ending `trace=1`. The user's successful physical execution
+confirms that this source was compiled/uploaded on their setup; local build
+logs or binary size were not supplied. It does not retroactively establish an
+ESP32 cross-build in this workspace. Independent reanalysis reproduces the
+live response/numerical/clock result and frozen trace within machine precision.
+
+| Measurement | Result |
+| --- | --- |
+| Analysed contiguous samples | 25,288 |
+| CSV receive duration | 50.5752456 wall seconds |
+| Average cadence | 499.987686 Hz |
+| Complete one-second windows | 499.718695–500.280568 Hz |
+| Median / maximum previous loop | 1,576 / 1,673 us |
+| All diagnostic flags | Zero |
+| Vm / command discrepancy | 0 mV at export precision |
+| Maximum independent clamp-reference error | 0.000000823228 nA |
+| Maximum gate-reference error | 0.000000465525 |
+| Maximum current-balance error | 0.000001 nA |
+| Settled post-protocol receptor maximum | 0.000002 nA, inside the original 0.003 nA quiet limit |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+Each settled phase resolves 22 events. Control / simulated 10 nM GVIA /
+washout fitted contributions are -0.09900054907 / -0.05559035672 /
+-0.09900054336 nA. Drug/control is 0.5615156405 (expected 0.561515625), and
+washout/control is 0.9999999423. A separate direct-increment/decay check agrees.
+This is the first complete passing case-20 capture; its firmware revision
+differs from the four preceding failed captures.
+
+The frozen trace covers 27,519 ticks, including setup/quiet activity outside
+the analysed CSV. Exceptional records, overruns, late starts, short writes,
+format errors and buffer overflow are all zero. Stage maxima below are
+separate maxima, not one observed worst-case tick:
+
+| Span | Maximum elapsed time |
+| --- | --- |
+| Command handling | 97 us |
+| Shared inputs | 272 us |
+| Release/receptors | 42 us |
+| Stimulus/current assembly | 268 us |
+| Membrane plus associated state | 389 us |
+| Outputs | 83 us |
+| VC2 formatting | 595 us |
+| VC2 write | 96 us |
+
+Raw evidence was independently checked, not just the JSON PASS flag:
+
+- All 4,056,215 bytes are covered by 75,800 consecutive, non-overlapping
+  timestamped chunks; no byte/timestamp storage truncation occurred.
+- All 25,288 CSV records, every exported field and every receive timestamp
+  match the complete VC2 records in the raw bytes exactly.
+- The ordinary line parser sees 27,518 contiguous VC2 records, sequences
+  840–28357. One initial line combines old binary framing with VC2 sequence
+  839; recovering that prefixed initial record gives 27,519 consecutive raw
+  records, matching the trace count. This startup transition lies before the
+  analysed CSV (3057–28344), not within a test phase. It does not explain the
+  earlier missing record 19575 during washout.
+- The 91 trailing bytes follow the diagnostic stop; they are outside the
+  analysed sample stream. The 1,536-byte frozen-query receive buffer separately
+  reproduces the reported trace. Its metadata records are complete.
+
+This is a clean instrumented run with no fault to localise. It verifies the
+diagnostic workflow and configured GVIA response but does not identify or fix
+the preceding intermittent timing/record-loss causes. Instrumentation also
+changes execution timing; passing it is not proof that the old firmware's
+intermittent issue is gone. All earlier failures remain retained.
+
+Evidence: `vc_synapse_20261030_214914_049603.zip`.
+Archive SHA-256: `19b9fac2758034439c092f31a33de54beb7e9d065049f638cf5b3fd41e1b656e`.
+CSV SHA-256: `036ed25806340bec56c782dbf4829bf091f93515070c7c310e567f7176ba2bce`.
+Raw RX SHA-256: `357fea5219dc244bd9dc310ea1063b79cc92039edf3134c01d82766a3d9dd1b3`.
+Chunk CSV SHA-256: `550ab4260c48074a91c81df929bca4fe5b15338c1e4561ce0a825d68108d5f3e`.
+Trace query SHA-256: `7d56d083bf43b685c44507f4b637b75731c8df95303574b42f26b4b5655d0011`.
+
+## Pre-defined extended observation, PC-only runner 1.3
+
+Next is one instrumented 60 / 60 / 60 wall-second control / GVIA / washout
+capture, using installed 3d78f06 firmware with no upload. Runner 1.3 adds
+`--phase-seconds 12|30|60` for automatic cases 15–20, preserving default 12
+and case 14. It records the requested duration and adds a duration/sample-count
+check for extended captures, without relaxing existing criteria. A normal
+12-second correct-response recording cannot pass as the requested long test.
+Raw timestamp capacity increases to 600,000 batches; the 32 MiB raw-byte cap,
+explicit truncation FAIL and five-minute acquisition limit remain. The larger
+timestamp cap is needed because the first 55-second raw capture already used
+75,800 batches. Firmware, receptor/membrane equations and doses are unchanged.
+
+Validation: **126 native/host tests PASS**, including complete three-minute
+native-sketch GVIA response, rejection of a short capture presented as long,
+and an otherwise complete long recording retaining a deadline FAIL. Targeted
+trace tests also verify timestamp-cap truncation is counted while raw-byte
+draining continues. One full real-pyserial/PTY 60/60/60-second CLI capture
+passes all original and extended criteria with actual sketch/parser and
+simulated IO, saves complete raw/trace files and resumes CC. This is software
+validation with an externally paced native clock, not physical ESP32 timing.
+The pre-defined extended physical capture remains pending.

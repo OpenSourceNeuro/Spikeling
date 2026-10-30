@@ -21,7 +21,8 @@ def setUpModule():
 
 
 @lru_cache(maxsize=None)
-def recording(case, channel=1, signal=True, wrong_drug=False, nmda_absent=False, fast=False):
+def recording(case, channel=1, signal=True, wrong_drug=False, nmda_absent=False, fast=False,
+              phase_ticks=6000):
     config = ref.configuration(case)
     gpio = 38 if channel == 1 else 39
     script = ('!VCM 1\n!VCA 1\n!VCI 1\n!VCP 20 500 5 -70\n!NO1 0\n!PG1 0\n'
@@ -50,7 +51,7 @@ def recording(case, channel=1, signal=True, wrong_drug=False, nmda_absent=False,
         for drug in (4, 5, 6, 7):
             dose = phase.dose if drug == phase.drug and not wrong_drug else 0
             script += f'!PH D {drug} {dose:g}\n'
-        count = 2000 if phase.name in ('baseline', 'recovery') else (5000 if case == '14_synaptic_input' else 6000)
+        count = 2000 if phase.name in ('baseline', 'recovery') else (5000 if case == '14_synaptic_input' else phase_ticks)
         groups.append((phase.name, count))
         script += pulses(count) if phase.name not in ('baseline', 'recovery') else f'R{count}\n'
     data = subprocess.run([str(base.TMP/'synaptic_sketch')], input=script.encode(),
@@ -66,6 +67,25 @@ def recording(case, channel=1, signal=True, wrong_drug=False, nmda_absent=False,
 
 
 class SynapticValidation(unittest.TestCase):
+    def test_extended_capture_rejects_short_run_even_with_correct_gvia_response(self):
+        result = tool.assess(recording('20_gvia'), '20_gvia', phase_seconds=60)
+        self.assertTrue(result['synaptic_response']['passed'])
+        self.assertFalse(result['extended_duration']['passed'])
+        self.assertFalse(result['all_passed'])
+
+    def test_extended_capture_accepts_complete_three_minute_native_protocol(self):
+        result = tool.assess(recording('20_gvia', phase_ticks=30000), '20_gvia', phase_seconds=60)
+        self.assertTrue(result['all_passed'])
+        self.assertTrue(result['extended_duration']['passed'])
+
+    def test_extended_capture_does_not_override_deadline_failure(self):
+        rows = [dict(r) for r in recording('20_gvia', phase_ticks=30000)]
+        rows[40000]['previous_loop_us'] = 23000
+        rows[40000]['flags'] = 64
+        result = tool.assess(rows, '20_gvia', phase_seconds=60)
+        self.assertTrue(result['extended_duration']['passed'])
+        self.assertFalse(result['all_passed'])
+
     def check(self, case, **kwargs):
         result = tool.assess(recording(case, **kwargs), case)
         json.dumps(result)  # Regression against non-serialisable NumPy scalars.

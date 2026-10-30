@@ -20,7 +20,7 @@ from verify_vc_clock import clock_metrics
 import vc_hh_reference as hh
 import vc_synapse_reference as syn
 
-VERSION = '1.2'
+VERSION = '1.3'
 CASES = ('14_synaptic_input', '15_nbqx', '16_gabazine', '17_ampa_reversal',
          '18_gaba_reversal', '19_nmda_apv', '20_gvia')
 CLEANUP = ['SG11 0', 'SG21 0', 'PH X', 'VCT 0', 'PH E 0', 'PH M 0',
@@ -52,7 +52,7 @@ def membrane_check(rows):
             'reference': 'exact HH gate/product integrals; separate synaptic impulse-superposition fit'}
 
 
-def assess(rows, case):
+def assess(rows, case, phase_seconds=None):
     integrity(rows)
     diag = diagnostics(rows)
     diag['timing_passed'] &= diag['max_previous_loop_us'] < 2000
@@ -60,11 +60,28 @@ def assess(rows, case):
     model = membrane_check(rows)
     receptor = syn.analyse(rows, case)
     quiet = max(abs(r['input_nA']) for r in rows) <= .003
-    return {'all_passed': all((diag['timing_passed'], diag['other_diagnostics_passed'],
+    result = {'all_passed': all((diag['timing_passed'], diag['other_diagnostics_passed'],
                               clock['passed'], model['passed'], receptor['passed'], quiet)),
             'samples': len(rows), 'sample_integrity_passed': True,
             'other_inputs_quiet': quiet, 'clock': clock, 'diagnostics': diag,
             'membrane': model, 'synaptic_response': receptor}
+    if phase_seconds is not None:
+        if case == '14_synaptic_input':
+            raise ValueError('Extended phase duration is unavailable for case 14')
+        phases = {}
+        minimum_seconds = phase_seconds-.25
+        minimum_samples = int(minimum_seconds*490)  # Existing 500 Hz +/-2% lower limit.
+        for phase in syn.phases(case):
+            group = [r for r in rows if r['phase'] == phase.name]
+            seconds = group[-1]['wall_s']-group[0]['wall_s'] if group else 0.
+            phases[phase.name] = {'passed': seconds >= minimum_seconds and len(group) >= minimum_samples,
+                                  'recorded_seconds': seconds, 'samples': len(group)}
+        complete = all(p['passed'] for p in phases.values())
+        result['extended_duration'] = {'passed': complete, 'requested_seconds_per_phase': phase_seconds,
+                                      'minimum_seconds': minimum_seconds,
+                                      'minimum_samples_per_phase': minimum_samples, 'phases': phases}
+        result['all_passed'] &= complete
+    return result
 
 
 def configure(stream, case, channel, progress=None):
@@ -111,7 +128,7 @@ def wait_quiet_receptor(recorder, timeout=30):
     raise TimeoutError('Synaptic input remains present: centre the SOURCE Patch knob; check other inputs.')
 
 
-def capture(stream, recorder, case, channel):
+def capture(stream, recorder, case, channel, phase_seconds=12):
     wait_enter(f'SOURCE: Patch centred and no spikes. Cable: SOURCE Axon/Synapse Out -> '
                f'POSTSYNAPTIC Synapse {channel} In. Both postsynaptic synapse knobs centred.', recorder)
     wait_quiet_receptor(recorder)
@@ -130,8 +147,8 @@ def capture(stream, recorder, case, channel):
         for phase in syn.phases(case):
             apply_phase(stream, phase)
             recorder.set_phase(phase.name)
-            print(f'{phase.name}: holding {phase.voltage:g} mV for 12 seconds ...', flush=True)
-            hold_phase(recorder, 12.)
+            print(f'{phase.name}: holding {phase.voltage:g} mV for {phase_seconds:g} seconds ...', flush=True)
+            hold_phase(recorder, phase_seconds)
     recorder.set_phase('change')
     wait_enter('SOURCE: return its Patch knob to centre so spiking stops.', recorder)
     if case != '14_synaptic_input':
@@ -195,6 +212,8 @@ def main():
     parser.add_argument('--analyse', type=Path, help='Offline CSV from this case')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--no-plots', action='store_true')
+    parser.add_argument('--phase-seconds', type=int, choices=(12, 30, 60), default=12,
+                        help='Wall seconds per automatic phase, cases 15-20 (default: 12)')
     parser.add_argument('--timing-trace', action='store_true',
                         help='Opt-in stage timing + bounded raw capture; requires trace=1 firmware')
     args = parser.parse_args()
@@ -202,12 +221,15 @@ def main():
         parser.error('Supply a postsynaptic port OR --analyse CSV')
     if args.timing_trace and args.analyse:
         parser.error('--timing-trace requires a live port')
+    if args.case == '14_synaptic_input' and args.phase_seconds != 12:
+        parser.error('--phase-seconds is available for automatic cases 15-20')
     output = args.output or Path('vc_synapse_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
     output.mkdir(parents=True, exist_ok=False)
     report = {'tool_version': VERSION, 'case': args.case, 'synapse': args.synapse,
               'created_utc': datetime.now(timezone.utc).isoformat(),
               'execution': 'saved CSV analysis' if args.analyse else 'live serial capture',
               'settings': syn.configuration(args.case), 'capture_complete': False,
+              'phase_seconds': args.phase_seconds if args.case != '14_synaptic_input' else None,
               'cc_binary_stream_resumed': None if args.analyse else False,
               'scope': 'Received deterministic events; no independent source spike count, '
                        'stochastic release-failure statistics or physical TTL/DAC calibration.'}
@@ -253,7 +275,7 @@ def main():
             recorder.start()
             send(stream, ['VCT 1'])
             progress('operator_capture', 'Starting synaptic capture ...')
-            rows = capture(stream, recorder, args.case, args.synapse)
+            rows = capture(stream, recorder, args.case, args.synapse, args.phase_seconds)
             report['pc_reader_metrics'] = dict(recorder.metrics)
             report['capture_complete'] = True
             if args.timing_trace:
@@ -261,7 +283,8 @@ def main():
         report['capture_complete'] = True
         report['startup_stage'] = 'capture_complete'
         save_csv(output/'recording.csv', rows)
-        report['analysis'] = assess(rows, args.case)
+        report['analysis'] = assess(rows, args.case,
+                                   args.phase_seconds if args.phase_seconds > 12 else None)
         if not args.no_plots:
             plot(output/'recording.png', rows, f'{args.case} - Synapse {args.synapse}')
     except (Exception, KeyboardInterrupt) as error:

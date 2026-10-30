@@ -526,11 +526,13 @@ passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
 Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
 passes selective slow-component block with preserved AMPA. Case 20 GVIA has
-four failures confirmed by raw-data review; pause ordinary reruns. Next is one
-opt-in stage-timing capture after local Arduino Verify/upload; see
-VC_TIMING_DIAGNOSTICS_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
+four failures confirmed by raw-data review, followed by a verified instrumented
+PASS at 3d78f06. Earlier causes remain unresolved. Next is one pre-defined
+three-minute diagnostic capture with installed firmware and runner 1.3; see
+VC_EXTENDED_DIAGNOSTICS_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 (repeat), 16, 17, 18 and 19 pass; case 20 has no passing capture.
+Cases 15 (repeat), 16, 17, 18, 19 and 20 now have passing captures across staged
+revisions; this is not one clean same-revision qualification run.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -790,3 +792,42 @@ in the current environment, so this source has not been cross-compiled here;
 local Arduino Verify is required before upload. The Windows guide includes
 one diagnostic run and rollback to the supplied 5c2e063 source. This is an
 investigation build, not a permanent timing correction or new board validation.
+
+## Physical instrumented GVIA PASS; intermittent fault not reproduced
+
+The first 3d78f06 / runner-1.2 trace capture passes independent analysis of
+25,288 contiguous samples over 50.5752456 wall seconds: 499.987686 Hz,
+one-second windows 499.718695–500.280568 Hz, zero flags, maximum loop 1,673 us,
+Vm=-70 mV and resumed CC streaming. The 22 events per phase give fitted
+control/drug/washout contributions -0.09900054907 / -0.05559035672 /
+-0.09900054336 nA; drug/control 0.5615156405 and washout/control 0.9999999423.
+Maximum independent clamp-reference error is 0.000000823228 nA.
+
+The firmware trace covers 27,519 ticks with zero exception/overflow counters.
+Stage maxima include formatting 595 us, membrane/state 389 us and writing
+96 us. These maxima are separate observations. The exact 4,056,215 raw bytes
+and 75,800 chunk timestamps reproduce every CSV value and receive timestamp.
+Raw VC2 sequences 840–28357 are contiguous; an initial binary-prefixed sequence
+839 is recoverable, giving all 27,519 traced ticks. This startup framing
+transition is outside the analysed CSV, not a mid-protocol record loss.
+Frozen-query bytes independently reproduce the trace; nothing was truncated.
+
+Archive SHA-256: 19b9fac2758034439c092f31a33de54beb7e9d065049f638cf5b3fd41e1b656e.
+All hashes/metrics are in VC_SYNAPTIC_VALIDATION.md. The physical execution
+confirms user-side compilation/upload, without supplying build logs here.
+There was no fault to localise: this clean instrumented capture does not
+identify a permanent fix, and earlier failures remain open. All core and
+synaptic protocols now have passing captures across staged revisions, not a
+single uninterrupted same-revision qualification sequence.
+
+Next is one pre-defined 60/60/60-second diagnostic case 20 with installed
+firmware. Runner 1.3 adds a PC-only duration option and minimum phase-coverage
+checks, retaining all existing model/timing/integrity criteria. Raw timestamp
+capacity rises to 600,000 batches while byte cap and truncation failures stay
+explicit. See VC_EXTENDED_DIAGNOSTICS_WINDOWS.md; no firmware upload is needed.
+
+Runner-1.3 validation: 126 native/host tests PASS, including duration and
+deadline-fault checks. The full real-pyserial/PTY three-minute GVIA CLI passes
+all criteria with complete raw/trace files and CC cleanup, using the actual
+native sketch/parser and simulated IO. Extended physical timing evidence is
+pending; no model parameter, firmware or threshold relaxation is introduced.

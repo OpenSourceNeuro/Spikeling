@@ -111,6 +111,14 @@ class TraceTransport(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             trace.save_raw(Path(d),recorder)
             self.assertEqual((Path(d)/'serial_rx.bin').read_bytes(),b'ignored\nok')
+        stream=Input()
+        recorder=BufferedCapture(stream,parser=lambda line:{} if line in (b'ok',b'last') else None,raw_limit=100)
+        recorder.raw_chunk_limit=1
+        recorder.run()
+        self.assertEqual(recorder.raw_data,b'ignored\nok\nlast\n')
+        self.assertEqual(len(recorder.raw_chunks),1)
+        self.assertEqual(recorder.metrics['raw_chunks_truncated'],2)
+        self.assertEqual(len(recorder.rows),2)
 
 
 if __name__=='__main__':unittest.main()

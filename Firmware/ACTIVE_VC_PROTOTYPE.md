@@ -193,7 +193,7 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-an opt-in timing diagnostic capture after four independently confirmed case-20 failures
+one pre-defined extended trace capture after a first instrumented case-20 PASS
 on Synapse 1: case 19 NMDA/APV passes with 24,928 samples,
 499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
 preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
@@ -202,9 +202,11 @@ near -80 mV. Case 17 AMPA reversal passes
 with 25,591 samples, 499.995562 Hz, zero flags, maximum loop 1,634 us and
 reversal near 0 mV. Case 16 gabazine passes with
 24,230 samples, 500.000290 Hz, no flags, maximum loop 1,620 us and confirmed
-half-block/washout and CC cleanup. Case 20 has no passing capture. Its raw-data
-review is complete; the next diagnostic source/tool kit requires local Arduino
-Verify before upload. See VC_TIMING_DIAGNOSTICS_WINDOWS.md.
+half-block/washout and CC cleanup. Case 20 now passes on instrumented 3d78f06
+firmware, with 25,288 samples, zero flags, maximum loop 1,673 us and matching
+GVIA efficacy. All four preceding failures remain open. The next extended
+capture uses installed firmware and PC-only runner 1.3; no upload is needed.
+See VC_EXTENDED_DIAGNOSTICS_WINDOWS.md.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
@@ -272,3 +274,17 @@ sample using simulated IO. ESP32 cross-compilation is unavailable here;
 the source kit requires local Arduino Verify/upload and includes 5c2e063 for
 rollback. One instrumented case-20 capture is next. No cause or permanent
 timing fix has been established; prior failures remain retained.
+
+The first physical instrumented case-20 capture passes: 499.987686 Hz,
+25,288 analysed samples, max loop 1,673 us, zero flags, intact raw data and
+resumed CC streaming. Drug/control is 0.5615156405, washout/control 0.9999999423.
+The 27,519-tick firmware trace has zero exception counters; no earlier pause
+or record-loss fault recurred, so there is no cause or permanent fix to infer.
+Earlier failures remain retained. A PC-only duration option in runner 1.3
+supports one 60/60/60-second observation using the same installed firmware.
+All existing criteria and model parameters remain unchanged; see the extended
+Windows guide and VC_SYNAPTIC_VALIDATION.md.
+
+Runner 1.3 passes 126 native/host tests and a full three-minute serial workflow
+with simulated IO, raw bytes, trace retrieval and CC cleanup. The extended
+physical observation is next; the firmware remains the user's tested 3d78f06.
