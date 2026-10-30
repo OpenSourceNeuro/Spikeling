@@ -16,9 +16,13 @@ loop 1.945 ms, and all coupled-model numerical checks passing.
 Physical reversal, holding-voltage inactivation and potassium-tail cases also
 pass at 5c2e063: approximately 500 Hz, no diagnostic/deadline flags and maximum
 loops no greater than 1.674 ms. The staged sequence now has passing recordings
-for all eight core protocols. Combined pharmacology/IO, repeated handover and
-longer timing checks remain. See ACTIVE_VC_VALIDATION.md for the evidence and
-the firmware revision used for each recording.
+for all eight core protocols. The five first-stage integration cases also have
+passing physical captures: noise, light, Patch command, five mode-switch cycles
+with retained half-block TTX/TEA effects, and one minute of settled access VC.
+The first Patch run's isolated 22.9 ms pause and unconfirmed cleanup remain
+recorded despite a passing repeat; its cause is unresolved. Synaptic/receptor/
+release pharmacology, mixed-input timing and physical output calibration remain.
+See ACTIVE_VC_VALIDATION.md for the evidence, scope and revision of each capture.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching

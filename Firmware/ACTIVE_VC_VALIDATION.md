@@ -3,8 +3,12 @@
 All eight core active VC protocols now have passing physical recordings across
 the staged validation sequence: cases 01 to 03 at ddabb4a, and cases 04 to 08
 at voltage=2 revision 5c2e063. This is not a single eight-case run at one revision.
-The current code also passes 70 software tests and the ESP32 build. Combined
-pharmacology/IO, repeated mode transitions and longer timing checks remain.
+The five first-stage integration protocols also have passing captures at
+5c2e063, including repeated switching and a one-minute access recording.
+The current code passes 84 software tests; the firmware source retains the
+verified ESP32 build. Synaptic/release pharmacology, mixed-input timing and
+physical output checks remain, together with the unresolved isolated pause
+documented below.
 
 ## Physical rerun: first active step PASS
 
@@ -459,8 +463,50 @@ individual analogue/TTL edge jitter or every mixed-input condition.
 Evidence: vc_integration_20261030_101425_529160.zip, both reports and the case
 CSV/plot. CSV SHA-256:
 86749178db3719536d71a3504a6b8fdad3fe5b09285bf5840848e7ac277db22c.
-This archive contains only case 13; no physical case 12 switching recordings
-are included, so that result cannot yet be verified from the supplied evidence.
+This archive contains only case 13. The physical case 12 switching recordings
+were supplied separately and are verified in the following section.
+
+## Physical five-cycle mode switching: PASS
+
+Case 12_mode_switching at firmware 5c2e063 and integration runner 1.0 passes
+all five recorded cycles. Independent re-analysis confirms every CSV and the
+top-level live report, including CC binary streaming after each cycle and final
+cleanup. The five VC segments contain 8,284 samples, contiguous within each
+segment; model sequence counters restart on VC entry and are assessed separately.
+
+| Cycle | Samples | Update rate, Hz | Maximum loop, microseconds | CC streaming |
+| --- | ---: | ---: | ---: | --- |
+| 01 | 1652 | 499.9881 | 1468 | Resumed |
+| 02 | 1657 | 500.0310 | 1460 | Resumed |
+| 03 | 1655 | 499.9988 | 1463 | Resumed |
+| 04 | 1659 | 500.0263 | 1448 | Resumed |
+| 05 | 1661 | 499.9968 | 1478 | Resumed |
+
+All flags are zero and every complete one-second window passes. Vm remains
+at the imposed -20 mV. TTX 9.2 nM and TEA 0.5 mM are configured once at setup,
+with no PH settings resent between handovers. Every settled segment has mean
+Na current -0.050448 nA, K current +0.998377 nA and clamp current +1.047929 nA.
+Na and K are respectively 0.50000192 and 0.50000008 of the independently
+calculated unblocked steady currents, consistent with the intended half block
+at recording precision. The five component-current/gate traces agree at CSV
+precision and each passes the independent constant-voltage reference.
+
+The largest component-current reference error is 0.000002726 nA; clamp error
+is at most 0.0000004091 nA. This supports retention of the specified TTX/TEA
+effect across the tested mode sequence. Each VC segment starts after 2.1 wall
+seconds of conditioning; these recordings do not resolve instantaneous handover
+transients, physical TTL edges, CC voltage trajectories or hidden receptor/RNG
+states. Backend selection intentionally initialises HH gates at the current Vm.
+
+Evidence: vc_integration_20261030_101351_194427.zip, top-level live report and
+cycle_01 through cycle_05, each with its case report, CSV and plot.
+Archive SHA-256: b9b619d4a8ae8b35352ecff2cd77d518c6e9536a142fa8e3186d29454e9474b4.
+
+The eight core protocols and five first-stage integration protocols now each
+have passing physical captures across the staged revisions. The first case 11
+timing/cleanup failure remains recorded, with its cause unresolved. This is a
+completed validation stage, not a claim of a clean single-revision full-suite
+run or complete pharmacology/hardware qualification.
 
 ## Next board action
 
@@ -469,13 +515,13 @@ correctly and the GUI displays proper behaviour. This records the requested
 post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
-Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py. Cases 09, 10, the case 11
-repeat and case 13 pass; the first case 11 failure remains documented above.
-The case 12 evidence is still needed: send the existing 12_mode_switching result
-folder with its top-level live report and five cycle subfolders. If it has
-already been recorded, use that capture rather than repeating completed work.
-It tests stored half-block TTX/TEA doses across the mode-transition sequence.
+Keep the tested voltage=2 firmware installed. Cases 09 to 13 now have verified
+passing captures, with the first case 11 failure retained above. No repetition
+of the completed protocols or firmware upload is needed for this milestone.
+The next stage requires a known presynaptic spike source and verified wiring:
+test both physical synaptic inputs, receptor driving-force/reversal behaviour,
+and NBQX/gabazine/APV and GVIA/release effects. Establish the available source
+(for example a second Spikeling) before giving hardware connection instructions.
 The existing firmware model and all numerical/timing tolerances are unchanged.
 
 The expanded native suite passes 84 tests: the original 70 and 14 integration
@@ -487,12 +533,12 @@ new cases with plots and cleanup, including two handovers and a full 60-second
 capture; a deliberately missing signal must fail while cleanup still succeeds.
 None of these host checks measures the new cases on the physical board.
 
-The remaining integration stage is active-VC shared-input routing (Patch,
-external command input and both synapses), receptor pharmacology and release,
-preserved state during repeated mode transitions, and longer access-mode timing.
-These need suitable active-VC integration captures; the quiet-input core step
-recordings above do not test those behaviours. Keep current thresholds for
-500 Hz cadence and diagnostic/deadline failures when adding those protocols.
+The remaining integration work includes external command input, both synapses,
+receptor/release pharmacology, hidden-state preservation during mode transitions,
+mixed-input access-mode timing, physical TTL behaviour and analogue calibration.
+Keep current thresholds for 500 Hz cadence and diagnostic/deadline failures
+when adding those protocols. The earlier isolated pause remains an open timing
+observation for subsequent captures.
 
 ## Model scope and sources
 

@@ -126,8 +126,11 @@ missing-input capture must fail its response check while still returning to CC
 streaming. The externally paced host clock is not a physical ESP32 timing
 measurement. See QA_RESULTS.md in the test pack for the verification scope.
 
-These new integration cases have not yet been run on your board. No firmware
-model or acceptance tolerance was changed. Synaptic cable routing, AMPA/GABA-A/
+All five integration cases now have passing board recordings, with a passing
+repeat for case 11. Its first isolated timing failure and unconfirmed cleanup
+remain documented; the cause is unresolved. See ACTIVE_VC_VALIDATION.md for
+per-capture evidence. No firmware model or acceptance tolerance was changed.
+Synaptic cable routing, AMPA/GABA-A/
 NMDA blockers, GVIA/release behaviour, stimulus loopback, TTL edges and analogue
 calibration require subsequent bench protocols. SK/A-current extensions and
 STP/LTP integration remain separate work.
