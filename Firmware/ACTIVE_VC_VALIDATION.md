@@ -524,10 +524,10 @@ the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
 passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
-Case 17 AMPA reversal now also passes. Next is case 18 GABA-A reversal on
-Synapse 1 using the same setup; cases 19 and 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+Cases 17 AMPA and 18 GABA-A reversal now also pass. Next is case 19 NMDA/APV
+on Synapse 1 using the same setup; case 20 follows after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 (repeat), 16 and 17 pass; cases 18 to 20 remain pending.
+Cases 15 (repeat), 16, 17 and 18 pass; cases 19 and 20 remain pending.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -687,3 +687,21 @@ Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. Earlier timing
 pauses remain unresolved. Next is case 18 GABA-A reversal on Synapse 1 with
 -90/-70/-50 mV command phases and expected -0.099/+0.099/+0.297 nA event
 contributions, using the same kit/firmware and unchanged thresholds.
+
+## Physical GABA-A reversal PASS
+
+The unchanged case-18 capture passes independent analysis of all 31,812
+contiguous samples over 63.62247 wall seconds: 499.996309 Hz, zero flags,
+maximum loop 1,621 us, exact recorded Vm tracking and resumed CC streaming.
+At -90/-70/-50 mV, 23/23/22 resolved events give receptor contributions
+-0.09900052643 / +0.09900053548 / +0.29700147581 nA. Fitted reversal is
+-79.9999994334 mV, effectively -80 mV at meaningful model precision. A separate
+direct-increment fit gives -80 mV. Maximum independent clamp-reference error
+is 0.00019185794 nA, inside the unchanged 0.01 nA tolerance.
+
+Evidence: vc_synapse_20261030_204825_321782.zip; archive SHA-256
+a6104671fa77b767d9fb306549823b6caa06ebc7d7b82ab21a7e13c49ac91a8b.
+Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. Earlier runtime
+pauses remain unresolved. Next is case 19 NMDA/APV at -20 mV on Synapse 1:
+selective reduction of the slow NMDA contribution, preserved fast AMPA and
+washout. Same kit/firmware and all original thresholds are retained.

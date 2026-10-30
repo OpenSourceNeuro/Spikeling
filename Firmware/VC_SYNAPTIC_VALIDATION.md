@@ -8,7 +8,8 @@ Basic Synapse 1 and Synapse 2 now have verified passing physical captures
 (see below). Case 15 also has a verified passing NBQX repeat; its first timing
 FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
 passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
-reversal is next; cases 18 to 20 remain pending physical-board evidence.
+reversal now also passes. Case 19 NMDA/APV is next; cases 19 and 20 remain
+pending physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -518,3 +519,59 @@ selects GABA-A and commands -90, -70 and -50 mV for 12 seconds each. Expected
 contributions per event are -0.099, +0.099 and +0.297 nA, with fitted reversal
 near the configured -80 mV. Keep the source steady and postsynaptic knobs fixed
 until prompted to stop; NMDA/APV and GVIA cases follow after review.
+
+## Physical GABA-A reversal — overall PASS, 30 October 2026
+
+Case `18_gaba_reversal --synapse 1`, runner 1.1 at 797f054 and unchanged
+5c2e063 firmware. Independent reanalysis of all **31,812 contiguous samples**
+over 63.62247 wall seconds agrees with the live report within machine precision.
+All unchanged response, numerical, integrity, timing and cleanup criteria pass.
+
+| Holding voltage | Resolved settled events | Fitted event contribution (nA) | Expected (nA) |
+| --- | --- | --- | --- |
+| -90 mV | 23 | -0.09900052643 | -0.099 |
+| -70 mV | 23 | +0.09900053548 | +0.099 |
+| -50 mV | 22 | +0.29700147581 | +0.297 |
+
+The fitted reversal is -79.9999994334 mV, effectively the configured -80 mV;
+fitted conductance is 0.010000050562 uS. A separate direct-increment check finds
+23/23/22 events with means -0.09899991 / +0.09899991 / +0.29699973 nA. Fitting
+those direct means gives -80 mV and 0.009999990909 uS. This checks the model's
+driving-force scaling and sign reversal, not physical voltage calibration.
+Events are resolved at all three nonzero-driving-force points, with minimum
+interval 0.472 wall seconds; zero current alone is never accepted as evidence
+that an input arrived. Maximum waveform-fit residual is 0.000001478404 nA.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 499.996309 Hz |
+| Complete one-second receive windows | 499.857656–500.066141 Hz |
+| Median / maximum previous loop | 1,517 / 1,621 us |
+| All diagnostic/deadline flags | Zero |
+| Maximum Vm / command discrepancy | 0 mV at export precision |
+| Maximum independent clamp-reference error | 0.00019185794 nA |
+| Maximum independent sodium-reference error | 0.00019216141 nA |
+| Maximum gate-reference error | 0.0000005253871 |
+| Maximum current-balance error | 0.000001 nA |
+| Settled post-protocol receptor maximum | 0 nA at export precision |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+The transient HH-current errors remain within the original 0.01 nA tolerance.
+Synaptic reversal uses receptor current; total injection additionally contains
+Na/K/leak and capacitive current. Prior intermittent NBQX/Patch pauses remain
+unresolved despite this clean one-minute capture. No model, firmware, tool or
+acceptance thresholds are changed.
+
+Evidence: `vc_synapse_20261030_204825_321782.zip`, containing report, CSV and plot.
+Archive SHA-256:
+`a6104671fa77b767d9fb306549823b6caa06ebc7d7b82ab21a7e13c49ac91a8b`.
+CSV SHA-256:
+`49763b5cc34c64925a7e6b8ced3d3ce302a377db6222f58df5921d81f109aa56`.
+
+Next: `19_nmda_apv --synapse 1`, with the same source/wiring. The runner restores
+AMPA plus NMDA, holds -20 mV and applies control / simulated 3.7 uM APV /
+washout for 12 seconds each. The fast AMPA contribution should stay near
+-0.0282857143 nA per event; the fitted slow NMDA coefficient should halve and
+recover. That coefficient is not a raw peak of the summed current. Source
+firing stays steady until prompted to stop. Recovery may take longer while
+NMDA tails decay; keep the source quiet and allow the script to finish.

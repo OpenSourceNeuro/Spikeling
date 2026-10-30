@@ -193,11 +193,13 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-case 18 GABA-A reversal on Synapse 1: case 17 AMPA reversal also passes,
+case 19 NMDA/APV on Synapse 1: case 18 GABA-A reversal also passes, with
+31,812 samples, 499.996309 Hz, zero flags, maximum loop 1,621 us and reversal
+near -80 mV. Case 17 AMPA reversal passes
 with 25,591 samples, 499.995562 Hz, zero flags, maximum loop 1,634 us and
 reversal near 0 mV. Case 16 gabazine passes with
 24,230 samples, 500.000290 Hz, no flags, maximum loop 1,620 us and confirmed
-half-block/washout and CC cleanup. Cases 18 to 20 remain pending. No new firmware or tool download is needed.
+half-block/washout and CC cleanup. Cases 19 and 20 remain pending. No new firmware or tool download is needed.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
@@ -225,3 +227,10 @@ Case 17 AMPA reversal passes: event contributions at -70/-20/+20 mV are
 clean timing and resumed CC streaming. Next is case 18 GABA-A reversal using
 the same kit/wiring. Previous isolated timing failures remain open; no model,
 firmware, tool or acceptance limits change.
+
+Case 18 GABA-A reversal passes: event contributions at -90/-70/-50 mV are
+-0.09900052643 / +0.09900053548 / +0.29700147581 nA, with fitted reversal near
+-80 mV, clean timing over 63.62247 wall seconds and resumed CC streaming.
+Next is case 19 NMDA/APV, testing selective slow-component block with preserved
+fast AMPA and washout at -20 mV. Existing kit/firmware/criteria remain unchanged;
+earlier intermittent timing pauses remain open.
