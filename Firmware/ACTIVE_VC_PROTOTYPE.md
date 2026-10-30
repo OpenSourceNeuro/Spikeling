@@ -179,3 +179,12 @@ changes. A passing serial test does not calibrate DAC voltages or TTL edges.
 
 These sources ground the channel/gating structure. Conductance scaling,
 passive parameters and teaching test thresholds are our explicit design choices.
+
+## Two-Spikeling synaptic test pack
+
+The user has a second Spikeling and stereo TRS cable. The Python-only cases
+14 to 20 now cover received AMPA input on either synapse, AMPA/GABA-A reversals,
+NBQX/gabazine/APV and deterministic GVIA release scaling. Firmware remains at
+5c2e063. Start with case 14 on Synapse 1; all new physical captures are pending.
+See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
+passes 100 tests, with source GPIO/clock/serial simulated.

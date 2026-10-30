@@ -518,14 +518,17 @@ VC captures. It is not a measurement of TTL timing or analogue calibration.
 Keep the tested voltage=2 firmware installed. Cases 09 to 13 now have verified
 passing captures, with the first case 11 failure retained above. No repetition
 of the completed protocols or firmware upload is needed for this milestone.
-The next stage requires a known presynaptic spike source and verified wiring:
-test both physical synaptic inputs, receptor driving-force/reversal behaviour,
-and NBQX/gabazine/APV and GVIA/release effects. Establish the available source
-(for example a second Spikeling) before giving hardware connection instructions.
-The existing firmware model and all numerical/timing tolerances are unchanged.
+The user has confirmed a second Spikeling and stereo TRS cable. The next
+Python-only pack uses its normal CC axon output as the source, connected through
+the labelled Synapse Out -> Synapse In jacks. Start with case 14 on Synapse 1,
+then review the capture before Synapse 2 and receptor/drug cases 15 to 20. See
+VC_SYNAPTIC_WINDOWS.md for wiring and VC_SYNAPTIC_VALIDATION.md for the independent
+reference, host tests and observability limits. Physical captures for these new
+cases remain pending. The firmware model and all existing tolerances are unchanged.
 
-The expanded native suite passes 84 tests: the original 70 and 14 integration
-analyser tests using the actual sketch with simulated ADC/clock/serial IO.
+The first integration pack passed 84 native tests: the original 70 and 14
+integration analyser tests using the actual sketch with simulated ADC/clock/serial
+IO. The synaptic pack adds 16 tests, bringing the passing suite to 100.
 Fault cases include missing input, wrong compensation sign, failed recovery,
 unresponsive command control, lost drug settings, cadence/deadline failure,
 sample gaps and incomplete recording duration. The CLI/PTY QA covers all five
