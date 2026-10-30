@@ -813,8 +813,12 @@ inline void send_SamplePacket() {
         unsigned(voltageClamp.flags),static_cast<unsigned long>(voltageClamp.solve_us),
         static_cast<unsigned long>(voltageClamp.previous_loop_us),double(value.sodium_nA),
         double(value.potassium_nA),double(value.receptor_nA),g.m,g.h,g.n);
-      if (size > 0 && size < int(sizeof(line)))
-        Serial.write(reinterpret_cast<const uint8_t*>(line),size);
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Format,micros());
+      if (size > 0 && size < int(sizeof(line))) {
+        const size_t written = Serial.write(reinterpret_cast<const uint8_t*>(line),size);
+        voltageClamp.trace.transmitted(size,written);
+      } else voltageClamp.trace.transmitted(0,0,true);
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Write,micros());
       return;
     }
     Serial.print("VC1,");

@@ -509,6 +509,7 @@ inline void setClampMode(ClampMode m) {
     patch.v_cmd  = patch.v_hold;
   } else {
     // Continue from the presently simulated voltage, never an old pre-clamp Vm.
+    voltageClamp.trace.stop();
     neuron.v = voltageClamp.sample().voltage_mV;
     voltageClamp.rearm_spike_output = neuron.v >= neuron.Vm_spike;
     voltageClamp.diagnostic = false;

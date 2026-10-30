@@ -20,7 +20,7 @@ from verify_vc_clock import clock_metrics
 import vc_hh_reference as hh
 import vc_synapse_reference as syn
 
-VERSION = '1.1'
+VERSION = '1.2'
 CASES = ('14_synaptic_input', '15_nbqx', '16_gabazine', '17_ampa_reversal',
          '18_gaba_reversal', '19_nmda_apv', '20_gvia')
 CLEANUP = ['SG11 0', 'SG21 0', 'PH X', 'VCT 0', 'PH E 0', 'PH M 0',
@@ -195,9 +195,13 @@ def main():
     parser.add_argument('--analyse', type=Path, help='Offline CSV from this case')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--no-plots', action='store_true')
+    parser.add_argument('--timing-trace', action='store_true',
+                        help='Opt-in stage timing + bounded raw capture; requires trace=1 firmware')
     args = parser.parse_args()
     if bool(args.port) == bool(args.analyse):
         parser.error('Supply a postsynaptic port OR --analyse CSV')
+    if args.timing_trace and args.analyse:
+        parser.error('--timing-trace requires a live port')
     output = args.output or Path('vc_synapse_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
     output.mkdir(parents=True, exist_ok=False)
     report = {'tool_version': VERSION, 'case': args.case, 'synapse': args.synapse,
@@ -209,6 +213,21 @@ def main():
                        'stochastic release-failure statistics or physical TTL/DAC calibration.'}
     rows = []
     stream = recorder = None
+    trace_queried = False
+    def collect_trace():
+        nonlocal trace_queried
+        import vc_timing_trace as trace
+        trace_queried = True
+        report['trace_stage'] = 'retrieving_frozen_trace'
+        print('Freezing timing trace and retrieving diagnostics ...', flush=True)
+        # Freeze while the reader is still draining. Stop diagnostic output
+        # before joining, then query with exclusive ownership of serial reads.
+        send(stream, ['VCPR 0', 'VCT 0'])
+        recorder.stop()
+        trace.save_raw(output, recorder)
+        report['pc_reader_metrics'] = dict(recorder.metrics)
+        report['timing_trace'], _ = trace.query(stream, raw_path=output/'trace_query_rx.bin')
+        report['trace_stage'] = 'complete'
     def progress(stage, message):
         report['startup_stage'] = stage
         print(message, flush=True)
@@ -224,13 +243,21 @@ def main():
             report['startup_bytes_drained'] = drain_serial(stream, 2)
             report['firmware_identity'] = configure(stream, args.case, args.synapse, progress)
             print('Firmware: '+report['firmware_identity'], flush=True)
-            recorder = BufferedCapture(stream, parser=parse_sample)
+            if args.timing_trace:
+                if 'trace=1' not in report['firmware_identity'].split(','):
+                    raise ValueError('Timing trace needs the diagnostic firmware with trace=1; no capture started')
+                send(stream, ['VCPR 1'])
+            recorder = BufferedCapture(stream, parser=parse_sample,
+                                       raw_limit=32*1024*1024 if args.timing_trace else 0)
             recorder.set_phase('setup')
             recorder.start()
             send(stream, ['VCT 1'])
             progress('operator_capture', 'Starting synaptic capture ...')
             rows = capture(stream, recorder, args.case, args.synapse)
             report['pc_reader_metrics'] = dict(recorder.metrics)
+            report['capture_complete'] = True
+            if args.timing_trace:
+                collect_trace()
         report['capture_complete'] = True
         report['startup_stage'] = 'capture_complete'
         save_csv(output/'recording.csv', rows)
@@ -247,6 +274,8 @@ def main():
     finally:
         if recorder is not None:
             try:
+                if args.timing_trace and not trace_queried:
+                    collect_trace()
                 recorder.stop()
                 if recorder.error:
                     raise RuntimeError(recorder.error)
@@ -263,6 +292,13 @@ def main():
             report['capture_complete'] and
             not any(k in report for k in ('error', 'reader_error', 'cleanup_error')) and
             (bool(args.analyse) or report['cc_binary_stream_resumed']))
+        if args.timing_trace:
+            summary = report.get('timing_trace', {}).get('summary', {})
+            report['all_passed'] &= bool(summary and summary['ticks'] > 0 and
+                not any(summary[k] for k in ('overruns', 'late_starts', 'short_writes',
+                                             'format_errors', 'overflow')) and
+                not any(report.get('pc_reader_metrics', {}).get(k) for k in
+                        ('raw_bytes_truncated', 'raw_chunks_truncated')))
         (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
     print('OVERALL: ' + ('PASS' if report['all_passed'] else 'FAIL'), flush=True)
     if 'analysis' in report:
@@ -275,6 +311,18 @@ def main():
                   (f"; resolved events {result['resolved_events']}" if 'resolved_events' in result else ''), flush=True)
     if 'error' in report:
         print('Reason: ' + report['error'], flush=True)
+    if 'timing_trace' in report:
+        t = report['timing_trace']['summary']
+        print('Trace: overruns={overruns}; late starts={late_starts}; '
+              'short writes={short_writes}; format errors={format_errors}; '
+              'overflow={overflow}'.format(**t), flush=True)
+        for event in report['timing_trace']['events'][:8]:
+            stages = report['timing_trace']['maximum_stage_us']
+            stage = max(stages, key=lambda k: event[k])
+            print(f"  Tick {event['sequence']}: total={event['total_us']} us; "
+                  f"largest span {stage}={event[stage]} us; "
+                  f"written={event['written_bytes']}/{event['expected_bytes']} bytes; "
+                  f"reason bits={event['reason']}", flush=True)
     print('Results: ' + str(output.resolve()), flush=True)
     if stream is not None:
         print('Cleanup requests original CC, pharmacology OFF, cleared synaptic states and normal knob control.', flush=True)

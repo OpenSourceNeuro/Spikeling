@@ -92,7 +92,9 @@ void loop() {
     }
 
     const uint32_t prototype_tick_started_us = micros();
+    voltageClamp.trace.begin(prototype_tick_started_us, elapsed_us);
     SCmd.readSerial();                                                                          // Reads Serial for external commands
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Command,micros());
     
     poll_ToggleButtons();                                                                       // Read buzzer/LED toggle buttons (raw + time)
     update_ToggleButtons();                                                                     // Toggle buzzer/LED enable flags when pressed
@@ -106,10 +108,12 @@ void loop() {
     update_Synapse(syn1, syn1.defaultdecay);                                                    // Sets Synapse 1 current
 
     update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Input,micros());
     if (pharmacology.enabled) {
       pharmStepSynapse(0, syn1.risingEdge, syn1.gain, syn1.decay, neuron.v, neuron.dt_ms);
       pharmStepSynapse(1, syn2.risingEdge, syn2.gain, syn2.decay, neuron.v, neuron.dt_ms);
     }
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Release,micros());
 
     update_StimulusOutput();                                                                    // Determines Analog and Digital Values
     
@@ -120,6 +124,7 @@ void loop() {
     // Shared inputs advance once; the selected membrane backend advances below.
                                                                  
     update_AllCurrent();                                                                        // Apply all current to the model
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Stimulus,micros());
 
 
 
@@ -146,11 +151,16 @@ void loop() {
       if (neuron.v <= neuron.Vm_min) neuron.v = neuron.Vm_min;
     }
 
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Membrane,micros());
     if (pharmacology.enabled && clampMode == ClampMode::CurrentClamp)
       pharmUpdateVerifiedSpikeOutput();
     else update_Spike();
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Output,micros());
 
     send_SamplePacket();                                                                        // Quantize the current state data and send it as a compact binary frame.
+    if (voltageClamp.trace.capturing)
+      voltageClamp.trace.finish(static_cast<uint32_t>(voltageClamp.tick),voltageClamp.solve_us,
+                                micros(),timing.step_us);
     if (clampMode == ClampMode::VoltageClamp)
       voltageClamp.previous_loop_us = micros() - prototype_tick_started_us;
   }

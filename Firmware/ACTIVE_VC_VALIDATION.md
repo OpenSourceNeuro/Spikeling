@@ -526,8 +526,9 @@ passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
 Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
 passes selective slow-component block with preserved AMPA. Case 20 GVIA has
-four console-reported failures; pause reruns for raw-data timing/transport
-diagnosis. See VC_SYNAPTIC_WINDOWS.md for wiring and
+four failures confirmed by raw-data review; pause ordinary reruns. Next is one
+opt-in stage-timing capture after local Arduino Verify/upload; see
+VC_TIMING_DIAGNOSTICS_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
 Cases 15 (repeat), 16, 17, 18 and 19 pass; case 20 has no passing capture.
 The firmware model and all existing tolerances are unchanged.
@@ -756,3 +757,36 @@ if needed after raw-data review. No particular USB/host/IO/GVIA cause is
 established. Keep all failures and original thresholds; the earlier NBQX/Patch
 pauses also remain unresolved. No model, firmware or runtime-tool change is
 made in this evidence update.
+
+## Four GVIA failures independently confirmed; diagnostic source prepared
+
+The combined upload contains all four captures, totalling 113,290 rows.
+Three contiguous captures reproduce their timing FAILs and passing GVIA
+responses (drug/control 0.5615151344 / 0.5615159760 / 0.5615155220, expected
+0.561515625). Their 23,312 / 16,665 / 23,226 us loops contain only 270 / 269 /
+273 us in the preceding measured HH solve. Faults occur between resolved
+synaptic events during drug and washout. Associated PC receive gaps are
+27.8889 / 21.0374 / 27.9421 ms; this does not identify causal direction.
+
+The third capture has exactly one missing exported record, sequence 19575,
+during washout: 19574 -> 19576, model step 0.2 ms, receive gap 4.1894 ms.
+All observed flags are zero and maximum loop is 1,615 us. Raw bytes were not
+retained, so the missing record's cause is unresolved. No numerical reference
+is propagated across its gap. Every original report confirms CC streaming
+resumed. All four remain FAIL under unchanged criteria.
+
+Archive SHA-256: d9f6820b1152ea2daaaaeff1e5328bc2b33890e75bce94f84e3e11ca6c4bc749.
+Full chronology, receptor fits and individual CSV hashes are in
+VC_SYNAPTIC_VALIDATION.md. Earlier NBQX/Patch pauses remain open.
+
+The next source revision adds opt-in `VCPR` stage profiling, bounded exception
+records/overflow counters and serial returned-byte counts, without changing
+model equations or per-tick protocols. Runner 1.2 adds `--timing-trace`, exact
+raw-byte/chunk capture and frozen retrieval before analysis/cleanup. Native
+suite: 123 tests PASS; full real-pyserial/PTY GVIA PASS and injected lost-sample
+FAIL behave as expected with traces/raw bytes and successful CC cleanup.
+These use simulated IO, not physical ESP32 timing. No ESP32 core is available
+in the current environment, so this source has not been cross-compiled here;
+local Arduino Verify is required before upload. The Windows guide includes
+one diagnostic run and rollback to the supplied 5c2e063 source. This is an
+investigation build, not a permanent timing correction or new board validation.

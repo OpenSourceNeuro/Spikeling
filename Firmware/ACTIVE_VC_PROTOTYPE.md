@@ -193,7 +193,7 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-timing/transport diagnosis after four console-reported case-20 GVIA failures
+an opt-in timing diagnostic capture after four independently confirmed case-20 failures
 on Synapse 1: case 19 NMDA/APV passes with 24,928 samples,
 499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
 preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
@@ -202,8 +202,9 @@ near -80 mV. Case 17 AMPA reversal passes
 with 25,591 samples, 499.995562 Hz, zero flags, maximum loop 1,634 us and
 reversal near 0 mV. Case 16 gabazine passes with
 24,230 samples, 500.000290 Hz, no flags, maximum loop 1,620 us and confirmed
-half-block/washout and CC cleanup. Case 20 has no passing capture; raw-data
-review is pending. No new firmware or tool download is needed.
+half-block/washout and CC cleanup. Case 20 has no passing capture. Its raw-data
+review is complete; the next diagnostic source/tool kit requires local Arduino
+Verify before upload. See VC_TIMING_DIAGNOSTICS_WINDOWS.md.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
@@ -256,3 +257,18 @@ review all four original captures before targeted timing/transport changes.
 Average cadence near 500 Hz does not excuse individual deadline failures.
 Keep the installed firmware and all criteria; no specific cause or permanent
 fix is established. See VC_SYNAPTIC_VALIDATION.md for the evidence ledger.
+
+All four GVIA captures are now independently reviewed (113,290 rows). The three
+timing failures lie outside their measured HH solves; the remaining capture
+is missing exported sequence 19575, with no observed deadline flags. All four
+reports confirm CC cleanup. GVIA response ratios in the contiguous captures
+match the configured 0.561515625 efficacy, but no overall PASS is claimed.
+
+An opt-in diagnostic revision adds stage timing and serial short-write evidence
+in a fixed buffer, plus runner 1.2 raw-byte capture. It changes no model
+equations or existing protocols/thresholds. Native tests (123) and two full
+serial workflows validate normal GVIA capture and an intentionally missing
+sample using simulated IO. ESP32 cross-compilation is unavailable here;
+the source kit requires local Arduino Verify/upload and includes 5c2e063 for
+rollback. One instrumented case-20 capture is next. No cause or permanent
+timing fix has been established; prior failures remain retained.

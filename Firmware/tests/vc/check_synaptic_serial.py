@@ -26,7 +26,7 @@ TOOLS = ROOT / 'Firmware/tools'
 
 
 def exercise(executable, case, output, missing_signal=False, channel=1,
-             drop_first_identity=False):
+             drop_first_identity=False, timing_trace=False, inject_short_write=False):
     master, slave = pty.openpty()
     tty.setraw(slave)
     port = os.ttyname(slave)
@@ -49,6 +49,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
                     action = actions.get_nowait()
                     if action == 'source_on':
                         source_on = not missing_signal
+                        if inject_short_write:
+                            native.stdin.write(b'W0 0\n')
                     elif action == 'source_off':
                         source_on = False
                     else:
@@ -94,6 +96,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
     thread.start()
     args = [sys.executable, str(TOOLS / 'run_vc_synapse_tests.py'), port,
             '--case', case, '--output', str(output), '--synapse', str(channel)]
+    if timing_trace:
+        args.append('--timing-trace')
     client = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                               stderr=subprocess.STDOUT, text=True, bufsize=1)
     lines = []
@@ -129,6 +133,22 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
     if errors:
         raise RuntimeError('; '.join(errors))
     report = json.loads((output / 'report.json').read_text())
+    if timing_trace:
+        assert (output/'serial_rx.bin').stat().st_size > 1000
+        assert (output/'serial_rx_chunks.csv').exists()
+        assert (output/'trace_query_rx.bin').exists()
+        assert report['timing_trace']['summary']['ticks'] > 0
+        assert report['pc_reader_metrics']['raw_bytes_truncated'] == 0
+        assert report['cc_binary_stream_resumed']
+    if inject_short_write:
+        assert code == 1 and not report['all_passed']
+        assert report['error'] == 'Missing or duplicated device sample'
+        assert report['timing_trace']['summary']['short_writes'] == 1
+        assert report['timing_trace']['events'][0]['written_bytes'] == 0
+        assert report['capture_complete'] and report['cc_binary_stream_resumed']
+        return {'case':'expected_short_write','workflow_checks_passed':True,
+                'all_passed':False,'trace_detected_short_write':True,
+                'cc_binary_stream_resumed':True}
     if drop_first_identity:
         assert code == 1 and not report['all_passed']
         assert not report['capture_complete'] and 'analysis' not in report

@@ -1,7 +1,8 @@
 # Synaptic VC test pack — validation and scope
 
-30 October 2026. PC-side tools for the existing `5c2e063` active firmware;
-no changes to `Firmware/Spikeling_V3` or its numerical/timing thresholds.
+30 October 2026. Physical captures below use the `5c2e063` active firmware.
+The subsequent opt-in diagnostic revision adds stage timing and serial-write
+evidence; it does not change model equations or numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
 Basic Synapse 1 and Synapse 2 now have verified passing physical captures
@@ -10,9 +11,10 @@ FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
 passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
 reversal now also passes. Case 19 NMDA/APV also passes, with selective slow
 component block and preserved fast AMPA. Case 20 GVIA now has four operator
-console-reported FAILs (three loop-deadline failures and one sequence-integrity
-failure); raw CSV/report review is pending. Pause further case-20 reruns and
-investigate timing/transport before advancing qualification.
+FAILs (three loop-deadline failures and one sequence-integrity failure), now
+confirmed by independent CSV/report review. Pause ordinary case-20 reruns;
+the next action is one instrumented diagnostic capture after local Arduino
+Verify/upload. See VC_TIMING_DIAGNOSTICS_WINDOWS.md and the evidence below.
 
 ## Protocol and independent reference
 
@@ -693,3 +695,106 @@ sequence discontinuity. If these cannot isolate the cause, instrument command
 handling, input/release, membrane/output work, formatting and transmission,
 including serial short-write counters, before another qualification run.
 Keep the current firmware installed while collecting the existing evidence.
+
+## Physical GVIA — all four raw captures reviewed, 30 October 2026
+
+The uploaded archive is named `vc_synapse_20261030_211129_302995.zip` but contains
+all four result folders. All **113,290 CSV rows** were inspected. Independent
+reanalysis reproduces the three complete reports within machine precision and
+reproduces the fourth report's integrity exception. Every overall result
+remains FAIL. All four original reports confirm CC binary streaming resumed.
+
+| Folder suffix | Samples | Overall cadence (Hz) | Minimum one-second window (Hz) | Failure |
+| --- | --- | --- | --- | --- |
+| 211129_302995 | 24,391 | 499.778056 | 489.355566 | One 23,312 us loop; deadline flag 64 |
+| 211245_619508 | 25,697 | 499.846250 | 492.685917 | One 16,665 us loop; deadline flag 64 |
+| 211356_139436 | 38,029 | 499.992351 | 499.866769 | Exactly one absent exported record, sequence 19575 |
+| 211532_623345 | 25,173 | 499.776667 | 489.306252 | One 23,226 us loop; deadline flag 64 |
+
+The second run passes the average and one-second cadence criterion but fails
+the individual loop deadline. The first and fourth also fail a one-second
+window. The third has no recorded diagnostic flags and maximum loop 1,615 us;
+good observed timing does not excuse its missing record. At that gap the CSV
+advances 19574 -> 19576, model time advances 0.2 ms and PC receive time advances
+4.1894 ms. It is not a duplicated row. The raw serial bytes were not retained,
+so firmware omission, a short write, byte loss or parser rejection cannot be
+distinguished. No reference propagation crosses that missing record.
+
+| Run | Flagged sequence | Measured loop sequence | Phase | Wall time from first CSV row | Preceding HH solve | Loop outside that solve |
+| --- | --- | --- | --- | --- | --- | --- |
+| First | 15740 | 15739 | Drug | 26.123798 s | 270 us | 23,042 us |
+| Second | 23249 | 23248 | Washout | 39.997535 s | 269 us | 16,396 us |
+| Fourth | 15281 | 15280 | Drug | 25.446215 s | 273 us | 22,953 us |
+
+`previous_loop_us` describes the preceding loop; the preceding row's solver
+measurement is used above. The nearest resolved synaptic events are 50 ticks
+before, 51 ticks after and 103 ticks before the measured long loops. Thus no
+new resolved input event occurs on those loops. The pauses are several seconds
+after phase changes and occur during both drug and washout. Existing telemetry
+locates them outside the measured HH solve but does not identify which other
+operation or scheduling event consumed the time.
+
+Each long-loop region also contains a receive-data gap before a batch of old
+records: 27.8889 / 21.0374 / 27.9421 ms in the exported row timestamps. This
+association makes serial/host scheduling useful to instrument; it does not
+establish the direction of causation or a specific USB fault.
+
+The three contiguous captures independently pass membrane agreement and the
+configured GVIA response. Control / drug / washout fitted contributions (nA):
+
+| Run | Control | GVIA | Washout | Drug/control | Washout/control |
+| --- | --- | --- | --- | --- | --- |
+| First | -0.09900048811 | -0.05559027239 | -0.09900048752 | 0.5615151344 | 0.9999999941 |
+| Second | -0.09900051731 | -0.05559037210 | -0.09900053889 | 0.5615159760 | 1.0000002180 |
+| Fourth | -0.09900054904 | -0.05559034497 | -0.09900054793 | 0.5615155220 | 0.9999999888 |
+
+Expected efficacy is 0.561515625. Separate fast-increment/decay checks agree.
+Maximum independent clamp-reference error is 0.000000823228 nA in these three
+captures. Quiet recovery passes in all four; the third retains at most
+0.000001 nA at export precision. Intact control/drug windows in the third also
+have the expected direct increments, but its broken washout sequence prevents
+acceptance of that complete protocol.
+
+Combined archive SHA-256:
+`d9f6820b1152ea2daaaaeff1e5328bc2b33890e75bce94f84e3e11ca6c4bc749`.
+
+| Folder suffix | CSV SHA-256 |
+| --- | --- |
+| 211129_302995 | 064f84168cc0a22ababb28362ac706b0a7b9adc5b5e342c0fcfa56cd889b5060 |
+| 211245_619508 | 2e82b78b1265c87b91cf9d5d33cb36cb0e47c29b1f73cec3eec9db664c936a9e |
+| 211356_139436 | b56a26c925df29f1fe6c09fc52f9f021f20df9fceab3a958e48c51f502981492 |
+| 211532_623345 | bbfe8c0293da29cdd8a153c323a4ca38e23a9e8d6571885cff31176a25dc64be |
+
+## Opt-in timing diagnostic revision
+
+`VCPR 1` enables a fixed-size 16-record buffer and stage maxima; `VCPR 0`
+freezes it; `VCPR ?` explicitly retrieves it. No extra per-tick fields or
+unsolicited lines are added to VC2 or the original CC binary protocol. Trace
+records identify the loop that actually ran long, late starts, format faults
+and returned-versus-requested VC2 byte counts. Entry counts and overflow stay
+explicit. Leaving VC disables tracing without erasing the stored evidence.
+Model equations, shared input/release behaviour, RNG and all thresholds are
+unchanged. This is an instrumented experiment, not a demonstrated timing fix.
+
+Runner 1.2 adds `--timing-trace`, requires identity marker `trace=1`, freezes
+profiling while the receive thread still drains, then retrieves it before
+analysis/plotting/cleanup. Exact received bytes and chunk timestamps are kept
+in bounded memory during capture and saved afterward. Missing samples,
+nonzero trace-fault counters, overflow or truncated forensic capture remain
+FAIL. Without the option, the runner remains compatible with 5c2e063.
+
+Native regression suite: **123 tests PASS**, including 10 new instrumentation
+and transport tests. A synthetic 21 ms serial write is localised to the write
+span and still produces a deadline failure; a zero-byte write is retained in
+the trace and still produces a missing-sample failure. The full real-pyserial/
+PTY GVIA CLI passes all criteria with simulated IO. A second full CLI with a
+deliberately omitted sample FAILS as expected, saves raw bytes/trace and
+confirms CC cleanup. These checks do not measure physical ESP32 timing.
+
+The current environment lacks the installed ESP32 core and cannot download it;
+the diagnostic revision has **not been ESP32 cross-compiled here**. Provide
+source only, requiring local Arduino Verify before upload, with the tested
+5c2e063 source for rollback. See VC_TIMING_DIAGNOSTICS_WINDOWS.md. Run one
+instrumented case 20 after successful Verify/upload, then review its complete
+result folder; do not keep repeating for a clean outcome. Earlier NBQX/Patch
+pauses and the four GVIA failures all remain open.

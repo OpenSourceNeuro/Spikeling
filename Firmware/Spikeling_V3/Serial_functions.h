@@ -337,6 +337,7 @@ inline void SerialFunctions(){
   SCmd.addCommand("VCMD",VCommand);        // Absolute Vcmd; ignores Current-In voltage steps.
   SCmd.addCommand("VCA",VCActive);
   SCmd.addCommand("VCINFO",VCInfo);        // Explicit prototype/version/units query.
+  SCmd.addCommand("VCPR",VCProfile);       // Opt-in timing trace; explicit frozen query only.
   SCmd.addCommand("VCP",VCParameters);     // Cm[pF] Rm[MOhm] Rs[MOhm] EL[mV]
   SCmd.addCommand("VCL",VCLimits);         // Imin[nA] Imax[nA]
   SCmd.addCommand("VCI",VCIdeal);          // 0=finite access (default), 1=ideal

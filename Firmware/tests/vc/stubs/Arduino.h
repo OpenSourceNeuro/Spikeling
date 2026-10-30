@@ -34,10 +34,16 @@ class Stream {
  public:
   std::string input;
   std::vector<uint8_t> output;
+  uint32_t next_write_delay_us=0;
+  size_t next_write_limit=static_cast<size_t>(-1);
   void begin(unsigned long){}
   int available(){return int(input.size());}
   int read(){int c=uint8_t(input.front());input.erase(input.begin());return c;}
-  size_t write(const uint8_t* data,size_t count){output.insert(output.end(),data,data+count);return count;}
+  size_t write(const uint8_t* data,size_t count){
+    host_us+=next_write_delay_us;next_write_delay_us=0;
+    count=std::min(count,next_write_limit);next_write_limit=static_cast<size_t>(-1);
+    output.insert(output.end(),data,data+count);return count;
+  }
   void print(const char* value){write(reinterpret_cast<const uint8_t*>(value),strlen(value));}
   void print(char value){output.push_back(value);}
   template<class T> void print(T value){std::ostringstream s;s<<value;print(s.str().c_str());}

@@ -2,6 +2,7 @@
 #pragma once
 #include "VoltageClamp_passive.h"
 #include "VoltageClamp_active.h"
+#include "VoltageClamp_trace.h"
 namespace vc {
 enum class Source : uint8_t { Hardware = 0, Direct = 1, Step = 2 };
 enum Flag : uint16_t {
@@ -28,6 +29,7 @@ struct Runtime {
   Mode mode = Mode::Access;
   Source source = Source::Hardware;
   bool diagnostic = false;
+  TimingTrace trace;
   bool cc_pot_enabled = true;
   bool rearm_spike_output = false;
   bool command_ok = true;

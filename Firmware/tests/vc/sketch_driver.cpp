@@ -18,6 +18,9 @@ int main(){
       (device==1?ADC1:ADC2).channels[ch]=value;
     }else if(line[0]=='D'){
       unsigned pin,value;std::istringstream s(line.substr(1));s>>pin>>value;host_gpio[pin]=value;
+    }else if(line[0]=='W'){
+      // One-shot serial stall/short write. These are synthetic host faults.
+      std::istringstream s(line.substr(1));s>>Serial.next_write_delay_us>>Serial.next_write_limit;
     }else if(line[0]=='R'){
       unsigned count=std::stoul(line.substr(1));
       for(unsigned i=0;i<count;++i){host_us=timing.lastStep_us+timing.step_us;loop();}
