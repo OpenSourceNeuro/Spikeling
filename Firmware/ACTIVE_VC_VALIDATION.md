@@ -524,10 +524,10 @@ the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
 passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
-Next is case 17 AMPA reversal on Synapse 1 using the same setup; cases 18 to 20
-follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+Case 17 AMPA reversal now also passes. Next is case 18 GABA-A reversal on
+Synapse 1 using the same setup; cases 19 and 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 (repeat) and 16 pass; cases 17 to 20 remain pending.
+Cases 15 (repeat), 16 and 17 pass; cases 18 to 20 remain pending.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -667,3 +667,23 @@ Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. The earlier runtime
 pauses remain unresolved. Next is case 17 AMPA reversal on Synapse 1, with
 automatic -70/-20/+20 mV command phases and expected negative-to-positive
 synaptic event currents. Firmware, tools and all thresholds remain unchanged.
+
+## Physical AMPA reversal PASS
+
+The unchanged case-17 capture passes independent analysis of all 25,591
+contiguous samples over 51.18045 wall seconds: 499.995562 Hz, zero flags,
+maximum loop 1,634 us, exact recorded Vm tracking and resumed CC streaming.
+At -70/-20/+20 mV, 21/20/20 resolved events give contributions
+-0.09900047321 / -0.02828581351 / +0.02828583075 nA. Fitted reversal is
+-0.0000012562 mV, effectively the configured 0 mV at meaningful model precision.
+A separate direct-increment linear fit also locates the zero near 0 mV.
+Maximum independent clamp-reference error is 0.0007501154 nA, within the
+unchanged 0.01 nA current tolerance. Synaptic reversal uses receptor current;
+total clamp injection additionally contains intrinsic and capacitive currents.
+
+Evidence: vc_synapse_20261030_203954_842898.zip; archive SHA-256
+2b411600c90a813fed0ae437bb00a98858dc5d879a1c7bf1f60226f7d191f0e4.
+Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. Earlier timing
+pauses remain unresolved. Next is case 18 GABA-A reversal on Synapse 1 with
+-90/-70/-50 mV command phases and expected -0.099/+0.099/+0.297 nA event
+contributions, using the same kit/firmware and unchanged thresholds.
