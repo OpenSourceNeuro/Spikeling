@@ -193,13 +193,15 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-case 19 NMDA/APV on Synapse 1: case 18 GABA-A reversal also passes, with
+case 20 GVIA on Synapse 1: case 19 NMDA/APV passes with 24,928 samples,
+499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
+preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
 31,812 samples, 499.996309 Hz, zero flags, maximum loop 1,621 us and reversal
 near -80 mV. Case 17 AMPA reversal passes
 with 25,591 samples, 499.995562 Hz, zero flags, maximum loop 1,634 us and
 reversal near 0 mV. Case 16 gabazine passes with
 24,230 samples, 500.000290 Hz, no flags, maximum loop 1,620 us and confirmed
-half-block/washout and CC cleanup. Cases 19 and 20 remain pending. No new firmware or tool download is needed.
+half-block/washout and CC cleanup. Case 20 remains pending. No new firmware or tool download is needed.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
@@ -234,3 +236,12 @@ Case 18 GABA-A reversal passes: event contributions at -90/-70/-50 mV are
 Next is case 19 NMDA/APV, testing selective slow-component block with preserved
 fast AMPA and washout at -20 mV. Existing kit/firmware/criteria remain unchanged;
 earlier intermittent timing pauses remain open.
+
+Case 19 NMDA/APV passes: at -20 mV, fitted slow-component drug/control is
+0.5000000438 and washout/control is 0.9999991081; fast AMPA drug/control is
+0.9999985723. Timing, independent membrane/receptor checks and CC cleanup
+pass. Settled recovery has a small nonzero tail (maximum 0.001399 nA), within
+the original quiet limit. Next is case 20 GVIA, testing deterministic
+presynaptic release scaling at -70 mV: event-amplitude ratio 0.561515625 at
+simulated 10 nM, then washout. Same kit/firmware and thresholds; earlier
+intermittent timing pauses remain unresolved.

@@ -524,10 +524,11 @@ the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
 passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
-Cases 17 AMPA and 18 GABA-A reversal now also pass. Next is case 19 NMDA/APV
-on Synapse 1 using the same setup; case 20 follows after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
+passes selective slow-component block with preserved AMPA. Next is case 20
+GVIA on Synapse 1 using the same setup. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 (repeat), 16, 17 and 18 pass; cases 19 and 20 remain pending.
+Cases 15 (repeat), 16, 17, 18 and 19 pass; case 20 remains pending.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -705,3 +706,31 @@ Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. Earlier runtime
 pauses remain unresolved. Next is case 19 NMDA/APV at -20 mV on Synapse 1:
 selective reduction of the slow NMDA contribution, preserved fast AMPA and
 washout. Same kit/firmware and all original thresholds are retained.
+
+## Physical NMDA/APV selectivity PASS
+
+The unchanged case-19 capture passes independent analysis of all 24,928
+contiguous samples over 49.85467 wall seconds: 499.993319 Hz (one-second
+windows 499.874530–500.097113), zero flags, maximum loop 1,690 us, exact
+recorded Vm tracking and resumed CC streaming. At -20 mV, control / simulated
+3.7 uM APV / washout resolve 19/19/18 events. Slow NMDA coefficients are
+-0.03458738249 / -0.01729369276 / -0.03458735165 nA: drug/control 0.5000000438
+and washout/control 0.9999991081. Fast AMPA stays near -0.0282858 nA per event,
+with drug/control 0.9999985723. A separate direct closed-form exponential fit
+reproduces both components without the analyser's convolution recurrences.
+
+The slow coefficient is not a peak of the summed current. Maximum independent
+clamp-reference error is 0.0001242676 nA, within the original 0.01 nA limit.
+Settled recovery retains at most 0.001399 nA receptor current, within the
+original 0.003 nA quiet limit; it is not exactly zero. This validates the
+configured deterministic receptor response and selective APV scaling at this
+voltage, not full magnesium voltage dependence or real drug binding kinetics.
+
+Evidence: vc_synapse_20261030_210026_760655.zip; archive SHA-256
+d9f3a5fe876ea9ed3a13d49d92bd78d676df73c9f13b77d27b09ca033aa37d15.
+Full metrics and CSV hash are in VC_SYNAPTIC_VALIDATION.md. Earlier runtime
+pauses remain unresolved. Next is case 20 GVIA on Synapse 1, using the same
+kit/firmware: AMPA at -70 mV, deterministic release, simulated 10 nM GVIA and
+washout. Expected event amplitudes are -0.099 / -0.055590046875 / -0.099 nA,
+with drug/control 0.561515625. This is not a stochastic release-failure test.
+All existing model and acceptance parameters remain unchanged.

@@ -8,7 +8,8 @@ Basic Synapse 1 and Synapse 2 now have verified passing physical captures
 (see below). Case 15 also has a verified passing NBQX repeat; its first timing
 FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
 passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
-reversal now also passes. Case 19 NMDA/APV is next; cases 19 and 20 remain
+reversal now also passes. Case 19 NMDA/APV also passes, with selective slow
+component block and preserved fast AMPA. Case 20 GVIA is next and remains
 pending physical-board evidence.
 
 ## Protocol and independent reference
@@ -575,3 +576,75 @@ washout for 12 seconds each. The fast AMPA contribution should stay near
 recover. That coefficient is not a raw peak of the summed current. Source
 firing stays steady until prompted to stop. Recovery may take longer while
 NMDA tails decay; keep the source quiet and allow the script to finish.
+
+## Physical NMDA/APV selectivity — overall PASS, 30 October 2026
+
+Case `19_nmda_apv --synapse 1`, runner 1.1 at 797f054 and unchanged
+5c2e063 firmware. Independent reanalysis of all **24,928 contiguous samples**
+over 49.85467 wall seconds reproduces the live report within machine precision.
+All original numerical, receptor, integrity, timing and cleanup criteria pass.
+
+The runner holds -20 mV with AMPA plus NMDA enabled, applies simulated 3.7 uM
+APV and then removes it. These are fitted contributions of resolved received
+events, with latent exponentials accounting for preceding synaptic tails.
+
+| Phase | Resolved settled events | Fast AMPA contribution (nA) | Slow NMDA coefficient (nA) |
+| --- | --- | --- | --- |
+| Control | 19 | -0.02828581578 | -0.03458738249 |
+| APV | 19 | -0.02828577539 | -0.01729369276 |
+| Washout | 18 | -0.02828579905 | -0.03458735165 |
+
+NMDA drug/control is 0.5000000438 and washout/control is 0.9999991081.
+AMPA drug/control is 0.9999985723 and washout/control is 0.9999994087.
+The expected AMPA event contribution is -0.0282857143 nA throughout; the
+expected slow coefficients are -0.03458773976 / -0.01729386988 /
+-0.03458773976 nA. The NMDA coefficient multiplies a biexponential waveform;
+it is not the raw peak or mean of total receptor/clamp current. The summed
+receptor trace contains temporal summation, so halving its overall peak or
+mean is not the acceptance test. Minimum resolved event interval is 0.576 wall
+seconds in each phase.
+
+A separate closed-form fit builds each event's exponential waveform directly
+from its age, without the analyser's convolution recurrences. It reproduces
+both component coefficients and their ratios. After subtracting the fitted
+slow contribution, mean fast increments are -0.02828551547 /
+-0.02828576375 / -0.02828566440 nA; maximum non-event fast-decay residual is
+0.000000999530 nA. Maximum summed waveform residual is 0.000000746563 nA.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 499.993319 Hz |
+| Complete one-second receive windows | 499.874530–500.097113 Hz |
+| Median / maximum previous loop | 1,527 / 1,690 us |
+| Maximum measured solver interval | 305 us |
+| All diagnostic/deadline flags | Zero |
+| Maximum Vm / command discrepancy | 0 mV at export precision |
+| Maximum independent clamp-reference error | 0.0001242676 nA |
+| Maximum independent sodium-reference error | 0.0001260491 nA |
+| Maximum gate-reference error | 0.000000525243 |
+| Maximum current-balance error | 0.000001 nA |
+| Settled post-protocol receptor maximum | 0.001399 nA, within the original 0.003 nA quiet limit |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+The slow recovery tail is small but nonzero; this is not an exact return to
+zero at export precision. This capture validates the configured receptor
+kinetics and selective APV scaling at -20 mV. It does not independently count
+source spikes, calibrate analogue outputs, test the full magnesium-block
+voltage relation or establish real drug binding/washout kinetics. Earlier
+intermittent NBQX/Patch pauses remain unresolved. Firmware, tools, model
+parameters and acceptance thresholds are unchanged.
+
+Evidence: `vc_synapse_20261030_210026_760655.zip`, containing report, CSV and plot.
+Archive SHA-256:
+`d9f3a5fe876ea9ed3a13d49d92bd78d676df73c9f13b77d27b09ca033aa37d15`.
+CSV SHA-256:
+`e61a166007c672880a7d680ce9b3660f712d2836869526fbbdb5e584b3b60765`.
+
+Next: `20_gvia --synapse 1`, using the same kit, firmware and wiring. The runner
+selects AMPA at -70 mV, disables NMDA and enables deterministic presynaptic
+release scaling with N-type fraction 0.35. Control / simulated 10 nM GVIA /
+washout phases each last 12 seconds. Expected contributions are -0.099 /
+-0.055590046875 / -0.099 nA per resolved event: drug/control efficacy
+`(1-0.35*0.5)^3 = 0.561515625`. This tests deterministic event amplitude,
+not stochastic release failures. Source firing stays steady until prompted
+to stop; retain the full result archive.
