@@ -277,11 +277,26 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Keep the tested voltage=2 firmware installed. After Python releases COM13,
-reopen the GUI and check that the Patch knob restores ordinary CC firing and
-can stop it again. Check the usual noise and photodiode responses in CC.
-Resumed binary data alone is not proof of physical firing, TTL timing or
-calibrated DAC output.
+After the eight core tests, the user confirmed that all knobs and functions work
+correctly and the GUI displays proper behaviour. This records the requested
+post-test operator check of ordinary operation, separately from the quantitative
+VC captures. It is not a measurement of TTL timing or analogue calibration.
+
+Keep the tested voltage=2 firmware installed. The new Python-only integration
+runner is Firmware/tools/run_vc_integration_tests.py; start with
+09_active_noise using the prompts in VC_INTEGRATION_WINDOWS.md. Cases 10 to 13
+cover photodiode input, Patch command routing, repeated mode transitions with
+stored half-block TTX/TEA doses, and 60 wall seconds of settled finite-access VC.
+The existing firmware model and all numerical/timing tolerances are unchanged.
+
+The expanded native suite passes 84 tests: the original 70 and 14 integration
+analyser tests using the actual sketch with simulated ADC/clock/serial IO.
+Fault cases include missing input, wrong compensation sign, failed recovery,
+unresponsive command control, lost drug settings, cadence/deadline failure,
+sample gaps and incomplete recording duration. The CLI/PTY QA covers all five
+new cases with plots and cleanup, including two handovers and a full 60-second
+capture; a deliberately missing signal must fail while cleanup still succeeds.
+None of these host checks measures the new cases on the physical board.
 
 The next integration stage is active-VC shared-input routing (Patch, noise,
 photodiode, command input and both synapses), receptor pharmacology and release,

@@ -163,10 +163,12 @@ Check the usual noise and photodiode responses in CC. The test cleanup requests
 CC, pharmacology OFF and Patch control; binary streaming alone does not verify
 normal firing on the display or physical outputs.
 
-Active-VC shared inputs, receptor/release pharmacology, repeated mode transitions
-and longer access-mode timing are the following bench stage. The core step
-runner above deliberately requires quiet inputs, so its PASS does not establish
-those combined behaviours. The detailed evidence is in ACTIVE_VC_VALIDATION.md.
+The user has confirmed normal knobs/functions and GUI behaviour after the core
+sequence. The next Python-only pack starts active-VC shared inputs, repeated mode
+transitions and longer access-mode timing; see VC_INTEGRATION_WINDOWS.md.
+Receptor/release pharmacology follows separately. The core step runner above
+deliberately requires quiet inputs, so its PASS does not establish those combined
+behaviours. The detailed evidence is in ACTIVE_VC_VALIDATION.md.
 
 ## Scope of this stage
 
