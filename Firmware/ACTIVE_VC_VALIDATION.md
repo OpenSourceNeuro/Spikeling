@@ -520,11 +520,12 @@ passing captures, with the first case 11 failure retained above. No repetition
 of the completed protocols or firmware upload is needed for this milestone.
 The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
-the labelled Synapse Out -> Synapse In jacks. Start with case 14 on Synapse 1,
-then review the capture before Synapse 2 and receptor/drug cases 15 to 20. See
-VC_SYNAPTIC_WINDOWS.md for wiring and VC_SYNAPTIC_VALIDATION.md for the independent
-reference, host tests and observability limits. Physical captures for these new
-cases remain pending. The firmware model and all existing tolerances are unchanged.
+the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
+verified passing physical capture with runner 1.1. Next, stop the source, move
+the receiving end to Synapse 2 and repeat case 14 with --synapse 2. Receptor/drug
+cases 15 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
+Synapse 2 and cases 15 to 20 remain pending. The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
 integration analyser tests using the actual sketch with simulated ADC/clock/serial
@@ -566,4 +567,23 @@ line read with a bounded byte scan, drains startup output, paces configuration
 and logs its startup stage. The native suite now passes 113 tests including
 13 startup regressions. See VC_SYNAPTIC_VALIDATION.md for the demonstrated scope
 and the missing-reply/continuous-binary serial regression. No firmware, model
-or acceptance-threshold change is made; physical synaptic captures remain pending.
+or acceptance-threshold change is made. The first physical Synapse 1 result
+is recorded below; other synaptic cases remain pending.
+
+## First physical synaptic capture — Synapse 1 PASS
+
+With runner 1.1 at 797f054 and unchanged 5c2e063 firmware, case 14 on Synapse 1
+passes independent analysis of all 21,670 CSV samples over 43.33926 wall seconds:
+499.985491 Hz, zero flags, maximum loop 1,561 us, Vm=-70 mV throughout, 22
+resolved settled-window events and resumed CC streaming. The fitted AMPA event
+contribution is -0.0990005281 nA versus -0.099 nA expected, with quiet baseline
+and recovered tail. A direct difference/decay check separately agrees with the
+fast synaptic recurrence. The startup fix reaches the identity and prompts on
+the physical COM13 board in this run.
+
+Evidence: vc_synapse_20261030_195517_858406.zip; SHA-256
+923d71ab69a217ebebb0f6d62bf2d7fd9c10ae6d9669f457e6a291a83d9686bb.
+See VC_SYNAPTIC_VALIDATION.md for all metrics, CSV hash and scope. Next board
+case is the same basic protocol on Synapse 2; receptor reversals and drug/release
+checks remain pending. This clean capture does not resolve the earlier isolated
+Patch pause. No firmware/tool/threshold change or new download is required.

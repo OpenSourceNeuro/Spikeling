@@ -4,7 +4,8 @@
 no changes to `Firmware/Spikeling_V3` or its numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
-All cases below remain pending physical-board evidence.
+Basic Synapse 1 now has a verified passing physical capture (see below).
+Basic Synapse 2 and cases 15 to 20 remain pending physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -174,5 +175,57 @@ The updated kit records their raw results separately
 from the original pack's nine workflows; any host cadence failure remains FAIL.
 
 Firmware and all membrane/receptor/pharmacology equations and acceptance
-thresholds remain unchanged. The updated PC startup still needs the user's
-COM13 verification before the first physical synaptic recording can proceed.
+thresholds remain unchanged. The first COM13 startup/physical capture
+verification is recorded below; other synaptic channels/protocols remain pending.
+
+## Physical basic Synapse 1 — PASS, 30 October 2026
+
+Case `14_synaptic_input --synapse 1`, runner 1.1 at tool revision 797f054,
+installed firmware 5c2e063 (`clock=2,gates=2,voltage=2`). The new startup reaches
+the active identity and operator prompts on COM13. This verifies the corrected
+startup in this run; it does not establish why the old reply was missed or
+resolve the earlier isolated Patch-loop pause.
+
+Independent reanalysis of all **21,670 contiguous CSV samples** agrees with the
+live report (allowing machine-rounding differences in least-squares results).
+The recording lasts 43.33926 wall seconds including operator-change intervals;
+the active capture lasts 10.00643 seconds. All existing criteria pass.
+
+| Measurement | Result |
+| --- | --- |
+| Overall cadence | 499.985491 Hz |
+| Complete one-second receive windows | 499.808891–500.236434 Hz |
+| Median / maximum previous loop | 1,479 / 1,561 us |
+| Diagnostic/deadline flags | All zero |
+| Command / Vm | -70 mV throughout; zero recorded tracking error |
+| Resolved events in settled active window | 22; minimum interval 0.402 wall s |
+| Fitted event contribution | -0.0990005281 nA; expected -0.099 nA |
+| Maximum synaptic waveform fit residual | 0.000000771944 nA |
+| Maximum independent clamp-reference error | 0.000000823227 nA |
+| Maximum current-balance error | 0.000001 nA |
+| Quiet baseline / settled recovery receptor maximum | 0 / 0.000001 nA |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+An additional direct recurrence check, separate from the regression fit, finds
+22 fast-current increments with mean -0.09899993 nA. Maximum increment error is
+0.00000007 nA; maximum non-event decay residual is 0.00000095 nA. This agrees with
+`I[k] = 0.99*I[k-1] - 0.099*event[k]` at fixed -70 mV. The active absolute peaks
+reach about -0.11414 nA because preceding events leave a residual tail; the
+event contribution rather than raw peak/mean is the relevant drug comparison.
+Vm stays fixed while compensating clamp current changes with receptor current.
+These tiny reference errors concern exported model values and rounding; they
+are not measurements of biological or analogue-output accuracy.
+
+Evidence: `vc_synapse_20261030_195517_858406.zip`, containing the live report,
+CSV and plot. Archive SHA-256:
+`923d71ab69a217ebebb0f6d62bf2d7fd9c10ae6d9669f457e6a291a83d9686bb`.
+CSV SHA-256:
+`7c7afc7c3530dab6ceea66c5889d6deb79d17e759555c60c199e0602627cd513`.
+
+Scope: received AMPA events through physical Synapse 1 under ideal active VC
+at -70 mV, with quiet baseline/recovery and measured timing. There is still no
+independent source spike count, proof of zero missed TTL events, stochastic
+release qualification, receptor/drug selectivity result or finite-access
+synaptic timing result. Stop the source, move only the receiving cable end to
+Synapse 2 In, and repeat case 14 with `--synapse 2` before cases 15 to 20.
+Firmware, tools and all acceptance thresholds remain unchanged.
