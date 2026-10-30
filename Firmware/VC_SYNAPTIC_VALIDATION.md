@@ -5,7 +5,8 @@ no changes to `Firmware/Spikeling_V3` or its numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
 Basic Synapse 1 and Synapse 2 now have verified passing physical captures
-(see below). Cases 15 to 20 remain pending physical-board evidence.
+(see below). Case 15 now has a verified NBQX response but its first run FAILS
+timing; a repeat is next. Cases 16 to 20 remain pending physical-board evidence.
 
 ## Protocol and independent reference
 
@@ -278,3 +279,72 @@ then run `15_nbqx --synapse 1`. Keep source firing steady through all three
 12-second phases; the script applies simulated 0.30 uM NBQX and washout.
 Expected per-event AMPA contributions are -0.099, -0.0495 and -0.099 nA.
 Review that capture before proceeding to gabazine or other receptor/release tests.
+
+## First physical NBQX capture — response PASS, overall FAIL
+
+Case `15_nbqx --synapse 1`, runner 1.1 at 797f054 and unchanged 5c2e063 firmware.
+Independent analysis of all **26,549 contiguous samples** over 53.11688 wall
+seconds agrees with the live report, including its overall FAIL. The receptor,
+membrane, integrity and cleanup results pass; timing does not. This capture
+must not be counted as a complete NBQX protocol PASS.
+
+At fixed -70 mV, each settled phase has 21 resolved events (minimum interval
+0.526 wall seconds). Simulated 0.30 uM NBQX produces the configured half-block
+and washout restores the event contribution:
+
+| Phase | Fitted contribution per event (nA) | Expected (nA) |
+| --- | --- | --- |
+| Control | -0.09900046618 | -0.099 |
+| NBQX | -0.04950020418 | -0.0495 |
+| Washout | -0.09900046598 | -0.099 |
+
+Drug/control ratio is 0.499999708; washout/control is 0.999999998. Maximum
+synaptic fit residual is 0.000000834053 nA. A separate direct difference/decay
+check finds 21 event increments per phase, averaging -0.0989997062,
+-0.0495002900 and -0.0989995800 nA. Independent HH/current balance agrees within
+export precision; maximum clamp-reference error is 0.000000823227 nA. Vm remains
+-70 mV, other input current is quiet and CC streaming resumes after cleanup.
+These establish the specified software drug effect on received events, not
+universal biological potency or independently measured source-spike statistics.
+
+### Timing failure and event chronology
+
+One flag-64 record at sequence 6146 reports previous_loop_us=22,256. All other
+loops are at most 1,614 us (overall median 1,489 us). The preceding sample at
+sequence 6145 has solve_us=262, so **21,994 us lies outside that measured HH solve**.
+The flag occurs in the manual `change` interval with receptor current zero:
+
+| Event | PC time from first captured sample |
+| --- | --- |
+| Deadline flag record | 0.500526 s |
+| First nonzero received receptor response | 2.370526 s |
+| Start of labelled control phase | 6.286600 s |
+| Start of labelled drug phase | 18.360628 s |
+
+Thus the overlong tick precedes the first recorded receptor response and NBQX
+application.
+The device duration/flag demonstrates an actual board-loop overrun; this is not
+merely a slow host receive window. The CSV also has a 27.0361 ms receive gap
+before a batch containing sequences 6143 to 6145. Host batching and the board
+pause occur together, but the existing instrumentation cannot assign causality
+to USB backpressure, console/host scheduling, other IO or device pre-emption.
+Do not attribute the delay to the HH solver or NBQX computation from these data.
+
+Overall cadence is 499.803431 Hz, but the first complete one-second receive
+window is 489.756429 Hz and fails the unchanged +/-2% rule. The single 22.256 ms
+loop also independently fails the unchanged 2 ms deadline. The earlier case 11
+22.9 ms pause remains unresolved; this new quiet-period occurrence has a similar
+pattern without establishing a shared cause. Startup identity and cleanup both
+succeed, so the corrected line-read hang is separate from this runtime overrun.
+
+Evidence: `vc_synapse_20261030_201130_252214.zip`, containing report, CSV and plot.
+Archive SHA-256:
+`2ac9db0b32a382709ce7511df6880fcdb2b8a0f270cbbc4e82935c2c632cc538`.
+CSV SHA-256:
+`bcddde217779d18c521ac6ed8f5faf43d119dbed3c815c52c45551ee22b5b365`.
+
+Next: repeat case 15 once with the same firmware, kit, Synapse 1 wiring and
+source procedure. Retain this failed recording even if the repeat passes; a
+clean repeat cannot establish a permanent fix for the intermittent pause. If
+it recurs, isolate IO/serial/pre-emption timing with targeted instrumentation
+before advancing the board qualification. No model or threshold is changed.

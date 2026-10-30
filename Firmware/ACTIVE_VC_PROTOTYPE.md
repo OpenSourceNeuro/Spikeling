@@ -190,7 +190,15 @@ contiguous samples, 499.985491 Hz, zero flags, maximum loop 1,561 us, 22 resolve
 events and resumed CC streaming. The Synapse 2 repeat also passes: 23,460
 contiguous samples, 499.987518 Hz, no flags, maximum loop 1,535 us and resumed
 CC streaming. Both inputs give the configured -0.099 nA event contribution.
-Next is case 15 NBQX on Synapse 1; cases 15 to 20 remain pending. No new firmware or tool download is needed.
+The first case 15 NBQX response is verified but its run FAILS timing (below).
+Repeat case 15 on Synapse 1 once; cases 16 to 20 remain pending. No new firmware or tool download is needed.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
+
+The first physical case 15 NBQX capture verifies the configured half-block and
+washout but FAILS overall: one 22.256 ms loop occurs before received events or
+drug application, with only 262 us in its preceding measured HH solve. Cleanup
+succeeds. This runtime timing issue remains unresolved; repeat case 15 once
+with the same kit/firmware, retain the failure and instrument IO timing if it
+recurs. Cases 16 to 20 remain pending; no thresholds or model parameters change.

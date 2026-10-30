@@ -522,10 +522,12 @@ The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
 verified passing physical capture with runner 1.1; the Synapse 2 repeat also
-passes. Next, stop the source, return the receiving end to Synapse 1 and run
-case 15 NBQX with --synapse 1. Cases 16 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
+passes. The first case 15 NBQX response is verified, but its run FAILS timing
+(see the detailed record below). Repeat case 15 on Synapse 1 once with the
+same setup. Cases 16 to 20 follow after review. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 to 20 remain pending. The firmware model and all existing tolerances are unchanged.
+Case 15 awaits its timing repeat; cases 16 to 20 remain pending.
+The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
 integration analyser tests using the actual sketch with simulated ADC/clock/serial
@@ -604,3 +606,28 @@ See VC_SYNAPTIC_VALIDATION.md for full metrics and CSV hash. Next is case 15
 NBQX on Synapse 1 (control/drug/washout), using the same kit and firmware.
 Receptor/drug/release cases remain pending; neither this clean capture nor the
 startup fix resolves the earlier isolated Patch-loop pause.
+
+## First physical NBQX run — pharmacology response passes; timing FAIL
+
+The first case 15 capture independently matches control / simulated half-block /
+washout, with 21 resolved events per phase and contributions -0.09900046618 /
+-0.04950020418 / -0.09900046598 nA. All 26,549 samples are contiguous, Vm stays
+-70 mV, the membrane reference agrees and CC streaming resumes. Overall status
+remains FAIL: one previous-loop duration is 22,256 us, with flag 64 and a failed
+489.756429 Hz first one-second receive window (global average 499.803431 Hz).
+All other loops are <=1,614 us.
+
+The flagged record occurs 0.500526 s after capture starts, before the first
+received receptor response (2.370526 s), control phase (6.286600 s) or drug
+phase (18.360628 s). The preceding HH solve is only 262 us: 21,994 us is outside
+that measured interval. Serial/IO/host scheduling or pre-emption cannot be
+separated by the available data. This resembles the earlier unresolved Patch
+pause but does not prove the same cause. The startup line-read correction is
+not a demonstrated fix for this runtime timing issue.
+
+Evidence: vc_synapse_20261030_201130_252214.zip, archive SHA-256
+2ac9db0b32a382709ce7511df6880fcdb2b8a0f270cbbc4e82935c2c632cc538.
+Full metrics, CSV hash and chronology are in VC_SYNAPTIC_VALIDATION.md. Repeat
+case 15 once with unchanged firmware/tools/criteria, preserving this FAIL.
+A clean repeat does not establish a permanent correction; another overrun calls
+for targeted IO/serial timing instrumentation before further qualification.
