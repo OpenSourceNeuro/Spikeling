@@ -11,6 +11,7 @@
                                                                       
 #include "Izhikevich_parameters.h"
 #include <Arduino.h>
+#include "VoltageClamp_usb.h"
 #include <esp_system.h>
 #include <SPI.h>
 #include <MCP_ADC.h>                                        // Microchip SPI ADC Library by Rob Tillaart                 https://github.com/RobTillaart/MCP_ADC
@@ -502,6 +503,7 @@ inline void setClampMode(ClampMode m) {
     voltageClamp.source = vc::Source::Hardware;
     voltageClamp.tick = 0;
     voltageClamp.flags = 0;
+    vc::usb_tx_fault = false;
     voltageClamp.previous_loop_us = 0;
     voltageClamp.reset(neuron.v);
     patch.v_step = 0.0f;
@@ -509,6 +511,7 @@ inline void setClampMode(ClampMode m) {
     patch.v_cmd  = patch.v_hold;
   } else {
     // Continue from the presently simulated voltage, never an old pre-clamp Vm.
+    vc::diagnosticUsbMode(false);
     voltageClamp.trace.stop();
     neuron.v = voltageClamp.sample().voltage_mV;
     voltageClamp.rearm_spike_output = neuron.v >= neuron.Vm_spike;
@@ -1041,6 +1044,7 @@ inline void init_PotFilters() {
 inline void HardwareSettings(){
 
   delay(500);                                               // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
+  vc::prepareDiagnosticUsb();                               // Preallocate CDC TX storage before interrupts own it.
   Serial.begin(BaudRate);                                   // Start UART for CLI + streaming at the configured baud rate
   delay(500);                                               // Extra settle time so the host opens the port before first prints
 

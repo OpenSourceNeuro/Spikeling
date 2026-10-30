@@ -23,7 +23,7 @@ def setUpModule():
 def run(script):
     data=subprocess.run([str(base.TMP/'trace_sketch')],input=script.encode(),
                         capture_output=True,check=True).stdout
-    prefixes=(b'VCPR1,',b'VCE1,',b'VCPMAX,',b'VCPREND,')
+    prefixes=(b'VCPR1,',b'VCPR2,',b'VCE1,',b'VCPMAX,',b'VCPREND,')
     lines=[line[min(line.find(p) for p in prefixes if p in line):]
            for line in data.splitlines() if any(p in line for p in prefixes)]
     return data,trace.decode(lines)

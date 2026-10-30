@@ -13,8 +13,11 @@ inline bool vcReadFloat(float& value) {
 }
 inline void VCInfo() {
   // Explicit query only. Do not send while the desktop GUI owns the binary stream.
-  Serial.println(voltageClamp.active ? "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2,trace=1" :
-                                      "VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
+  if (voltageClamp.active)
+    Serial.println(vc::usb_tx_ready ?
+      "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2,trace=2,tx=guarded4096" :
+      "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2,trace=2,tx=unavailable");
+  else Serial.println("VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
 }
 inline bool vcNoMoreArguments() { return SCmd.next() == nullptr; }
 inline void VCProfile() {
@@ -29,10 +32,10 @@ inline void VCProfile() {
     // Explicit query freezes collection before any potentially blocking output.
     t.stop();
     char line[320];
-    int n = snprintf(line,sizeof(line),"VCPR1,%lu,%u,%lu,%lu,%lu,%lu,%lu\n",
+    int n = snprintf(line,sizeof(line),"VCPR2,%lu,%u,%lu,%lu,%lu,%lu,%lu,%lu\n",
       (unsigned long)t.ticks,t.count,(unsigned long)t.overruns,
       (unsigned long)t.late_starts,(unsigned long)t.short_writes,
-      (unsigned long)t.format_errors,(unsigned long)t.overflow);
+      (unsigned long)t.format_errors,(unsigned long)t.overflow,(unsigned long)t.capacity_skips);
     Serial.write(reinterpret_cast<const uint8_t*>(line),n);
     for (unsigned i=0;i<t.count;++i) {
       const auto& r=t.records[i];
@@ -63,6 +66,7 @@ inline void VCActive() {
   float value;
   voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) &&
     vcNoMoreArguments() && voltageClamp.selectActive(value != 0);
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
 }
 inline bool vcSetHolding(float value, vc::Source source) {
   if (!vcValidCommand(value)) return voltageClamp.command_ok = false;
@@ -98,6 +102,7 @@ inline void VCDiagnostics() {
   float value;
   voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) && vcNoMoreArguments();
   if (voltageClamp.command_ok) voltageClamp.diagnostic = value != 0;
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
 }
 inline void VCStep() {
   float target, delay_ms, duration_ms;

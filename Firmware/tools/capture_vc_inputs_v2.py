@@ -25,7 +25,7 @@ VERSION = '2.1'
 PHASE_SECONDS = 5.
 FLAG_NAMES = {1: 'compliance', 2: 'rejected_command', 4: 'solver_fault',
               8: 'display_range', 16: 'packet_range', 32: 'unsupported_pharmacology',
-              64: 'loop_deadline'}
+              64: 'loop_deadline', 128: 'transport_fault'}
 
 
 def integrity(rows):
@@ -72,7 +72,7 @@ def diagnostics(rows):
         raise ValueError('No diagnostic samples')
     counts = {name: sum(bool(int(r['flags']) & bit) for r in rows)
               for bit, name in FLAG_NAMES.items()}
-    unknown = sum(bool(int(r['flags']) & ~127) for r in rows)
+    unknown = sum(bool(int(r['flags']) & ~255) for r in rows)
     events = []
     for i, row in enumerate(rows):
         if int(row['flags']) & 64 and len(events) < 50:

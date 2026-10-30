@@ -528,8 +528,9 @@ Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
 passes selective slow-component block with preserved AMPA. Case 20 GVIA has
 four failures confirmed by raw-data review, followed by a verified instrumented
 PASS at 3d78f06. Earlier causes remain unresolved. Next is one pre-defined
-three-minute diagnostic capture with installed firmware and runner 1.3; see
-VC_EXTENDED_DIAGNOSTICS_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
+guarded USB transport verification after the extended trace localised a stall
+to the serial-write span. This requires the new source upload and runner 1.4;
+see VC_USB_TRANSPORT_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
 Cases 15 (repeat), 16, 17, 18, 19 and 20 now have passing captures across staged
 revisions; this is not one clean same-revision qualification run.
@@ -831,3 +832,33 @@ deadline-fault checks. The full real-pyserial/PTY three-minute GVIA CLI passes
 all criteria with complete raw/trace files and CC cleanup, using the actual
 native sketch/parser and simulated IO. Extended physical timing evidence is
 pending; no model parameter, firmware or threshold relaxation is introduced.
+
+## Extended physical trace FAIL: elapsed stall in serial-write span
+
+All 95,571 analysed rows in the 60/60/60-second capture reproduce the report.
+Average cadence is 499.938085 Hz; one-second minimum 489.970632 Hz, one deadline
+flag, max loop 22,022 us. Trace loop 50913 contains 20,501 us in writing and
+only 276 us in the HH solve; all 149 bytes are accepted and received. The next
+loop's late start is the same stall's consequence. Every CSV value/timestamp
+matches complete raw data; 14,531,607 bytes / 270,335 chunks are untruncated.
+No analysed record is missing. All three phase durations, membrane/receptor
+checks and CC cleanup pass, but overall remains FAIL. GVIA ratio is
+0.5615153516, washout 0.9999999975. Full spans/hashes are in
+VC_SYNAPTIC_VALIDATION.md; archive SHA-256
+73f12cffe6c1692e69fee81da669367dce6f11889808058e327a4b7d2001afac.
+
+This narrows the pause to an elapsed transmission span; it does not prove a
+host-versus-SDK cause or explain the prior missing record. A guarded active-VC2
+transport prototype preallocates a 4,096-byte Hardware CDC ring and requires
+whole-frame capacity with zero wait, pinned to audited core 3.3.12. Capacity
+skips and short writes latch transport flag 128 and remain failures; trace
+protocol 2 counts them separately. Models/doses/2 ms deadline/thresholds and
+CC packet layout are unchanged; the normal timeout is restored outside VC2.
+Local Arduino Verify/upload is needed because the ESP32 core remains unavailable
+here. Physical mitigation verification is pending; see VC_USB_TRANSPORT_WINDOWS.md.
+
+The guarded revision passes 131 native/host tests and a full three-minute
+real-pyserial/PTY capture with simulated 20 ms host backpressure. Injected
+short-write and full-FIFO workflows retain the expected FAIL and complete
+raw/trace preservation plus CC cleanup. These simulations do not prove real
+ESP32 timing. Physical verification is next with the pinned core/source kit.

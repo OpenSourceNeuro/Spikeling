@@ -20,7 +20,7 @@ from verify_vc_clock import clock_metrics
 import vc_hh_reference as hh
 import vc_synapse_reference as syn
 
-VERSION = '1.3'
+VERSION = '1.4'
 CASES = ('14_synaptic_input', '15_nbqx', '16_gabazine', '17_ampa_reversal',
          '18_gaba_reversal', '19_nmda_apv', '20_gvia')
 CLEANUP = ['SG11 0', 'SG21 0', 'PH X', 'VCT 0', 'PH E 0', 'PH M 0',
@@ -215,7 +215,7 @@ def main():
     parser.add_argument('--phase-seconds', type=int, choices=(12, 30, 60), default=12,
                         help='Wall seconds per automatic phase, cases 15-20 (default: 12)')
     parser.add_argument('--timing-trace', action='store_true',
-                        help='Opt-in stage timing + bounded raw capture; requires trace=1 firmware')
+                        help='Stage timing + raw capture; requires trace=2,tx=guarded4096 firmware')
     args = parser.parse_args()
     if bool(args.port) == bool(args.analyse):
         parser.error('Supply a postsynaptic port OR --analyse CSV')
@@ -266,8 +266,9 @@ def main():
             report['firmware_identity'] = configure(stream, args.case, args.synapse, progress)
             print('Firmware: '+report['firmware_identity'], flush=True)
             if args.timing_trace:
-                if 'trace=1' not in report['firmware_identity'].split(','):
-                    raise ValueError('Timing trace needs the diagnostic firmware with trace=1; no capture started')
+                tags = report['firmware_identity'].split(',')
+                if 'trace=2' not in tags or 'tx=guarded4096' not in tags:
+                    raise ValueError('This diagnostic runner needs trace=2,tx=guarded4096 firmware; no capture started')
                 send(stream, ['VCPR 1'])
             recorder = BufferedCapture(stream, parser=parse_sample,
                                        raw_limit=32*1024*1024 if args.timing_trace else 0)
@@ -320,6 +321,7 @@ def main():
             report['all_passed'] &= bool(summary and summary['ticks'] > 0 and
                 not any(summary[k] for k in ('overruns', 'late_starts', 'short_writes',
                                              'format_errors', 'overflow')) and
+                'capacity_skips' in summary and summary['capacity_skips'] == 0 and
                 not any(report.get('pc_reader_metrics', {}).get(k) for k in
                         ('raw_bytes_truncated', 'raw_chunks_truncated')))
         (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
@@ -339,6 +341,7 @@ def main():
         print('Trace: overruns={overruns}; late starts={late_starts}; '
               'short writes={short_writes}; format errors={format_errors}; '
               'overflow={overflow}'.format(**t), flush=True)
+        print(f"  Whole-record capacity skips={t.get('capacity_skips', 'not reported')}", flush=True)
         for event in report['timing_trace']['events'][:8]:
             stages = report['timing_trace']['maximum_stage_us']
             stage = max(stages, key=lambda k: event[k])

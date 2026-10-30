@@ -16,7 +16,7 @@ struct TimingTrace {
   static constexpr unsigned capacity = 16;
   bool enabled = false, capturing = false;
   uint32_t ticks = 0, overruns = 0, late_starts = 0, short_writes = 0;
-  uint32_t format_errors = 0, overflow = 0;
+  uint32_t format_errors = 0, overflow = 0, capacity_skips = 0;
   unsigned count = 0;
   uint32_t maximum_stage_us[trace_stage_count]{};
   TraceRecord records[capacity]{};
@@ -43,6 +43,12 @@ struct TimingTrace {
     if (format_error) current.reason |= 8;
     else if (written != expected) current.reason |= 4;
   }
+  void capacitySkipped(uint32_t expected) {
+    if (!capturing) return;
+    current.expected_bytes = expected;
+    current.written_bytes = 0;
+    current.reason |= 16;  // No Serial.write call was made; whole record skipped.
+  }
   void finish(uint32_t sequence, uint32_t solve, uint32_t now, uint32_t period) {
     if (!capturing) return;
     capturing = false;
@@ -56,6 +62,7 @@ struct TimingTrace {
     }
     if (current.reason & 4) ++short_writes;
     if (current.reason & 8) ++format_errors;
+    if (current.reason & 16) ++capacity_skips;
     for (unsigned i = 0; i < trace_stage_count; ++i)
       if (current.stage_us[i] > maximum_stage_us[i])
         maximum_stage_us[i] = current.stage_us[i];

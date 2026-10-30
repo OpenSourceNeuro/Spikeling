@@ -193,7 +193,7 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-one pre-defined extended trace capture after a first instrumented case-20 PASS
+guarded USB transport verification after the extended trace captured a write-span stall
 on Synapse 1: case 19 NMDA/APV passes with 24,928 samples,
 499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
 preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
@@ -204,9 +204,9 @@ reversal near 0 mV. Case 16 gabazine passes with
 24,230 samples, 500.000290 Hz, no flags, maximum loop 1,620 us and confirmed
 half-block/washout and CC cleanup. Case 20 now passes on instrumented 3d78f06
 firmware, with 25,288 samples, zero flags, maximum loop 1,673 us and matching
-GVIA efficacy. All four preceding failures remain open. The next extended
-capture uses installed firmware and PC-only runner 1.3; no upload is needed.
-See VC_EXTENDED_DIAGNOSTICS_WINDOWS.md.
+GVIA efficacy. The extended follow-up FAIL localises 20.501 ms to the serial-write
+span. The next guarded transport source revision and runner 1.4 require local
+Verify/upload and one extended verification capture; see VC_USB_TRANSPORT_WINDOWS.md.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 113 tests, with source GPIO/clock/serial simulated, including the
 startup deadline regressions.
@@ -288,3 +288,19 @@ Windows guide and VC_SYNAPTIC_VALIDATION.md.
 Runner 1.3 passes 126 native/host tests and a full three-minute serial workflow
 with simulated IO, raw bytes, trace retrieval and CC cleanup. The extended
 physical observation is next; the firmware remains the user's tested 3d78f06.
+
+The extended physical follow-up FAILS despite correct GVIA/model/phase-duration
+checks: one 22.022 ms loop, with 20.501 ms in the serial-write span and HH solve
+0.276 ms. All bytes/analysed records are intact and CC cleanup succeeds. This
+locates the elapsed stall but does not establish its host/SDK cause. The next
+prototype guards active-VC2 writes with a preallocated 4,096-byte Hardware CDC
+buffer and zero-wait whole-frame capacity checks on pinned core 3.3.12. Capacity
+skips or short writes latch flag 128 and remain FAIL. Trace protocol 2 and
+runner 1.4 retain original numerical/timing criteria. ESP32 cross-compilation
+is unavailable here; local Verify/upload is required before physical checking.
+Earlier failures remain retained; no permanent timing fix is yet established.
+
+Guarded transport software checks: 131 native/host tests PASS; a full
+three-minute serial workflow with simulated 20 ms host backpressure passes,
+while explicit short-write/full-FIFO workflows remain FAIL and preserve
+diagnostics/cleanup. Physical guarded-transport timing has not yet been tested.

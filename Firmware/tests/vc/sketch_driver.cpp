@@ -18,6 +18,14 @@ int main(){
       (device==1?ADC1:ADC2).channels[ch]=value;
     }else if(line[0]=='D'){
       unsigned pin,value;std::istringstream s(line.substr(1));s>>pin>>value;host_gpio[pin]=value;
+#ifdef VC_PROTOTYPE_TEST
+    }else if(line[0]=='Q'){
+      std::cout<<"USBSTATE,"<<vc::usb_tx_ready<<','<<vc::usb_tx_guarded<<','
+               <<vc::usb_tx_fault<<','<<Serial.tx_timeout_ms<<','<<Serial.tx_capacity<<'\n';
+#endif
+    }else if(line[0]=='U'){
+      Serial.host_paused=true;
+      Serial.host_pause_until_us=host_us+static_cast<uint32_t>(std::stoul(line.substr(1)));
     }else if(line[0]=='W'){
       // One-shot serial stall/short write. These are synthetic host faults.
       std::istringstream s(line.substr(1));s>>Serial.next_write_delay_us>>Serial.next_write_limit;

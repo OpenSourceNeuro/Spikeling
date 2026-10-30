@@ -7,7 +7,8 @@ namespace vc {
 enum class Source : uint8_t { Hardware = 0, Direct = 1, Step = 2 };
 enum Flag : uint16_t {
   Compliance = 1, RejectedCommand = 2, SolverFault = 4,
-  DisplayRange = 8, PacketRange = 16, UnsupportedPharmacology = 32, LoopDeadline = 64
+  DisplayRange = 8, PacketRange = 16, UnsupportedPharmacology = 32, LoopDeadline = 64,
+  TransportFault = 128
 };
 
 struct Runtime {

@@ -697,6 +697,7 @@ inline void update_PassiveVoltageClamp() {
   } else ok = voltageClamp.cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode);
   voltageClamp.solve_us = micros() - started;
   voltageClamp.flags = voltageClamp.command_ok ? 0 : vc::RejectedCommand;
+  if (vc::usb_tx_fault) voltageClamp.flags |= vc::TransportFault;
   if (!ok) voltageClamp.flags |= vc::SolverFault;
   const auto& sample = voltageClamp.sample();
   neuron.v = sample.voltage_mV;
@@ -815,8 +816,10 @@ inline void send_SamplePacket() {
         double(value.potassium_nA),double(value.receptor_nA),g.m,g.h,g.n);
       if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Format,micros());
       if (size > 0 && size < int(sizeof(line))) {
-        const size_t written = Serial.write(reinterpret_cast<const uint8_t*>(line),size);
-        voltageClamp.trace.transmitted(size,written);
+        bool capacity_skip;
+        const size_t written = vc::writeDiagnosticUsb(reinterpret_cast<const uint8_t*>(line),size,capacity_skip);
+        if (capacity_skip) voltageClamp.trace.capacitySkipped(size);
+        else voltageClamp.trace.transmitted(size,written);
       } else voltageClamp.trace.transmitted(0,0,true);
       if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Write,micros());
       return;

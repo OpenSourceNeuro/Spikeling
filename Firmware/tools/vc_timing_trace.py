@@ -19,8 +19,9 @@ def decode(lines):
         values = [int(v) for v in parts]
         if any(v < 0 or v > 2**32-1 for v in values):
             raise ValueError('Out-of-range trace field')
-        if tag == 'VCPR1' and len(values) == len(SUMMARY) and summary is None:
-            summary = dict(zip(SUMMARY, values))
+        fields = SUMMARY + (('capacity_skips',) if tag == 'VCPR2' else ())
+        if tag in ('VCPR1', 'VCPR2') and len(values) == len(fields) and summary is None:
+            summary = dict(zip(fields, values))
         elif tag == 'VCE1' and len(values) == len(EVENT):
             events.append(dict(zip(EVENT, values)))
         elif tag == 'VCPMAX' and len(values) == len(STAGES) and maximum is None:
@@ -46,7 +47,7 @@ def query(stream, timeout=4., raw_path=None):
     pending = bytearray()
     raw = bytearray()
     lines = []
-    prefixes = (b'VCPR1,', b'VCE1,', b'VCPMAX,', b'VCPREND,')
+    prefixes = (b'VCPR1,', b'VCPR2,', b'VCE1,', b'VCPMAX,', b'VCPREND,')
     try:
         while time.monotonic() < end:
             data = _read_before(stream, end)

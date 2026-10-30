@@ -14,8 +14,9 @@ component block and preserved fast AMPA. Case 20 GVIA now has four operator
 FAILs (three loop-deadline failures and one sequence-integrity failure), now
 confirmed by independent CSV/report review, followed by one verified PASS on
 the instrumented 3d78f06 firmware. Earlier failures remain unresolved. Next is
-one pre-defined extended diagnostic capture using that installed firmware;
-see VC_EXTENDED_DIAGNOSTICS_WINDOWS.md and the evidence below.
+an extended diagnostic FAIL that localises the elapsed stall to serial writing.
+A guarded/buffered active-VC2 transport source revision is now prepared; its
+physical verification is next. See VC_USB_TRANSPORT_WINDOWS.md and below.
 
 ## Protocol and independent reference
 
@@ -898,3 +899,116 @@ passes all original and extended criteria with actual sketch/parser and
 simulated IO, saves complete raw/trace files and resumes CC. This is software
 validation with an externally paced native clock, not physical ESP32 timing.
 The pre-defined extended physical capture remains pending.
+
+## Extended physical trace — FAIL; write span identified, 30 October 2026
+
+Case 20 at installed 3d78f06 firmware / runner 1.3, with 60-second phases.
+Independent reanalysis of all **95,571 contiguous analysed samples** reproduces
+the live extended-duration, model, receptor and timing results. The frozen
+trace is independently decoded from its saved query bytes. Overall remains
+FAIL: one deadline flag and one receive-cadence window below 490 Hz.
+
+| Measurement | Result |
+| --- | --- |
+| Analysed duration | 191.1636718 wall seconds |
+| Average cadence | 499.938085 Hz |
+| Complete one-second windows | 489.970632–500.255341 Hz |
+| Median / maximum previous loop | 1,588 / 22,022 us |
+| Deadline flags / other flags | One / zero |
+| Vm / command discrepancy | 0 mV at export precision |
+| Maximum independent clamp-reference error | 0.000000823228 nA |
+| Extended phase coverage | All three pass, about 60 seconds each |
+| Post-protocol quiet receptor maximum | 0.000001 nA |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+The maximum-loop row is sequence 50914; it describes the preceding loop,
+sequence **50913**. The trace gives that loop total 22,013 us, including:
+
+| Span | Elapsed |
+| --- | --- |
+| Command | 12 us |
+| Shared inputs | 242 us |
+| Release/receptors | 28 us |
+| Stimulus/current assembly | 258 us |
+| Membrane/state | 355 us (HH solve 276 us) |
+| Outputs | 48 us |
+| Formatting | 564 us |
+| Serial-write span | **20,501 us** |
+
+The 9 us difference between the profile's total and the next row's full-loop
+duration covers profiling/bookkeeping outside those spans. The transmit call
+accepted all 149 requested bytes, and the raw stream confirms they arrived.
+The next trace record, 50914, is a late start after 22,034 us with a normal
+1,642 us body. It is the consequence of the same stall, not a second independent
+overrun. Trace counts: one overrun, one late start, zero short writes, format
+errors or buffer overflow. The fault occurs during drug, 32.0569434 seconds
+after that phase starts, and 95.2478901 seconds after the first analysed row.
+
+This identifies the elapsed serial-write span rather than the HH solver as the
+location of this pause. It does not distinguish an SDK wait for USB capacity
+from task/interrupt pre-emption within that span or establish the cause of
+every preceding failure. The associated receive batch spans sequences 50911–13
+after a 26.5983 ms row-timestamp gap. No analysed records are missing here.
+
+All 14,531,607 raw bytes are covered by 270,335 consecutive timestamped chunks
+without truncation. Every analysed CSV value and receive timestamp matches
+those bytes. Raw sequences 840–98885 are contiguous; recovering initial
+binary-prefixed 839 gives 98,047 records, exactly the traced tick count. The
+single non-VC2-prefixed line is that initial transition, outside analysis.
+The 75 trailing binary bytes and 5,120 query bytes are outside acquisition.
+
+Each settled phase resolves 155 events. Control / drug / washout fitted
+contributions are -0.09900055571 / -0.05559033185 / -0.09900055546 nA,
+drug/control 0.5615153516 (expected 0.561515625), washout/control 0.9999999975.
+Direct fast-increment/decay checks agree. Numerical/receptor correctness and
+complete phase coverage do not override the timing FAIL.
+
+Evidence: `vc_synapse_20261030_220451_204121.zip`.
+Archive SHA-256: `73f12cffe6c1692e69fee81da669367dce6f11889808058e327a4b7d2001afac`.
+CSV SHA-256: `0d62998d2e3c9fefe2c6257d949c2f591e3cf33c3357a3760a2e4156009210b1`.
+Raw RX SHA-256: `d5a72c637946e69de887f1584c975ed77f7c1540ed14f99084cbe2513b5d68e7`.
+Chunk CSV SHA-256: `2668957c7113d305fc4044291e7d02c082211c2bd3d46845b4ef1b8802cf800e`.
+Query SHA-256: `cf0c05f8b8442567e24d8b2cc09c75bf601dad71b1126174cbfb29900047db94`.
+
+## Guarded active-VC2 transport prototype
+
+The audited Espressif 3.3.12 Hardware CDC implementation defaults to a
+256-byte transmit ring and may wait for ring capacity in Serial.write.
+This is a plausible transmission-side mechanism for the observed span, not a
+proved host/driver root cause. The prototype preallocates 4,096 bytes once
+before Serial.begin and uses zero-timeout, whole-record space checks only in
+active VC2 diagnostics. It pins core 3.3.12 because its retry loop is bounded;
+other core implementations must not be assumed safe with a zero timeout.
+No live ISR-owned ring is resized. Original 100 ms timeout is restored outside
+that stream; passive VC1 and ordinary GUI/CC frame layout are unchanged.
+
+If a complete record cannot fit, it is skipped without waiting, trace reason
+16 / capacity counter increases and flag 128 latches. An actual short driver
+write is separately counted and also latches flag 128. Sequence gaps, all
+transport faults and trace truncation remain FAIL. The buffer cannot absorb
+an arbitrarily long stalled host, and scheduling pre-emption remains possible.
+No model equation, dose, timestep, numerical or timing threshold is changed.
+
+Trace protocol 2 adds a capacity-skip counter without changing per-tick VC2.
+Runner 1.4 requires identity `trace=2,tx=guarded4096` for the new diagnostic
+workflow. Its offline decoder still reads trace protocol 1. Windows local
+Arduino Verify/upload to the receiving unit is required; the ESP32 core is
+unavailable in this runtime, so this revision has not been cross-compiled here.
+The source kit includes 3d78f06 rollback and uses one extended case-20 capture
+for physical verification. See VC_USB_TRANSPORT_WINDOWS.md. Earlier failures,
+including the independently missing record 19575, remain retained/unresolved.
+
+Software validation: **131 native/host tests PASS**. Five new actual-sketch
+tests use a finite FIFO: a 20 ms host pause preserves all records and model
+cadence; a 100 ms pause fills the buffer, produces whole-record skips and
+latched flag 128 without a model-loop wait; a short driver write stays a
+failure; a new stream resets the latch; CC restores the audited 100 ms timeout
+and original framing. These are simulated transport contracts, not measurements
+of the actual ESP32 USB driver or scheduling.
+
+Full real-pyserial/PTY QA also passes every criterion in a three-minute GVIA
+capture with a simulated 20 ms host pause. Separate full workflows with an
+injected short write and a full FIFO remain FAIL as intended, retain raw/trace
+evidence and resume CC. No failure is relabelled. ESP32 cross-compilation and
+physical guarded-transport timing remain pending local Verify/upload and the
+single extended follow-up in the Windows guide.

@@ -27,7 +27,7 @@ TOOLS = ROOT / 'Firmware/tools'
 
 def exercise(executable, case, output, missing_signal=False, channel=1,
              drop_first_identity=False, timing_trace=False, inject_short_write=False,
-             phase_seconds=12):
+             phase_seconds=12, host_pause_us=0):
     master, slave = pty.openpty()
     tty.setraw(slave)
     port = os.ttyname(slave)
@@ -52,6 +52,8 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
                         source_on = not missing_signal
                         if inject_short_write:
                             native.stdin.write(b'W0 0\n')
+                        if host_pause_us:
+                            native.stdin.write(f'U{host_pause_us}\n'.encode())
                     elif action == 'source_off':
                         source_on = False
                     else:
@@ -153,6 +155,15 @@ def exercise(executable, case, output, missing_signal=False, channel=1,
         assert report['capture_complete'] and report['cc_binary_stream_resumed']
         return {'case':'expected_short_write','workflow_checks_passed':True,
                 'all_passed':False,'trace_detected_short_write':True,
+                'cc_binary_stream_resumed':True}
+    if host_pause_us >= 100000:
+        assert code == 1 and not report['all_passed']
+        assert report['error'] == 'Missing or duplicated device sample'
+        assert report['timing_trace']['summary']['capacity_skips'] > 0
+        assert report['timing_trace']['summary']['overruns'] == 0
+        assert report['capture_complete'] and report['cc_binary_stream_resumed']
+        return {'case':'expected_capacity_skip','workflow_checks_passed':True,
+                'all_passed':False,'trace_detected_capacity_skip':True,
                 'cc_binary_stream_resumed':True}
     if drop_first_identity:
         assert code == 1 and not report['all_passed']
