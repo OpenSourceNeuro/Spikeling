@@ -275,6 +275,39 @@ Compilation PASS: **405,201 bytes** program storage, **24,224 bytes** globals,
 The flash-table trade-off adds about 48 kB program storage, without adding RAM.
 The build and packaged source hashes are checked against the committed source.
 
+## Physical active-VC noise integration: PASS
+
+Case 09_active_noise with the installed 5c2e063 firmware and integration runner
+1.0 passes on the board. Independent offline re-analysis of the CSV agrees with
+both live reports. All 13,160 samples are contiguous across 26.3199 wall seconds,
+including the operator's changes between baseline, active and recovery phases.
+
+| Check | Physical noise integration recording |
+| --- | ---: |
+| Command / Vm throughout capture | -70 / -70 mV |
+| Average update rate | 499.9636 Hz |
+| Complete one-second window rates | 499.7072 to 500.1911 Hz |
+| Median / maximum previous loop | 1,525 / 1,801 microseconds |
+| Maximum solver | 305 microseconds |
+| Deadline flags / all other diagnostic flags | 0 / 0 |
+| Settled active input / clamp standard deviation | 0.09708838 / 0.09708839 nA |
+| Input-to-clamp correlation in settled active phase | -0.999999999992 |
+| Maximum clamp-current reference error | 0.0000008233 nA |
+| Maximum current-balance residual | 0.000001 nA |
+| CC binary streaming after cleanup | Resumed |
+
+Both settled baseline and recovery have zero input current and the same
+0.001279 nA holding clamp current. During the settled active phase, the sum of
+input and clamp current remains within 0.000001 nA of that holding current.
+The numerical check includes the ongoing Na/K/leak currents and fixed-voltage
+gating. Thus the added shared noise is compensated by clamp current while the
+ideal voltage stays controlled. The 199-microsecond maximum-loop margin applies
+to this recorded setup; noisy finite-access VC remains a separate combination.
+
+Evidence: vc_integration_20261030_094428_326236.zip, containing both reports,
+09_active_noise/recording.csv and recording.png.
+CSV SHA-256: 8f411a85ecf548676f851f009eec1f7087baf2b855c2a8bf051d1ce9c18b67b1.
+
 ## Next board action
 
 After the eight core tests, the user confirmed that all knobs and functions work
@@ -283,8 +316,8 @@ post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
 Keep the tested voltage=2 firmware installed. The new Python-only integration
-runner is Firmware/tools/run_vc_integration_tests.py; start with
-09_active_noise using the prompts in VC_INTEGRATION_WINDOWS.md. Cases 10 to 13
+runner is Firmware/tools/run_vc_integration_tests.py. Case 09 now passes; run
+10_active_photodiode next using the prompts in VC_INTEGRATION_WINDOWS.md. Cases 10 to 13
 cover photodiode input, Patch command routing, repeated mode transitions with
 stored half-block TTX/TEA doses, and 60 wall seconds of settled finite-access VC.
 The existing firmware model and all numerical/timing tolerances are unchanged.
@@ -298,7 +331,7 @@ new cases with plots and cleanup, including two handovers and a full 60-second
 capture; a deliberately missing signal must fail while cleanup still succeeds.
 None of these host checks measures the new cases on the physical board.
 
-The next integration stage is active-VC shared-input routing (Patch, noise,
+The remaining integration stage is active-VC shared-input routing (Patch,
 photodiode, command input and both synapses), receptor pharmacology and release,
 preserved state during repeated mode transitions, and longer access-mode timing.
 These need suitable active-VC integration captures; the quiet-input core step
