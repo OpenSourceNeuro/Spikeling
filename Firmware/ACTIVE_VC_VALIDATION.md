@@ -525,10 +525,11 @@ verified passing physical capture with runner 1.1; the Synapse 2 repeat also
 passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
 Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
-passes selective slow-component block with preserved AMPA. Next is case 20
-GVIA on Synapse 1 using the same setup. See VC_SYNAPTIC_WINDOWS.md for wiring and
+passes selective slow-component block with preserved AMPA. Case 20 GVIA has
+four console-reported failures; pause reruns for raw-data timing/transport
+diagnosis. See VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
-Cases 15 (repeat), 16, 17, 18 and 19 pass; case 20 remains pending.
+Cases 15 (repeat), 16, 17, 18 and 19 pass; case 20 has no passing capture.
 The firmware model and all existing tolerances are unchanged.
 
 The first integration pack passed 84 native tests: the original 70 and 14
@@ -734,3 +735,24 @@ kit/firmware: AMPA at -70 mV, deterministic release, simulated 10 nM GVIA and
 washout. Expected event amplitudes are -0.099 / -0.055590046875 / -0.099 nA,
 with drug/control 0.561515625. This is not a stochastic release-failure test.
 All existing model and acceptance parameters remain unchanged.
+
+## Physical GVIA: repeated timing/integrity failures, raw evidence pending
+
+The user reports four case-20 attempts with runner 1.1 and the same firmware
+identity. Folders 211129_302995, 211245_619508 and 211532_623345 report PASS
+for control/drug/washout receptor phases but FAIL overall: maximum loops
+23,312 / 16,665 / 23,226 us, one deadline flag each, average rates
+499.778 / 499.846 / 499.777 Hz. Folder 211356_139436 reports FAIL for a missing
+or duplicated device sample. Full folder names, event counts and evidence
+limits are in VC_SYNAPTIC_VALIDATION.md. This is console evidence only;
+independent CSV/report reanalysis and CC-cleanup confirmation remain pending.
+
+Pause further case-20 reruns. The next step is to review all four original
+reports/CSVs, align flagged previous-loop durations with preceding solver
+measurements, locate phase/source timing and characterise sequence/receive
+gaps. Existing telemetry cannot separate serial work from all other input,
+output or scheduling time. Add targeted stage timing/short-write diagnostics
+if needed after raw-data review. No particular USB/host/IO/GVIA cause is
+established. Keep all failures and original thresholds; the earlier NBQX/Patch
+pauses also remain unresolved. No model, firmware or runtime-tool change is
+made in this evidence update.

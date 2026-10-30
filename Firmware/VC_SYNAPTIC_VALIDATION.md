@@ -9,8 +9,10 @@ Basic Synapse 1 and Synapse 2 now have verified passing physical captures
 FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
 passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
 reversal now also passes. Case 19 NMDA/APV also passes, with selective slow
-component block and preserved fast AMPA. Case 20 GVIA is next and remains
-pending physical-board evidence.
+component block and preserved fast AMPA. Case 20 GVIA now has four operator
+console-reported FAILs (three loop-deadline failures and one sequence-integrity
+failure); raw CSV/report review is pending. Pause further case-20 reruns and
+investigate timing/transport before advancing qualification.
 
 ## Protocol and independent reference
 
@@ -648,3 +650,46 @@ washout phases each last 12 seconds. Expected contributions are -0.099 /
 `(1-0.35*0.5)^3 = 0.561515625`. This tests deterministic event amplitude,
 not stochastic release failures. Source firing stays steady until prompted
 to stop; retain the full result archive.
+
+## Physical GVIA — four console-reported FAILs, 30 October 2026
+
+The user ran `20_gvia --synapse 1` four times with runner 1.1 and the installed
+identity `VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2`. This section
+records the supplied console output only. The four CSVs/reports have not yet
+been supplied or independently reanalysed; no archive hashes are available.
+
+| Result folder | Console result | Cadence | Maximum loop | Deadline flags | Resolved control / drug / washout events |
+| --- | --- | --- | --- | --- | --- |
+| vc_synapse_20261030_211129_302995 | Overall FAIL; all three response phases PASS | 499.778 Hz | 23,312 us | 1 | 18 / 18 / 18 |
+| vc_synapse_20261030_211245_619508 | Overall FAIL; all three response phases PASS | 499.846 Hz | 16,665 us | 1 | 34 / 34 / 33 |
+| vc_synapse_20261030_211356_139436 | Overall FAIL: Missing or duplicated device sample | Not printed | Not printed | Not printed | Not printed |
+| vc_synapse_20261030_211532_623345 | Overall FAIL; all three response phases PASS | 499.777 Hz | 23,226 us | 1 | 22 / 23 / 22 |
+
+The three complete analyses report the intended receptor response while
+failing the unchanged loop-deadline criterion. Average cadence near 500 Hz
+does not override a missed 2 ms deadline. The third run fails the sequence
+integrity check before response analysis; its gap/duplicate direction and
+size are unknown from the console. No numerical reference should be propagated
+across that discontinuity. The cleanup message states requested actions;
+it does not establish successful CC resumption without the report.
+
+These recurrences make targeted timing/transport diagnosis the next board
+action. Do not repeat until one run happens to pass, relax thresholds, slow
+the model or change receptor parameters to conceal the failures. Preserve
+all four folders, including partial captures. The earlier NBQX/Patch pauses
+also remain open; a shared cause is not yet established.
+
+Code inspection finds that deterministic GVIA uses a fixed, small arithmetic
+path on incoming events, while complete-loop timing includes command handling,
+shared inputs/release, membrane work, outputs, formatting and serial writing.
+The active VC2 write does not currently record its returned byte count.
+The PC reader ignores non-VC2 lines and does not preserve a raw byte stream.
+These are diagnostic coverage limits, not proof of a USB or parser fault.
+
+Next: obtain all four original reports/CSVs; locate each flagged record relative
+to source onset, phase changes and recovery; compare its previous-loop value
+with the preceding row's solver interval; inspect PC receive gaps and every
+sequence discontinuity. If these cannot isolate the cause, instrument command
+handling, input/release, membrane/output work, formatting and transmission,
+including serial short-write counters, before another qualification run.
+Keep the current firmware installed while collecting the existing evidence.
