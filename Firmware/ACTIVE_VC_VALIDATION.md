@@ -1,9 +1,10 @@
 # Active VC verification and access-timing revision — 30 October 2026
 
-The current voltage=2 revision passes 70 software tests and the ESP32 build.
-Its finite-access timing still needs a physical rerun. Earlier physical results
-below identify the firmware revision used; a numerical PASS alone is not a
-complete timing PASS.
+The current voltage=2 revision at 5c2e063 passes the physical finite-access
+rerun, 70 software tests and the ESP32 build. Earlier physical results below
+identify the firmware revision used; a numerical PASS alone is not a complete
+timing PASS. Reversals, holding-voltage inactivation, tails and combined
+pharmacology/IO are the next physical checks.
 
 ## Physical rerun: first active step PASS
 
@@ -27,8 +28,8 @@ CSV agree. The optimised firmware tested is ddabb4a.
 The slowest recorded loop has 333 microseconds of margin against the 2 ms
 period. Median solver time falls from 1,252 to 256 microseconds, while the
 waveform/reference checks remain passing. This verifies the timing correction
-for this ideal-clamp protocol on the tested board; finite-access and blocker
-protocols have not yet been run physically. PC receive timestamps establish
+for this ideal-clamp protocol on the tested board. The subsequent blocker and
+finite-access recordings are documented below. PC receive timestamps establish
 average cadence, not individual output edge jitter. Actual normal CC firing,
 TTL edges and DAC calibration are separate physical observations.
 
@@ -112,7 +113,44 @@ workflow is checked separately.
 The active identity adds voltage=2; runner 1.2 requires it alongside gates=2.
 The original finite-access CSV remains a FAIL under the updated analyser,
 with one deadline flag. No timing threshold or numerical tolerance is relaxed.
-Physical verification of this voltage=2 revision is pending.
+The physical rerun below now verifies this voltage=2 revision for the access case.
+
+## Physical finite-access rerun at voltage=2: PASS
+
+The 04_access_resistance recording at 5c2e063, identified by
+clock=2,gates=2,voltage=2 and runner 1.2, passes all existing checks. Independent
+offline re-analysis of the uploaded CSV agrees with both reports. The 1,703
+samples are contiguous, include the complete 200-sample pulse and recovery,
+and have quiet inputs and no diagnostic flags.
+
+| Check | Physical voltage=2 recording |
+| --- | ---: |
+| Average rate / complete one-second windows | 499.9067 Hz / 499.4994 to 500.0808 Hz |
+| Median / 99th percentile / maximum previous loop | 1,785 / 1,840 / 1,945 microseconds |
+| Median / maximum solver | 466 / 503 microseconds |
+| Deadline flags / all other diagnostic flags | 0 / 0 |
+| Maximum coupled-reference Vm error | 0.0298423 mV |
+| Maximum clamp-current reference error | 0.0030423 nA |
+| Maximum gate reference error | 0.0003433 |
+| Maximum current-balance residual | 0.000002 nA |
+| Late step Vm / command | -26.91563 / -20 mV |
+| Late clamp current | 1.38312 nA |
+| CC binary stream after cleanup | Resumed |
+
+Compared with the previous finite-access run, median loop time falls by
+120 microseconds and median solver time by 65 microseconds. The reference
+errors remain unchanged at the precision shown. The maximum loop has
+55 microseconds of margin in this approximately 3.405-second analysed capture;
+this result is not a long-duration or mixed-input timing qualification.
+
+The late command-to-Vm difference is 6.91563 mV; Rs times mean clamp current
+is 6.91560 mV. This is the intended access-resistance error, distinct from the
+0.02984 mV numerical error against the coupled reference. No firmware changes,
+threshold relaxation or repeat of cases 01 to 04 is needed for the next checks.
+
+Evidence: report(20261030-070810).json (top-level live report),
+report(20261030-070817).json (case report), recording(8).csv and recording(10).png.
+CSV SHA-256: cbb1b53ca6e3af1f885d09286cc8960f566da598f00dc5c127e81a2b118d9eb2.
 
 ## Original failure on the physical ESP32-S3
 
@@ -198,11 +236,10 @@ The build and packaged source hashes are checked against the committed source.
 
 ## Next board action
 
-Upload the complete voltage=2 revision and repeat ONLY 04_access_resistance
-with runner 1.2, retaining the same quiet-input setup. Send its top-level report,
-CSV and plot. A visible command-tracking error is expected; numerical agreement
-is judged against the finite-access reference. After timing passes, continue
-with reversals, holding-voltage inactivation and potassium tails.
+Keep the tested voltage=2 firmware installed and the same quiet-input setup.
+Run 05_sodium_reversal, 06_sodium_inactivation, 07_above_sodium_reversal and
+08_potassium_tail with runner 1.2; stop at the first failure and retain its files.
+Send the new result folders with their top-level reports, CSVs and plots.
 Required outcomes remain 500 Hz within 2%, loop duration below 2 ms, zero deadline
 flags and all existing waveform/numerical checks passing. Check actual knob-
 controlled CC firing in the GUI after cleanup; resumed binary data alone is not

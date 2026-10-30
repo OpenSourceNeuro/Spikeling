@@ -10,8 +10,11 @@ Single-dose ideal-clamp TTX (92 nM) and TEA (5 mM) tests also pass on the
 physical board, with selective 1/11 current scaling and no deadline flags.
 The first finite-access recording passes the coupled-model numerical checks,
 but one 2.048 ms loop exceeds the 2 ms budget. The subsequent voltage=2
-revision removes a redundant voltage exponential; its board rerun is pending.
-Physical reversal and combined pharmacology tests also remain pending.
+revision at 5c2e063 removes a redundant voltage exponential and passes the
+physical access rerun: 499.907 Hz, zero diagnostic/deadline flags, maximum
+loop 1.945 ms, and all coupled-model numerical checks passing.
+Physical reversal, inactivation, tail and combined pharmacology/IO checks
+remain pending. See ACTIVE_VC_VALIDATION.md for the evidence and timing limits.
 Keep the working passive ZIP as a fallback.
 
 ## Model and switching

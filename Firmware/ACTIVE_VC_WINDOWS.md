@@ -4,7 +4,10 @@ The ideal active step, TTX and TEA cases passed on your board. The finite-access
 case passed its waveform/model checks but recorded one 2.048 ms loop against
 the 2 ms period. This revision reuses one voltage exponential for the exact
 endpoint and interval mean, retaining all four internal steps and test limits.
-Its new physical timing is not yet verified. Repeat ONLY the finite-access case.
+The physical finite-access rerun at 5c2e063 now passes: 499.907 Hz, no diagnostic
+flags and maximum loop 1.945 ms. If you already completed that passing rerun,
+keep this firmware and proceed to cases 05 to 08 below. Steps 1 to 6 describe
+installation and the access check for a fresh setup.
 
 ## 1. Keep the working passive firmware
 
@@ -117,7 +120,25 @@ rerun passes, cases 05 to 08 are the next new physical checks:
 | 07_above_sodium_reversal | At +60 mV Na current is outward |
 | 08_potassium_tail | After a -20 mV hold, a -90 mV step gives inward K tail current |
 
-Run one case by substituting its name after --case. To run all eight:
+Run one case by substituting its name after --case.
+
+To run only the four remaining cases after a passing access rerun, use the
+same extracted folder, quiet inputs and Python environment. No upload is needed:
+
+```powershell
+$cases = "05_sodium_reversal", "06_sodium_inactivation", "07_above_sodium_reversal", "08_potassium_tail"
+foreach ($case in $cases) {
+    & $vcPython .\Firmware\tools\run_active_vc_tests.py COM13 --case $case
+    if ($LASTEXITCODE -ne 0) { break }
+}
+```
+
+Each case creates its own vc_active_TIMESTAMP folder. Send those new folders
+as one ZIP, preserving the top-level report.json and the case CSV/PNG. A failure
+stops this sequence; keep that result before changing anything. After testing,
+reopen the GUI and check normal Patch-controlled CC firing.
+
+For a fresh full validation, run all eight:
 
 ```powershell
 & $vcPython .\Firmware\tools\run_active_vc_tests.py COM13
