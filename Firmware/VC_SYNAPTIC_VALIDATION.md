@@ -15,7 +15,8 @@ FAILs, a shorter instrumented PASS, and an extended trace FAIL that localises
 one elapsed pause to serial writing. Guarded-USB c70dff2 now has an independently
 verified three-minute physical PASS with intact raw data and zero transport
 exceptions. One success does not establish a permanent fix for every earlier
-fault. Next is a focused finite-access case-13 repeat with the installed kit.
+fault. The focused c70dff2 finite-access case-13 repeat also now passes;
+the ordinary GUI/CC operator check after cleanup is the remaining milestone check.
 
 ## Protocol and independent reference
 
@@ -1087,3 +1088,33 @@ backend with guarded VC2 output after the transport change. It is a targeted
 same-revision check, not another GVIA repeat or a new model revision. After
 cleanup, check normal knob-controlled CC firing in the GUI and retain the
 complete integration result folder. No new source download/upload is needed.
+
+## Focused finite-access follow-up — PASS, 31 October 2026
+
+The requested existing `13_access_stress --seconds 60` follow-up also passes
+on guarded c70dff2. Independent reanalysis of all 30,001 contiguous samples
+over 60.0032378 wall seconds reproduces the per-case report; parent/child
+reports agree. Cadence is 499.973020 Hz (one-second windows
+499.851046–500.113603), all flags are zero and median/max loop is 1,799/1,908 us.
+The live report confirms CC binary streaming resumed after cleanup.
+
+At -20 mV command, Vm stays -26.916933 mV and clamp current +1.383387 nA at
+export precision throughout the minute. The 6.916933 mV access drop agrees
+with 5 MOhm times clamp current; maximum direct Ohm-law residual is
+0.0000004 nA. Independent settled coupled-reference errors are at most
+0.00006313185 mV and 0.00001222634 nA. Shared/receptor inputs are zero.
+This is settled finite-access validation, not a new transient reference test.
+No raw-byte stream or frozen stage trace was collected by this integration
+runner; its CSV continuity and flags are the evidence for sample/transport
+integrity. Full metrics/scope are in ACTIVE_VC_VALIDATION.md.
+
+Evidence: `vc_integration_20261031_101953_447850.zip`.
+Archive SHA-256: `3d88def41146ba06cc5d67325c563e830b16ee85448006afb231c8d4929b6978`.
+CSV SHA-256: `73a261757d5374c2bd456417f8b6018a66398fa6f8afb6dcfd68bba09ea37b01`.
+
+No further stress repeat or firmware upload is requested for this transport
+milestone. Keep the current kit and check ordinary GUI/CC firing after cleanup;
+operator confirmation of that current-revision check is still pending. Earlier
+failures remain retained, and these passes do not establish every mixed-input
+configuration or permanent absence of intermittent faults. No implementation
+or threshold is changed by this evidence update.

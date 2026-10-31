@@ -515,10 +515,11 @@ correctly and the GUI displays proper behaviour. This records the requested
 post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
-Keep the installed guarded-USB c70dff2 firmware. Cases 09 to 13 have passing
-captures at earlier recorded revisions, with the first case 11 failure retained
-above. After the guarded three-minute GVIA PASS, repeat only case 13 once to
-check the more demanding finite-access backend at this firmware revision.
+Keep the installed guarded-USB c70dff2 firmware. Its extended GVIA capture and
+focused one-minute finite-access case-13 repeat now both pass independently.
+The earlier recorded integration captures and failures remain retained.
+Quantitative checks for this transport-change milestone are complete; the
+ordinary GUI/CC operator check after cleanup awaits user confirmation.
 The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
@@ -530,8 +531,9 @@ passes selective slow-component block with preserved AMPA. Case 20 GVIA has
 four failures confirmed by raw-data review, a shorter instrumented PASS at
 3d78f06 and an extended write-span timing FAIL. Its guarded c70dff2 extended
 follow-up now passes independent CSV/raw/trace review. Earlier causes remain
-unresolved. The next focused case-13 repeat uses the existing firmware/kit;
-no new upload is needed. See VC_USB_TRANSPORT_WINDOWS.md for the transport
+unresolved. The focused c70dff2 case-13 repeat also now passes; no further
+stress repeats or source upload are needed for this milestone. See
+VC_USB_TRANSPORT_WINDOWS.md for the transport
 change and VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
 Cases 15 (repeat), 16, 17, 18, 19 and 20 now have passing captures across staged
@@ -890,3 +892,54 @@ cables disconnected, to check the higher-cost finite-access backend on the
 current guarded firmware. No firmware/tool update is needed. Follow with the
 ordinary GUI/CC knob check. Earlier FAILs remain retained; no release/merge or
 all-configurations timing claim is made.
+
+## Guarded-USB finite-access stress PASS, 31 October 2026
+
+Case `13_access_stress --seconds 60`, integration runner 1.0 and installed
+c70dff2 identity `trace=2,tx=guarded4096`. Independent reanalysis reproduces
+the child report and the enclosing report agrees exactly. All original
+numerical, command-routing, input-quietness, continuity, cadence and deadline
+criteria pass; the live report confirms resumed CC binary streaming.
+
+| Measurement | Result |
+| --- | --- |
+| Contiguous analysed samples | 30,001, sequences 1688–31688 |
+| Recorded duration | 60.0032378 wall seconds |
+| Overall cadence | 499.973020 Hz |
+| Complete one-second receive windows | 499.851046–500.113603 Hz |
+| Median / maximum previous loop | 1,799 / 1,908 us |
+| Maximum measured solver interval | 502 us |
+| All diagnostic/deadline/transport flags | Zero |
+| Command / settled Vm | -20 / -26.916933 mV |
+| Settled clamp injection | +1.383387 nA |
+| Shared input / receptor current | 0 / 0 nA at export precision |
+| Maximum independent settled-reference Vm error | 0.00006313185 mV |
+| Maximum independent clamp-reference error | 0.00001222634 nA |
+| Maximum gate-reference error | 0.00000549285 |
+| Maximum current-balance error | 0.000001 nA |
+
+Vm and clamp current are constant at export precision across the minute.
+The 6.916933 mV command/Vm offset agrees with the 5 MOhm access drop:
+`(Vcmd - Vm)/Rs = 1.3833866 nA`, differing from exported current by only
+0.0000004 nA. This is the intended finite-access teaching effect. It is a
+settled coupled-reference/drift check, not a new transient benchmark or an
+analogue calibration. The observed maximum leaves 92 us below the existing
+2 ms deadline in this capture; it is not a universal worst-case margin.
+
+The PC reader reports a maximum receive gap of 26.7621 ms with no recorded
+sequence loss or latched transport fault. This integration runner does not
+save raw serial bytes or retrieve the frozen stage trace, so no raw-byte or
+per-stage attribution claim is made for this run.
+
+Evidence: `vc_integration_20261031_101953_447850.zip`.
+Archive SHA-256: `3d88def41146ba06cc5d67325c563e830b16ee85448006afb231c8d4929b6978`.
+CSV SHA-256: `73a261757d5374c2bd456417f8b6018a66398fa6f8afb6dcfd68bba09ea37b01`.
+
+The two targeted post-transport-change physical checks now pass: extended
+ideal synaptic/GVIA capture and one-minute settled finite-access VC. Keep
+c70dff2 and the same PC kit; ordinary GUI/CC knob-controlled firing after this
+cleanup still awaits an operator observation. No further quantitative repeat
+is requested for this milestone. Earlier failures, mixed-input/finite-access
+synaptic timing and physical TTL/analogue calibration remain outside these
+two successful captures. Firmware/tools/models/thresholds are unchanged by
+this evidence update; the PR remains an experimental draft.
