@@ -18,6 +18,17 @@ int main(){
       (device==1?ADC1:ADC2).channels[ch]=value;
     }else if(line[0]=='D'){
       unsigned pin,value;std::istringstream s(line.substr(1));s>>pin>>value;host_gpio[pin]=value;
+#ifdef VC_PROTOTYPE_TEST
+    }else if(line[0]=='Q'){
+      std::cout<<"USBSTATE,"<<vc::usb_tx_ready<<','<<vc::usb_tx_guarded<<','
+               <<vc::usb_tx_fault<<','<<Serial.tx_timeout_ms<<','<<Serial.tx_capacity<<'\n';
+#endif
+    }else if(line[0]=='U'){
+      Serial.host_paused=true;
+      Serial.host_pause_until_us=host_us+static_cast<uint32_t>(std::stoul(line.substr(1)));
+    }else if(line[0]=='W'){
+      // One-shot serial stall/short write. These are synthetic host faults.
+      std::istringstream s(line.substr(1));s>>Serial.next_write_delay_us>>Serial.next_write_limit;
     }else if(line[0]=='R'){
       unsigned count=std::stoul(line.substr(1));
       for(unsigned i=0;i<count;++i){host_us=timing.lastStep_us+timing.step_us;loop();}
@@ -39,9 +50,9 @@ int main(){
     }else if(line[0]=='P'){
       if(line.size()>1){
         pharmacology.enabled=std::stoi(line.substr(1))!=0;
-        pharmSetDose(0,100);pharmSeed(123);
-      }else std::cout<<"PHARM,"<<pharmacology.enabled<<','<<pharmacology.dose[0]<<','
-                     <<pharmacology.syn[0].rng<<','<<pharmacology.syn[1].rng<<'\n';
+        pharmSetDrug(0,100);pharmSeed(123);
+      }else std::cout<<"PHARM,"<<pharmacology.enabled<<','<<pharmacology.concentration[0]<<','
+                     <<pharmacology.syn[0].rng_state<<','<<pharmacology.syn[1].rng_state<<'\n';
 #endif
     }
     for(uint8_t c:Serial.output)std::cout.put(char(c));

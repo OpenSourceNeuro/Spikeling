@@ -60,6 +60,8 @@ void setup() {
   HardwareSettings();                                                                           // Initialise all components
   calibrate_PhotodiodeDark();                                                                   // Set dark baseline with stim outputs forced OFF
   SerialFunctions();                                                                            // Initialise Serial commands
+  pharmSeed(pharmacology.seed);
+  pharmResetIntrinsic(neuron.v);
   synchroniseModelClock();                                                                      // Calibration delays do not advance model time
   //setupWifiAP();
   //Mode_opening();
@@ -90,7 +92,9 @@ void loop() {
     }
 
     const uint32_t prototype_tick_started_us = micros();
+    voltageClamp.trace.begin(prototype_tick_started_us, elapsed_us);
     SCmd.readSerial();                                                                          // Reads Serial for external commands
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Command,micros());
     
     poll_ToggleButtons();                                                                       // Read buzzer/LED toggle buttons (raw + time)
     update_ToggleButtons();                                                                     // Toggle buzzer/LED enable flags when pressed
@@ -104,6 +108,12 @@ void loop() {
     update_Synapse(syn1, syn1.defaultdecay);                                                    // Sets Synapse 1 current
 
     update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Input,micros());
+    if (pharmacology.enabled) {
+      pharmStepSynapse(0, syn1.risingEdge, syn1.gain, syn1.decay, neuron.v, neuron.dt_ms);
+      pharmStepSynapse(1, syn2.risingEdge, syn2.gain, syn2.decay, neuron.v, neuron.dt_ms);
+    }
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Release,micros());
 
     update_StimulusOutput();                                                                    // Determines Analog and Digital Values
     
@@ -114,6 +124,7 @@ void loop() {
     // Shared inputs advance once; the selected membrane backend advances below.
                                                                  
     update_AllCurrent();                                                                        // Apply all current to the model
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Stimulus,micros());
 
 
 
@@ -121,6 +132,14 @@ void loop() {
 
     if (clampMode == ClampMode::VoltageClamp) {
       update_PassiveVoltageClamp();
+    } else if (pharmacology.enabled) {
+      pharmStepIntrinsic(neuron.v, neuron.u, neuron.a, neuron.b, neuron.c, neuron.d,
+                         neuron.dt_ms, neuron.total_current, false, neuron.Vm_peak);
+      if (neuron.v <= neuron.Vm_min) neuron.v = neuron.Vm_min;
+      if (voltageClamp.rearm_spike_output) {
+        pharmacology.intrinsic.verified_event = false;
+        if (neuron.v < neuron.Vm_spike) voltageClamp.rearm_spike_output = false;
+      }
     } else {
       // Original CC equations, sequential update order and spike reset.
       neuron.v = neuron.v + neuron.dt_ms*(0.04 * neuron.v * neuron.v + 5*neuron.v + 140 - neuron.u + neuron.total_current);
@@ -132,9 +151,16 @@ void loop() {
       if (neuron.v <= neuron.Vm_min) neuron.v = neuron.Vm_min;
     }
 
-    update_Spike();                                                                             // Handles spike related functions and hardware (LED + Buzzer) and generate Axon Digital and Analog output
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Membrane,micros());
+    if (pharmacology.enabled && clampMode == ClampMode::CurrentClamp)
+      pharmUpdateVerifiedSpikeOutput();
+    else update_Spike();
+    if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Output,micros());
 
     send_SamplePacket();                                                                        // Quantize the current state data and send it as a compact binary frame.
+    if (voltageClamp.trace.capturing)
+      voltageClamp.trace.finish(static_cast<uint32_t>(voltageClamp.tick),voltageClamp.solve_us,
+                                micros(),timing.step_us);
     if (clampMode == ClampMode::VoltageClamp)
       voltageClamp.previous_loop_us = micros() - prototype_tick_started_us;
   }

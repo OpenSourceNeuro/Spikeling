@@ -1,7 +1,8 @@
 #pragma once  
    
 #include "Serial_functions.h"
-#include "Pharmacology_release.h"
+#include "Pharmacology_serial.h"
+#include "Pharmacology_outputs.h"
 
 
 
@@ -289,8 +290,8 @@ inline void update_AllCurrent() {
   neuron.total_current = patch.i_command                                                      // CC command; zero in passive VC
                        + patch.i_current                                                      // External Current-In injection (CC only)
                        + PD.current                                                           // Photodiode / light input contribution
-                       + syn1.current                                                         // Synapse 1 current contribution
-                       + syn2.current                                                         // Synapse 2 current contribution
+                       + (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current)
+                       + (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current)
                        + noise.current;                                                       // Noise injection contribution
 }
 
@@ -665,11 +666,40 @@ inline void update_PassiveVoltageClamp() {
   vc::Inputs input;
   input.inward_nA = neuron.total_current * vc::Runtime::nA_per_legacy_unit;
   const uint32_t started = micros();
-  const bool ok = voltageClamp.cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode);
+  if (pharmacology.enabled && pharmacology.mode == PharmSynapseMode::Conductance) {
+    // Replace the pre-evaluated receptor currents with sum(g) and sum(gE), so
+    // an imposed voltage has the proper driving force without double counting.
+    input.inward_nA -= (pharmacology.syn[0].effective_current +
+                       pharmacology.syn[1].effective_current)*vc::Runtime::nA_per_legacy_unit;
+    for (unsigned i=0;i<2;++i) {
+      const auto& s = pharmacology.syn[i];
+      const bool ampa = s.receptor == PharmReceptor::AMPA;
+      const bool gaba = s.receptor == PharmReceptor::GABAA;
+      if (!ampa && !gaba) continue;
+      const float scale = vc::Runtime::nA_per_legacy_unit;
+      const float g = s.conductance*(1-pharmacology.block[ampa?4:5])*scale;
+      input.conductance_uS += g;
+      input.conductance_E_nA += g*(ampa?pharmacology.e_ampa:pharmacology.e_gaba);
+      if (ampa && pharmacology.nmda_enabled) {
+        const float gn = pharmNMDA_Norm*fmaxf(0,s.nmda_decay-s.nmda_rise)*
+          (1-pharmacology.block[6])*pharmNMDAUnblocked(neuron.v)*scale;
+        input.conductance_uS += gn;
+        input.conductance_E_nA += gn*pharmacology.e_nmda;
+      }
+    }
+  }
+  bool ok;
+  if (voltageClamp.active) {
+    voltageClamp.active_cell.configure(voltageClamp.cell.parameters());
+    ok = voltageClamp.active_cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode,
+      pharmacology.enabled ? 1-pharmacology.block[0] : 1,
+      pharmacology.enabled ? 1-pharmacology.block[1] : 1);
+  } else ok = voltageClamp.cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode);
   voltageClamp.solve_us = micros() - started;
   voltageClamp.flags = voltageClamp.command_ok ? 0 : vc::RejectedCommand;
+  if (vc::usb_tx_fault) voltageClamp.flags |= vc::TransportFault;
   if (!ok) voltageClamp.flags |= vc::SolverFault;
-  const auto& sample = voltageClamp.cell.sample();
+  const auto& sample = voltageClamp.sample();
   neuron.v = sample.voltage_mV;
   // Retain the original recovery relaxation, without generating Izhikevich spikes in VC.
   neuron.u += neuron.dt_ms * neuron.a * (neuron.b * neuron.v - neuron.u);
@@ -680,8 +710,19 @@ inline void update_PassiveVoltageClamp() {
   if (neuron.v < neuron.Vm_min || neuron.v > neuron.Vm_max) voltageClamp.flags |= vc::DisplayRange;
   if (sample.clamp_nA*I_SCALE > 32767 || sample.clamp_nA*I_SCALE < -32768)
     voltageClamp.flags |= vc::PacketRange;
-  // The passive milestone has no drug-sensitive channels. Never imply compatibility.
-  if (pharmacology.enabled) voltageClamp.flags |= vc::UnsupportedPharmacology;
+  // SK and A-current blockade require additional channels; never invent their
+  // effects in a Na/K-only backend. Settings remain intact for CC.
+  if (pharmacology.enabled && (!voltageClamp.active ||
+      pharmacology.block[2] > 0 || pharmacology.block[3] > 0))
+    voltageClamp.flags |= vc::UnsupportedPharmacology;
+  if (pharmacology.enabled) {
+    auto& state = pharmacology.intrinsic;
+    state.s_sk *= expf(-neuron.dt_ms/120);
+    state.h_na += (pharmSigmoid(-(neuron.v+55)/6)-state.h_na)*
+                  (-expm1f(-neuron.dt_ms/(neuron.v<=-62?2:9)));
+    state.h_a += (pharmSigmoid(-(neuron.v+78)/6)-state.h_a)*
+                 (-expm1f(-neuron.dt_ms/(neuron.v>=-78?35:80)));
+  }
   if (voltageClamp.previous_loop_us >= timing.step_us || voltageClamp.missed_wall_period)
     voltageClamp.flags |= vc::LoopDeadline;
   ++voltageClamp.tick;
@@ -761,7 +802,28 @@ inline int16_t q_round(float x) {
 inline void send_SamplePacket() {
   if (clampMode == ClampMode::VoltageClamp && voltageClamp.diagnostic) {
     // Explicitly selected diagnostic protocol: interval-end state, mean currents.
-    const auto& value = voltageClamp.cell.sample();
+    const auto& value = voltageClamp.sample();
+    if (voltageClamp.active) {
+      char line[320];
+      const auto& g = voltageClamp.active_cell.gates();
+      const int size = snprintf(line,sizeof(line),
+        "VC2,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%u,%lu,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n",
+        static_cast<unsigned long>(voltageClamp.tick),double(voltageClamp.tick)*neuron.dt_ms,
+        double(patch.v_cmd),double(value.voltage_mV),double(value.clamp_nA),
+        double(value.capacitive_nA),double(value.leak_nA),double(value.input_nA),
+        unsigned(voltageClamp.flags),static_cast<unsigned long>(voltageClamp.solve_us),
+        static_cast<unsigned long>(voltageClamp.previous_loop_us),double(value.sodium_nA),
+        double(value.potassium_nA),double(value.receptor_nA),g.m,g.h,g.n);
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Format,micros());
+      if (size > 0 && size < int(sizeof(line))) {
+        bool capacity_skip;
+        const size_t written = vc::writeDiagnosticUsb(reinterpret_cast<const uint8_t*>(line),size,capacity_skip);
+        if (capacity_skip) voltageClamp.trace.capacitySkipped(size);
+        else voltageClamp.trace.transmitted(size,written);
+      } else voltageClamp.trace.transmitted(0,0,true);
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Write,micros());
+      return;
+    }
     Serial.print("VC1,");
     Serial.print(static_cast<uint32_t>(voltageClamp.tick)); Serial.print(',');
     Serial.print(double(voltageClamp.tick)*neuron.dt_ms, 6); Serial.print(',');
@@ -784,10 +846,12 @@ inline void send_SamplePacket() {
   pkt.Itot_q      = q_round(patch.I_for_gui * I_SCALE);                                         // Current In
   pkt.syn1_vm_q   = q_round(syn1.Vm * SYN_V_SCALE);                                             // Synapse 1 Membrane Potential
   pkt.Isyn1_q     = q_round((clampMode == ClampMode::VoltageClamp
-                    ? syn1.current * vc::Runtime::nA_per_legacy_unit : syn1.current) * I_SCALE); // nA in VC; original a.u. in CC
+                    ? (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current) * vc::Runtime::nA_per_legacy_unit
+                    : (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current)) * I_SCALE);
   pkt.syn2_vm_q   = q_round(syn2.Vm * SYN_V_SCALE);                                             // Synapse 2 Membrane Potential
   pkt.Isyn2_q     = q_round((clampMode == ClampMode::VoltageClamp
-                    ? syn2.current * vc::Runtime::nA_per_legacy_unit : syn2.current) * I_SCALE); // nA in VC; original a.u. in CC
+                    ? (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current) * vc::Runtime::nA_per_legacy_unit
+                    : (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current)) * I_SCALE);
   pkt.trigger_q   = (int16_t)stim.trigger;                                                      // Trigger
 
   const uint8_t header[2] = { 0xAA, 0x55 };

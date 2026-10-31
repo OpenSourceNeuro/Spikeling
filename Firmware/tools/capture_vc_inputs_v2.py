@@ -25,7 +25,7 @@ VERSION = '2.1'
 PHASE_SECONDS = 5.
 FLAG_NAMES = {1: 'compliance', 2: 'rejected_command', 4: 'solver_fault',
               8: 'display_range', 16: 'packet_range', 32: 'unsupported_pharmacology',
-              64: 'loop_deadline'}
+              64: 'loop_deadline', 128: 'transport_fault'}
 
 
 def integrity(rows):
@@ -72,7 +72,7 @@ def diagnostics(rows):
         raise ValueError('No diagnostic samples')
     counts = {name: sum(bool(int(r['flags']) & bit) for r in rows)
               for bit, name in FLAG_NAMES.items()}
-    unknown = sum(bool(int(r['flags']) & ~127) for r in rows)
+    unknown = sum(bool(int(r['flags']) & ~255) for r in rows)
     events = []
     for i, row in enumerate(rows):
         if int(row['flags']) & 64 and len(events) < 50:
@@ -127,8 +127,9 @@ def response(rows, kind):
 
 class BufferedCapture:
     """Read available byte batches on a dedicated thread throughout user prompts."""
-    def __init__(self, stream):
+    def __init__(self, stream, parser=parse_sample, raw_limit=0):
         self.stream = stream
+        self.parser = parser
         self.rows = []
         self.error = None
         self.stop_event = threading.Event()
@@ -138,6 +139,12 @@ class BufferedCapture:
         self.events = [{'phase': 'baseline', 'wall_s': 0.}]
         self.metrics = {'read_calls': 0, 'bytes_read': 0, 'max_waiting_bytes': 0,
                         'max_pc_read_gap_s': 0.}
+        self.raw_limit = raw_limit
+        self.raw_chunk_limit = 600000
+        self.raw_data = bytearray()
+        self.raw_chunks = []
+        if raw_limit:
+            self.metrics.update(raw_bytes_truncated=0, raw_chunks_truncated=0, non_sample_lines=0)
         self.thread = threading.Thread(target=self.run, daemon=True)
 
     def set_phase(self, name):
@@ -178,6 +185,17 @@ class BufferedCapture:
                         raise TimeoutError('No complete VC samples for three seconds')
                     continue
                 self.metrics['bytes_read'] += len(data)
+                if self.raw_limit:
+                    # Memory only on the reader thread. Disk output occurs after
+                    # acquisition stops; a bounded cap never interrupts draining.
+                    kept = data[:max(0, self.raw_limit-len(self.raw_data))]
+                    if kept:
+                        if len(self.raw_chunks) < self.raw_chunk_limit:
+                            self.raw_chunks.append((now-self.started,len(self.raw_data),len(kept)))
+                        else:
+                            self.metrics['raw_chunks_truncated'] += 1
+                        self.raw_data.extend(kept)
+                    self.metrics['raw_bytes_truncated'] += len(data)-len(kept)
                 self.metrics['max_pc_read_gap_s'] = max(self.metrics['max_pc_read_gap_s'], now-last_data)
                 last_data = now
                 pending.extend(data)
@@ -188,7 +206,9 @@ class BufferedCapture:
                 with self.lock:
                     phase = self.phase
                 for line in lines:
-                    row = parse_sample(line)
+                    row = self.parser(line)
+                    if row is None and self.raw_limit:
+                        self.metrics['non_sample_lines'] += 1
                     if row is not None:
                         last_valid = now
                         row['wall_s'] = now-self.started

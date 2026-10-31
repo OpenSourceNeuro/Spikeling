@@ -13,11 +13,60 @@ inline bool vcReadFloat(float& value) {
 }
 inline void VCInfo() {
   // Explicit query only. Do not send while the desktop GUI owns the binary stream.
-  Serial.println("VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
+  if (voltageClamp.active)
+    Serial.println(vc::usb_tx_ready ?
+      "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2,trace=2,tx=guarded4096" :
+      "VC-ACTIVE-1,mV,ms,nA,pF,MOhm,clock=2,gates=2,voltage=2,trace=2,tx=unavailable");
+  else Serial.println("VC-PASSIVE-1,mV,ms,nA,pF,MOhm,clock=2");
 }
 inline bool vcNoMoreArguments() { return SCmd.next() == nullptr; }
+inline void VCProfile() {
+  char* token = SCmd.next();
+  auto& t = voltageClamp.trace;
+  if (!token || !vcNoMoreArguments()) { voltageClamp.command_ok = false; return; }
+  if (strcmp(token,"1") == 0 && clampMode == ClampMode::VoltageClamp && voltageClamp.active) {
+    t.start();
+  } else if (strcmp(token,"0") == 0) {
+    t.stop();
+  } else if (strcmp(token,"?") == 0) {
+    // Explicit query freezes collection before any potentially blocking output.
+    t.stop();
+    char line[320];
+    int n = snprintf(line,sizeof(line),"VCPR2,%lu,%u,%lu,%lu,%lu,%lu,%lu,%lu\n",
+      (unsigned long)t.ticks,t.count,(unsigned long)t.overruns,
+      (unsigned long)t.late_starts,(unsigned long)t.short_writes,
+      (unsigned long)t.format_errors,(unsigned long)t.overflow,(unsigned long)t.capacity_skips);
+    Serial.write(reinterpret_cast<const uint8_t*>(line),n);
+    for (unsigned i=0;i<t.count;++i) {
+      const auto& r=t.records[i];
+      n=snprintf(line,sizeof(line),
+        "VCE1,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
+        (unsigned long)r.sequence,(unsigned long)r.elapsed_us,(unsigned long)r.total_us,
+        (unsigned long)r.stage_us[0],(unsigned long)r.stage_us[1],
+        (unsigned long)r.stage_us[2],(unsigned long)r.stage_us[3],
+        (unsigned long)r.stage_us[4],(unsigned long)r.stage_us[5],
+        (unsigned long)r.stage_us[6],(unsigned long)r.stage_us[7],
+        (unsigned long)r.expected_bytes,(unsigned long)r.written_bytes,
+        (unsigned long)r.solve_us,(unsigned long)r.reason);
+      Serial.write(reinterpret_cast<const uint8_t*>(line),n);
+    }
+    Serial.print("VCPMAX");
+    for (unsigned i=0;i<vc::trace_stage_count;++i) {
+      Serial.print(','); Serial.print(t.maximum_stage_us[i]);
+    }
+    Serial.println();
+    Serial.print("VCPREND,"); Serial.println(t.count);
+  } else { voltageClamp.command_ok = false; return; }
+  voltageClamp.command_ok = true;
+}
 inline bool vcValidCommand(float value) {
   return std::isfinite(value) && value >= vc::command_min && value <= vc::command_max;
+}
+inline void VCActive() {
+  float value;
+  voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) &&
+    vcNoMoreArguments() && voltageClamp.selectActive(value != 0);
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
 }
 inline bool vcSetHolding(float value, vc::Source source) {
   if (!vcValidCommand(value)) return voltageClamp.command_ok = false;
@@ -53,6 +102,7 @@ inline void VCDiagnostics() {
   float value;
   voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) && vcNoMoreArguments();
   if (voltageClamp.command_ok) voltageClamp.diagnostic = value != 0;
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
 }
 inline void VCStep() {
   float target, delay_ms, duration_ms;
