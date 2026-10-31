@@ -519,7 +519,7 @@ Keep the installed guarded-USB c70dff2 firmware. Its extended GVIA capture and
 focused one-minute finite-access case-13 repeat now both pass independently.
 The earlier recorded integration captures and failures remain retained.
 Quantitative checks for this transport-change milestone are complete; the
-ordinary GUI/CC operator check after cleanup awaits user confirmation.
+user also confirms normal GUI operation returned after cleanup.
 The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
@@ -937,9 +937,19 @@ CSV SHA-256: `73a261757d5374c2bd456417f8b6018a66398fa6f8afb6dcfd68bba09ea37b01`.
 
 The two targeted post-transport-change physical checks now pass: extended
 ideal synaptic/GVIA capture and one-minute settled finite-access VC. Keep
-c70dff2 and the same PC kit; ordinary GUI/CC knob-controlled firing after this
-cleanup still awaits an operator observation. No further quantitative repeat
+c70dff2 and the same PC kit; the user confirms normal GUI operation returned
+after this cleanup. No further quantitative repeat
 is requested for this milestone. Earlier failures, mixed-input/finite-access
 synaptic timing and physical TTL/analogue calibration remain outside these
 two successful captures. Firmware/tools/models/thresholds are unchanged by
 this evidence update; the PR remains an experimental draft.
+
+## Post-cleanup GUI operation confirmed, 31 October 2026
+
+After the guarded extended GVIA and finite-access captures, the user reports:
+"normal gui operation returned". This completes the requested operator check
+after cleanup on the installed c70dff2 revision, alongside the recorded return
+to CC binary streaming. It is an operator observation, separate from the
+quantitative capture results. This transport-change validation milestone is
+complete; keep the same firmware/PC kit. Earlier failures and evidence limits
+remain retained, with no firmware/tool/threshold change or merge/release.

@@ -193,9 +193,9 @@ contiguous samples, 499.987518 Hz, no flags, maximum loop 1,535 us and resumed
 CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
-half-block and washout. Its first timing FAIL remains recorded below. The next
-milestone check is ordinary GUI/CC operation after both guarded physical
-follow-ups pass. On Synapse 1, case 19 NMDA/APV passes with 24,928 samples,
+half-block and washout. Its first timing FAIL remains recorded below. Both guarded
+physical follow-ups pass and the user confirms normal GUI operation returned
+after cleanup, completing this milestone. On Synapse 1, case 19 NMDA/APV passes with 24,928 samples,
 499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
 preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
 31,812 samples, 499.996309 Hz, zero flags, maximum loop 1,621 us and reversal
@@ -209,7 +209,7 @@ GVIA efficacy. The extended follow-up FAIL localises 20.501 ms to the serial-wri
 span. Its c70dff2 guarded follow-up now passes with 100,891 analysed samples,
 zero flags, max loop 1,858 us and complete raw/trace evidence. The focused
 finite-access case-13 repeat also passes: 30,001 samples, zero flags, max loop
-1,908 us. Keep this firmware/kit; the ordinary GUI/CC check remains to confirm.
+1,908 us. Keep this firmware/kit; normal GUI operation after cleanup is confirmed.
 See VC_SYNAPTIC_VALIDATION.md and ACTIVE_VC_VALIDATION.md.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
 passes 131 tests, with source GPIO/clock/serial simulated, including startup,
@@ -323,6 +323,7 @@ That focused finite-access capture now independently passes at c70dff2:
 flags, max loop 1,908 us, steady Vm=-26.916933 mV and clamp current=1.383387 nA
 at -20 mV command / 5 MOhm access. Independent settled-reference agreement and
 CC streaming cleanup pass. Both targeted transport-change checks are complete;
-no further stress repeat or upload is requested. Ordinary GUI/CC knob firing
-on this current revision still awaits operator confirmation. Earlier failures
+no further stress repeat or upload is requested. On 31 October 2026 the user
+confirmed "normal gui operation returned" after cleanup, completing the
+requested operator check on this revision. Earlier failures
 and broader mixed-input/calibration limits remain recorded.

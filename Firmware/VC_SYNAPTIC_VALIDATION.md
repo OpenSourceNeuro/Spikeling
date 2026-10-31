@@ -16,7 +16,8 @@ one elapsed pause to serial writing. Guarded-USB c70dff2 now has an independentl
 verified three-minute physical PASS with intact raw data and zero transport
 exceptions. One success does not establish a permanent fix for every earlier
 fault. The focused c70dff2 finite-access case-13 repeat also now passes;
-the ordinary GUI/CC operator check after cleanup is the remaining milestone check.
+the user confirms normal GUI operation returned after cleanup, completing
+this transport-change validation milestone.
 
 ## Protocol and independent reference
 
@@ -1113,8 +1114,9 @@ Archive SHA-256: `3d88def41146ba06cc5d67325c563e830b16ee85448006afb231c8d4929b69
 CSV SHA-256: `73a261757d5374c2bd456417f8b6018a66398fa6f8afb6dcfd68bba09ea37b01`.
 
 No further stress repeat or firmware upload is requested for this transport
-milestone. Keep the current kit and check ordinary GUI/CC firing after cleanup;
-operator confirmation of that current-revision check is still pending. Earlier
+milestone. Keep the current kit. On 31 October 2026 the user confirms
+"normal gui operation returned" after cleanup on this revision, completing
+the requested operator check; see ACTIVE_VC_VALIDATION.md. Earlier
 failures remain retained, and these passes do not establish every mixed-input
 configuration or permanent absence of intermittent faults. No implementation
 or threshold is changed by this evidence update.
