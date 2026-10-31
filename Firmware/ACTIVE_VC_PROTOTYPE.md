@@ -184,8 +184,9 @@ passive parameters and teaching test thresholds are our explicit design choices.
 
 The user has a second Spikeling and stereo TRS cable. The Python-only cases
 14 to 20 now cover received AMPA input on either synapse, AMPA/GABA-A reversals,
-NBQX/gabazine/APV and deterministic GVIA release scaling. Firmware remains at
-5c2e063. Case 14 on physical Synapse 1 now passes with runner 1.1: 21,670
+NBQX/gabazine/APV and deterministic GVIA release scaling. Initial synaptic
+captures use 5c2e063; diagnostic/guarded follow-ups name their revisions below.
+Case 14 on physical Synapse 1 passes with runner 1.1: 21,670
 contiguous samples, 499.985491 Hz, zero flags, maximum loop 1,561 us, 22 resolved
 events and resumed CC streaming. The Synapse 2 repeat also passes: 23,460
 contiguous samples, 499.987518 Hz, no flags, maximum loop 1,535 us and resumed
@@ -193,7 +194,7 @@ CC streaming. Both inputs give the configured -0.099 nA event contribution.
 Case 15 NBQX now has a verified passing repeat: 26,409 samples, 499.994257 Hz,
 no flags, maximum loop 1,607 us and resumed CC streaming, with the expected
 half-block and washout. Its first timing FAIL remains recorded below. Next is
-guarded USB transport verification after the extended trace captured a write-span stall
+a focused finite-access case-13 repeat after the guarded extended GVIA PASS
 on Synapse 1: case 19 NMDA/APV passes with 24,928 samples,
 499.993319 Hz, zero flags, maximum loop 1,690 us, selective NMDA half-block,
 preserved AMPA and washout. Case 18 GABA-A reversal also passes, with
@@ -205,11 +206,12 @@ reversal near 0 mV. Case 16 gabazine passes with
 half-block/washout and CC cleanup. Case 20 now passes on instrumented 3d78f06
 firmware, with 25,288 samples, zero flags, maximum loop 1,673 us and matching
 GVIA efficacy. The extended follow-up FAIL localises 20.501 ms to the serial-write
-span. The next guarded transport source revision and runner 1.4 require local
-Verify/upload and one extended verification capture; see VC_USB_TRANSPORT_WINDOWS.md.
+span. Its c70dff2 guarded follow-up now passes with 100,891 analysed samples,
+zero flags, max loop 1,858 us and complete raw/trace evidence. Keep this firmware
+and kit for the focused case-13 repeat; see VC_SYNAPTIC_VALIDATION.md.
 See VC_SYNAPTIC_WINDOWS.md and VC_SYNAPTIC_VALIDATION.md. The native suite now
-passes 113 tests, with source GPIO/clock/serial simulated, including the
-startup deadline regressions.
+passes 131 tests, with source GPIO/clock/serial simulated, including startup,
+duration and guarded-transport regressions.
 
 The first physical case 15 NBQX capture verifies the configured half-block and
 washout but FAILS overall: one 22.256 ms loop occurs before received events or
@@ -304,3 +306,12 @@ Guarded transport software checks: 131 native/host tests PASS; a full
 three-minute serial workflow with simulated 20 ms host backpressure passes,
 while explicit short-write/full-FIFO workflows remain FAIL and preserve
 diagnostics/cleanup. Physical guarded-transport timing has not yet been tested.
+
+Guarded c70dff2 now has a passing extended physical GVIA capture: 100,891
+analysed samples, 500.000115 Hz, zero flags, max loop 1,858 us and resumed CC.
+The 102,948-tick trace has zero overruns, short writes or capacity skips;
+write-span maximum is 87 us. Raw bytes independently reproduce all analysed
+records/timestamps, and GVIA efficacy/washout match the configured model.
+Earlier intermittent causes remain open; this is one condition and a different
+source event rate, not proof of permanent correction. Next is one existing
+finite-access case-13 stress capture on this same firmware, then GUI/CC checking.

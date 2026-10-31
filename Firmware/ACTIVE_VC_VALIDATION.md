@@ -515,9 +515,10 @@ correctly and the GUI displays proper behaviour. This records the requested
 post-test operator check of ordinary operation, separately from the quantitative
 VC captures. It is not a measurement of TTL timing or analogue calibration.
 
-Keep the tested voltage=2 firmware installed. Cases 09 to 13 now have verified
-passing captures, with the first case 11 failure retained above. No repetition
-of the completed protocols or firmware upload is needed for this milestone.
+Keep the installed guarded-USB c70dff2 firmware. Cases 09 to 13 have passing
+captures at earlier recorded revisions, with the first case 11 failure retained
+above. After the guarded three-minute GVIA PASS, repeat only case 13 once to
+check the more demanding finite-access backend at this firmware revision.
 The user has confirmed a second Spikeling and stereo TRS cable. The next
 Python-only pack uses its normal CC axon output as the source, connected through
 the labelled Synapse Out -> Synapse In jacks. Case 14 on Synapse 1 now has a
@@ -526,11 +527,12 @@ passes. Case 15 NBQX now also has a verified passing repeat; its first timing
 FAIL remains recorded below and unresolved. Case 16 gabazine also passes.
 Cases 17 AMPA and 18 GABA-A reversal now also pass. Case 19 NMDA/APV also
 passes selective slow-component block with preserved AMPA. Case 20 GVIA has
-four failures confirmed by raw-data review, followed by a verified instrumented
-PASS at 3d78f06. Earlier causes remain unresolved. Next is one pre-defined
-guarded USB transport verification after the extended trace localised a stall
-to the serial-write span. This requires the new source upload and runner 1.4;
-see VC_USB_TRANSPORT_WINDOWS.md. See VC_SYNAPTIC_WINDOWS.md for wiring and
+four failures confirmed by raw-data review, a shorter instrumented PASS at
+3d78f06 and an extended write-span timing FAIL. Its guarded c70dff2 extended
+follow-up now passes independent CSV/raw/trace review. Earlier causes remain
+unresolved. The next focused case-13 repeat uses the existing firmware/kit;
+no new upload is needed. See VC_USB_TRANSPORT_WINDOWS.md for the transport
+change and VC_SYNAPTIC_WINDOWS.md for wiring and
 VC_SYNAPTIC_VALIDATION.md for the independent reference, evidence and limits.
 Cases 15 (repeat), 16, 17, 18, 19 and 20 now have passing captures across staged
 revisions; this is not one clean same-revision qualification run.
@@ -862,3 +864,29 @@ real-pyserial/PTY capture with simulated 20 ms host backpressure. Injected
 short-write and full-FIFO workflows retain the expected FAIL and complete
 raw/trace preservation plus CC cleanup. These simulations do not prove real
 ESP32 timing. Physical verification is next with the pinned core/source kit.
+
+## Guarded-USB extended physical GVIA PASS
+
+The c70dff2 / runner-1.4 60/60/60-second capture independently passes all
+criteria: 100,891 analysed samples over 201.7799535 wall seconds, 500.000115 Hz
+(one-second windows 499.754388–500.253285), zero flags, maximum loop 1,858 us,
+Vm=-70 mV and resumed CC streaming. Per-phase 90/91/90 events give control /
+drug / washout -0.09900044110 / -0.05559030352 / -0.09900043783 nA,
+drug/control 0.5615157155 and washout/control 0.9999999670. All three duration
+checks pass. Maximum independent clamp-reference error is 0.000000823228 nA.
+
+All CSV fields/timestamps match 15,264,339 exact raw bytes / 210,030 chunks.
+Raw VC2 records are contiguous through the analysed interval; initial mixed
+framing is outside it. The independently decoded 102,948-tick trace has zero
+exceptions, short writes, capacity skips or overflow. Maximum write span is
+87 us, while PC receive gaps reach 26.735 ms. This supports buffering under
+these conditions without proving the cause of all earlier failures or permanent
+reliability. The source event rate also differs from the preceding failed run.
+
+Archive SHA-256: 7583895872797a4df65ce2c7c08ca00522b225edec12257de2970c5920adf4c6.
+Full metrics/scope and individual hashes are in VC_SYNAPTIC_VALIDATION.md.
+Next is one existing `13_access_stress --seconds 60` capture, with incoming
+cables disconnected, to check the higher-cost finite-access backend on the
+current guarded firmware. No firmware/tool update is needed. Follow with the
+ordinary GUI/CC knob check. Earlier FAILs remain retained; no release/merge or
+all-configurations timing claim is made.

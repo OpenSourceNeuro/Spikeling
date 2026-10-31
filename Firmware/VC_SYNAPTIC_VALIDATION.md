@@ -1,8 +1,8 @@
 # Synaptic VC test pack — validation and scope
 
-30 October 2026. Physical captures below use the `5c2e063` active firmware.
-The subsequent opt-in diagnostic revision adds stage timing and serial-write
-evidence; it does not change model equations or numerical/timing thresholds.
+31 October 2026. Physical captures below name their firmware revisions:
+5c2e063, instrumented 3d78f06 and guarded-USB c70dff2. Diagnostic/transport
+changes do not change model equations or numerical/timing thresholds.
 The user has confirmed access to a second Spikeling and a stereo TRS cable.
 The first requested physical capture is `14_synaptic_input --synapse 1` on COM13.
 Basic Synapse 1 and Synapse 2 now have verified passing physical captures
@@ -10,13 +10,12 @@ Basic Synapse 1 and Synapse 2 now have verified passing physical captures
 FAIL remains recorded and unresolved. Case 16 gabazine also has a verified
 passing capture. Case 17 AMPA reversal now also passes. Case 18 GABA-A
 reversal now also passes. Case 19 NMDA/APV also passes, with selective slow
-component block and preserved fast AMPA. Case 20 GVIA now has four operator
-FAILs (three loop-deadline failures and one sequence-integrity failure), now
-confirmed by independent CSV/report review, followed by one verified PASS on
-the instrumented 3d78f06 firmware. Earlier failures remain unresolved. Next is
-an extended diagnostic FAIL that localises the elapsed stall to serial writing.
-A guarded/buffered active-VC2 transport source revision is now prepared; its
-physical verification is next. See VC_USB_TRANSPORT_WINDOWS.md and below.
+component block and preserved fast AMPA. Case 20 has retained timing/integrity
+FAILs, a shorter instrumented PASS, and an extended trace FAIL that localises
+one elapsed pause to serial writing. Guarded-USB c70dff2 now has an independently
+verified three-minute physical PASS with intact raw data and zero transport
+exceptions. One success does not establish a permanent fix for every earlier
+fault. Next is a focused finite-access case-13 repeat with the installed kit.
 
 ## Protocol and independent reference
 
@@ -1012,3 +1011,79 @@ injected short write and a full FIFO remain FAIL as intended, retain raw/trace
 evidence and resume CC. No failure is relabelled. ESP32 cross-compilation and
 physical guarded-transport timing remain pending local Verify/upload and the
 single extended follow-up in the Windows guide.
+
+## Guarded-USB extended physical capture — PASS, 31 October 2026
+
+Case `20_gvia --synapse 1 --timing-trace --phase-seconds 60`, runner 1.4 and
+installed c70dff2 source package, identity ending
+`trace=2,tx=guarded4096`. Independent reanalysis reproduces all response,
+numerical, duration, clock and frozen-trace results within machine precision.
+All original and extended criteria pass. The successful execution confirms
+user-side compilation/upload; no local build log or binary hash was supplied.
+
+| Measurement | Result |
+| --- | --- |
+| Analysed contiguous samples | 100,891 |
+| Analysed receive duration | 201.7799535 wall seconds |
+| Average cadence | 500.000115 Hz |
+| Complete one-second windows | 499.754388–500.253285 Hz |
+| Median / maximum previous loop | 1,588 / 1,858 us |
+| All diagnostic/deadline/transport flags | Zero |
+| Vm / command discrepancy | 0 mV at export precision |
+| Maximum independent clamp-reference error | 0.000000823228 nA |
+| Maximum gate-reference error | 0.000000465525 |
+| Maximum current-balance error | 0.000001 nA |
+| Quiet recovery receptor maximum | 0.000001 nA |
+| CC binary streaming after cleanup | Confirmed by the live report |
+
+Control / drug / washout each have at least 60 seconds of recorded coverage
+(30,034 / 30,031 / 30,009 samples). Settled analysis resolves 90 / 91 / 90
+events, minimum resolved interval 0.65 wall seconds. Fitted contributions are
+-0.09900044110 / -0.05559030352 / -0.09900043783 nA. Drug/control is
+0.5615157155 (expected 0.561515625); washout/control is 0.9999999670. Separate
+direct-increment/decay checks agree. These are event-normalised model currents,
+not a claim of analogue calibration or complete source-spike counting.
+
+The firmware trace covers **102,948 ticks**, with zero exceptional records,
+overruns, late starts, actual short writes, capacity skips, format errors or
+overflow. Maximum write span is **87 us**, compared with 20,501 us in the
+preceding extended failure. Other separate maxima are command 104 us, input
+293 us, release 37 us, stimulus/current assembly 302 us, membrane/state 432 us,
+outputs 94 us and formatting 711 us. These maxima are not simultaneous and
+must not be summed as an observed worst-case loop. The observed 1,858 us
+maximum leaves 142 us below the existing deadline in this capture only.
+
+All **15,264,339 raw bytes** are covered by **210,030** consecutive timestamped
+chunks, with no truncation. Every analysed CSV field and receive timestamp
+matches the raw records exactly. The ordinary parser sees contiguous raw VC2
+sequences 841–103786; initial binary-prefixed sequence 840 is recoverable,
+giving 102,947 consecutive VC2 records. Trace and byte collection cover slightly
+different boundaries, including non-VC2 setup/stop traffic, so their totals
+differ by one tick; no analysed record is missing. The 91 trailing binary bytes
+are outside the analysed stream. All frozen trace metadata is independently
+recovered from the separate 4,096-byte query buffer.
+
+PC receive-read gaps still reach 26.735 ms without any observed device loop
+overrun or record loss. This is consistent with buffering absorbing receive-side
+gaps in this run; it is not an independent measurement of USB transaction timing
+or proof of the earlier host/driver cause. Source activity also differs from
+the preceding run (90/91/90 rather than 155 events per phase), so this is not
+a controlled causal A/B experiment. All historical failures, including missing
+record 19575, remain retained. The result supports this transport mitigation
+under the tested ideal -70 mV conditions, not every input/access configuration
+or a permanent absence of intermittent faults.
+
+Evidence: `vc_synapse_20261031_100615_869059.zip`.
+Archive SHA-256: `7583895872797a4df65ce2c7c08ca00522b225edec12257de2970c5920adf4c6`.
+CSV SHA-256: `c1798e0a7be782aa7f105a79aef31a2d16d9731f94c9eca6b017ba548f484148`.
+Raw RX SHA-256: `7bcc468ba3b7a31aa2971afda52da544b8b529dde3839523fb65b74ed57e2f94`.
+Chunk CSV SHA-256: `4a405233ed17381c95af5f06baffede06aac45e085baaf84c862b02c85ae538a`.
+Query SHA-256: `32e051ffb6cefd11b14dda375231633dddff09806fc109c54fcebbeb7012b20b`.
+
+Next: keep c70dff2 and the current Python kit. Run one existing integration
+`13_access_stress --seconds 60` with Current-In and both incoming synapses
+disconnected and SOURCE quiet. This checks the more expensive finite-access
+backend with guarded VC2 output after the transport change. It is a targeted
+same-revision check, not another GVIA repeat or a new model revision. After
+cleanup, check normal knob-controlled CC firing in the GUI and retain the
+complete integration result folder. No new source download/upload is needed.
