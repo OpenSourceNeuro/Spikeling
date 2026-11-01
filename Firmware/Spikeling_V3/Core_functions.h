@@ -253,7 +253,10 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
     }
   }
   if (syn.risingEdge == true){                                                                // If Spike on Synapse is detected
-    syn.current += syn.gain * STP_spikeMultiplier(syn.stp, stpStepCount, neuron.dt_ms);         // Apply event-driven STP to new current only; preserve the existing decay, polarity and VC input path
+    syn.event_gain = syn.gain * STP_spikeMultiplier(syn.stp, stpStepCount, neuron.dt_ms);        // One STP event update shared by legacy CC/VC and optional pharmacological release
+    syn.current += syn.event_gain;                                                              // Preserve the original current-based synaptic tail, including polarity and decay
+  } else {
+    syn.event_gain = 0.0f;                                                                      // Never reuse a previous event gain on a tick without an incoming spike
   }
   
   if (syn.decay_enable == true){                                                              // If the GUI Synaptic Decay 1 is disabled: 
