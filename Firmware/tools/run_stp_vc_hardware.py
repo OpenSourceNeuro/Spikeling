@@ -12,7 +12,6 @@ from datetime import datetime, timezone
 import json
 import math
 from pathlib import Path
-import statistics
 import time
 
 COLUMN_NAMES = ("tick time_ms command_mV voltage_mV clamp_nA capacitive_nA "
@@ -88,11 +87,14 @@ def extract(rows,gain,decay,mode,min_events):
     flags=[r["flags"] for r in rows]
     time_elapsed=rows[-1]["host_seconds"]-rows[0]["host_seconds"]
     observed_rate=(rows[-1]["tick"]-rows[0]["tick"])/time_elapsed if time_elapsed>0 else 0
-    # An ideal held cell's residual clamp minus the known inward-current term
-    # is constant (ionic background may be nonzero in active HH mode).
-    equilibrium=[r["clamp_nA"]+r["input_nA"] for r in rows[len(rows)//10:]]
-    offset=statistics.median(equilibrium) if equilibrium else float("nan")
-    balance_max=max((abs(v-offset) for v in equilibrium),default=float("inf"))
+    # Kirchhoff's law for the measured interval: clamp + inward input =
+    # capacitive + leak + Na + K + receptor.  The ionic terms can be nonzero
+    # in active VC, so clamp must NOT be tested against -inward alone.
+    balance_residuals=[
+        abs(r["clamp_nA"]+r["input_nA"]-r["capacitive_nA"]-r["leak_nA"]
+            -r.get("sodium_nA",0.)-r.get("potassium_nA",0.)-r.get("receptor_nA",0.))
+        for r in rows[len(rows)//10:]]
+    balance_max=max(balance_residuals,default=float("inf"))
     flag_count={str(bit):sum(bool(f&bit) for f in flags) for bit in (1,4,16,64,128)}
     result={"status":"PASS","reason":"Valid events, current balance, VC health and wall cadence",
             "event_count":len(events),"events":events,"lost_or_duplicate_tick_pairs":gaps,
