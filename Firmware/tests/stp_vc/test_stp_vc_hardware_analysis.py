@@ -2,6 +2,8 @@
 """Adversarial tests for the physical STP/VC diagnostic analyser (no serial port)."""
 import importlib.util
 from pathlib import Path
+import queue
+import time
 import unittest
 
 TOOL = Path(__file__).resolve().parents[2]/"tools/run_stp_vc_hardware.py"
@@ -71,6 +73,47 @@ class HardwareAnalysis(unittest.TestCase):
         self.assertEqual(m.decode_line(good,"active")["tick"],1)
         self.assertIsNone(m.decode_line(b"VC2,1,2,3","active"))
         self.assertIsNone(m.decode_line(good.replace(b"0.5",b"NaN"),"active"))
+
+
+class ContinuousReaderTests(unittest.TestCase):
+    class FakePort:
+        def __init__(self):
+            self.data=queue.Queue()
+        def readline(self,size=512):
+            try:
+                return self.data.get(timeout=.01)
+            except queue.Empty:
+                return b""
+        def send_tick(self,tick):
+            values=[tick,tick*.1,-70.,-70.,0.,0.,0.,0.,0,20,200]
+            self.data.put(("VC1,"+",".join(map(str,values))+"\\n").encode("ascii"))
+
+    def test_reader_drains_while_unarmed_without_leaking_stale_samples(self):
+        port=self.FakePort()
+        reader=m.ContinuousReader(port,"passive")
+        reader.start()
+        try:
+            for tick in range(1,10):
+                port.send_tick(tick)
+            time.sleep(.08)
+            self.assertTrue(port.data.empty(), "Unarmed reader must still drain the stream")
+            self.assertEqual(reader.rows,[])
+            # A worker sends new ticks while capture is armed.
+            import threading
+            def produce():
+                time.sleep(.03)
+                for tick in range(100,111):
+                    port.send_tick(tick)
+                    time.sleep(.003)
+            feeder=threading.Thread(target=produce)
+            feeder.start()
+            rows=reader.record(.15)
+            feeder.join()
+            self.assertEqual([r["tick"] for r in rows],list(range(100,111)))
+            self.assertLess(rows[0]["host_seconds"],rows[-1]["host_seconds"])
+            self.assertIsNone(reader.error)
+        finally:
+            reader.close()
 
 
 if __name__=="__main__":
