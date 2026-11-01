@@ -69,7 +69,7 @@ int main(){
         <<syn2.event_gain<<','<<syn2.current<<','<<int(syn2.stp.mode)<<','
         <<b.released_current<<','<<b.conductance<<','<<b.nmda_rise<<','
         <<b.nmda_decay<<','<<b.effective_current<<','<<b.last_release_multiplier<<','
-        <<int(b.last_quanta)<<','<<b.rng_state<<','<<neuron.total_current<<'\\n';
+        <<int(b.last_quanta)<<','<<b.rng_state<<','<<neuron.total_current<<'\n';
     }else if(line[0]=='P'){
       if(line.size()>1){
         pharmacology.enabled=std::stoi(line.substr(1))!=0;
