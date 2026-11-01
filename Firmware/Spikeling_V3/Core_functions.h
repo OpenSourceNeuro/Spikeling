@@ -824,18 +824,35 @@ inline void send_SamplePacket() {
       if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Write,micros());
       return;
     }
-    Serial.print("VC1,");
-    Serial.print(static_cast<uint32_t>(voltageClamp.tick)); Serial.print(',');
-    Serial.print(double(voltageClamp.tick)*neuron.dt_ms, 6); Serial.print(',');
-    Serial.print(patch.v_cmd, 6); Serial.print(',');
-    Serial.print(value.voltage_mV, 6); Serial.print(',');
-    Serial.print(value.clamp_nA, 6); Serial.print(',');
-    Serial.print(value.capacitive_nA, 6); Serial.print(',');
-    Serial.print(value.leak_nA, 6); Serial.print(',');
-    Serial.print(value.input_nA, 6); Serial.print(',');
-    Serial.print(voltageClamp.flags); Serial.print(',');
-    Serial.print(voltageClamp.solve_us); Serial.print(',');
-    Serial.println(voltageClamp.previous_loop_us);
+    // Passive VC diagnostic: one bounded USB record, not eleven potentially
+    // blocking Serial.print calls from inside the 2-ms model loop.
+    // The CSV field layout and scientific units remain identical to VC1.
+    char line[208];
+    const int size = snprintf(line, sizeof(line),
+      "VC1,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%u,%lu,%lu\\n",
+      static_cast<unsigned long>(voltageClamp.tick),
+      double(voltageClamp.tick)*neuron.dt_ms, double(patch.v_cmd),
+      double(value.voltage_mV), double(value.clamp_nA),
+      double(value.capacitive_nA), double(value.leak_nA),
+      double(value.input_nA), unsigned(voltageClamp.flags),
+      static_cast<unsigned long>(voltageClamp.solve_us),
+      static_cast<unsigned long>(voltageClamp.previous_loop_us));
+    if (size > 0 && size < int(sizeof(line))) {
+#if VC_GUARDED_HWCDC
+      bool capacity_skip;
+      const size_t written = vc::writeDiagnosticUsb(
+        reinterpret_cast<const uint8_t*>(line), size, capacity_skip);
+      if (capacity_skip) voltageClamp.trace.capacitySkipped(size);
+      else voltageClamp.trace.transmitted(size, written);
+#else
+      // Non-HWCDC builds retain a single legacy write; not protected from
+      // backpressure and not validated as an ESP32-S3 diagnostic configuration.
+      Serial.write(reinterpret_cast<const uint8_t*>(line),size);
+#endif
+    } else {
+      vc::usb_tx_fault = true;
+      voltageClamp.trace.transmitted(0,0,true);
+    }
     return;
   }
   pkt.v_q         = q_round(neuron.v_out * V_SCALE);                                            // Membrane Potential
