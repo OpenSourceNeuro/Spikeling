@@ -66,7 +66,7 @@ inline void VCActive() {
   float value;
   voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) &&
     vcNoMoreArguments() && voltageClamp.selectActive(value != 0);
-  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.diagnostic);
 }
 inline bool vcSetHolding(float value, vc::Source source) {
   if (!vcValidCommand(value)) return voltageClamp.command_ok = false;
@@ -102,7 +102,7 @@ inline void VCDiagnostics() {
   float value;
   voltageClamp.command_ok = vcReadFloat(value) && (value == 0 || value == 1) && vcNoMoreArguments();
   if (voltageClamp.command_ok) voltageClamp.diagnostic = value != 0;
-  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.active && voltageClamp.diagnostic);
+  vc::diagnosticUsbMode(clampMode == ClampMode::VoltageClamp && voltageClamp.diagnostic);
 }
 inline void VCStep() {
   float target, delay_ms, duration_ms;
