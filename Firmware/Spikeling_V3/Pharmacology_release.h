@@ -67,5 +67,5 @@ inline float pharmReleaseEvent(PharmSynapseState &state, float calcium_efficienc
   }
   state.last_quanta = released;
   state.last_release_multiplier = float(released) / (float(state.sites) * state.p0);
-  return state.last_release_multiplier;                      // Baseline p0 remains fixed for future STP/LTP support.
+  return state.last_release_multiplier;                      // Baseline p0 stays fixed; upstream STP scales amplitude, not Bernoulli probabilities.
 }
