@@ -171,6 +171,8 @@ def commands_for(case):
         "PH C "+str(int(case.ca_enabled)),
         "PH F 1 .35",
         "PH L 1 0", "PH L 2 0",           # Deterministic release; frozen prob. tests are host-side.
+        "PH D 0 0", "PH D 1 0",            # Clear intrinsic Na/K blockers from earlier sessions.
+        "PH D 2 0", "PH D 3 0",            # Clear unsupported SK/A blockers to prevent VC flag 32.
         "PH D 4 "+str(case.nbqx),
         "PH D 5 "+str(case.gabazine),
         "PH D 6 0", "PH D 7 "+str(case.gvia),
