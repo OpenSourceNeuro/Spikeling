@@ -21,6 +21,8 @@ def fake_trace(mode=1,gain=6.,decay=.99,count=7,break_balance=False):
         inward=round(current*.01,6)
         row={"tick":tick,"time_ms":tick*.1,"input_nA":inward,
              "clamp_nA":-inward+(.04 if break_balance and tick>=200 else 0.),
+             "capacitive_nA":0.,"leak_nA":0.,"sodium_nA":0.,
+             "potassium_nA":0.,"receptor_nA":0.,
              "voltage_mV":-70.,"flags":0,"host_seconds":tick*.002}
         rows.append(row)
     return rows
