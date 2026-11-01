@@ -2,6 +2,7 @@
 #include "Spikeling_V3.ino"
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <string>
 int main(){
   setup();
@@ -47,6 +48,14 @@ int main(){
                <<host_gpio[pins.gpio.axon_d]<<','<<host_gpio[pins.gpio.spike]<<','
                <<pot.use_patch_pot<<','<<patch.current_clamp<<','<<neuron.selected_model<<'\n';
 #ifdef VC_PROTOTYPE_TEST
+    }else if(line[0]=='Y'){
+      // Host-only state probe. Never included in real ESP32 firmware.
+      std::cout<<std::setprecision(9)<<"STPSTATE,"<<stpStepCount<<','
+        <<int(syn1.stp.mode)<<','<<syn1.stp.u<<','<<syn1.stp.x<<','
+        <<syn1.stp.hasEvent<<','<<syn1.current<<','
+        <<int(syn2.stp.mode)<<','<<syn2.stp.u<<','<<syn2.stp.x<<','
+        <<syn2.stp.hasEvent<<','<<syn2.current<<','
+        <<neuron.total_current<<','<<int(clampMode)<<','<<pharmacology.enabled<<'\n';
     }else if(line[0]=='P'){
       if(line.size()>1){
         pharmacology.enabled=std::stoi(line.substr(1))!=0;

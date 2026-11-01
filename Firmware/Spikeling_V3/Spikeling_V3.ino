@@ -105,6 +105,7 @@ void loop() {
 
     update_Photodiode();                                                                        // Sets Light generated current
 
+    ++stpStepCount;                                                                              // Advance model-time event clock once per shared CC/VC integration step
     update_Synapse(syn1, syn1.defaultdecay);                                                    // Sets Synapse 1 current
 
     update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current

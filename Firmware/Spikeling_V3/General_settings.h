@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "VoltageClamp.h"
 #include "Pharmacology_settings.h"
+#include "STP_functions.h"
 
 
 
@@ -646,6 +647,7 @@ struct Synapse {
   PotFilter pot_filt;                                       // Filter state for Synapse gain pot ADC (median + IIR + deadband)
   // --- Gain (synaptic weight)
   float    gain;                                            // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
+  STPState stp;                                             // Independent event-driven short-term plasticity state; retains history in both clamp modes.
   int16_t  pot_value;                                       // Raw ADC reading (0..4095)
   float    pot_scaling;                                     // Counts-per-gain-unit
   // --- State
