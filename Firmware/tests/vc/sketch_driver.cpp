@@ -56,6 +56,20 @@ int main(){
         <<int(syn2.stp.mode)<<','<<syn2.stp.u<<','<<syn2.stp.x<<','
         <<syn2.stp.hasEvent<<','<<syn2.current<<','
         <<neuron.total_current<<','<<int(clampMode)<<','<<pharmacology.enabled<<'\n';
+    }else if(line[0]=='J'){
+      // Host-only STP+PH event-state probe. Never linked into the physical ESP32 build.
+      const auto& a=pharmacology.syn[0];
+      const auto& b=pharmacology.syn[1];
+      std::cout<<std::setprecision(10)<<"PHSTP,"<<stpStepCount<<','
+        <<pharmacology.enabled<<','<<int(pharmacology.mode)<<','<<int(clampMode)<<','
+        <<syn1.event_gain<<','<<syn1.current<<','<<int(syn1.stp.mode)<<','
+        <<a.released_current<<','<<a.conductance<<','<<a.nmda_rise<<','
+        <<a.nmda_decay<<','<<a.effective_current<<','<<a.last_release_multiplier<<','
+        <<int(a.last_quanta)<<','<<a.rng_state<<','
+        <<syn2.event_gain<<','<<syn2.current<<','<<int(syn2.stp.mode)<<','
+        <<b.released_current<<','<<b.conductance<<','<<b.nmda_rise<<','
+        <<b.nmda_decay<<','<<b.effective_current<<','<<b.last_release_multiplier<<','
+        <<int(b.last_quanta)<<','<<b.rng_state<<','<<neuron.total_current<<'\n';
     }else if(line[0]=='P'){
       if(line.size()>1){
         pharmacology.enabled=std::stoi(line.substr(1))!=0;

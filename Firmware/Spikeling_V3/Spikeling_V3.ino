@@ -111,8 +111,8 @@ void loop() {
     update_Synapse(syn2, syn2.defaultdecay);                                                    // Sets Synapse 2 current
     if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Input,micros());
     if (pharmacology.enabled) {
-      pharmStepSynapse(0, syn1.risingEdge, syn1.gain, syn1.decay, neuron.v, neuron.dt_ms);
-      pharmStepSynapse(1, syn2.risingEdge, syn2.gain, syn2.decay, neuron.v, neuron.dt_ms);
+      pharmStepSynapse(0, syn1.risingEdge, syn1.event_gain, syn1.decay, neuron.v, neuron.dt_ms);
+      pharmStepSynapse(1, syn2.risingEdge, syn2.event_gain, syn2.decay, neuron.v, neuron.dt_ms);
     }
     if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Release,micros());
 

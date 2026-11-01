@@ -647,6 +647,7 @@ struct Synapse {
   PotFilter pot_filt;                                       // Filter state for Synapse gain pot ADC (median + IIR + deadband)
   // --- Gain (synaptic weight)
   float    gain;                                            // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
+  float    event_gain;                                      // Signed event gain AFTER one STP update, BEFORE pharmacological release; zero on non-event ticks.
   STPState stp;                                             // Independent event-driven short-term plasticity state; retains history in both clamp modes.
   int16_t  pot_value;                                       // Raw ADC reading (0..4095)
   float    pot_scaling;                                     // Counts-per-gain-unit
@@ -672,7 +673,8 @@ inline Synapse syn1 = {
   .pot_pin          = pins.adc1.syn1_pot,
   .pot_raw          = 0,
   .pot_raw_filter   = 0,
-  .gain             = 0,                                  
+  .gain             = 0,
+  .event_gain       = 0.0f,                                // No presynaptic event pending at boot
   .pot_value        = 0,
   .pot_scaling       = 1 / (bits12/50.0f),
   .spikeState       = LOW,
@@ -693,6 +695,7 @@ inline Synapse syn2 = {
   .pin_analog       = pins.adc1.syn2_a,
   .pot_pin          = pins.adc1.syn2_pot,
   .gain             = 0,
+  .event_gain       = 0.0f,                                // No presynaptic event pending at boot
   .pot_value        = 0,
   .pot_scaling      = 1 / (bits12/50.0f),
   .spikeState       = LOW,
