@@ -829,7 +829,7 @@ inline void send_SamplePacket() {
     // The CSV field layout and scientific units remain identical to VC1.
     char line[208];
     const int size = snprintf(line, sizeof(line),
-      "VC1,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%u,%lu,%lu\\n",
+      "VC1,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%u,%lu,%lu\n",
       static_cast<unsigned long>(voltageClamp.tick),
       double(voltageClamp.tick)*neuron.dt_ms, double(patch.v_cmd),
       double(value.voltage_mV), double(value.clamp_nA),
