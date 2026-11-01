@@ -178,7 +178,8 @@ def run(args):
                 # Drain old responses; the next spike must be the first after mode reset.
                 time.sleep(1.0)
                 port.reset_input_buffer()
-                print(f"Set SOURCE to a stable 1-3 Hz. Capturing for {args.seconds:g}s ...")
+                print(f"Press Enter to begin the {args.seconds:g}s recording with SOURCE still stopped.")
+                print("As soon as capture begins, start SOURCE at 1-3 Hz; then hold the rate steady.")
                 if not args.noninteractive:input("Press Enter to start capture ... ")
                 rows=record(port,args.backend,args.seconds)
                 result=extract(rows,args.gain,.99,mode,args.min_events)
