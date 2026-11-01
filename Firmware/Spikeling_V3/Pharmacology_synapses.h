@@ -95,8 +95,12 @@ inline float pharmNMDAUnblocked(float v) {
    Output: syn[i].effective_current, subsequently replacing raw syn.current in update_AllCurrent.
    A new presynaptic AP samples release ONCE, then receptor states decay in the Python order.
    NBQX, gabazine and APV apply to current outputs, not stored activations. GVIA applies at events.
-   Synapses are strictly current-based by default; no STP/LTP is implemented here. */
-inline void pharmStepSynapse(uint8_t i, bool rising_edge, float gain, float decay, float vm, float dt_ms) {
+   STP is advanced ONCE upstream by update_Synapse() and arrives here as event_gain.
+   Its normalised multiplier scales the signed event amplitude; it does not modify
+   the release probability p0, vesicle count K, receptor blockers, or stored tails.
+   For classroom use this is phenomenological amplitude STP: resource depletion
+   advances on each presynaptic AP even if probabilistic release fails. */
+inline void pharmStepSynapse(uint8_t i, bool rising_edge, float event_gain, float decay, float vm, float dt_ms) {
   if (i > 1) return;
   PharmSynapseState &s = pharmacology.syn[i];
   const PharmReceptor receptor = s.receptor;
@@ -104,13 +108,13 @@ inline void pharmStepSynapse(uint8_t i, bool rising_edge, float gain, float deca
   const bool ampa = receptor == PharmReceptor::AMPA;
   const bool gabaa = receptor == PharmReceptor::GABAA;
   const bool valid_gain = receptor == PharmReceptor::Legacy ||
-                           (ampa && gain >= 0.0f) || (gabaa && gain <= 0.0f);
+                           (ampa && event_gain >= 0.0f) || (gabaa && event_gain <= 0.0f);
   if (rising_edge) {                                               // Do not consume RNG on ordinary simulation ticks.
     const float gv = pharmGVRelease(s);                             // Applied to newly released transmitter only.
     const float release_multiplier = pharmReleaseEvent(s, gv);      // Deterministic or K/(N*p0), never multiplied by gv again.
     if (valid_gain) {
-      s.released_current += gain * release_multiplier;              // Signed amplitude in current-based receptor model.
-      const float conductance_event = pharmEventConductance(gain, receptor) * release_multiplier;
+      s.released_current += event_gain * release_multiplier;        // One STP multiplier times one release multiplier; never apply either twice.
+      const float conductance_event = pharmEventConductance(event_gain, receptor) * release_multiplier;
       s.conductance += conductance_event;                           // Positive receptor conductance, in model units.
       if (ampa && conductance_mode && pharmacology.nmda_enabled) {
         const float nmda_event = conductance_event * pharmacology.nmda_peak_ratio;
