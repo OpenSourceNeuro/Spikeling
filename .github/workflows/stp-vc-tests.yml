@@ -1,0 +1,46 @@
+name: STP and voltage clamp integration
+
+on:
+  push:
+    branches:
+      - feature/stp-active-vc-integration-20261101
+  pull_request:
+    paths:
+      - 'Firmware/**'
+      - '.github/workflows/stp-vc-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  native-sketch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check native compiler
+        run: g++ --version
+      - name: Compile full active-VC sketch with STP and run analytical integration tests
+        run: python -m unittest discover -s Firmware/tests/stp_vc -p 'test_*.py' -v
+      - name: Compile original STP C++ test smoke
+        run: |
+          g++ -std=c++17 -Wall -Wextra -Werror -I Firmware/Spikeling_V3 \
+            Firmware/Spikeling_V3/tests/stp_model_smoke.cpp -o /tmp/stp-smoke
+          /tmp/stp-smoke
+  original-vc-synapses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original VC test dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy matplotlib pyserial
+      - name: Existing VC synapse and pharmacology regressions
+        run: python -m unittest discover -s Firmware/tests/vc -p 'test_vc_synapses.py' -v
