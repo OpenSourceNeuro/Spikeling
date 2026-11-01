@@ -278,7 +278,8 @@ inline void Syn2Decay_off(){
 //                      Short-term plasticity                       //
 // Each command changes ONLY its selected synapse and clears that synapse's
 // transient facilitation/depletion state. The existing current tail is retained.
-// Staged integration: use PH E 0 while validating STP with voltage clamp.
+// STP and pharmacology now share a single presynaptic event gain; the mode
+// remains independent of PH E and the receiving clamp mode.
 inline void SetSTPMode(Synapse &syn) {
   int mode;                                                                                     // 0 Off; 1 Facilitation; 2 Depression; 3 Combined
   if (!readNextInt(mode)) return;                                                               // Missing mode leaves state unchanged
