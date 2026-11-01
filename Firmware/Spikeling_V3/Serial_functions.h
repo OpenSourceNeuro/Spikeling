@@ -274,6 +274,26 @@ inline void Syn2Decay_off(){
 
 
 
+// // // // // // // // // // // // // // // // // // // // // // // //
+//                      Short-term plasticity                       //
+// Each command changes ONLY its selected synapse and clears that synapse's
+// transient facilitation/depletion state. The existing current tail is retained.
+// Staged integration: use PH E 0 while validating STP with voltage clamp.
+inline void SetSTPMode(Synapse &syn) {
+  int mode;                                                                                     // 0 Off; 1 Facilitation; 2 Depression; 3 Combined
+  if (!readNextInt(mode)) return;                                                               // Missing mode leaves state unchanged
+  if (mode < 0 || mode > 3) return;                                                             // Reject undefined classroom presets
+  STP_setMode(syn.stp, static_cast<uint8_t>(mode));                                              // Preserve raw synaptic-current tail across mode changes
+}
+
+inline void Syn1STPMode() {
+  SetSTPMode(syn1);                                                                             // Configure independently of clamp mode
+}
+inline void Syn2STPMode() {
+  SetSTPMode(syn2);                                                                             // Configure independently of clamp mode
+}
+
+
 inline void Buzzer_on(){
   spike.Buzzer_enable = true;
 }
@@ -351,6 +371,8 @@ inline void SerialFunctions(){
   SCmd.addCommand("VRS",VClampReset);       
   SCmd.addCommand("NO1",Noise_on);
   SCmd.addCommand("NO0",Noise_off);
+  SCmd.addCommand("STP1",Syn1STPMode);                                                       // Per-channel STP mode, valid in CC and VC
+  SCmd.addCommand("STP2",Syn2STPMode);                                                       // Mode selection resets only the targeted transient state
   SCmd.addCommand("SG11",Syn1Gain_on);
   SCmd.addCommand("SG10",Syn1Gain_off);
   SCmd.addCommand("SD11",Syn1Decay_on);
