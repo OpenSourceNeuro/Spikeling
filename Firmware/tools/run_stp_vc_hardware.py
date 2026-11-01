@@ -13,6 +13,7 @@ import json
 import math
 from pathlib import Path
 import time
+import threading
 
 COLUMN_NAMES = ("tick time_ms command_mV voltage_mV clamp_nA capacitive_nA "
                 "leak_nA input_nA flags solve_us previous_loop_us").split()
@@ -138,19 +139,66 @@ def send(port,*commands):
         time.sleep(.07)
 
 
-def record(port,backend,seconds):
-    rows=[]
-    end=time.monotonic()+seconds
-    while time.monotonic()<end:
-        packet=port.readline()
-        row=decode_line(packet,backend)
-        if row is not None:
-            row["host_seconds"]=time.monotonic()
-            rows.append(row)
-    if rows:
-        first=rows[0]["host_seconds"]
-        for row in rows:row["host_seconds"]-=first
-    return rows
+class ContinuousReader:
+    """Drain serial continuously, including during operator prompts.
+
+    Only samples received while armed enter a measurement. The reader never
+    flushes the ESP32 TX buffer or silently treats old queued rows as new data.
+    The same reader remains alive across STP mode changes and VC/CC cleanup.
+    """
+    def __init__(self,port,backend):
+        self.port=port
+        self.backend=backend
+        self.lock=threading.Lock()
+        self.stop_event=threading.Event()
+        self.active=False
+        self.rows=[]
+        self.error=None
+        self.thread=threading.Thread(target=self._read,name="stp_vc_serial_reader",daemon=True)
+
+    def start(self):
+        self.thread.start()
+
+    def _read(self):
+        while not self.stop_event.is_set():
+            try:
+                packet=self.port.readline(512)
+                received=time.monotonic()
+                row=decode_line(packet,self.backend)
+            except Exception as exc:
+                self.error=str(exc)
+                break
+            if row is None:
+                continue
+            row["host_seconds"]=received
+            with self.lock:
+                if self.active:
+                    self.rows.append(row)
+
+    def record(self,seconds):
+        if self.error:
+            raise RuntimeError("Background serial reader failed: "+self.error)
+        with self.lock:
+            self.rows=[]
+            self.active=True
+        time.sleep(seconds)
+        with self.lock:
+            self.active=False
+            rows=self.rows
+            self.rows=[]
+        if self.error:
+            raise RuntimeError("Background serial reader failed: "+self.error)
+        if rows:
+            first=rows[0]["host_seconds"]
+            for row in rows:
+                row["host_seconds"]-=first
+        return rows
+
+    def close(self):
+        self.stop_event.set()
+        self.thread.join(timeout=2)
+        if self.thread.is_alive():
+            raise RuntimeError("Background reader did not terminate; check COM-port connection")
 
 
 def run(args):
@@ -164,6 +212,8 @@ def run(args):
             "pharmacology_enabled":False,"modes":{}}
     modes=range(4) if args.all_modes else (args.mode,)
     with serial.Serial(args.port,baudrate=500000,timeout=.25,write_timeout=2) as port:
+        reader=ContinuousReader(port,args.backend)
+        reader.start()                                      # Never leave binary/VC diagnostics unread during prompts
         time.sleep(1)
         try:
             send(port,"DT 2000","PH E 0","NO1 0","PG1 0","PC0",
@@ -177,13 +227,13 @@ def run(args):
                 print(f"Mode {mode}: centre SOURCE Patch/Stim knob and stop firing.")
                 if not args.noninteractive:input("Press Enter once SOURCE has stopped ... ")
                 send(port,f"STP{args.synapse} {mode}")
-                # Drain old responses; the next spike must be the first after mode reset.
+                # Drain old responses in the background; never discard or queue
+                # UART/USB records while the operator prepares the next mode.
                 time.sleep(1.0)
-                port.reset_input_buffer()
                 print(f"Press Enter to begin the {args.seconds:g}s recording with SOURCE still stopped.")
                 print("As soon as capture begins, start SOURCE at 1-3 Hz; then hold the rate steady.")
                 if not args.noninteractive:input("Press Enter to start capture ... ")
-                rows=record(port,args.backend,args.seconds)
+                rows=reader.record(args.seconds)
                 result=extract(rows,args.gain,.99,mode,args.min_events)
                 name=f"syn{args.synapse}_{args.backend}_mode{mode}"
                 write_rows(out/f"{name}_samples.csv",rows)
@@ -204,6 +254,7 @@ def run(args):
                      "NO0","PG0","PC0","DT 2000")
             except Exception as exc:
                 print("WARNING: serial cleanup failed:",exc)
+            reader.close()
     (out/"summary.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
     print("Summary:",out/"summary.json")
     print("Overall:",report.get("overall_status","INCONCLUSIVE"))
