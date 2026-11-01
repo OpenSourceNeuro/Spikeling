@@ -83,9 +83,39 @@ The script automatically selects positive/negative gain and receptor identity. T
 
 The runner restores CC, VCT off, PH off, STP off, physical gain/decay controls and DT 2000. It does not restore previous custom PH drug doses, receptor settings or RNG seed. Use a dedicated experimental receiver.
 
+## Second physical test: NMDA and APV under active ideal VC
+
+After the current-mode and fast-conductance tests pass, retain the same Stage 2
+receiver firmware on COM5. Download the latest Stage 2 branch (Python test
+tools have been added, but the Arduino sketch itself is unchanged).
+
+~~~powershell
+python Firmware\tools\run_stp_ph_nmda_hardware.py COM5 --all --seconds 25 --output STP_PH_NMDA_APV_COM5
+~~~
+
+The operator prompts require the presynaptic source to be stopped during
+reconfiguration. Only start source spikes (approximately 1–3 Hz) **after**
+RECORDING STARTED appears; this prevents hidden pre-recording STP/receptor
+events.
+
+The four protocols are fast AMPA only, AMPA+NMDA, APV half-block of NMDA at
+3.7 µM, and NBQX half-block of AMPA at 0.30 µM. The voltage is held at
+−70 mV and receptor release is deterministic. The independent analyser
+reconstructs the entire NMDA rise/decay waveform at model dt=0.1 ms from
+recorded presynaptic event times, applying Mg-dependent NMDA unblock,
+single shared STP/release events and receptor-specific Hill blockade.
+The slow NMDA contribution at −70 mV is small due to Mg block; voltage
+dependence must be assessed separately at additional command potentials.
+
+Raw VC2 recordings and predicted current waveforms are saved for independent
+post-run validation. An aggregate receptor-current trace does not
+independently verify every presynaptic TTL transition, and the comparison
+validates the educational firmware implementation, not biological NMDA
+kinetics.
+
 ## Not yet covered physically
 
-- NMDA slow-current and APV half-block/washout with STP.
+- NMDA slow-current and APV half-block/washout **at multiple holding voltages** with STP.
 - Stochastic vesicle-release failures, where no individual incoming TTL event timestamp appears in the aggregate VC2 output.
 - Dual synapses with independent STP and probabilistic release settings.
 - Cross-mode handovers during ongoing PH receptor activation.
