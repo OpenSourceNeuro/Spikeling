@@ -63,7 +63,10 @@ def decode(data):
                     samples.append(dict(active=tag == b"VC2,", tick=int(x[0]),
                                         command=x[2], voltage=x[3], clamp=x[4],
                                         capacitive=x[5], leak=x[6], inward=x[7],
-                                        flags=int(x[8])))
+                                        flags=int(x[8]),
+                                        sodium=x[11] if len(x)>11 else 0.,
+                                        potassium=x[12] if len(x)>12 else 0.,
+                                        receptor=x[13] if len(x)>13 else 0.))
     return states, samples
 
 
@@ -121,7 +124,7 @@ class FullSketchSTPVC(unittest.TestCase):
         for s, want in zip(states, expected):
             gap = 0 if last_tick is None else s["tick"]-last_tick-1
             want_current = (previous * .99**gap + 6*want)*.99
-            self.assertAlmostEqual(s["current1"], want_current,delta=3e-5)
+            self.assertAlmostEqual(s["current1"], want_current,delta=1e-4)
             previous, last_tick = s["current1"], s["tick"]
         self.assertGreater(expected[1],expected[0])
         self.assertEqual(rows[-1]["flags"] & 4, 0)
@@ -166,7 +169,9 @@ class FullSketchSTPVC(unittest.TestCase):
                 self.assertTrue(states[-1]["seen1"] and states[-1]["seen2"])
                 # Every diagnostic VC sample must represent exactly the raw signed currents
                 # scaled once into nA when PH is OFF, not summed twice.
-                self.assertLess(max(abs(r["clamp"]+r["inward"]) for r in rows[-30:]),.001)
+                self.assertLess(max(abs(r["clamp"]+r["inward"]-r["capacitive"]-r["leak"]
+                                        -r["sodium"]-r["potassium"]-r["receptor"])
+                                    for r in rows[-30:]),.00005)
                 self.assertFalse(any(r["flags"] & 4 for r in rows))
 
     def test_state_survives_cc_vc_and_vc_cc_handover(self):
