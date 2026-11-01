@@ -86,7 +86,7 @@ class ContinuousReaderTests(unittest.TestCase):
                 return b""
         def send_tick(self,tick):
             values=[tick,tick*.1,-70.,-70.,0.,0.,0.,0.,0,20,200]
-            self.data.put(("VC1,"+",".join(map(str,values))+"\\n").encode("ascii"))
+            self.data.put(("VC1,"+",".join(map(str,values))+"\n").encode("ascii"))
 
     def test_reader_drains_while_unarmed_without_leaking_stale_samples(self):
         port=self.FakePort()
