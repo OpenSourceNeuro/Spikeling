@@ -48,7 +48,7 @@ inline float pharmNMDA_Norm = 1.0f;
 inline float pharmNMDA_Dt = -1.0f;
 
 /* Return a finite nonnegative conductance increment calibrated at -70 model mV.
-   Inputs: signed potentiometer gain, explicit receptor classification.
+   Inputs: signed event gain after one STP update, explicit receptor classification.
    AMPA requires a positive gain; GABA-A requires a negative gain. Opposite-sign hardware
    inputs produce zero NEW receptor activation, not an invented negative conductance.
    Reference E_GABA=-80 remains FIXED when a user changes actual E_GABA for shunting studies. */
