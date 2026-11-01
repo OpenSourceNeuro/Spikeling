@@ -54,12 +54,12 @@ class GuardedPassiveUSB(unittest.TestCase):
         self.assertTrue(all(int(r.split(b",")[9])==0 for r in rows))
 
     def test_full_fifo_only_skips_whole_records_and_reports_transport_fault(self):
-        data=self.run_sketch(PREFIX+"U100000\nR90\nQ\n")
+        data=self.run_sketch(PREFIX+"U250000\nR180\nQ\n")
         rows=[r for r in data.splitlines() if r.startswith(b"VC1,")]
         ticks=[int(r.split(b",")[1]) for r in rows]
         self.assertTrue(ticks)
-        self.assertLess(len(ticks),90)
-        self.assertEqual(ticks[-1],90)
+        self.assertLess(len(ticks),180)
+        self.assertEqual(ticks[-1],180)
         self.assertTrue(any(b-a>1 for a,b in zip(ticks,ticks[1:])))
         self.assertTrue(any(int(r.split(b",")[9])&128 for r in rows))
         self.assertFalse(any(int(r.split(b",")[9])&64 for r in rows))
