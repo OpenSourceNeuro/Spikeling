@@ -20,6 +20,33 @@ def _slider_qss(groove_color: str, fill_color: str, handle_image: str | None,
         }}
         """
 
+    else:
+        handle_part = f"""
+        QSlider::handle:horizontal {{
+            background-color: #93A1A1;
+            border: 1px solid #BEC DCD;
+            border-radius: 2px;
+            width: 6px;
+            height: 16px;
+            margin: -{max(0, (16 - height) / 2):g}px 0px;
+        }}
+
+        QSlider::handle:horizontal:hover {{
+            background-color: #BECDCD;
+            border-color: {fill_color};
+        }}
+
+        QSlider::handle:horizontal:pressed {{
+            background-color: {fill_color};
+            border-color: {fill_color};
+        }}
+
+        QSlider::handle:horizontal:disabled {{
+            background-color: #586E75;
+            border-color: #586E75;
+        }}
+        """
+
     return f"""
         QSlider::groove:horizontal {{
             height: {height}px;

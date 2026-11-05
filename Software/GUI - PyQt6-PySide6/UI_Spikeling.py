@@ -158,6 +158,7 @@ class Ui_Spikeling(object):
 "}\n"
 "\n"
 "\n"
+"\n"
 "#Spikeling_DataRecording_box{\n"
 "	border: 2px solid rgb(147,161,161);\n"
 "}\n"
@@ -188,8 +189,8 @@ class Ui_Spikeling(object):
 "	border-radius: 10px;\n"
 "    padding: 3px 10px;\n"
 "}\n"
-"#Emulator_top_subframe1 QPus"
-                        "hButton:hover{\n"
+"#Emulator_top_subframe1"
+                        " QPushButton:hover{\n"
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
 "\n"
@@ -225,8 +226,8 @@ class Ui_Spikeling(object):
 "	background-color: rgb(0, 43, 54);\n"
 "}\n"
 "#EmulatorStimulusParameter_page QComboBox{\n"
-"	border: 2px solid rgb(190, 20"
-                        "5, 205);\n"
+"	border: 2px solid rgb(19"
+                        "0, 205, 205);\n"
 "	background-color: rgb(0, 30, 38);\n"
 "	padding: 2px;\n"
 "}\n"
@@ -266,8 +267,8 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "#Emulator_bottom_subframe QPushButton{\n"
-"	padding: 5p"
-                        "x 5px;\n"
+"	paddin"
+                        "g: 5px 5px;\n"
 "	border-radius:10px;\n"
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
@@ -305,8 +306,8 @@ class Ui_Spikeling(object):
 "\n"
 "\n"
 "\n"
-"/*"
-                        "  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
+""
+                        "/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
 "     Page 201 - Imaging_ImagingSimulation \n"
 " -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
@@ -1968,7 +1969,7 @@ class Ui_Spikeling(object):
         self.Spikeling_StimFre_Label = QLabel(self.Spikeling_StimFre_Label_frame)
         self.Spikeling_StimFre_Label.setObjectName(u"Spikeling_StimFre_Label")
         font6 = QFont()
-        font6.setPointSize(9)
+        font6.setPointSize(10)
         self.Spikeling_StimFre_Label.setFont(font6)
 
         self.Spikeling_StimFre_Layout.addWidget(self.Spikeling_StimFre_Label, 0, Qt.AlignmentFlag.AlignLeft)
@@ -2125,6 +2126,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_38.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_StimStr_Label = QLabel(self.Spikeling_StimStr_Label_frame)
         self.Spikeling_StimStr_Label.setObjectName(u"Spikeling_StimStr_Label")
+        self.Spikeling_StimStr_Label.setFont(font6)
 
         self.horizontalLayout_38.addWidget(self.Spikeling_StimStr_Label)
 
@@ -2246,6 +2248,121 @@ class Ui_Spikeling(object):
         self.verticalLayout_24.setSpacing(5)
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
         self.verticalLayout_24.setContentsMargins(5, 0, 5, 0)
+        self.Spikeling_CustomStimulus_label_frame = QFrame(self.Spikeling_CustomStimulus_frame)
+        self.Spikeling_CustomStimulus_label_frame.setObjectName(u"Spikeling_CustomStimulus_label_frame")
+        self.Spikeling_CustomStimulus_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_300 = QVBoxLayout(self.Spikeling_CustomStimulus_label_frame)
+        self.verticalLayout_300.setSpacing(0)
+        self.verticalLayout_300.setObjectName(u"verticalLayout_300")
+        self.verticalLayout_300.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_label = QLabel(self.Spikeling_CustomStimulus_label_frame)
+        self.Spikeling_CustomStimulus_label.setObjectName(u"Spikeling_CustomStimulus_label")
+        self.Spikeling_CustomStimulus_label.setFont(font4)
+
+        self.verticalLayout_300.addWidget(self.Spikeling_CustomStimulus_label, 0, Qt.AlignmentFlag.AlignHCenter)
+
+
+        self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_label_frame)
+
+        self.Spikeling_CustomStimulus_Selection_frame = QFrame(self.Spikeling_CustomStimulus_frame)
+        self.Spikeling_CustomStimulus_Selection_frame.setObjectName(u"Spikeling_CustomStimulus_Selection_frame")
+        self.Spikeling_CustomStimulus_Selection_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_Selection_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_45 = QHBoxLayout(self.Spikeling_CustomStimulus_Selection_frame)
+        self.horizontalLayout_45.setSpacing(5)
+        self.horizontalLayout_45.setObjectName(u"horizontalLayout_45")
+        self.horizontalLayout_45.setContentsMargins(0, 0, 5, 0)
+        self.Spikeling_CustomStimulus_StimLabel_frame = QFrame(self.Spikeling_CustomStimulus_Selection_frame)
+        self.Spikeling_CustomStimulus_StimLabel_frame.setObjectName(u"Spikeling_CustomStimulus_StimLabel_frame")
+        self.Spikeling_CustomStimulus_StimLabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_StimLabel_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_253 = QHBoxLayout(self.Spikeling_CustomStimulus_StimLabel_frame)
+        self.horizontalLayout_253.setSpacing(0)
+        self.horizontalLayout_253.setObjectName(u"horizontalLayout_253")
+        self.horizontalLayout_253.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_StimLabel = QLabel(self.Spikeling_CustomStimulus_StimLabel_frame)
+        self.Spikeling_CustomStimulus_StimLabel.setObjectName(u"Spikeling_CustomStimulus_StimLabel")
+        self.Spikeling_CustomStimulus_StimLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_253.addWidget(self.Spikeling_CustomStimulus_StimLabel)
+
+
+        self.horizontalLayout_45.addWidget(self.Spikeling_CustomStimulus_StimLabel_frame, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.Spikeling_CustomStimulus_Load_frame = QFrame(self.Spikeling_CustomStimulus_Selection_frame)
+        self.Spikeling_CustomStimulus_Load_frame.setObjectName(u"Spikeling_CustomStimulus_Load_frame")
+        sizePolicy2.setHeightForWidth(self.Spikeling_CustomStimulus_Load_frame.sizePolicy().hasHeightForWidth())
+        self.Spikeling_CustomStimulus_Load_frame.setSizePolicy(sizePolicy2)
+        self.Spikeling_CustomStimulus_Load_frame.setMinimumSize(QSize(75, 0))
+        self.Spikeling_CustomStimulus_Load_frame.setMaximumSize(QSize(75, 16777215))
+        self.Spikeling_CustomStimulus_Load_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_Load_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_252 = QHBoxLayout(self.Spikeling_CustomStimulus_Load_frame)
+        self.horizontalLayout_252.setSpacing(0)
+        self.horizontalLayout_252.setObjectName(u"horizontalLayout_252")
+        self.horizontalLayout_252.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_Load_pushButton = QPushButton(self.Spikeling_CustomStimulus_Load_frame)
+        self.Spikeling_CustomStimulus_Load_pushButton.setObjectName(u"Spikeling_CustomStimulus_Load_pushButton")
+        self.Spikeling_CustomStimulus_Load_pushButton.setMinimumSize(QSize(0, 0))
+        self.Spikeling_CustomStimulus_Load_pushButton.setMaximumSize(QSize(16777215, 16777215))
+
+        self.horizontalLayout_252.addWidget(self.Spikeling_CustomStimulus_Load_pushButton)
+
+
+        self.horizontalLayout_45.addWidget(self.Spikeling_CustomStimulus_Load_frame)
+
+
+        self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_Selection_frame)
+
+        self.Spikeling_CustomStimulus_Loop_frame = QFrame(self.Spikeling_CustomStimulus_frame)
+        self.Spikeling_CustomStimulus_Loop_frame.setObjectName(u"Spikeling_CustomStimulus_Loop_frame")
+        self.Spikeling_CustomStimulus_Loop_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_Loop_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_44 = QHBoxLayout(self.Spikeling_CustomStimulus_Loop_frame)
+        self.horizontalLayout_44.setSpacing(5)
+        self.horizontalLayout_44.setObjectName(u"horizontalLayout_44")
+        self.horizontalLayout_44.setContentsMargins(0, 0, 5, 0)
+        self.Spikeling_CustomStimulus_Loop_label_frame = QFrame(self.Spikeling_CustomStimulus_Loop_frame)
+        self.Spikeling_CustomStimulus_Loop_label_frame.setObjectName(u"Spikeling_CustomStimulus_Loop_label_frame")
+        self.Spikeling_CustomStimulus_Loop_label_frame.setMinimumSize(QSize(0, 0))
+        self.Spikeling_CustomStimulus_Loop_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_Loop_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_49 = QHBoxLayout(self.Spikeling_CustomStimulus_Loop_label_frame)
+        self.horizontalLayout_49.setSpacing(0)
+        self.horizontalLayout_49.setObjectName(u"horizontalLayout_49")
+        self.horizontalLayout_49.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_Loop_label = QLabel(self.Spikeling_CustomStimulus_Loop_label_frame)
+        self.Spikeling_CustomStimulus_Loop_label.setObjectName(u"Spikeling_CustomStimulus_Loop_label")
+
+        self.horizontalLayout_49.addWidget(self.Spikeling_CustomStimulus_Loop_label)
+
+
+        self.horizontalLayout_44.addWidget(self.Spikeling_CustomStimulus_Loop_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame = QFrame(self.Spikeling_CustomStimulus_Loop_frame)
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame.setObjectName(u"Spikeling_CustomStimulus_Loop_lineEdit_frame")
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame.setMinimumSize(QSize(75, 0))
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame.setMaximumSize(QSize(75, 16777215))
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_Loop_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_82 = QHBoxLayout(self.Spikeling_CustomStimulus_Loop_lineEdit_frame)
+        self.horizontalLayout_82.setSpacing(0)
+        self.horizontalLayout_82.setObjectName(u"horizontalLayout_82")
+        self.horizontalLayout_82.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_Loop_lineEdit = QLineEdit(self.Spikeling_CustomStimulus_Loop_lineEdit_frame)
+        self.Spikeling_CustomStimulus_Loop_lineEdit.setObjectName(u"Spikeling_CustomStimulus_Loop_lineEdit")
+        self.Spikeling_CustomStimulus_Loop_lineEdit.setStyleSheet(u"border: 2px solid rgb(190, 205, 205);\n"
+"    background-color: rgb(0, 30, 38);")
+
+        self.horizontalLayout_82.addWidget(self.Spikeling_CustomStimulus_Loop_lineEdit)
+
+
+        self.horizontalLayout_44.addWidget(self.Spikeling_CustomStimulus_Loop_lineEdit_frame)
+
+
+        self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_Loop_frame)
+
         self.Spikeling_CustomStimulus_Title_frame = QFrame(self.Spikeling_CustomStimulus_frame)
         self.Spikeling_CustomStimulus_Title_frame.setObjectName(u"Spikeling_CustomStimulus_Title_frame")
         self.Spikeling_CustomStimulus_Title_frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -2285,74 +2402,40 @@ class Ui_Spikeling(object):
 
         self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_Title_frame)
 
-        self.Spikeling_CustomStimulus_Selection_frame = QFrame(self.Spikeling_CustomStimulus_frame)
-        self.Spikeling_CustomStimulus_Selection_frame.setObjectName(u"Spikeling_CustomStimulus_Selection_frame")
-        self.Spikeling_CustomStimulus_Selection_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_CustomStimulus_Selection_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_45 = QHBoxLayout(self.Spikeling_CustomStimulus_Selection_frame)
-        self.horizontalLayout_45.setSpacing(5)
-        self.horizontalLayout_45.setObjectName(u"horizontalLayout_45")
-        self.horizontalLayout_45.setContentsMargins(0, 0, 5, 0)
-        self.Spikeling_CustomStimulus_StimLabel_frame = QFrame(self.Spikeling_CustomStimulus_Selection_frame)
-        self.Spikeling_CustomStimulus_StimLabel_frame.setObjectName(u"Spikeling_CustomStimulus_StimLabel_frame")
-        self.Spikeling_CustomStimulus_StimLabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_CustomStimulus_StimLabel_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_253 = QHBoxLayout(self.Spikeling_CustomStimulus_StimLabel_frame)
-        self.horizontalLayout_253.setSpacing(0)
-        self.horizontalLayout_253.setObjectName(u"horizontalLayout_253")
-        self.horizontalLayout_253.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_CustomStimulus_StimLabel = QLabel(self.Spikeling_CustomStimulus_StimLabel_frame)
-        self.Spikeling_CustomStimulus_StimLabel.setObjectName(u"Spikeling_CustomStimulus_StimLabel")
-        self.Spikeling_CustomStimulus_StimLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout_253.addWidget(self.Spikeling_CustomStimulus_StimLabel)
-
-
-        self.horizontalLayout_45.addWidget(self.Spikeling_CustomStimulus_StimLabel_frame)
-
-        self.Spikeling_CustomStimulus_Load_frame = QFrame(self.Spikeling_CustomStimulus_Selection_frame)
-        self.Spikeling_CustomStimulus_Load_frame.setObjectName(u"Spikeling_CustomStimulus_Load_frame")
-        sizePolicy2.setHeightForWidth(self.Spikeling_CustomStimulus_Load_frame.sizePolicy().hasHeightForWidth())
-        self.Spikeling_CustomStimulus_Load_frame.setSizePolicy(sizePolicy2)
-        self.Spikeling_CustomStimulus_Load_frame.setMinimumSize(QSize(50, 0))
-        self.Spikeling_CustomStimulus_Load_frame.setMaximumSize(QSize(50, 16777215))
-        self.Spikeling_CustomStimulus_Load_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_CustomStimulus_Load_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_252 = QHBoxLayout(self.Spikeling_CustomStimulus_Load_frame)
-        self.horizontalLayout_252.setSpacing(0)
-        self.horizontalLayout_252.setObjectName(u"horizontalLayout_252")
-        self.horizontalLayout_252.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_CustomStimulus_Load_pushButton = QPushButton(self.Spikeling_CustomStimulus_Load_frame)
-        self.Spikeling_CustomStimulus_Load_pushButton.setObjectName(u"Spikeling_CustomStimulus_Load_pushButton")
-        self.Spikeling_CustomStimulus_Load_pushButton.setMinimumSize(QSize(50, 0))
-        self.Spikeling_CustomStimulus_Load_pushButton.setMaximumSize(QSize(50, 16777215))
-
-        self.horizontalLayout_252.addWidget(self.Spikeling_CustomStimulus_Load_pushButton)
-
-
-        self.horizontalLayout_45.addWidget(self.Spikeling_CustomStimulus_Load_frame)
-
-
-        self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_Selection_frame)
-
         self.Spikeling_CustomStimulus_display_frame = QFrame(self.Spikeling_CustomStimulus_frame)
         self.Spikeling_CustomStimulus_display_frame.setObjectName(u"Spikeling_CustomStimulus_display_frame")
         self.Spikeling_CustomStimulus_display_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Spikeling_CustomStimulus_display_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_44 = QHBoxLayout(self.Spikeling_CustomStimulus_display_frame)
-        self.horizontalLayout_44.setSpacing(0)
-        self.horizontalLayout_44.setObjectName(u"horizontalLayout_44")
-        self.horizontalLayout_44.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_303 = QVBoxLayout(self.Spikeling_CustomStimulus_display_frame)
+        self.verticalLayout_303.setSpacing(0)
+        self.verticalLayout_303.setObjectName(u"verticalLayout_303")
+        self.verticalLayout_303.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_CustomStimulus_display = PlotWidget(self.Spikeling_CustomStimulus_display_frame)
         self.Spikeling_CustomStimulus_display.setObjectName(u"Spikeling_CustomStimulus_display")
         self.Spikeling_CustomStimulus_display.setEnabled(False)
         sizePolicy5.setHeightForWidth(self.Spikeling_CustomStimulus_display.sizePolicy().hasHeightForWidth())
         self.Spikeling_CustomStimulus_display.setSizePolicy(sizePolicy5)
-        self.Spikeling_CustomStimulus_display.setMinimumSize(QSize(0, 50))
-        self.Spikeling_CustomStimulus_display.setMaximumSize(QSize(16777215, 100))
+        self.Spikeling_CustomStimulus_display.setMinimumSize(QSize(0, 60))
+        self.Spikeling_CustomStimulus_display.setMaximumSize(QSize(16777215, 16777215))
         self.Spikeling_CustomStimulus_display.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
-        self.horizontalLayout_44.addWidget(self.Spikeling_CustomStimulus_display)
+        self.verticalLayout_303.addWidget(self.Spikeling_CustomStimulus_display)
+
+        self.Spikeling_CustomStimulus_display_label_frame = QFrame(self.Spikeling_CustomStimulus_display_frame)
+        self.Spikeling_CustomStimulus_display_label_frame.setObjectName(u"Spikeling_CustomStimulus_display_label_frame")
+        self.Spikeling_CustomStimulus_display_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_CustomStimulus_display_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_309 = QVBoxLayout(self.Spikeling_CustomStimulus_display_label_frame)
+        self.verticalLayout_309.setSpacing(0)
+        self.verticalLayout_309.setObjectName(u"verticalLayout_309")
+        self.verticalLayout_309.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_CustomStimulus_display_label = QLabel(self.Spikeling_CustomStimulus_display_label_frame)
+        self.Spikeling_CustomStimulus_display_label.setObjectName(u"Spikeling_CustomStimulus_display_label")
+
+        self.verticalLayout_309.addWidget(self.Spikeling_CustomStimulus_display_label)
+
+
+        self.verticalLayout_303.addWidget(self.Spikeling_CustomStimulus_display_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
 
 
         self.verticalLayout_24.addWidget(self.Spikeling_CustomStimulus_display_frame)
@@ -4287,9 +4370,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_167.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse1_Gain_Label = QLabel(self.Spikeling_Synapse1_Gain_Label_frame)
         self.Spikeling_Synapse1_Gain_Label.setObjectName(u"Spikeling_Synapse1_Gain_Label")
-        font11 = QFont()
-        font11.setPointSize(10)
-        self.Spikeling_Synapse1_Gain_Label.setFont(font11)
+        self.Spikeling_Synapse1_Gain_Label.setFont(font6)
 
         self.horizontalLayout_167.addWidget(self.Spikeling_Synapse1_Gain_Label)
 
@@ -4414,7 +4495,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_169.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse1_Decay_Label = QLabel(self.Spikeling_Synapse1_Decay_Label_frame)
         self.Spikeling_Synapse1_Decay_Label.setObjectName(u"Spikeling_Synapse1_Decay_Label")
-        self.Spikeling_Synapse1_Decay_Label.setFont(font11)
+        self.Spikeling_Synapse1_Decay_Label.setFont(font6)
 
         self.horizontalLayout_169.addWidget(self.Spikeling_Synapse1_Decay_Label)
 
@@ -4514,7 +4595,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_271.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse1_STP_Label = QLabel(self.Spikeling_Synapse1_STP_Label_frame)
         self.Spikeling_Synapse1_STP_Label.setObjectName(u"Spikeling_Synapse1_STP_Label")
-        self.Spikeling_Synapse1_STP_Label.setFont(font11)
+        self.Spikeling_Synapse1_STP_Label.setFont(font4)
 
         self.verticalLayout_271.addWidget(self.Spikeling_Synapse1_STP_Label)
 
@@ -4616,7 +4697,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_298.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse1_Release_label = QLabel(self.Spikeling_Synapse1_Release_label_frame)
         self.Spikeling_Synapse1_Release_label.setObjectName(u"Spikeling_Synapse1_Release_label")
-        self.Spikeling_Synapse1_Release_label.setFont(font11)
+        self.Spikeling_Synapse1_Release_label.setFont(font4)
 
         self.verticalLayout_298.addWidget(self.Spikeling_Synapse1_Release_label)
 
@@ -4812,7 +4893,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_168.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse2_Gain_Label = QLabel(self.Spikeling_Synapse2_Gain_Label_frame)
         self.Spikeling_Synapse2_Gain_Label.setObjectName(u"Spikeling_Synapse2_Gain_Label")
-        self.Spikeling_Synapse2_Gain_Label.setFont(font11)
+        self.Spikeling_Synapse2_Gain_Label.setFont(font6)
 
         self.horizontalLayout_168.addWidget(self.Spikeling_Synapse2_Gain_Label)
 
@@ -4937,7 +5018,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_171.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse2_Decay_Label = QLabel(self.Spikeling_Synapse2_Decay_Label_frame)
         self.Spikeling_Synapse2_Decay_Label.setObjectName(u"Spikeling_Synapse2_Decay_Label")
-        self.Spikeling_Synapse2_Decay_Label.setFont(font11)
+        self.Spikeling_Synapse2_Decay_Label.setFont(font6)
 
         self.horizontalLayout_171.addWidget(self.Spikeling_Synapse2_Decay_Label)
 
@@ -5037,7 +5118,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_267.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse2_STP_Label = QLabel(self.Spikeling_Synapse2_STP_Label_frame)
         self.Spikeling_Synapse2_STP_Label.setObjectName(u"Spikeling_Synapse2_STP_Label")
-        self.Spikeling_Synapse2_STP_Label.setFont(font11)
+        self.Spikeling_Synapse2_STP_Label.setFont(font4)
 
         self.verticalLayout_267.addWidget(self.Spikeling_Synapse2_STP_Label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -5131,9 +5212,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_287.setContentsMargins(5, 0, 5, 0)
         self.Spikeling_Synapse2_Release_label_frame = QFrame(self.Spikeling_Synapse2_Release_frame)
         self.Spikeling_Synapse2_Release_label_frame.setObjectName(u"Spikeling_Synapse2_Release_label_frame")
-        font12 = QFont()
-        font12.setPointSize(5)
-        self.Spikeling_Synapse2_Release_label_frame.setFont(font12)
+        font11 = QFont()
+        font11.setPointSize(5)
+        self.Spikeling_Synapse2_Release_label_frame.setFont(font11)
         self.Spikeling_Synapse2_Release_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Spikeling_Synapse2_Release_label_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_269 = QVBoxLayout(self.Spikeling_Synapse2_Release_label_frame)
@@ -5142,7 +5223,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_269.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Synapse2_Release_label = QLabel(self.Spikeling_Synapse2_Release_label_frame)
         self.Spikeling_Synapse2_Release_label.setObjectName(u"Spikeling_Synapse2_Release_label")
-        self.Spikeling_Synapse2_Release_label.setFont(font11)
+        self.Spikeling_Synapse2_Release_label.setFont(font4)
 
         self.verticalLayout_269.addWidget(self.Spikeling_Synapse2_Release_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -5441,10 +5522,10 @@ class Ui_Spikeling(object):
         self.horizontalLayout_487.setContentsMargins(0, 0, 0, 0)
         self.Emulator_NeuronModeLabel = QLabel(self.Emulator_top_subframe2)
         self.Emulator_NeuronModeLabel.setObjectName(u"Emulator_NeuronModeLabel")
-        font13 = QFont()
-        font13.setPointSize(14)
-        font13.setBold(True)
-        self.Emulator_NeuronModeLabel.setFont(font13)
+        font12 = QFont()
+        font12.setPointSize(14)
+        font12.setBold(True)
+        self.Emulator_NeuronModeLabel.setFont(font12)
         self.Emulator_NeuronModeLabel.setStyleSheet(u"")
 
         self.horizontalLayout_487.addWidget(self.Emulator_NeuronModeLabel)
@@ -5516,7 +5597,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_94.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Speed_label = QLabel(self.Emulator_Speed_label_frame)
         self.Emulator_Speed_label.setObjectName(u"Emulator_Speed_label")
-        self.Emulator_Speed_label.setFont(font11)
+        self.Emulator_Speed_label.setFont(font6)
 
         self.verticalLayout_94.addWidget(self.Emulator_Speed_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -7708,9 +7789,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_223.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn1_Mode_label_frame_2 = QLabel(self.Emulator_Syn1_Mode_label_frame)
         self.Emulator_Syn1_Mode_label_frame_2.setObjectName(u"Emulator_Syn1_Mode_label_frame_2")
-        font14 = QFont()
-        font14.setPointSize(14)
-        self.Emulator_Syn1_Mode_label_frame_2.setFont(font14)
+        font13 = QFont()
+        font13.setPointSize(14)
+        self.Emulator_Syn1_Mode_label_frame_2.setFont(font13)
         self.Emulator_Syn1_Mode_label_frame_2.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.verticalLayout_223.addWidget(self.Emulator_Syn1_Mode_label_frame_2, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -7759,14 +7840,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_540.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn1_Mode_Browse_pushButton = QPushButton(self.Emulator_Syn1_Mode_pushButton_frame)
         self.Emulator_Syn1_Mode_Browse_pushButton.setObjectName(u"Emulator_Syn1_Mode_Browse_pushButton")
-        self.Emulator_Syn1_Mode_Browse_pushButton.setFont(font11)
+        self.Emulator_Syn1_Mode_Browse_pushButton.setFont(font6)
         self.Emulator_Syn1_Mode_Browse_pushButton.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_540.addWidget(self.Emulator_Syn1_Mode_Browse_pushButton)
 
         self.Emulator_Syn1_Mode_Apply_pushButton = QPushButton(self.Emulator_Syn1_Mode_pushButton_frame)
         self.Emulator_Syn1_Mode_Apply_pushButton.setObjectName(u"Emulator_Syn1_Mode_Apply_pushButton")
-        self.Emulator_Syn1_Mode_Apply_pushButton.setFont(font11)
+        self.Emulator_Syn1_Mode_Apply_pushButton.setFont(font6)
         self.Emulator_Syn1_Mode_Apply_pushButton.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_540.addWidget(self.Emulator_Syn1_Mode_Apply_pushButton)
@@ -7795,7 +7876,7 @@ class Ui_Spikeling(object):
 
         self.Emulator_Syn1_Mode_Toggle_label = QLabel(self.Emulator_Syn1_Mode_Toggle_frame)
         self.Emulator_Syn1_Mode_Toggle_label.setObjectName(u"Emulator_Syn1_Mode_Toggle_label")
-        self.Emulator_Syn1_Mode_Toggle_label.setFont(font11)
+        self.Emulator_Syn1_Mode_Toggle_label.setFont(font6)
         self.Emulator_Syn1_Mode_Toggle_label.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_541.addWidget(self.Emulator_Syn1_Mode_Toggle_label)
@@ -8652,7 +8733,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_211.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn2_Mode_label_frame_2 = QLabel(self.Emulator_Syn2_Mode_label_frame)
         self.Emulator_Syn2_Mode_label_frame_2.setObjectName(u"Emulator_Syn2_Mode_label_frame_2")
-        self.Emulator_Syn2_Mode_label_frame_2.setFont(font14)
+        self.Emulator_Syn2_Mode_label_frame_2.setFont(font13)
         self.Emulator_Syn2_Mode_label_frame_2.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.verticalLayout_211.addWidget(self.Emulator_Syn2_Mode_label_frame_2, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -8701,14 +8782,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_526.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn2_Mode_Browse_pushButton = QPushButton(self.Emulator_Syn2_Mode_pushButton_frame)
         self.Emulator_Syn2_Mode_Browse_pushButton.setObjectName(u"Emulator_Syn2_Mode_Browse_pushButton")
-        self.Emulator_Syn2_Mode_Browse_pushButton.setFont(font11)
+        self.Emulator_Syn2_Mode_Browse_pushButton.setFont(font6)
         self.Emulator_Syn2_Mode_Browse_pushButton.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_526.addWidget(self.Emulator_Syn2_Mode_Browse_pushButton)
 
         self.Emulator_Syn2_Mode_Apply_pushButton = QPushButton(self.Emulator_Syn2_Mode_pushButton_frame)
         self.Emulator_Syn2_Mode_Apply_pushButton.setObjectName(u"Emulator_Syn2_Mode_Apply_pushButton")
-        self.Emulator_Syn2_Mode_Apply_pushButton.setFont(font11)
+        self.Emulator_Syn2_Mode_Apply_pushButton.setFont(font6)
         self.Emulator_Syn2_Mode_Apply_pushButton.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_526.addWidget(self.Emulator_Syn2_Mode_Apply_pushButton)
@@ -8737,7 +8818,7 @@ class Ui_Spikeling(object):
 
         self.Emulator_Syn2_Mode_Toggle_label = QLabel(self.Emulator_Syn2_Mode_Toggle_frame)
         self.Emulator_Syn2_Mode_Toggle_label.setObjectName(u"Emulator_Syn2_Mode_Toggle_label")
-        self.Emulator_Syn2_Mode_Toggle_label.setFont(font11)
+        self.Emulator_Syn2_Mode_Toggle_label.setFont(font6)
         self.Emulator_Syn2_Mode_Toggle_label.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_527.addWidget(self.Emulator_Syn2_Mode_Toggle_label)
@@ -9727,7 +9808,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton10")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_80.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton10)
@@ -9736,7 +9817,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton10")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_80.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton10)
@@ -9750,7 +9831,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_80.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton10)
@@ -9827,7 +9908,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton11")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_101.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton11)
@@ -9836,7 +9917,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton11")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_101.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton11)
@@ -9847,7 +9928,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_101.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton11)
@@ -9900,9 +9981,9 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setSizePolicy(sizePolicy5)
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setMinimumSize(QSize(0, 150))
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setMaximumSize(QSize(16777215, 150))
-        font15 = QFont()
-        font15.setPointSize(11)
-        self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setFont(font15)
+        font14 = QFont()
+        font14.setPointSize(11)
+        self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setFont(font14)
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
         self.verticalLayout_49.addWidget(self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2)
@@ -9929,7 +10010,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton12")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_103.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton12)
@@ -9938,7 +10019,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton12")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_103.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton12)
@@ -9949,7 +10030,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_103.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton12)
@@ -10042,7 +10123,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton20")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_105.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton20)
@@ -10051,7 +10132,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton20")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_105.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton20)
@@ -10062,7 +10143,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_105.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton20)
@@ -10155,7 +10236,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton21")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_107.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton21)
@@ -10164,7 +10245,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton21")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_107.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton21)
@@ -10175,7 +10256,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_107.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton21)
@@ -10267,7 +10348,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton22")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_108.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton22)
@@ -10276,7 +10357,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton22")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_108.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton22)
@@ -10287,7 +10368,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_108.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton22)
@@ -10379,7 +10460,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton30")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_109.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton30)
@@ -10388,7 +10469,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton30")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_109.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton30)
@@ -10399,7 +10480,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_109.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton30)
@@ -10491,7 +10572,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton31")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_110.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton31)
@@ -10500,7 +10581,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton31")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_110.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton31)
@@ -10511,7 +10592,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_110.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton31)
@@ -10603,7 +10684,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton32")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_111.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton32)
@@ -10612,7 +10693,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton32")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_111.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton32)
@@ -10623,7 +10704,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_111.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton32)
@@ -10708,7 +10789,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setObjectName(u"Spikeling_DataAnalysis_Neuron0Vm_pushButton110")
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setMinimumSize(QSize(25, 0))
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_417.addWidget(self.Spikeling_DataAnalysis_Neuron0Vm_pushButton110)
@@ -10717,7 +10798,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setObjectName(u"Spikeling_DataAnalysis_Neuron1Vm_pushButton110")
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_417.addWidget(self.Spikeling_DataAnalysis_Neuron1Vm_pushButton110)
@@ -10728,7 +10809,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setSizePolicy(sizePolicy7)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setMinimumSize(QSize(0, 25))
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setMaximumSize(QSize(16777215, 25))
-        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setFont(font11)
+        self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setFont(font6)
         self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_417.addWidget(self.Spikeling_DataAnalysis_Neuron2Vm_pushButton110)
@@ -11014,7 +11095,7 @@ class Ui_Spikeling(object):
 
         self.Imaging_Source_frame = QFrame(self.Imaging_header_frame)
         self.Imaging_Source_frame.setObjectName(u"Imaging_Source_frame")
-        self.Imaging_Source_frame.setFont(font11)
+        self.Imaging_Source_frame.setFont(font6)
         self.Imaging_Source_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_Source_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_106 = QVBoxLayout(self.Imaging_Source_frame)
@@ -11800,7 +11881,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_315.setContentsMargins(0, 0, 0, 0)
         self.Imaging_FrameRate_Label = QLabel(self.Imaging_FrameRate_Label_frame)
         self.Imaging_FrameRate_Label.setObjectName(u"Imaging_FrameRate_Label")
-        self.Imaging_FrameRate_Label.setFont(font11)
+        self.Imaging_FrameRate_Label.setFont(font6)
         self.Imaging_FrameRate_Label.setWordWrap(True)
 
         self.horizontalLayout_315.addWidget(self.Imaging_FrameRate_Label)
@@ -11931,7 +12012,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_319.setContentsMargins(0, 0, 0, 0)
         self.Imaging_PMT_Label = QLabel(self.Imaging_PMT_Label_frame)
         self.Imaging_PMT_Label.setObjectName(u"Imaging_PMT_Label")
-        self.Imaging_PMT_Label.setFont(font11)
+        self.Imaging_PMT_Label.setFont(font6)
         self.Imaging_PMT_Label.setWordWrap(True)
 
         self.horizontalLayout_319.addWidget(self.Imaging_PMT_Label)
@@ -12059,7 +12140,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_324.setContentsMargins(0, 0, 0, 0)
         self.Imaging_Laser_Label = QLabel(self.Imaging_Laser_Label_frame)
         self.Imaging_Laser_Label.setObjectName(u"Imaging_Laser_Label")
-        self.Imaging_Laser_Label.setFont(font11)
+        self.Imaging_Laser_Label.setFont(font6)
         self.Imaging_Laser_Label.setWordWrap(True)
 
         self.horizontalLayout_324.addWidget(self.Imaging_Laser_Label)
@@ -12185,7 +12266,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_329.setContentsMargins(0, 0, 0, 0)
         self.Imaging_CalciumDecay_Label = QLabel(self.Imaging_CalciumDecay_Label_frame)
         self.Imaging_CalciumDecay_Label.setObjectName(u"Imaging_CalciumDecay_Label")
-        self.Imaging_CalciumDecay_Label.setFont(font11)
+        self.Imaging_CalciumDecay_Label.setFont(font6)
         self.Imaging_CalciumDecay_Label.setWordWrap(True)
 
         self.horizontalLayout_329.addWidget(self.Imaging_CalciumDecay_Label)
@@ -12311,7 +12392,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_423.setContentsMargins(0, 0, 0, 0)
         self.Imaging_CalciumRise_Label = QLabel(self.Imaging_CalciumRise_Label_frame)
         self.Imaging_CalciumRise_Label.setObjectName(u"Imaging_CalciumRise_Label")
-        self.Imaging_CalciumRise_Label.setFont(font11)
+        self.Imaging_CalciumRise_Label.setFont(font6)
         self.Imaging_CalciumRise_Label.setWordWrap(True)
 
         self.horizontalLayout_423.addWidget(self.Imaging_CalciumRise_Label)
@@ -12437,7 +12518,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_334.setContentsMargins(0, 0, 0, 0)
         self.Imaging_CalciumJump_Label = QLabel(self.Imaging_CalciumJump_Label_frame)
         self.Imaging_CalciumJump_Label.setObjectName(u"Imaging_CalciumJump_Label")
-        self.Imaging_CalciumJump_Label.setFont(font11)
+        self.Imaging_CalciumJump_Label.setFont(font6)
         self.Imaging_CalciumJump_Label.setWordWrap(True)
 
         self.horizontalLayout_334.addWidget(self.Imaging_CalciumJump_Label)
@@ -12565,7 +12646,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_339.setContentsMargins(0, 0, 0, 0)
         self.Imaging_CalciumNoise_Label = QLabel(self.Imaging_CalciumNoise_Label_frame)
         self.Imaging_CalciumNoise_Label.setObjectName(u"Imaging_CalciumNoise_Label")
-        self.Imaging_CalciumNoise_Label.setFont(font11)
+        self.Imaging_CalciumNoise_Label.setFont(font6)
 
         self.horizontalLayout_339.addWidget(self.Imaging_CalciumNoise_Label)
 
@@ -12691,7 +12772,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_344.setContentsMargins(0, 0, 0, 0)
         self.Imaging_CalciumBaseline_Label = QLabel(self.Imaging_CalciumBaseline_Label_frame)
         self.Imaging_CalciumBaseline_Label.setObjectName(u"Imaging_CalciumBaseline_Label")
-        self.Imaging_CalciumBaseline_Label.setFont(font11)
+        self.Imaging_CalciumBaseline_Label.setFont(font6)
         self.Imaging_CalciumBaseline_Label.setWordWrap(True)
 
         self.horizontalLayout_344.addWidget(self.Imaging_CalciumBaseline_Label)
@@ -13058,9 +13139,9 @@ class Ui_Spikeling(object):
         self.Imaging_IndRise_Toggle_frame = QFrame(self.Imaging_IndRise_Title_frame)
         self.Imaging_IndRise_Toggle_frame.setObjectName(u"Imaging_IndRise_Toggle_frame")
         self.Imaging_IndRise_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        font16 = QFont()
-        font16.setPointSize(1)
-        self.Imaging_IndRise_Toggle_frame.setFont(font16)
+        font15 = QFont()
+        font15.setPointSize(1)
+        self.Imaging_IndRise_Toggle_frame.setFont(font15)
         self.Imaging_IndRise_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_IndRise_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_IndRise_Toggle_layout = QHBoxLayout(self.Imaging_IndRise_Toggle_frame)
@@ -13191,7 +13272,7 @@ class Ui_Spikeling(object):
         self.Imaging_IndDecay_Toggle_frame = QFrame(self.Imaging_IndDecay_Title_frame)
         self.Imaging_IndDecay_Toggle_frame.setObjectName(u"Imaging_IndDecay_Toggle_frame")
         self.Imaging_IndDecay_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_IndDecay_Toggle_frame.setFont(font16)
+        self.Imaging_IndDecay_Toggle_frame.setFont(font15)
         self.Imaging_IndDecay_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_IndDecay_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_IndDecay_Toggle_layout = QHBoxLayout(self.Imaging_IndDecay_Toggle_frame)
@@ -13320,7 +13401,7 @@ class Ui_Spikeling(object):
         self.Imaging_DFF_Toggle_frame = QFrame(self.Imaging_DFF_Title_frame)
         self.Imaging_DFF_Toggle_frame.setObjectName(u"Imaging_DFF_Toggle_frame")
         self.Imaging_DFF_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_DFF_Toggle_frame.setFont(font16)
+        self.Imaging_DFF_Toggle_frame.setFont(font15)
         self.Imaging_DFF_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_DFF_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_DFF_Toggle_layout = QHBoxLayout(self.Imaging_DFF_Toggle_frame)
@@ -14115,7 +14196,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton10")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton10.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton10)
@@ -14124,7 +14205,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton10")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton10.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton10)
@@ -14135,7 +14216,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton10.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_129.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton10)
@@ -14195,7 +14276,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton11")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton11.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton11)
@@ -14204,7 +14285,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton11")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton11.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton11)
@@ -14215,7 +14296,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton11.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_130.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton11)
@@ -14277,7 +14358,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton12")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton12.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton12)
@@ -14286,7 +14367,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton12")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton12.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton12)
@@ -14297,7 +14378,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton12.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_131.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton12)
@@ -14390,7 +14471,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton20")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton20.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton20)
@@ -14399,7 +14480,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton20")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton20.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton20)
@@ -14410,7 +14491,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton20.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_132.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton20)
@@ -14503,7 +14584,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton21")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton21.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton21)
@@ -14512,7 +14593,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton21")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton21.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton21)
@@ -14523,7 +14604,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton21.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_133.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton21)
@@ -14615,7 +14696,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setObjectName(u"Imaging_DataAnalysis_Neuron0Vm_pushButton22")
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setMinimumSize(QSize(25, 0))
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setFont(font6)
         self.Imaging_DataAnalysis_Neuron0Vm_pushButton22.setStyleSheet(u"color: rgb(220, 50, 47);")
 
         self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron0Vm_pushButton22)
@@ -14624,7 +14705,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setObjectName(u"Imaging_DataAnalysis_Neuron1Vm_pushButton22")
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setFont(font6)
         self.Imaging_DataAnalysis_Neuron1Vm_pushButton22.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron1Vm_pushButton22)
@@ -14635,7 +14716,7 @@ class Ui_Spikeling(object):
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setSizePolicy(sizePolicy7)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setMinimumSize(QSize(0, 25))
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setMaximumSize(QSize(16777215, 25))
-        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setFont(font11)
+        self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setFont(font6)
         self.Imaging_DataAnalysis_Neuron2Vm_pushButton22.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.horizontalLayout_134.addWidget(self.Imaging_DataAnalysis_Neuron2Vm_pushButton22)
@@ -15118,7 +15199,7 @@ class Ui_Spikeling(object):
 
         self.ExtraCellular_Source_frame = QFrame(self.ExtraCellular_header_frame)
         self.ExtraCellular_Source_frame.setObjectName(u"ExtraCellular_Source_frame")
-        self.ExtraCellular_Source_frame.setFont(font11)
+        self.ExtraCellular_Source_frame.setFont(font6)
         self.ExtraCellular_Source_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.ExtraCellular_Source_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_121 = QVBoxLayout(self.ExtraCellular_Source_frame)
@@ -15618,7 +15699,7 @@ class Ui_Spikeling(object):
 
         self.ExtraCellular_Mode_dVdT_label = QLabel(self.ExtraCellular_Mode_Label_frame)
         self.ExtraCellular_Mode_dVdT_label.setObjectName(u"ExtraCellular_Mode_dVdT_label")
-        self.ExtraCellular_Mode_dVdT_label.setFont(font11)
+        self.ExtraCellular_Mode_dVdT_label.setFont(font6)
         self.ExtraCellular_Mode_dVdT_label.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_114.addWidget(self.ExtraCellular_Mode_dVdT_label)
@@ -15700,7 +15781,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_Bandpass_comboBox.addItem("")
         self.ExtraCellular_Bandpass_comboBox.addItem("")
         self.ExtraCellular_Bandpass_comboBox.setObjectName(u"ExtraCellular_Bandpass_comboBox")
-        self.ExtraCellular_Bandpass_comboBox.setFont(font11)
+        self.ExtraCellular_Bandpass_comboBox.setFont(font6)
 
         self.verticalLayout_118.addWidget(self.ExtraCellular_Bandpass_comboBox)
 
@@ -15757,7 +15838,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_562.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_Spread_Label_ = QLabel(self.ExtraCellular_Spread_Label_frame)
         self.ExtraCellular_Spread_Label_.setObjectName(u"ExtraCellular_Spread_Label_")
-        self.ExtraCellular_Spread_Label_.setFont(font11)
+        self.ExtraCellular_Spread_Label_.setFont(font6)
         self.ExtraCellular_Spread_Label_.setWordWrap(True)
 
         self.horizontalLayout_562.addWidget(self.ExtraCellular_Spread_Label_)
@@ -15901,7 +15982,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_633.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_BaselineNoise_Label = QLabel(self.ExtraCellular_BaselineNoise_Label_frame)
         self.ExtraCellular_BaselineNoise_Label.setObjectName(u"ExtraCellular_BaselineNoise_Label")
-        self.ExtraCellular_BaselineNoise_Label.setFont(font11)
+        self.ExtraCellular_BaselineNoise_Label.setFont(font6)
         self.ExtraCellular_BaselineNoise_Label.setWordWrap(True)
 
         self.horizontalLayout_633.addWidget(self.ExtraCellular_BaselineNoise_Label)
@@ -16021,7 +16102,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_640.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_SharedNoise_Label = QLabel(self.ExtraCellular_SharedNoise_Label_frame)
         self.ExtraCellular_SharedNoise_Label.setObjectName(u"ExtraCellular_SharedNoise_Label")
-        self.ExtraCellular_SharedNoise_Label.setFont(font11)
+        self.ExtraCellular_SharedNoise_Label.setFont(font6)
         self.ExtraCellular_SharedNoise_Label.setWordWrap(True)
 
         self.horizontalLayout_640.addWidget(self.ExtraCellular_SharedNoise_Label)
@@ -16141,7 +16222,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_567.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_HumNoise_Label = QLabel(self.ExtraCellular_HumNoise_Label_frame)
         self.ExtraCellular_HumNoise_Label.setObjectName(u"ExtraCellular_HumNoise_Label")
-        self.ExtraCellular_HumNoise_Label.setFont(font11)
+        self.ExtraCellular_HumNoise_Label.setFont(font6)
         self.ExtraCellular_HumNoise_Label.setWordWrap(True)
 
         self.horizontalLayout_567.addWidget(self.ExtraCellular_HumNoise_Label)
@@ -16253,7 +16334,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_638.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_CAR_Label = QLabel(self.ExtraCellular_CAR_Label_frame)
         self.ExtraCellular_CAR_Label.setObjectName(u"ExtraCellular_CAR_Label")
-        self.ExtraCellular_CAR_Label.setFont(font11)
+        self.ExtraCellular_CAR_Label.setFont(font6)
         self.ExtraCellular_CAR_Label.setWordWrap(True)
 
         self.horizontalLayout_638.addWidget(self.ExtraCellular_CAR_Label)
@@ -16402,7 +16483,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_246.setContentsMargins(10, 0, 10, 0)
         self.ExtraCellular_Spikes_Threshold_label_frame = QFrame(self.ExtraCellular_Spikes_Threshold_frame)
         self.ExtraCellular_Spikes_Threshold_label_frame.setObjectName(u"ExtraCellular_Spikes_Threshold_label_frame")
-        self.ExtraCellular_Spikes_Threshold_label_frame.setFont(font11)
+        self.ExtraCellular_Spikes_Threshold_label_frame.setFont(font6)
         self.ExtraCellular_Spikes_Threshold_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.ExtraCellular_Spikes_Threshold_label_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_254 = QVBoxLayout(self.ExtraCellular_Spikes_Threshold_label_frame)
@@ -16588,7 +16669,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_258.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_Spikes_Filter_label = QLabel(self.ExtraCellular_Spikes_Filter_label_frame)
         self.ExtraCellular_Spikes_Filter_label.setObjectName(u"ExtraCellular_Spikes_Filter_label")
-        self.ExtraCellular_Spikes_Filter_label.setFont(font11)
+        self.ExtraCellular_Spikes_Filter_label.setFont(font6)
 
         self.verticalLayout_258.addWidget(self.ExtraCellular_Spikes_Filter_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -17173,11 +17254,11 @@ class Ui_Spikeling(object):
         self.SaveNeuronPushButton = QPushButton(self.SaveNeuron_frame)
         self.SaveNeuronPushButton.setObjectName(u"SaveNeuronPushButton")
         self.SaveNeuronPushButton.setEnabled(True)
-        font17 = QFont()
-        font17.setPointSize(10)
-        font17.setBold(True)
-        font17.setStrikeOut(False)
-        self.SaveNeuronPushButton.setFont(font17)
+        font16 = QFont()
+        font16.setPointSize(10)
+        font16.setBold(True)
+        font16.setStrikeOut(False)
+        self.SaveNeuronPushButton.setFont(font16)
         self.SaveNeuronPushButton.setStyleSheet(u"")
         self.SaveNeuronPushButton.setCheckable(False)
 
@@ -19431,9 +19512,12 @@ class Ui_Spikeling(object):
         self.Spikeling_StimStr_values_0.setText(QCoreApplication.translate("Spikeling", u"0", None))
         self.Spikeling_StimStr_values_max.setText(QCoreApplication.translate("Spikeling", u"100", None))
         self.Spikeling_StimStr_image.setText("")
-        self.Spikeling_CustomStimulus_Label.setText(QCoreApplication.translate("Spikeling", u"Custom Stimulus", None))
-        self.Spikeling_CustomStimulus_StimLabel.setText(QCoreApplication.translate("Spikeling", u"Select a stimulus:", None))
+        self.Spikeling_CustomStimulus_label.setText(QCoreApplication.translate("Spikeling", u"Custom Stimulus", None))
+        self.Spikeling_CustomStimulus_StimLabel.setText(QCoreApplication.translate("Spikeling", u"Select a stimulus", None))
         self.Spikeling_CustomStimulus_Load_pushButton.setText(QCoreApplication.translate("Spikeling", u"Load", None))
+        self.Spikeling_CustomStimulus_Loop_label.setText(QCoreApplication.translate("Spikeling", u"Number of loop", None))
+        self.Spikeling_CustomStimulus_Label.setText(QCoreApplication.translate("Spikeling", u"Apply Stimulus", None))
+        self.Spikeling_CustomStimulus_display_label.setText(QCoreApplication.translate("Spikeling", u"Stimulus preview", None))
         self.Spikeling_PatchClamp_label.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; font-weight:700;\">Patch Clamp</span></p></body></html>", None))
         self.Spikeling_CurrentClamp_label.setText(QCoreApplication.translate("Spikeling", u"Current-Clamp", None))
         self.Spikeling_VoltageClamp_label.setText(QCoreApplication.translate("Spikeling", u"Voltage-Clamp", None))

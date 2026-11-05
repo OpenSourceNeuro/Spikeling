@@ -539,6 +539,11 @@ class Spikeling():
             # Reconnection restoration happens after the board handshake.
             binding.cancel_pending()
 
+        def select_membrane_model(index):
+            # Change the backend without resetting the holding-voltage slider.
+            if mode_toggle.isChecked():
+                Spikeling.SyncPatchClampState(self)
+
         remember_value(binding.value)
 
         binding.valueChanged.connect(remember_value)
@@ -547,6 +552,7 @@ class Spikeling():
 
         override_toggle.toggled.connect(binding.set_active)
         mode_toggle.toggled.connect(select_mode)
+        membrane_combo.currentIndexChanged.connect(select_membrane_model)
 
         serial_port.connection_changed.connect(connection_changed)
 
@@ -588,6 +594,22 @@ class Spikeling():
         # PC1 is interpreted in the correct units only after VCM.
         if not serial_port.write(f"VCM {int(is_vc)}\n"):
             return
+        # Select the actual membrane backend when voltage clamp is active.
+        if is_vc:
+            combo = self.ui.Spikeling_PatchClamp_MembraneModel_comboBox
+            model_name = combo.currentText().strip().casefold()
+
+            if model_name == "active":
+                active_model = 1
+            elif model_name == "passive":
+                active_model = 0
+            else:
+                raise ValueError(
+                    f"Unknown membrane model: {combo.currentText()}"
+                )
+
+            if not serial_port.write(f"VCA {active_model}\n"):
+                return
 
         # Independently select GUI override or physical potentiometer.
         if self.ui.PatchClamp_toggleButton.isChecked():
@@ -1205,9 +1227,22 @@ class Spikeling():
 
         serial_port.connection_changed.connect(connection_changed)
 
-        self.ui.Spikeling_Pharmacology_Clear_pushButton.clicked.connect(
-            lambda checked=False: Spikeling.ClearAllDrugs(self)
-        )
+        clear_button = self.ui.Spikeling_Pharmacology_Clear_pushButton
+
+        clear_button.setCheckable(False)
+        clear_button.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        clear_button.setStyleSheet("""
+            QPushButton#Spikeling_Pharmacology_Clear_pushButton {color: #B58900; background-color: #073642; border: 1px solid #586E75; border-radius: 4px;}
+
+            QPushButton#Spikeling_Pharmacology_Clear_pushButton:hover {color: #002B36; background-color: #B58900; border-color: #B58900;}
+
+            QPushButton#Spikeling_Pharmacology_Clear_pushButton:pressed {color: #FDF6E3; background-color: #806000; border-color: #806000;}
+
+            QPushButton#Spikeling_Pharmacology_Clear_pushButton:disabled {color: #586E75; background-color: #073642; border-color: #073642;}
+        """)
+
+        clear_button.clicked.connect(lambda checked=False: Spikeling.ClearAllDrugs(self))
 
         self._drug_setup_complete = True
 
@@ -1310,9 +1345,8 @@ class Spikeling():
         if not send("PH E", int(pharmacology_enabled)):
             return
 
-
     def ClearAllDrugs(self):
-        """Reset all drug controls, then synchronise the firmware once."""
+        """Uncheck all drug toggles, reset concentrations and synchronise once."""
 
         controls = getattr(self, "drug_controls", None)
 
@@ -1323,9 +1357,12 @@ class Spikeling():
             binding = control["binding"]
             toggle = control["toggle"]
 
-            # Suppress individual command callbacks while clearing the group.
-            with QSignalBlocker(binding), QSignalBlocker(toggle):
+            # Keep toggle signals active so PyToggle animates correctly.
+            # Block binding signals to avoid individual serial updates.
+            with QSignalBlocker(binding):
                 toggle.setChecked(False)
+
+                # Also reconcile the binding if it was already unchecked.
                 binding.set_active(False)
                 binding.set_value(0, send=False)
 
