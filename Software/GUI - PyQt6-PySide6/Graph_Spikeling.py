@@ -28,9 +28,10 @@ SAMPLE_INTERVAL = 0.1
 TIME_WINDOW = 2000
 TIME_WINDOW_DISPLAY = 250
 PEN_WIDTH = 1.5
-VM_MIN, VM_MAX = -100, 40
-CURRENT_MIN, CURRENT_MAX = -100, 100
-VC_CURRENT_MIN, VC_CURRENT_MAX = -2.0, 2.0
+VM_MIN, VM_MAX = -100, 40 # Membrane potential
+CURRENT_MIN, CURRENT_MAX = -100, 100 # Current-clamp current, arbitrary units
+VC_CURRENT_MIN, VC_CURRENT_MAX = -2.0, 2.0 # Voltage-clamp current, nanoamperes
+STIMULUS_MIN, STIMULUS_MAX = -100.0, 100.0 # Stimulus amplitude, percentage
 N_STREAM_CHANNELS = 8
 
 # Suppress redundant serial writes when the custom stimulus value is unchanged
@@ -59,7 +60,15 @@ class SpikelingGraph(QObject):
         self.last_valid_data = None
         self.record_flag = False
         self.stim_counter = 0
+        # Secondary plotting areas.
         self.current_plots = None
+        self.stimulus_plots = None
+
+        # Default display mode is current clamp.
+        self.voltage_clamp_display = False
+
+        # Prevent duplicate resize-signal connections.
+        self._resize_connected = False
         self._last_stim_value = None
 
 
@@ -96,6 +105,8 @@ class SpikelingGraph(QObject):
         self.ui.Spikeling_Speed_slider.setEnabled(False)
 
         self.cleanup()
+        if self.stimulus_plots is not None:
+            self.stimulus_plots.clear()
         self.parent.SerialFlag = False
 
         if serial_port.is_open:
@@ -391,6 +402,22 @@ class SpikelingGraph(QObject):
         ``TIME_WINDOW_DISPLAY`` regardless of widget geometry or launch mode.
         """
         pw = self.ui.Spikeling_Oscilloscope_widget
+        # Remove secondary ViewBoxes from an earlier connection.
+        # Clearing the PlotWidget does not remove these scene items.
+
+        for attribute in ("current_plots", "stimulus_plots"):
+            old_view = getattr(self, attribute, None)
+
+            if old_view is not None:
+                old_view.clear()
+
+                scene = old_view.scene()
+                if scene is not None:
+                    scene.removeItem(old_view)
+
+                old_view.deleteLater()
+                setattr(self, attribute, None)
+
         plot_item = pw.getPlotItem()
         vb = plot_item.getViewBox()
 
@@ -407,6 +434,24 @@ class SpikelingGraph(QObject):
 
         # --- Secondary ViewBox: currents on the right axis ----------------
         self.current_plots = pg.ViewBox()
+        # Independent stimulus plotting area.
+        self.stimulus_plots = pg.ViewBox()
+        self.stimulus_plots.setMouseEnabled(
+            x=False,
+            y=False
+        )
+        self.stimulus_plots.setMenuEnabled(False)
+        pw.scene().addItem(self.stimulus_plots)
+        self.stimulus_plots.setXLink(pw)
+        self.stimulus_plots.enableAutoRange(
+            axis=pg.ViewBox.YAxis,
+            enable=False
+        )
+        self.stimulus_plots.setYRange(
+            STIMULUS_MIN,
+            STIMULUS_MAX,
+            padding=0.0
+        )
         self.current_plots.setMouseEnabled(x=False, y=False)
         self.current_plots.setMenuEnabled(False)
         pw.scene().addItem(self.current_plots)
@@ -431,18 +476,46 @@ class SpikelingGraph(QObject):
         self.curve4 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[7], width=PEN_WIDTH, cosmetic=True))
         self.curve6 = pg.PlotCurveItem(self.x, zeros, pen=pg.mkPen(Settings.DarkSolarized[10], width=PEN_WIDTH, cosmetic=True))
 
-        for curve in (self.curve1, self.curve2, self.curve4, self.curve6):
+        # Stimulus has an independent percentage scale.
+        self.stimulus_plots.addItem(self.curve1)
+
+        # Current traces share the current scale.
+        for curve in (self.curve2, self.curve4, self.curve6):
             self.current_plots.addItem(curve)
 
+        self.configure_current_axis(
+            self.voltage_clamp_display
+        )
+
         self._update_views()
-        safe_reconnect(pw.getViewBox().sigResized, self._update_views)
+
+        # The main oscilloscope ViewBox survives device reconnects.
+        # Connect the resize handler only once.
+        if not self._resize_connected:
+            pw.getViewBox().sigResized.connect(self._update_views)
+            self._resize_connected = True
 
     def _update_views(self):
-        """Keep the right-axis current ViewBox aligned with the main ViewBox."""
+        """
+        Align the secondary current and stimulus ViewBoxes
+        with the main membrane-potential ViewBox.
+
+        All three ViewBoxes share the same time axis.
+        """
+
         pw = self.ui.Spikeling_Oscilloscope_widget
         main_vb = pw.getViewBox()
-        self.current_plots.setGeometry(main_vb.sceneBoundingRect())
-        self.current_plots.linkedViewChanged(main_vb, self.current_plots.XAxis)
+        geometry = main_vb.sceneBoundingRect()
+
+        if self.current_plots is not None:
+            self.current_plots.setGeometry(geometry)
+            self.current_plots.linkedViewChanged(main_vb, self.current_plots.XAxis
+            )
+
+        if self.stimulus_plots is not None:
+            self.stimulus_plots.setGeometry(geometry)
+            self.stimulus_plots.linkedViewChanged(main_vb, self.stimulus_plots.XAxis
+            )
 
     def plot_curve(self):
         """
@@ -470,43 +543,43 @@ class SpikelingGraph(QObject):
         except Exception as error:
             print(f"Error in plot_curve: {error}")
 
-
     def configure_current_axis(self, voltage_clamp=False):
         """
-        Configure the oscilloscope current axis.
+        Configure the current axis for CC or VC.
 
-        Current Clamp:
-            Displays total injected current in legacy a.u.
+        CC: total current in legacy arbitrary units.
+        VC: clamp current in nanoamperes.
 
-        Voltage Clamp:
-            Displays simulated clamp current in nA.
+        The independent stimulus axis is not modified.
         """
 
-        if voltage_clamp:
+        self.voltage_clamp_display = bool(voltage_clamp)
+
+        if self.voltage_clamp_display:
             minimum = VC_CURRENT_MIN
             maximum = VC_CURRENT_MAX
             label = "Clamp Current"
             unit = "nA"
-
         else:
             minimum = CURRENT_MIN
             maximum = CURRENT_MAX
             label = "Current Input"
             unit = "a.u."
 
-        # Select the appropriate engineering units.
-        self.ui.Spikeling_Oscilloscope_widget.setLabel(
+        scope = self.ui.Spikeling_Oscilloscope_widget
+
+        scope.setLabel(
             "right",
             label,
             units=unit
         )
 
-        # Apply the appropriate current scale.
-        self.current_plots.setYRange(
-            minimum,
-            maximum,
-            padding=0.0
-        )
+        if self.current_plots is not None:
+            self.current_plots.setYRange(
+                minimum,
+                maximum,
+                padding=0.0
+            )
 
     # -------------------------------------------------------------------------
     # Saving Data

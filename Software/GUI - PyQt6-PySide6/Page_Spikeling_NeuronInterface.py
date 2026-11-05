@@ -604,6 +604,12 @@ class Spikeling():
             self.ui.Spikeling_PatchClamp_values_0.setText(str(midpoint))
             self.ui.Spikeling_PatchClamp_values_max.setText(str(maximum))
 
+            # Update graph units even during initial UI configuration.
+            graph = getattr(self, "spikeling_graph", None)
+
+            if graph is not None:
+                graph.configure_current_axis(voltage_clamp=bool(is_vc))
+
             if send:
                 Spikeling.SyncPatchClampState(self)
 
@@ -626,30 +632,46 @@ class Spikeling():
         select_mode(mode_toggle.isChecked(), send=False)
 
     def SyncPatchClampState(self):
-        """Send the selected mode, followed by its current control source."""
+        """
+        Synchronise the patch-clamp mode with the firmware.
+
+        The CC/VC toggle determines the graph's current units.
+        The Patch Clamp override toggle determines whether PC1
+        or the physical potentiometer controls the command.
+
+        Called with the MainWindow instance as self.
+        """
+
         binding = getattr(self, "patch_clamp_binding", None)
 
-        if binding is None or not serial_port.is_open:
+        if binding is None:
             return
 
         binding.cancel_pending()
 
+        # The clamp mode is determined only by the CC/VC toggle.
         is_vc = self.ui.PatchClampMode_toggleButton.isChecked()
 
-        # Send mode first so PC1 is interpreted in the correct units.
+        # Update the existing graph object, not MainWindow.
+        graph = getattr(self, "spikeling_graph", None)
+
+        if graph is not None:
+            graph.configure_current_axis(voltage_clamp=is_vc)
+
+        # Allow local GUI presentation to update while disconnected.
+        if not serial_port.is_open:
+            return
+
+        # Tell the firmware which model to use.
+        # PC1 is interpreted in the correct units only after VCM.
         if not serial_port.write(f"VCM {int(is_vc)}\n"):
             return
 
+        # Independently select GUI override or physical potentiometer.
         if self.ui.PatchClamp_toggleButton.isChecked():
             serial_port.write(f"PC1 {binding.value}\n")
-            self.configure_current_axis(voltage_clamp=True)
         else:
             serial_port.write("PC0\n")
-            self.configure_current_axis(voltage_clamp=False)
-
-
-
-
 
     # NoiseLevel
     def ActivateNoiseLevel(self):
