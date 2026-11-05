@@ -642,8 +642,11 @@ class Spikeling():
 
         if self.ui.PatchClamp_toggleButton.isChecked():
             serial_port.write(f"PC1 {binding.value}\n")
+            self.configure_current_axis(voltage_clamp=True)
         else:
             serial_port.write("PC0\n")
+            self.configure_current_axis(voltage_clamp=False)
+
 
 
 

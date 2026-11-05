@@ -669,12 +669,15 @@ inline void update_StimulusCurrentIn() {
   if (clampMode == ClampMode::VoltageClamp) {
 
     if (currentInSign == 0.0f) {
-      patch.v_step = 0.0f;
-      patch.v_cmd  = constrain(patch.v_hold, vc::command_min, vc::command_max);
-      patch.current_input = 0.0f;
-      stim.state = (int)lroundf(patch.v_cmd);
-      return;
-    }
+    patch.v_step = 0.0f;
+    patch.v_cmd = constrain(
+        patch.v_hold,
+        vc::command_min,
+        vc::command_max
+    );
+    patch.current_input = 0.0f;
+    return;
+}
 
     patch.magnitude =
       (fabsf(patch.pot_adj) / (float)stim_dac_span) * patch.v_step_max;
@@ -687,7 +690,6 @@ inline void update_StimulusCurrentIn() {
                              vc::command_max);
 
     patch.current_input = 0.0f;
-    stim.state = (int)lroundf(patch.v_cmd);
     return;
   }
 
@@ -747,7 +749,6 @@ inline void update_PassiveVoltageClamp() {
   neuron.u += neuron.dt_ms * neuron.a * (neuron.b * neuron.v - neuron.u);
   neuron.spike = false;
   patch.I_clamp = sample.clamp_nA;
-  stim.state = static_cast<int>(lroundf(patch.v_cmd));
   if (sample.saturated_fraction > 0) voltageClamp.flags |= vc::Compliance;
   if (neuron.v < neuron.Vm_min || neuron.v > neuron.Vm_max) voltageClamp.flags |= vc::DisplayRange;
   if (sample.clamp_nA*I_SCALE > 32767 || sample.clamp_nA*I_SCALE < -32768)

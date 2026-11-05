@@ -30,6 +30,7 @@ TIME_WINDOW_DISPLAY = 250
 PEN_WIDTH = 1.5
 VM_MIN, VM_MAX = -100, 40
 CURRENT_MIN, CURRENT_MAX = -100, 100
+VC_CURRENT_MIN, VC_CURRENT_MAX = -2.0, 2.0
 N_STREAM_CHANNELS = 8
 
 # Suppress redundant serial writes when the custom stimulus value is unchanged
@@ -468,6 +469,44 @@ class SpikelingGraph(QObject):
                     curve.setData(self.x, self.databuffers[index].data)
         except Exception as error:
             print(f"Error in plot_curve: {error}")
+
+
+    def configure_current_axis(self, voltage_clamp=False):
+        """
+        Configure the oscilloscope current axis.
+
+        Current Clamp:
+            Displays total injected current in legacy a.u.
+
+        Voltage Clamp:
+            Displays simulated clamp current in nA.
+        """
+
+        if voltage_clamp:
+            minimum = VC_CURRENT_MIN
+            maximum = VC_CURRENT_MAX
+            label = "Clamp Current"
+            unit = "nA"
+
+        else:
+            minimum = CURRENT_MIN
+            maximum = CURRENT_MAX
+            label = "Current Input"
+            unit = "a.u."
+
+        # Select the appropriate engineering units.
+        self.ui.Spikeling_Oscilloscope_widget.setLabel(
+            "right",
+            label,
+            units=unit
+        )
+
+        # Apply the appropriate current scale.
+        self.current_plots.setYRange(
+            minimum,
+            maximum,
+            padding=0.0
+        )
 
     # -------------------------------------------------------------------------
     # Saving Data
