@@ -2,6 +2,7 @@
   <qresource prefix="resources">
     <file>resources/Spikeling-v3_GUI.png</file>
     <file>resources/data01.png</file>
+    <file>resources/Pharmacology.png</file>
     <file>resources/data02.png</file>
     <file>resources/data03.png</file>
     <file>resources/InstensitySteps.png</file>

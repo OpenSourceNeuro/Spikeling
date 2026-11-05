@@ -56,10 +56,10 @@ QProgressBar::chunk{
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="spacing">
@@ -92,10 +92,10 @@ QProgressBar::chunk{
           </size>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
@@ -113,13 +113,13 @@ QProgressBar::chunk{
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignLeft|Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop">
            <widget class="QFrame" name="frame">
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Shadow::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <property name="spacing">
@@ -137,7 +137,7 @@ QProgressBar::chunk{
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item alignment="Qt::AlignLeft">
+             <item alignment="Qt::AlignmentFlag::AlignLeft">
               <widget class="QLabel" name="label">
                <property name="maximumSize">
                 <size>
@@ -162,13 +162,13 @@ QProgressBar::chunk{
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QFrame" name="Status_Frame">
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <property name="spacing">
@@ -186,13 +186,13 @@ QProgressBar::chunk{
           <property name="bottomMargin">
            <number>100</number>
           </property>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QLabel" name="label_3">
             <property name="whatsThis">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; color:#93a1a1;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:28pt; color:#93a1a1;&quot;&gt;v2.2&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#93a1a1;&quot;&gt;a Hardware implementation of spiking neurons&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#93a1a1;&quot;&gt;for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:72pt; color:#becdcd;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#becdcd;&quot;&gt;v3.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#becdcd;&quot;&gt;A hardware implementation of spiking neurons for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:72pt; color:#becdcd;&quot;&gt;Spikeling &lt;/span&gt;&lt;span style=&quot; font-size:16pt; color:#becdcd;&quot;&gt;v3.2.0&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#becdcd;&quot;&gt;A hardware implementation of spiking neurons for neuroscience teaching and outreach&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -214,10 +214,10 @@ QProgressBar::chunk{
           </size>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
@@ -240,7 +240,6 @@ QProgressBar::chunk{
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -255,10 +254,10 @@ QProgressBar::chunk{
        <item>
         <widget class="QFrame" name="frame_2">
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <property name="spacing">
@@ -276,7 +275,7 @@ QProgressBar::chunk{
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QLabel" name="Status_Label">
             <property name="font">
              <font>
@@ -287,20 +286,20 @@ QProgressBar::chunk{
              <string>Welcome to Spikeling GUI</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignBottom">
+       <item alignment="Qt::AlignmentFlag::AlignBottom">
         <widget class="QFrame" name="Footer_Frame">
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <property name="spacing">
@@ -318,7 +317,7 @@ QProgressBar::chunk{
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item alignment="Qt::AlignBottom">
+          <item alignment="Qt::AlignmentFlag::AlignBottom">
            <widget class="QFrame" name="License_Frame">
             <property name="minimumSize">
              <size>
@@ -333,10 +332,10 @@ QProgressBar::chunk{
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Shadow::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="spacing">
@@ -354,7 +353,7 @@ QProgressBar::chunk{
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item alignment="Qt::AlignBottom">
+             <item alignment="Qt::AlignmentFlag::AlignBottom">
               <widget class="QLabel" name="label_2">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;This project is licensed under the GNU General Public License v3.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -364,7 +363,7 @@ QProgressBar::chunk{
             </layout>
            </widget>
           </item>
-          <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+          <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignBottom">
            <widget class="QFrame" name="Logo_Frame">
             <property name="minimumSize">
              <size>
@@ -373,10 +372,10 @@ QProgressBar::chunk{
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Shadow::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <property name="spacing">
@@ -394,7 +393,7 @@ QProgressBar::chunk{
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item alignment="Qt::AlignVCenter">
+             <item alignment="Qt::AlignmentFlag::AlignVCenter">
               <widget class="QLabel" name="Sussex_Logo">
                <property name="minimumSize">
                 <size>
@@ -462,10 +461,10 @@ QProgressBar::chunk{
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Shadow::Raised</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
              <property name="spacing">
@@ -486,10 +485,10 @@ QProgressBar::chunk{
              <item>
               <widget class="QLabel" name="Credits_Label">
                <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Developped by &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Based on&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; an original idea by T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Developped by &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;M.J.Y. Zimmermann&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Maintained by &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;P. Rignanese, A. Koumoundourou &amp;amp; L. Zanetti&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Based on&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; an original idea by T. Baden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
               </widget>
              </item>

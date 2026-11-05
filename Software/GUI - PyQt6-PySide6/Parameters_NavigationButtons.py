@@ -10,7 +10,9 @@ from PySide6.QtWidgets import QSlider
 
 from UI_NeuronParameters import Ui_AdvancedParameters
 from UI_Tetrode import Ui_Tetrode
+import Parameters_Settings as Settings
 from Tetrode import TetrodeGeometryWindow
+from Parameters_Sliders import SliderBinding
 import Page_Home, Page_Spikeling_NeuronInterface, Page_Spikeling_NeuronEmulator, Page_Spikeling_DataAnalysis, Page_Spikeling_Tutorial, Page_Imaging_ImagingSimulation, Page_Imaging_DataAnalysis, Page_Imaging_Tutorial, Page_ExtraCellular_Scope, Page_NeuronGenerator, Page_StimulusGenerator, Page_Settings, Page_About, Page_GitHub
 import Graph_Emulator, Graph_Imaging
 from Graph_Spikeling import SpikelingGraph
@@ -180,6 +182,9 @@ def Buttons(self):
                                                                                           self.ui.Spikeling_rightMenuSubContainer_pushButton, self.icon_SpikelingMenuRight, self.icon_SpikelingDropMenuRight, True))
     self.ui.Spikeling_StimulusParameter_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max, animation_speed, True))
     self.ui.Spikeling_NeuronParameter_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max, animation_speed, True))
+    self.ui.Spikeling_PharmacologyParameter_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max,animation_speed, True))
+    self.ui.Spikeling_Synapse1Parameter_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max,animation_speed, True))
+    self.ui.Spikeling_Synapse2Parameter_pushButton.clicked.connect(lambda: expandMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max,animation_speed, True))
     self.ui.Spikeling_parameter_exit_pushButton.clicked.connect(lambda: collapseMenu(self, self.ui.Spikeling_CenterMenuContainer, spikecenterMenu_min, spikecenterMenu_max, animation_speed, True))
 
 
@@ -208,10 +213,10 @@ def Buttons(self):
 
 
 ########################################################################
-# Home Page - page000
+# Home Page - page_Home
     # Display Home page on start up
-    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_000)
-    self.ui.appTitle_pushButton.clicked.connect(lambda: self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_000))
+    self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Home)
+    self.ui.appTitle_pushButton.clicked.connect(lambda: self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Home))
 
 ########################################################################
 # Spikeling Neuron Interface Page
@@ -260,47 +265,63 @@ def Buttons(self):
     self.ui.Spikeling_DataRecording_Record_pushButton.setCheckable(True)
     self.ui.Spikeling_DataRecording_Record_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.RecordButton(self))
 
-    # Stimulation parameters
-    # Display stimulation parameter page when StimulusParameter button is clicked
-    self.ui.Spikeling_StimulusParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.StimulusParameter_page))
-    self.ui.StimFre_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateStimFre(self))
-    self.ui.Spikeling_StimFre_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetStimFreSliderValue(self))
-    self.ui.StimStr_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateStimStr(self))
-    self.ui.Spikeling_StimStr_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetStimStrSliderValue(self))
-    self.ui.StimCus_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateCustomStimulus(self))
 
+    # Stimulation parameters
+    self.ui.Spikeling_StimulusParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.StimulusParameter_page))
+
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureStimulusFrequency(self)
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureStimulusStrength(self)
+
+    self.ui.StimCus_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateCustomStimulus(self))
     self.ui.Spikeling_CustomStimulus_Load_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.LoadStimulus(self))
-    self.ui.PhotoGain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePhotoGain(self))
-    self.ui.Spikeling_PR_PhotoGain_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPhotoGain(self))
-    self.ui.PhotoDecay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRDecay(self))
-    self.ui.Spikeling_PR_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRDecay(self))
-    self.ui.PhotoRecovery_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRRecovery(self))
-    self.ui.Spikeling_PR_Recovery_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRRecovery(self))
+
+
 
     # Neuron parameters
-    # Display neuron parameter page when NeuronParameter button is clicked
     self.ui.Spikeling_NeuronParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.NeuronParameter_page))
+
     self.ui.PatchClampMode_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.SelectPatchClampMode(self))
     self.ui.PatchClamp_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateInjectedCurrent(self))
     self.ui.Spikeling_PatchClamp_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetInjectedCurrent(self))
+
     self.ui.Noise_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateNoiseLevel(self))
     self.ui.Spikeling_Noise_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetNoiseLevel(self))
-    self.ui.Synapse1_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain1(self))
+
+    self.ui.PhotoGain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePhotoGain(self))
+    self.ui.Spikeling_PR_PhotoGain_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPhotoGain(self))
+
+    self.ui.PhotoDecay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRDecay(self))
+    self.ui.Spikeling_PR_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRDecay(self))
+
+    self.ui.PhotoRecovery_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRRecovery(self))
+    self.ui.Spikeling_PR_Recovery_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRRecovery(self))
+
+    # Pharmacology parameters
+    self.ui.Spikeling_PharmacologyParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.PharmacologyParameter_page))
+
+    # Synapse1 parameters
+    self.ui.Spikeling_Synapse1Parameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.Synapse1Parameter_page))
+
+    self.ui.Synapse1_Gain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain1(self))
     self.ui.Spikeling_Synapse1_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticGain1(self))
+
     self.ui.Synapse1Decay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapseDecay1(self))
     self.ui.Spikeling_Synapse1_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticDecay1(self))
-    self.ui.Synapse2_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain2(self))
+
+    # Synapse2 parameters
+    self.ui.Spikeling_Synapse2Parameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.Synapse2Parameter_page))
+
+    self.ui.Synapse2_Gain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain2(self))
     self.ui.Spikeling_Synapse2_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticGain2(self))
+
     self.ui.Synapse2Decay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapseDecay2(self))
     self.ui.Spikeling_Synapse2_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticDecay2(self))
 
-
-########################################################################
-# Spikeling Emulator Page
+    ########################################################################
+    # Spikeling Emulator Page
 
     # Display Page_Spikeling_NeuronEmulator when emulator button is clicked
     self.ui.NeuronEmulator_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronEmulator.Emulator.ShowPage(self))
-
 
     # Start the Emulator
     self.ui.Emulator_Connect_pushButton.clicked.connect(lambda: Graph_Emulator.EmulatorPlot(self))

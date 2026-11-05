@@ -217,7 +217,7 @@ class SettingsPage:
 
     def _build_controls(self) -> None:
         """Create the appearance widgets inside ``page_601``."""
-        page = self.ui.page_601
+        page = self.ui.page_Settings
         layout = page.layout()
         if layout is None:
             layout = QVBoxLayout(page)

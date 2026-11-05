@@ -4,12 +4,14 @@
 
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QIcon
-from PySide6.QtCore import QSize, QFileInfo
+from PySide6.QtCore import Qt, QSize, QFileInfo
 from Parameters_ToggleButtons import PyToggle
 from Parameters_Sliders import configure_styled_slider
+from Parameters_Sliders import SliderBinding
 
 from serial_manager import serial_manager
 import os
+import math
 import numpy as np
 import pandas as pd
 
@@ -30,7 +32,7 @@ class Spikeling():
         self.ui.Spikeling_rightMenuContainer.setMinimumSize(QSize(NavigationButtons.spikerightMenu_max, 16777215))
         self.ui.Spikeling_Oscilloscope_widget.setBackground(Settings.DarkSolarized[0])
         self.ui.Spikeling_CustomStimulus_display.setBackground(Settings.DarkSolarized[0])
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_101)
+        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Spikeling_NeuronInterface)
         NavigationButtons.toggleMenu(self, self.ui.Spikeling_rightMenuContainer, NavigationButtons.spikerightMenu_min, NavigationButtons.spikerightMenu_max, NavigationButtons.animation_speed,
                                      self.ui.Spikeling_rightMenuSubContainer_pushButton, self.icon_SpikelingMenuRight, self.icon_SpikelingDropMenuRight, True)
 
@@ -194,61 +196,178 @@ class Spikeling():
 
 
     # Stimulus Frequency
-    def ActivateStimFre(self):
-        global serial_port
-        if self.ui.StimFre_toggleButton.isChecked():
-            self.Stim_DutyCycle = 500
-            self.Stim_MinCycle = 10
-            self.ui.Spikeling_StimFre_slider.setEnabled(True)
-            self.StimFreValue = self.ui.Spikeling_StimFre_slider.value()*(-1)
-            self.setTextStimFre = str(int(np.around(10000/(self.Stim_DutyCycle + (self.StimFreValue*self.Stim_DutyCycle/100) + self.Stim_MinCycle))))
-            self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
-            self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
+    ##################################################
+    def ConfigureStimulusFrequency(self):
+        """Connect the frequency slider, editable reading and serial commands."""
+
+        if hasattr(self, "stimulus_frequency_binding"):
+            return
+
+        slider = self.ui.Spikeling_StimFre_slider
+
+        # Preserve the constants used by the existing frequency conversion.
+        self.Stim_DutyCycle = 500
+        self.Stim_MinCycle = 10
+        duty_cycle = self.Stim_DutyCycle
+        minimum_cycle = self.Stim_MinCycle
+
+        def period_from_position(position):
+            return ( duty_cycle - position * duty_cycle / 100 + minimum_cycle )
+
+        # Every available slider position must produce a positive period.
+        if min(period_from_position(slider.minimum()), period_from_position(slider.maximum()),) <= 0:
+            raise ValueError("Stimulus-frequency slider range produces a non-positive period.")
+
+        def frequency_from_position(position):
+            """Convert a slider position into the existing frequency units."""
+            return 10000 / period_from_position(position)
+
+        def format_frequency(frequency):
+            """Preserve the existing integer frequency display."""
+            return str(round(frequency))
+
+        def position_from_frequency(frequency):
+            """Select the slider position giving the nearest frequency."""
+            endpoint_frequencies = (
+                frequency_from_position(slider.minimum()),
+                frequency_from_position(slider.maximum()),
+            )
+
+            lower = min(endpoint_frequencies)
+            upper = max(endpoint_frequencies)
+
+            if not lower <= frequency <= upper:
+                raise ValueError("Frequency is outside the available range.")
+
+            # Integer readings can represent several slider positions.
+            # Re-entering the displayed value should preserve the current one.
+            current_position = slider.value()
+            current_text = format_frequency(frequency_from_position(current_position))
+
+            if frequency == float(current_text):
+                return current_position
+
+            # Invert the existing frequency equation.
+            raw_position = ( (duty_cycle + minimum_cycle - 10000 / frequency) * 100 / duty_cycle )
+
+            # Compare neighbouring positions in frequency units.
+            # Simply rounding raw_position is less accurate for this
+            # nonlinear mapping.
+            candidates = {
+                max(
+                    slider.minimum(),
+                    min(slider.maximum(), math.floor(raw_position)),
+                ),
+                max(
+                    slider.minimum(),
+                    min(slider.maximum(), math.ceil(raw_position)),
+                ),
+            }
+
+            return min(
+                candidates,
+                key=lambda position: (
+                    abs(frequency_from_position(position) - frequency),
+                    position,
+                ),
+            )
+
+        binding = SliderBinding(
+            slider=slider,
+            editor=self.ui.Spikeling_StimFre_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.StimFre_toggleButton.isChecked(),
+            default_position=0,
+            disabled_text="Knob control",
+            active_editor_style=( "color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;" ),
+            disabled_editor_style=( "color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;" ),
+            to_display=frequency_from_position,
+            to_slider=position_from_frequency,
+            format_value=format_frequency,
+            interval_ms=40,
+        )
+
+        self.stimulus_frequency_binding = binding
+
+        def remember_value(position):
+            # Preserve the existing attributes and their meanings.
+            self.StimFreValue = -position
+            self.setTextStimFre = format_frequency(frequency_from_position(position))
+
+        def apply_value(position):
             if serial_port.is_open:
-                serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
+                serial_port.write(f"FR1 {-position}\n")
 
-        else:
-            self.ui.Spikeling_StimFre_slider.setEnabled(False)
-            self.ui.Spikeling_StimFre_slider.setValue(0)
-            self.ui.Spikeling_StimFre_readings.setText('')
+        def disable_control():
             if serial_port.is_open:
-                serial_port.write('FR0' + '\n')
+                serial_port.write("FR0\n")
 
+        def connection_changed(connected):
+            binding.cancel_pending()
 
-    def GetStimFreSliderValue(self):
-        global serial_port
-        self.StimFreValue = self.ui.Spikeling_StimFre_slider.value()*(-1)
-        self.setTextStimFre = str(int(np.around(10000/(self.Stim_DutyCycle + (self.StimFreValue*self.Stim_DutyCycle/100) + self.Stim_MinCycle))))
-        self.ui.Spikeling_StimFre_readings.setText(self.setTextStimFre)
-        self.ui.Spikeling_StimFre_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('FR1 ' + str(self.StimFreValue) + '\n')
+        # Initialise application attributes without sending a command.
+        remember_value(binding.value)
+
+        binding.valueChanged.connect(remember_value)
+        binding.applyRequested.connect(apply_value)
+        binding.disableRequested.connect(disable_control)
+
+        self.ui.StimFre_toggleButton.toggled.connect(binding.set_active)
+
+        serial_port.connection_changed.connect(connection_changed)
+
 
 
     # Stimulus Strength
-    def ActivateStimStr(self):
-        global serial_port
-        if self.ui.StimStr_toggleButton.isChecked():
-            self.ui.Spikeling_StimStr_slider.setEnabled(True)
-            self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
-            self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
-            self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
-        else:
-            self.ui.Spikeling_StimStr_slider.setEnabled(False)
-            self.ui.Spikeling_StimStr_slider.setValue(0)
-            self.ui.Spikeling_StimStr_readings.setText('')
-            if serial_port.is_open:
-                serial_port.write('ST0' + '\n')
+    ##################################################
+    def ConfigureStimulusStrength(self):
+        """Create and connect the stimulus-strength slider binding once."""
 
-    def GetStimStrSliderValue(self):
-        global serial_port
-        self.StimStrValue = self.ui.Spikeling_StimStr_slider.value()
-        self.ui.Spikeling_StimStr_readings.setText(str(self.StimStrValue))
-        self.ui.Spikeling_StimStr_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('ST1 ' + str(self.StimStrValue) + '\n')
+        # Avoid duplicate connections if setup is called again.
+        if hasattr(self, "stimulus_strength_binding"):
+            return
+
+        binding = SliderBinding(
+            slider=self.ui.Spikeling_StimStr_slider,
+            editor=self.ui.Spikeling_StimStr_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.StimStr_toggleButton.isChecked(),
+            default_position=0,
+            disabled_text="Knob control",
+            active_editor_style=("color: rgb" + str(tuple(Settings.DarkSolarized[5])) + "; font: 700 10pt;"),
+            disabled_editor_style=("color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;"),
+            to_display=float,
+            to_slider=float,
+            format_value=lambda value: f"{value:.0f}",
+            interval_ms=40,
+        )
+
+        # Keep a reference and initialise the application value.
+        self.stimulus_strength_binding = binding
+        self.StimStrValue = binding.value
+
+        def remember_value(value):
+            self.StimStrValue = value
+
+        def apply_value(value):
+            if serial_port.is_open:
+                serial_port.write(f"ST1 {value}\n")
+
+        def disable_control():
+            if serial_port.is_open:
+                serial_port.write("ST0\n")
+
+        def connection_changed(connected):
+            # Discard updates scheduled before a connection transition.
+            binding.cancel_pending()
+
+        binding.valueChanged.connect(remember_value)
+        binding.applyRequested.connect(apply_value)
+        binding.disableRequested.connect(disable_control)
+
+        self.ui.StimStr_toggleButton.toggled.connect(binding.set_active)
+
+        serial_port.connection_changed.connect(connection_changed)
 
 
     # Custom Stimulus
@@ -390,7 +509,7 @@ class Spikeling():
                 "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
             )
             self.ui.Spikeling_PatchClamp_Label.setText("Hold Voltage (mV)")
-            self.ui.Spikeling_PatchClamp_reading.setStyleSheet(
+            self.ui.Spikeling_PatchClamp_readings.setStyleSheet(
                 "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
             )
 
@@ -414,7 +533,7 @@ class Spikeling():
                 "color: rgb" + str(tuple(Settings.DarkSolarized[11])) + "; font: 700 10pt;"
             )
             self.ui.Spikeling_PatchClamp_Label.setText("Injected Current (a.u.)")
-            self.ui.Spikeling_PatchClamp_reading.setStyleSheet(
+            self.ui.Spikeling_PatchClamp_readings.setStyleSheet(
                 "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
             )
 
@@ -446,11 +565,11 @@ class Spikeling():
         if self.ui.PatchClamp_toggleButton.isChecked():
             self.ui.Spikeling_PatchClamp_slider.setEnabled(True)
             self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
-            self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
+            self.ui.Spikeling_PatchClamp_readings.setText(str(self.InjectedCurrent))
             if self.ui.PatchClampMode_toggleButton.isChecked():
-                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
+                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
             else:
-                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
                     serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
         else:
@@ -459,18 +578,18 @@ class Spikeling():
                 self.ui.Spikeling_PatchClamp_slider.setValue(-70)
             else:
                 self.ui.Spikeling_PatchClamp_slider.setValue(0)
-            self.ui.Spikeling_PatchClamp_reading.setText("")
+            self.ui.Spikeling_PatchClamp_readings.setText("")
             if serial_port.is_open:
                     serial_port.write('PC0' + '\n')
 
     def GetInjectedCurrent(self):
             global serial_port
             self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
-            self.ui.Spikeling_PatchClamp_reading.setText(str(self.InjectedCurrent))
+            self.ui.Spikeling_PatchClamp_readings.setText(str(self.InjectedCurrent))
             if self.ui.PatchClampMode_toggleButton.isChecked():
-                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
+                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
             else:
-                self.ui.Spikeling_PatchClamp_reading.setStyleSheet("color: rgb"  + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb"  + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
             if serial_port.is_open:
                 serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
 

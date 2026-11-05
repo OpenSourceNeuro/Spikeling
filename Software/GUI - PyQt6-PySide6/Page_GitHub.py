@@ -107,7 +107,7 @@ class GitHubPage:
 
     def _build_controls(self) -> None:
         """Create the version and update widgets inside ``page_901``."""
-        page = self.ui.page_801
+        page = self.ui.page_GitHub
         layout = page.layout()
         if layout is None:
             layout = QVBoxLayout(page)

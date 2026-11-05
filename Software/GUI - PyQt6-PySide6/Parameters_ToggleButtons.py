@@ -172,86 +172,184 @@ class PyToggle(QCheckBox):
 def Buttons(self):
 
     # Generate toggle buttons for Spikeling Page
+
+    # Stimulus Parameters
+    self.ui.StimFre_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
+                                            )
+    self.ui.Spikeling_StimFre_toggle_layout.addWidget(self.ui.StimFre_toggleButton)
+    self.ui.Spikeling_StimFre_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.StimStr_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
+                                            )
+    self.ui.Spikeling_StimStr_toggle_layout.addWidget(self.ui.StimStr_toggleButton)
+    self.ui.Spikeling_StimStr_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+    self.ui.StimCus_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
+                                            )
+    self.ui.Spikeling_CustomStimulus_toggle_layout.addWidget(self.ui.StimCus_toggleButton)
+    self.ui.Spikeling_CustomStimulus_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+
+    # Neuron Parameters
     self.ui.PatchClampMode_toggleButton = PyToggle(width = 75,
                                                    bg_color='#%02x%02x%02x' % tuple(DarkSolarized[4]),
                                                    circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                    active_color='#%02x%02x%02x' % tuple(DarkSolarized[3])
                                                    )
+    self.ui.Spikeling_PatchClampMode_toggle_layout.addWidget(self.ui.PatchClampMode_toggleButton)
+    self.ui.Spikeling_PatchClampMode_toggle_layout.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
     self.ui.PatchClamp_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                active_color='#%02x%02x%02x' % tuple(DarkSolarized[4])
                                                )
+    self.ui.Spikeling_PatchClamp_toggle_layout.addWidget(self.ui.PatchClamp_toggleButton)
+    self.ui.Spikeling_PatchClamp_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.Noise_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                           circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                           active_color='#%02x%02x%02x' % tuple(DarkSolarized[4])
                                           )
+    self.ui.Spikeling_Noise_toggle_layout.addWidget(self.ui.Noise_toggleButton)
+    self.ui.Spikeling_Noise_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.PhotoGain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                               circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                               active_color='#%02x%02x%02x' % tuple(DarkSolarized[4])
                                               )
+    self.ui.Spikeling_PRGain_toggle_layout.addWidget(self.ui.PhotoGain_toggleButton)
+    self.ui.Spikeling_PRGain_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.PhotoDecay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                active_color='#%02x%02x%02x' % tuple(DarkSolarized[4])
                                                )
+    self.ui.Spikeling_PRDecay_Toggle_layout.addWidget(self.ui.PhotoDecay_toggleButton)
+    self.ui.Spikeling_PRDecay_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.PhotoRecovery_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                   circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(DarkSolarized[4])
                                                   )
-    self.ui.StimFre_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
-                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
-                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
-                                            )
-    self.ui.StimStr_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
-                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
-                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
-                                            )
-    self.ui.StimCus_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
-                                            circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
-                                            active_color='#%02x%02x%02x' % tuple(DarkSolarized[5])
-                                            )
-    self.ui.Synapse1_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+    self.ui.Spikeling_PRRecovery_toggle_layout.addWidget(self.ui.PhotoRecovery_toggleButton)
+    self.ui.Spikeling_PRRecovery_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+
+    # Pharmacology Parameters
+    self.ui.TTX_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                                  circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                                  active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                                  )
+    self.ui.Spikeling_Pharmacology_TTX_toggle_layout.addWidget(self.ui.TTX_toggleButton)
+    self.ui.Spikeling_Pharmacology_TTX_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.TEA_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_TEA_toggle_layout.addWidget(self.ui.TEA_toggleButton)
+    self.ui.Spikeling_Pharmacology_TEA_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.FourAP_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_4AP_toggle_layout.addWidget(self.ui.FourAP_toggleButton)
+    self.ui.Spikeling_Pharmacology_4AP_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.Apamin_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_Apamin_toggle_layout.addWidget(self.ui.Apamin_toggleButton)
+    self.ui.Spikeling_Pharmacology_Apamin_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.NBQX_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_NBQX_toggle_layout.addWidget(self.ui.NBQX_toggleButton)
+    self.ui.Spikeling_Pharmacology_NBQX_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.APV_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_APV_toggle_layout.addWidget(self.ui.APV_toggleButton)
+    self.ui.Spikeling_Pharmacology_APV_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.Gabazine_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_Gabazine_toggle_layout.addWidget(self.ui.Gabazine_toggleButton)
+    self.ui.Spikeling_Pharmacology_Gabazine_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.GVIA_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                        circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                        active_color='#%02x%02x%02x' % tuple(DarkSolarized[8])
+                                        )
+    self.ui.Spikeling_Pharmacology_GVIA_toggle_layout.addWidget(self.ui.GVIA_toggleButton)
+    self.ui.Spikeling_Pharmacology_GVIA_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+
+    # Synapse1 Parameters
+    self.ui.Synapse1_Gain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                              circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                              active_color='#%02x%02x%02x' % tuple(DarkSolarized[7])
                                              )
+    self.ui.Spikeling_Synapse1_Gain_toggle_layout.addWidget(self.ui.Synapse1_Gain_toggleButton)
+    self.ui.Spikeling_Synapse1_Gain_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.Synapse1Decay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                   circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(DarkSolarized[7])
                                                   )
-    self.ui.Synapse2_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+    self.ui.Spikeling_Synapse1_Decay_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
+    self.ui.Spikeling_Synapse1_Decay_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+    self.ui.Synapse1Release_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                                  circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                                  active_color='#%02x%02x%02x' % tuple(DarkSolarized[7])
+                                                  )
+    self.ui.Spikeling_Synapse1_Release_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
+    self.ui.Spikeling_Synapse1_Release_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+
+    self.ui.Synapse2_Gain_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                              circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                              active_color='#%02x%02x%02x' % tuple(DarkSolarized[10])
                                              )
+    self.ui.Spikeling_Synapse2_Gain_toggle_layout.addWidget(self.ui.Synapse2_Gain_toggleButton)
+    self.ui.Spikeling_Synapse2_Gain_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
     self.ui.Synapse2Decay_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
                                                   circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(DarkSolarized[10])
                                                   )
-    self.ui.Spikeling_PatchClampMode_toggle_layout.addWidget(self.ui.PatchClampMode_toggleButton)
-    self.ui.Spikeling_PatchClampMode_toggle_layout.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-    self.ui.Spikeling_PatchClamp_toggle_layout.addWidget(self.ui.PatchClamp_toggleButton)
-    self.ui.Spikeling_PatchClamp_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_Noise_toggle_layout.addWidget(self.ui.Noise_toggleButton)
-    self.ui.Spikeling_Noise_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_Synapse1_toggle_layout.addWidget(self.ui.Synapse1_toggleButton)
-    self.ui.Spikeling_Synapse1_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_Synapse1_Decay_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
-    self.ui.Spikeling_Synapse1_Decay_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_Synapse2_toggle_layout.addWidget(self.ui.Synapse2_toggleButton)
-    self.ui.Spikeling_Synapse2_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
     self.ui.Spikeling_Synapse2_Decay_toggle_layout.addWidget(self.ui.Synapse2Decay_toggleButton)
     self.ui.Spikeling_Synapse2_Decay_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-    self.ui.Spikeling_StimFre_toggle_layout.addWidget(self.ui.StimFre_toggleButton)
-    self.ui.Spikeling_StimFre_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_StimStr_toggle_layout.addWidget(self.ui.StimStr_toggleButton)
-    self.ui.Spikeling_StimStr_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_CustomStimulus_toggle_layout.addWidget(self.ui.StimCus_toggleButton)
-    self.ui.Spikeling_CustomStimulus_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_PR_toggle_layout.addWidget(self.ui.PhotoGain_toggleButton)
-    self.ui.Spikeling_PR_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.Spikeling_PRDecay_Toggle_layout.addWidget(self.ui.PhotoDecay_toggleButton)
-    self.ui.Spikeling_PRDecay_Toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-    self.ui.SpikelingPRRecovery_toggle_layout.addWidget(self.ui.PhotoRecovery_toggleButton)
-    self.ui.SpikelingPRRecovery_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+    self.ui.Synapse2Release_toggleButton = PyToggle(bg_color='#%02x%02x%02x' % tuple(DarkSolarized[11]),
+                                                    circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
+                                                    active_color='#%02x%02x%02x' % tuple(DarkSolarized[10])
+                                                    )
+    self.ui.Spikeling_Synapse2_Release_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
+    self.ui.Spikeling_Synapse2_Release_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+
+
+
+
+
+
+
+
 
 
 
