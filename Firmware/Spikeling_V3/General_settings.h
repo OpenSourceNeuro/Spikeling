@@ -1,6 +1,10 @@
 #pragma once  
 
 #include <cstdint>
+#include <Arduino.h>                                  // Required by the native USB transport layer
+#include "VoltageClamp_functions.h"                   // Passive / active VC solvers and guarded diagnostics
+#include "Pharmacology_functions.h"                   // Intrinsic and synaptic pharmacology, including release
+#include "STP_functions.h"                            // Independent per-synapse event plasticity
 
 
 
@@ -31,6 +35,11 @@ inline Timing timing{
  .lastStep_us =  0,
  .step_us     = 2000
 };
+
+inline void synchroniseModelClock() {
+  timing.current_us = micros();
+  timing.lastStep_us = timing.current_us;
+}
 
 
 
@@ -352,7 +361,7 @@ inline NeuronModel neuron = {
 /*                     Patch Clamp parameters                      */
 
 // Clamp mode: "CurrentClamp" mimics classical I-clamp (command current, observe Vm).
-// "VoltageClamp" enables a PI feedback controller that drives injected current so Vm tracks a command voltage.
+// "VoltageClamp" selects the passive equivalent-circuit prototype in VoltageClamp.h.
 
 enum class ClampMode : uint8_t { CurrentClamp = 0, VoltageClamp = 1 };
 inline ClampMode clampMode = ClampMode::CurrentClamp;
@@ -391,11 +400,11 @@ struct PatchClamp{
   float    v_step_max;                                      // Max |v_step| mapped from full-scale stimulus input (mV)
   float    i_command;                                       // Final command/injected current
   float    magnitude;
-  // --- Voltage clamp controller (PI)
+  // --- Legacy PI fields retained for now; unused by the passive VC backend
   float    Kp;                                              // Proportional gain (a.u. per mV error)
   float    Ki;                                              // Integral gain (a.u. per (mV*ms)) if dt is in ms
   float    e_int;                                           // Integrated voltage error (mV*ms)
-  float    I_clamp;                                         // Clamp current output (a.u.) computed by PI in VoltageClamp mode
+  float    I_clamp;                                         // Recorded interval-average clamp current (nA) in passive VC
   float    I_min;                                           // Compliance min (a.u.): clamp cannot inject below this
   float    I_max;                                           // Compliance max (a.u.): clamp cannot inject above this
   // --- GUI output
@@ -464,6 +473,9 @@ inline Integrator pi {
   .allow_integrate        = false
 };
 
+// Passive VC is independent of the Izhikevich state and shared input generators.
+inline vc::Runtime voltageClamp;
+
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
@@ -472,6 +484,15 @@ inline Integrator pi {
 inline void setClampMode(ClampMode m) {
   if (clampMode == m) return;
   clampMode = m;
+  // Boot/calibration/USB waits are wall time, never a backlog of model steps.
+  // Re-anchor both handovers so the selected backend starts at its normal rate.
+  synchroniseModelClock();
+  voltageClamp.missed_wall_period = false;
+  // A handover cannot carry a half-committed pharmacology AP into CC outputs.
+  pharmacology.intrinsic.committed = false;
+  pharmacology.intrinsic.verified_event = false;
+  pharmacology.intrinsic.armed = true;
+  pharmacology.intrinsic.failed_passive = false;
 
   // Reset PI state when entering/exiting voltage clamp
   patch.e_int   = 0.0f;
@@ -479,10 +500,24 @@ inline void setClampMode(ClampMode m) {
 
   // On entry to V-clamp, start by holding the present Vm (avoids sudden jumps)
   if (clampMode == ClampMode::VoltageClamp) {
+    voltageClamp.cc_pot_enabled = pot.use_patch_pot;
+    voltageClamp.source = vc::Source::Hardware;
+    voltageClamp.tick = 0;
+    voltageClamp.flags = 0;
+    vc::usb_tx_fault = false;
+    voltageClamp.previous_loop_us = 0;
+    voltageClamp.reset(neuron.v);
     patch.v_step = 0.0f;
-    patch.v_hold = constrain(neuron.v, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_hold = constrain(neuron.v, vc::command_min, vc::command_max);
     patch.v_cmd  = patch.v_hold;
   } else {
+    // Continue from the presently simulated voltage, never an old pre-clamp Vm.
+    vc::diagnosticUsbMode(false);
+    voltageClamp.trace.stop();
+    neuron.v = voltageClamp.sample().voltage_mV;
+    voltageClamp.rearm_spike_output = neuron.v >= neuron.Vm_spike;
+    voltageClamp.diagnostic = false;
+    pot.use_patch_pot = voltageClamp.cc_pot_enabled;
     // Leaving V-clamp: clear step so it won't “stick” next time
     patch.v_step = 0.0f;
   }
@@ -612,6 +647,8 @@ struct Synapse {
   PotFilter pot_filt;                                       // Filter state for Synapse gain pot ADC (median + IIR + deadband)
   // --- Gain (synaptic weight)
   float    gain;                                            // Synaptic event amplitude (current increment per spike). Sign can encode excitation/inhibition.
+  float    event_gain;                                      // Signed event gain AFTER one STP update, BEFORE pharmacological release; zero on non-event ticks.
+  STPState stp;                                             // Independent event-driven short-term plasticity state; retains history in both clamp modes.
   int16_t  pot_value;                                       // Raw ADC reading (0..4095)
   float    pot_scaling;                                     // Counts-per-gain-unit
   // --- State
@@ -636,7 +673,8 @@ inline Synapse syn1 = {
   .pot_pin          = pins.adc1.syn1_pot,
   .pot_raw          = 0,
   .pot_raw_filter   = 0,
-  .gain             = 0,                                  
+  .gain             = 0,
+  .event_gain       = 0.0f,                                // No presynaptic event pending at boot
   .pot_value        = 0,
   .pot_scaling       = 1 / (bits12/50.0f),
   .spikeState       = LOW,
@@ -657,6 +695,7 @@ inline Synapse syn2 = {
   .pin_analog       = pins.adc1.syn2_a,
   .pot_pin          = pins.adc1.syn2_pot,
   .gain             = 0,
+  .event_gain       = 0.0f,                                // No presynaptic event pending at boot
   .pot_value        = 0,
   .pot_scaling      = 1 / (bits12/50.0f),
   .spikeState       = LOW,
@@ -1010,6 +1049,7 @@ inline void init_PotFilters() {
 inline void HardwareSettings(){
 
   delay(500);                                               // Give USB/Serial a moment after reset (ESP32-S3 can enumerate slowly)
+  vc::prepareDiagnosticUsb();                               // Preallocate CDC TX storage before interrupts own it.
   Serial.begin(BaudRate);                                   // Start UART for CLI + streaming at the configured baud rate
   delay(500);                                               // Extra settle time so the host opens the port before first prints
 

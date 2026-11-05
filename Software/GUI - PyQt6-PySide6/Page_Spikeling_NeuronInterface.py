@@ -4,7 +4,7 @@
 
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QIcon
-from PySide6.QtCore import Qt, QSize, QFileInfo
+from PySide6.QtCore import Qt, QSize, QFileInfo, QSignalBlocker
 from Parameters_ToggleButtons import PyToggle
 from Parameters_Sliders import configure_styled_slider
 from Parameters_Sliders import SliderBinding
@@ -491,107 +491,160 @@ class Spikeling():
                 serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
 
 
-    # PatchClamp
-    def SelectPatchClampMode(self):
-        global serial_port
+    # Patch Clamp
+    ##################################################
+    def ConfigurePatchClamp(self):
+        """Configure CC/VC presentation, slider binding and serial callbacks."""
+
+        if hasattr(self, "patch_clamp_binding"):
+            return
+
+        slider = self.ui.Spikeling_PatchClamp_slider
+        mode_toggle = self.ui.PatchClampMode_toggleButton
+        override_toggle = self.ui.PatchClamp_toggleButton
+
+        membrane_combo = self.ui.Spikeling_PatchClamp_MembraneModel_comboBox
+        membrane_label = self.ui.Spikeling_PatchClamp_MembraneModel_label
+
+        modes = {
+            False: {
+                "minimum": -100,
+                "maximum": 100,
+                "default": 0,
+                "title": "Injected Current (a.u.)",
+                "colour": "rgb(133, 153, 0)",
+                "fill": "#859900",
+            },
+            True: {
+                "minimum": -110,
+                "maximum": 30,
+                "default": -70,
+                "title": "Holding Voltage (mV)",
+                "colour": "rgb(220, 50, 47)",
+                "fill": "#DC322F",
+            },
+        }
+
+        initial = modes[mode_toggle.isChecked()]
+
+        # Set the correct initial range before constructing the binding.
+        with QSignalBlocker(slider):
+            slider.setRange(initial["minimum"], initial["maximum"])
+            slider.setValue(initial["default"])
+
+        binding = SliderBinding(
+            slider=slider,
+            editor=self.ui.Spikeling_PatchClamp_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=override_toggle.isChecked(),
+            default_position=initial["default"],
+            disabled_text="Knob control",
+            active_editor_style=(f"color: {initial['colour']}; font: 700 10pt;"),
+            disabled_editor_style=("color: rgb(88, 110, 117);""font-size: 9pt;""font-weight: 400;"),
+            to_display=float,
+            to_slider=float,
+            format_value=lambda value: f"{value:.0f}",
+            interval_ms=40,
+        )
+
+        self.patch_clamp_binding = binding
+
+        def remember_value(value):
+            self.PatchClampValue = value
+
+            # Preserve the attribute used by the previous implementation.
+            self.InjectedCurrent = value
+
+        def apply_value(value):
+            if serial_port.is_open:
+                serial_port.write(f"PC1 {value}\n")
+
+        def disable_control():
+            if serial_port.is_open:
+                serial_port.write("PC0\n")
+
+        def select_mode(is_vc, *, send=True):
+            """Update the complete GUI before sending the new clamp mode."""
+            settings = modes[bool(is_vc)]
+            colour = settings["colour"]
+
+            binding.reconfigure(
+                minimum=settings["minimum"],
+                maximum=settings["maximum"],
+                default_position=settings["default"],
+                active_editor_style=f"color: {colour}; font: 700 10pt;",
+            )
+
+            # Update labels inside Spikeling_PatchClampSelector_label.
+            cc_colour = ("rgb(88, 110, 117)"if is_vc else "rgb(133, 153, 0)"
+            )
+            vc_colour = ("rgb(220, 50, 47)"if is_vc else "rgb(88, 110, 117)"
+            )
+
+            self.ui.Spikeling_CurrentClamp_label.setStyleSheet(f"color: {cc_colour}; font: 700 10pt;")
+            self.ui.Spikeling_VoltageClamp_label.setStyleSheet(f"color: {vc_colour}; font: 700 10pt;")
+
+            # Membrane-model selection is available only in VC.
+            membrane_colour = ("rgb(190, 205, 205)" if is_vc else "rgb(88, 110, 117)")
+            membrane_combo.setEnabled(bool(is_vc))
+            membrane_combo.setStyleSheet(f"color: {membrane_colour};")
+            membrane_label.setStyleSheet(f"color: {membrane_colour};")
+
+            # Update contents of Spikeling_PatchClamp_Command_frame.
+            self.ui.Spikeling_PatchClamp_Label.setText(settings["title"])
+
+            slider.set_fill_color(settings["fill"])
+            override_toggle.set_active_color(settings["fill"])
+
+            minimum = settings["minimum"]
+            maximum = settings["maximum"]
+            midpoint = (minimum + maximum) // 2
+
+            self.ui.Spikeling_PatchClamp_values_min.setText(str(minimum))
+            self.ui.Spikeling_PatchClamp_values_0.setText(str(midpoint))
+            self.ui.Spikeling_PatchClamp_values_max.setText(str(maximum))
+
+            if send:
+                Spikeling.SyncPatchClampState(self)
+
+        def connection_changed(connected):
+            # Reconnection restoration happens after the board handshake.
+            binding.cancel_pending()
+
+        remember_value(binding.value)
+
+        binding.valueChanged.connect(remember_value)
+        binding.applyRequested.connect(apply_value)
+        binding.disableRequested.connect(disable_control)
+
+        override_toggle.toggled.connect(binding.set_active)
+        mode_toggle.toggled.connect(select_mode)
+
+        serial_port.connection_changed.connect(connection_changed)
+
+        # Initialise presentation without sending commands.
+        select_mode(mode_toggle.isChecked(), send=False)
+
+    def SyncPatchClampState(self):
+        """Send the selected mode, followed by its current control source."""
+        binding = getattr(self, "patch_clamp_binding", None)
+
+        if binding is None or not serial_port.is_open:
+            return
+
+        binding.cancel_pending()
 
         is_vc = self.ui.PatchClampMode_toggleButton.isChecked()
 
-        # Prevent valueChanged callbacks firing while we reconfigure the slider
-        self.ui.Spikeling_PatchClamp_slider.blockSignals(True)
+        # Send mode first so PC1 is interpreted in the correct units.
+        if not serial_port.write(f"VCM {int(is_vc)}\n"):
+            return
 
-        if is_vc:
-            # --- UI cosmetics (Voltage clamp) ---
-            self.ui.Spikeling_CurrentClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[11])) + "; font: 700 10pt;"
-            )
-            self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
-            )
-            self.ui.Spikeling_PatchClamp_Label.setText("Hold Voltage (mV)")
-            self.ui.Spikeling_PatchClamp_readings.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;"
-            )
-
-            self.ui.Spikeling_PatchClamp_slider.set_fill_color("#DC322F")
-            self.ui.Spikeling_PatchClamp_slider.setRange(-110, 30)
-            self.ui.Spikeling_PatchClamp_slider.setValue(-70)
-
-            # NOTE: verify this is the correct button object; you check PatchClampMode_toggleButton above
-            self.ui.PatchClamp_toggleButton.set_active_color("#DC322F")
-
-            self.ui.Spikeling_PatchClamp_values_min.setText("-110")
-            self.ui.Spikeling_PatchClamp_values_0.setText("-40")
-            self.ui.Spikeling_PatchClamp_values_max.setText("30")
-
-        else:
-            # --- UI cosmetics (Current clamp) ---
-            self.ui.Spikeling_CurrentClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
-            )
-            self.ui.Spikeling_VoltageClamp_label.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[11])) + "; font: 700 10pt;"
-            )
-            self.ui.Spikeling_PatchClamp_Label.setText("Injected Current (a.u.)")
-            self.ui.Spikeling_PatchClamp_readings.setStyleSheet(
-                "color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;"
-            )
-
-            self.ui.Spikeling_PatchClamp_slider.set_fill_color("#859900")
-            self.ui.Spikeling_PatchClamp_slider.setRange(-100, 100)
-            self.ui.Spikeling_PatchClamp_slider.setValue(0)
-
-            self.ui.PatchClamp_toggleButton.set_active_color("#859900")
-
-            self.ui.Spikeling_PatchClamp_values_min.setText("-100")
-            self.ui.Spikeling_PatchClamp_values_0.setText("0")
-            self.ui.Spikeling_PatchClamp_values_max.setText("100")
-
-        self.ui.Spikeling_PatchClamp_slider.blockSignals(False)
-
-        # --- Send commands in a safe order: mode first, then the setpoint ---
-        if serial_port.is_open:
-            val = self.ui.Spikeling_PatchClamp_slider.value()
-            if self.ui.PatchClampMode_toggleButton.isChecked():
-                serial_port.write('VCM 1\n')
-            else:
-                serial_port.write('VCM 0\n')
-            serial_port.write('PC1 ' + str(val)+ '\n')
-            serial_port.write('PC0 \n')
-
-
-    def ActivateInjectedCurrent(self):
-        global serial_port
         if self.ui.PatchClamp_toggleButton.isChecked():
-            self.ui.Spikeling_PatchClamp_slider.setEnabled(True)
-            self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
-            self.ui.Spikeling_PatchClamp_readings.setText(str(self.InjectedCurrent))
-            if self.ui.PatchClampMode_toggleButton.isChecked():
-                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
-            else:
-                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                    serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
+            serial_port.write(f"PC1 {binding.value}\n")
         else:
-            self.ui.Spikeling_PatchClamp_slider.setEnabled(False)
-            if self.ui.PatchClampMode_toggleButton.isChecked():
-                self.ui.Spikeling_PatchClamp_slider.setValue(-70)
-            else:
-                self.ui.Spikeling_PatchClamp_slider.setValue(0)
-            self.ui.Spikeling_PatchClamp_readings.setText("")
-            if serial_port.is_open:
-                    serial_port.write('PC0' + '\n')
+            serial_port.write("PC0\n")
 
-    def GetInjectedCurrent(self):
-            global serial_port
-            self.InjectedCurrent = self.ui.Spikeling_PatchClamp_slider.value()
-            self.ui.Spikeling_PatchClamp_readings.setText(str(self.InjectedCurrent))
-            if self.ui.PatchClampMode_toggleButton.isChecked():
-                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[3])) + "; font: 700 10pt;")
-            else:
-                self.ui.Spikeling_PatchClamp_readings.setStyleSheet("color: rgb"  + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                serial_port.write('PC1 ' + str(self.InjectedCurrent) + '\n')
 
 
 

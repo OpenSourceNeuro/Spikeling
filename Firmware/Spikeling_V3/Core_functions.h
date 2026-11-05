@@ -1,6 +1,47 @@
 #pragma once  
    
 #include "Serial_functions.h"
+#include <string.h>                                        // Assemble complete normal binary USB packets using memcpy().
+// Hardware-level verified-spike outputs share the original GPIO/LED/DAC driver.
+
+/* ================= Original validated module: Pharmacology_outputs.h ================= */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* ========================================================================================================
+  Spikeling V3 - Verified-spike hardware outputs in optional pharmacology mode
+  ---------------------------------------------------------------------------------------------------------
+  Requires General_settings.h and Pharmacology_intrinsic.h. The unmodified legacy output path
+  remains active when pharmacology is OFF. In the optional path ONLY verified APs activate outputs.
+  (c) 2026 Open Source Neuro contributors. GPL-3.0-or-later.
+  ====================================================================================================== */
+/* Show a verified AP through the unchanged output pins, PWM calibration and 12-bit DAC mapping.
+   Input: one-tick verified_event from the intrinsic model; called instead of update_Spike()
+   only when pharmacology is enabled and current-clamp is active. Failed TTX upstrokes
+   cannot activate TTL, spike LED or buzzer, nor generate the analogue +30 mV spike marker. */
+inline void pharmUpdateVerifiedSpikeOutput() {
+  const bool verified = pharmacology.intrinsic.verified_event;                      // Authoritative AP gate for every output.
+  neuron.spike = verified;                                                          // Record event for optional consumers.
+  if (verified) {
+    neuron.v_out = neuron.Vm_peak;                                                   // Display the last verified +30 mV model peak.
+    digitalWrite(axon.pin_digital, HIGH);                                            // Axonal TTL pulse lasts one hardware loop step.
+    if (spike.LED_enable) setSpikeRgbLedWhite();                                      // No white output for failed upstroke.
+    digitalWrite(pins.gpio.spike, spike.Buzzer_enable ? HIGH : LOW);                  // Existing buzzer enable respected.
+  } else {
+    neuron.v_out = neuron.v;                                                         // Preserve the actual non-spike Vm.
+    digitalWrite(axon.pin_digital, LOW);                                             // Suppress false AP TTL.
+    digitalWrite(pins.gpio.spike, LOW);                                              // Suppress false buzzer pulse.
+    if (spike.LED_enable) {
+      spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;             // Original Vm brightness calculation.
+      spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));
+      setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                        // Preserve the selected non-spike RGB colour.
+    }
+  }
+  axon.norm = (neuron.v_out - neuron.Vm_min) * axon.Vm_range;                       // Original analogue Vm calibration.
+  axon.norm = constrain(axon.norm, 0.0f, 1.0f);
+  axon.dacVal = axon.norm * dac_max + 0.5f;
+  DAC.write(axon.dacVal, axon.pin_analog);
+}
+
+
 
 
 
@@ -54,7 +95,7 @@ inline void update_ToggleButtons() {
 
 inline void update_PatchInput() {
 
-/*   -- In VoltageClamp mode, the patch knob defines a command voltage (v_cmd), and a PI controller --   */  
+/*   -- In VoltageClamp mode, the patch knob defines a command voltage (v_cmd), selects the VC solver --   */
   if (clampMode == ClampMode::VoltageClamp) {                                                 // If we are in Voltage Clamp mode:
     if (!pot.use_patch_pot) return;                                                             // If GUI is overriding v_cmd, don't read the pot
     
@@ -75,7 +116,7 @@ inline void update_PatchInput() {
     patch.frac = constrain(patch.frac, -1.0f, 1.0f);                                            // Safety clamp (numerical stability + ensures predictable mapping).
 
     patch.v_hold = neuron.v_rest + patch.frac * patch.v_cmd_span;                               // Map the normalised knob position to an absolute command voltage.
-    patch.v_cmd = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);                       // Ensure Vcmd cannot exceed model bounds
+    patch.v_cmd = constrain(patch.v_hold, vc::command_min, vc::command_max);                    // VC range is independent of the spike-display peak
   } 
 
 /*          -- In CurrentClamp mode, the patch knob directly injects current (I-clamp style) --          */
@@ -251,7 +292,10 @@ inline void update_Synapse(Synapse &syn, float defaultDecay) {
     }
   }
   if (syn.risingEdge == true){                                                                // If Spike on Synapse is detected
-    syn.current += syn.gain;                                                                    // Generates Synaptic current by incrementing Synaptic Amplification
+    syn.event_gain = syn.gain * STP_spikeMultiplier(syn.stp, stpStepCount, neuron.dt_ms);        // One STP event update shared by legacy CC/VC and optional pharmacological release
+    syn.current += syn.event_gain;                                                              // Preserve the original current-based synaptic tail, including polarity and decay
+  } else {
+    syn.event_gain = 0.0f;                                                                      // Never reuse a previous event gain on a tick without an incoming spike
   }
   
   if (syn.decay_enable == true){                                                              // If the GUI Synaptic Decay 1 is disabled: 
@@ -275,8 +319,8 @@ inline void update_AllCurrent() {
 
 /*              --  Select the “primary command current” based on clamp mode  --              */
   if (clampMode == ClampMode::VoltageClamp) {                                                 // If we are in voltage clamp mode
-    patch.i_command = patch.I_clamp;                                                            // The command is the PI controller output current that enforces Vcmd.
-    patch.i_current = 0.0f;                                                                     // Ignore Current-In to keep VC protocols clean
+    patch.i_command = 0.0f;                                                                     // VC consumes shared inputs before computing clamp current.
+    patch.i_current = 0.0f;                                                                     // Current-In is a VC voltage command, not a second injected current.
   }
 /*                               --  Current-In contribution  --                               */
   else{                                                                                       // If we are in current clamp mode
@@ -285,11 +329,11 @@ inline void update_AllCurrent() {
   }
 
 /*           --  Sum all current sources into the neuron’s total injected current  --           */
-  neuron.total_current = patch.i_command                                                      // Primary command: pot current (CC) or PI output (VC)
+  neuron.total_current = patch.i_command                                                      // CC command; zero in passive VC
                        + patch.i_current                                                      // External Current-In injection (CC only)
                        + PD.current                                                           // Photodiode / light input contribution
-                       + syn1.current                                                         // Synapse 1 current contribution
-                       + syn2.current                                                         // Synapse 2 current contribution
+                       + (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current)
+                       + (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current)
                        + noise.current;                                                       // Noise injection contribution
 }
 
@@ -527,7 +571,7 @@ inline void neutralise_StimulusCurrentIn() {
 
   if (clampMode == ClampMode::VoltageClamp) {
     patch.v_step = 0.0f;
-    patch.v_cmd  = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);
+    patch.v_cmd  = constrain(patch.v_hold, vc::command_min, vc::command_max);
   }
 }
 
@@ -626,7 +670,7 @@ inline void update_StimulusCurrentIn() {
 
     if (currentInSign == 0.0f) {
       patch.v_step = 0.0f;
-      patch.v_cmd  = constrain(patch.v_hold, neuron.Vm_min, neuron.Vm_peak);
+      patch.v_cmd  = constrain(patch.v_hold, vc::command_min, vc::command_max);
       patch.current_input = 0.0f;
       stim.state = (int)lroundf(patch.v_cmd);
       return;
@@ -639,8 +683,8 @@ inline void update_StimulusCurrentIn() {
 
     patch.v_step = currentInSign * patch.magnitude;
     patch.v_cmd  = constrain(patch.v_hold + patch.v_step,
-                             neuron.Vm_min,
-                             neuron.Vm_peak);
+                             vc::command_min,
+                             vc::command_max);
 
     patch.current_input = 0.0f;
     stim.state = (int)lroundf(patch.v_cmd);
@@ -659,46 +703,71 @@ inline void update_StimulusCurrentIn() {
 
 
 
-inline void update_VoltageClampPI() {                                                           
-
-  if (clampMode != ClampMode::VoltageClamp) {                                                 // If we are NOT in voltage clamp mode...
-    patch.I_clamp = 0.0f;                                                                       // Force PI output to 0 (not used in current clamp mode).
-    patch.e_int   = 0.0f;                                                                       // Reset the integrator so it does not accumulate while inactive.
-    return;                                                                                     // Exit early; nothing else to do.
+inline void update_PassiveVoltageClamp() {
+  patch.v_cmd = voltageClamp.command(patch.v_cmd, patch.v_hold);
+  vc::Inputs input;
+  input.inward_nA = neuron.total_current * vc::Runtime::nA_per_legacy_unit;
+  const uint32_t started = micros();
+  if (pharmacology.enabled && pharmacology.mode == PharmSynapseMode::Conductance) {
+    // Replace the pre-evaluated receptor currents with sum(g) and sum(gE), so
+    // an imposed voltage has the proper driving force without double counting.
+    input.inward_nA -= (pharmacology.syn[0].effective_current +
+                       pharmacology.syn[1].effective_current)*vc::Runtime::nA_per_legacy_unit;
+    for (unsigned i=0;i<2;++i) {
+      const auto& s = pharmacology.syn[i];
+      const bool ampa = s.receptor == PharmReceptor::AMPA;
+      const bool gaba = s.receptor == PharmReceptor::GABAA;
+      if (!ampa && !gaba) continue;
+      const float scale = vc::Runtime::nA_per_legacy_unit;
+      const float g = s.conductance*(1-pharmacology.block[ampa?4:5])*scale;
+      input.conductance_uS += g;
+      input.conductance_E_nA += g*(ampa?pharmacology.e_ampa:pharmacology.e_gaba);
+      if (ampa && pharmacology.nmda_enabled) {
+        const float gn = pharmNMDA_Norm*fmaxf(0,s.nmda_decay-s.nmda_rise)*
+          (1-pharmacology.block[6])*pharmNMDAUnblocked(neuron.v)*scale;
+        input.conductance_uS += gn;
+        input.conductance_E_nA += gn*pharmacology.e_nmda;
+      }
+    }
   }
-
-/*                     ---- Error computation: command minus measured ----                     */
-  pi.e = patch.v_cmd - neuron.v;                                                                // If e > 0, Vm is below command -> controller should inject depolarizing current 
-
-/*                       ---- Proportional term (a.u.): p = Kp * e ----                        */
-  pi.p = patch.Kp * pi.e;                                                                       // Proportional output current: reacts immediately to the present error. Kp in [uA/mV] so P is [uA]
-
-/*            --- Integral term (a.u.) computed from CURRENT integrator state ----             */ 
-  pi.i_hold = patch.Ki * patch.e_int;                                                           // Integral output current computed from the proposed integrator state. e_int in [mV*ms], Ki in [uA/(mV*ms)] so I is [uA]
-
-/*                ---- Unsaturated PI output (a.u.) using held integrator ----                 */
-  pi.out_unsat_hold = pi.p + pi.i_hold;                                                         // PI output current before applying compliance (saturation). [uA]
-
-/*                   ---- Apply compliance limits (actuator saturation) ----                   */
-  pi.out_sat = constrain(pi.out_unsat_hold, patch.I_min, patch.I_max);
-
-/*                                 ---- Anti-windup logic ----                                 */
-  pi.saturated_high = (pi.out_unsat_hold > patch.I_max);
-  pi.saturated_low  = (pi.out_unsat_hold < patch.I_min);
-
-/*                           ---- Commit the integrator update ----                            */
-  pi.allow_integrate =  (!pi.saturated_high && !pi.saturated_low) ||
-                        (pi.saturated_high && (pi.e < 0.0f)) ||
-                        (pi.saturated_low  && (pi.e > 0.0f));
-  if (pi.allow_integrate) {
-      patch.e_int += pi.e * neuron.dt_ms;                                                       // Candidate integrator update (mV * model-ms)
+  bool ok;
+  if (voltageClamp.active) {
+    voltageClamp.active_cell.configure(voltageClamp.cell.parameters());
+    ok = voltageClamp.active_cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode,
+      pharmacology.enabled ? 1-pharmacology.block[0] : 1,
+      pharmacology.enabled ? 1-pharmacology.block[1] : 1);
+  } else ok = voltageClamp.cell.step(patch.v_cmd, neuron.dt_ms, input, voltageClamp.mode);
+  voltageClamp.solve_us = micros() - started;
+  voltageClamp.flags = voltageClamp.command_ok ? 0 : vc::RejectedCommand;
+  if (vc::usb_tx_fault) voltageClamp.flags |= vc::TransportFault;
+  if (!ok) voltageClamp.flags |= vc::SolverFault;
+  const auto& sample = voltageClamp.sample();
+  neuron.v = sample.voltage_mV;
+  // Retain the original recovery relaxation, without generating Izhikevich spikes in VC.
+  neuron.u += neuron.dt_ms * neuron.a * (neuron.b * neuron.v - neuron.u);
+  neuron.spike = false;
+  patch.I_clamp = sample.clamp_nA;
+  stim.state = static_cast<int>(lroundf(patch.v_cmd));
+  if (sample.saturated_fraction > 0) voltageClamp.flags |= vc::Compliance;
+  if (neuron.v < neuron.Vm_min || neuron.v > neuron.Vm_max) voltageClamp.flags |= vc::DisplayRange;
+  if (sample.clamp_nA*I_SCALE > 32767 || sample.clamp_nA*I_SCALE < -32768)
+    voltageClamp.flags |= vc::PacketRange;
+  // SK and A-current blockade require additional channels; never invent their
+  // effects in a Na/K-only backend. Settings remain intact for CC.
+  if (pharmacology.enabled && (!voltageClamp.active ||
+      pharmacology.block[2] > 0 || pharmacology.block[3] > 0))
+    voltageClamp.flags |= vc::UnsupportedPharmacology;
+  if (pharmacology.enabled) {
+    auto& state = pharmacology.intrinsic;
+    state.s_sk *= expf(-neuron.dt_ms/120);
+    state.h_na += (pharmSigmoid(-(neuron.v+55)/6)-state.h_na)*
+                  (-expm1f(-neuron.dt_ms/(neuron.v<=-62?2:9)));
+    state.h_a += (pharmSigmoid(-(neuron.v+78)/6)-state.h_a)*
+                 (-expm1f(-neuron.dt_ms/(neuron.v>=-78?35:80)));
   }
-  
-/*                ---- Final output computed from COMMITTED integrator state ----               */
-  pi.i_final = patch.Ki * patch.e_int;
-  pi.out_unsat = pi.p + pi.i_final;
-  pi.out_sat = constrain (pi.out_unsat, patch.I_min, patch.I_max);
-  patch.I_clamp = pi.out_sat;
+  if (voltageClamp.previous_loop_us >= timing.step_us || voltageClamp.missed_wall_period)
+    voltageClamp.flags |= vc::LoopDeadline;
+  ++voltageClamp.tick;
 }
 
 
@@ -707,7 +776,9 @@ inline void update_VoltageClampPI() {
 /*                                       Spike and Axon output                                           */
 
 inline void update_Spike() {
-  if (clampMode == ClampMode::VoltageClamp) {                                                   // If we are in Voltage Clamp mode. 
+  if (voltageClamp.rearm_spike_output && neuron.v < neuron.Vm_spike)
+    voltageClamp.rearm_spike_output = false;
+  if (clampMode == ClampMode::VoltageClamp || voltageClamp.rearm_spike_output) {                  // No synthetic spike event at a clamp-mode transition.
     neuron.v_out = neuron.v;                                                                      // Export the model voltage directly as the output voltage. In voltage clamp we do not generate spike events; we simply report the clamped Vm.
     digitalWrite(axon.pin_digital, LOW);                                                          // Force the axon digital output LOW so no TTL “spike” pulses are emitted. Force the axon digital output LOW so no TTL “spike” pulses are emitted interpreting clamp plateaus/steps as spikes.
     digitalWrite(pins.gpio.spike, LOW);                                                           // Force the spike-indicator GPIO LOW (typically drives a LED / buzzer logic). Avoid “false spike” signals during voltage clamp.
@@ -770,22 +841,176 @@ inline int16_t q_round(float x) {
 
 
 
+/*             ---- Bounded, allocation-free six-decimal VC2 formatter ----             */
+/* This routine replaces only the ASCII diagnostic formatter in active VC.
+   It does not alter membrane equations, numerical state, telemetry fields or
+   transport. The original six decimal places and column order are retained.
+   Use this only with the existing validated finite VC diagnostic values. */
+struct VC2TextBuilder {
+  char* next;                                                       // Next byte to write into the caller's bounded buffer.
+  char* limit;                                                      // One byte past the reserved final newline/record space.
+  bool good = true;                                                 // A false value rejects the entire record, never truncates it.
+
+  /* Initialise a bounded writer; no heap allocation or Serial IO is performed. */
+  VC2TextBuilder(char* first, size_t capacity): next(first), limit(first+capacity) {}
+
+  /* Append an ASCII literal, checking buffer capacity for every byte. */
+  void text(const char* words) {
+    if (!good) return;                                              // Preserve the first formatting error.
+    while (*words) {                                                // Copy the fixed VC2 prefix or column separator.
+      if (next == limit) { good = false; return; }                  // Never overwrite the output buffer.
+      *next++ = *words++;                                           // Advance output and input cursors.
+    }
+  }
+
+  /* Append an unsigned decimal integer without printf's format interpreter. */
+  void number(uint64_t value) {
+    if (!good) return;                                              // Skip incomplete records.
+    char reverse[20];                                               // 20 digits cover all unsigned 64-bit counters.
+    unsigned length = 0;                                            // Number of significant decimal digits.
+    do { reverse[length++] = char('0' + value%10); value /= 10; }  // Accumulate digits from least significant to most.
+    while (value != 0);                                             // Zero is represented as exactly one digit.
+    if (size_t(limit-next) < length) { good = false; return; }      // Require room for the complete integer.
+    while (length) *next++ = reverse[--length];                      // Write digits in natural order.
+  }
+
+  /* Append a finite number with precisely six fractional decimal digits.
+     Rounds to the active IEEE nearest/even mode, matching %.6f on ordinary
+     finite VC2 values; tests compare the entire scientific numeric record. */
+  void fixed6(double value) {
+    if (!good) return;                                              // Preserve earlier failure.
+    if (!std::isfinite(value) || std::fabs(value) > 1.0e12) {       // Reject invalid/unreasonably large diagnostic quantities.
+      good = false; return;                                         // Never silently replace invalid model data with zeros.
+    }
+    if (std::signbit(value)) text("-");                              // Preserve negative values and the sign of negative zero.
+    const double positive = std::fabs(value);                       // Work with nonnegative magnitude while formatting digits.
+    uint64_t integer = static_cast<uint64_t>(positive);             // Extract whole-number part without an expensive printf call.
+    uint32_t fraction = static_cast<uint32_t>(std::nearbyint(        // Round the displayed fractional part to six places.
+        (positive - double(integer))*1000000.0));                  // Keep the complete scientific record at original precision.
+    if (fraction >= 1000000U) { ++integer; fraction = 0; }           // Carry a rounded fraction of one to the integer field.
+    number(integer);                                                // Write integral voltage, time, current or gate quantity.
+    text(".");                                                      // Original VC2 protocol always includes a decimal point.
+    if (!good || size_t(limit-next) < 6) { good = false; return; }  // Reserve exactly six digits before touching the buffer.
+    for (int digit = 5; digit >= 0; --digit) {                       // Populate fixed-width fractional digits in reverse.
+      next[digit] = char('0' + fraction%10);                         // Extract the units of the remaining scaled fraction.
+      fraction /= 10;                                               // Advance to the next more-significant decimal digit.
+    }
+    next += 6;                                                      // Commit six fraction digits as a unit.
+  }
+
+  /* Return the complete record length, or zero when a field failed to format. */
+  size_t length(char* start) const { return good ? size_t(next-start) : 0; }
+};
+
+/* Format one VC2 record while preserving the pre-existing column order, units,
+   comma separators, six-decimal precision, flags, clock and gate fields.
+   Inputs: current VC runtime/sample state; output: encoded length or 0 on error.
+   Called only from active VC diagnostic telemetry, never the CC binary path. */
+inline size_t formatActiveVC2(char* line, size_t capacity) {
+  VC2TextBuilder out(line,capacity);                                // Allocate a bounded on-stack ASCII writer.
+  const auto& value = voltageClamp.sample();                        // Read the current active membrane sample once.
+  const auto& gates = voltageClamp.active_cell.gates();             // Read the active HH gating states once.
+  out.text("VC2,");                                                 // Retain the original active diagnostic record identifier.
+  out.number(static_cast<unsigned long>(voltageClamp.tick));       // Sequence as previously encoded on ESP32's 32-bit unsigned long.
+  out.text(","); out.fixed6(double(voltageClamp.tick)*neuron.dt_ms); // Simulated model time [ms].
+  out.text(","); out.fixed6(double(patch.v_cmd));                  // Imposed voltage command [mV].
+  out.text(","); out.fixed6(double(value.voltage_mV));            // Membrane voltage [mV].
+  out.text(","); out.fixed6(double(value.clamp_nA));              // Clamp current [nA].
+  out.text(","); out.fixed6(double(value.capacitive_nA));         // Capacitive current [nA].
+  out.text(","); out.fixed6(double(value.leak_nA));               // Leak current [nA].
+  out.text(","); out.fixed6(double(value.input_nA));              // Externally imposed current [nA].
+  out.text(","); out.number(unsigned(voltageClamp.flags));        // Unchanged diagnostic and deadline flags.
+  out.text(","); out.number(static_cast<unsigned long>(voltageClamp.solve_us)); // Solver duration [us].
+  out.text(","); out.number(static_cast<unsigned long>(voltageClamp.previous_loop_us)); // Previous loop duration [us].
+  out.text(","); out.fixed6(double(value.sodium_nA));            // Sodium ionic current [nA].
+  out.text(","); out.fixed6(double(value.potassium_nA));         // Potassium ionic current [nA].
+  out.text(","); out.fixed6(double(value.receptor_nA));          // Effective receptor current [nA].
+  out.text(","); out.fixed6(gates.m);                            // HH sodium activation state.
+  out.text(","); out.fixed6(gates.h);                            // HH sodium inactivation state.
+  out.text(","); out.fixed6(gates.n);                            // HH potassium activation state.
+  out.text("\n");                                                 // Preserve newline-terminated CSV framing.
+  return out.length(line);                                         // Return zero rather than transmitting any partial record.
+}
+
 inline void send_SamplePacket() {
+  if (clampMode == ClampMode::VoltageClamp && voltageClamp.diagnostic) {
+    // Explicitly selected diagnostic protocol: interval-end state, mean currents.
+    const auto& value = voltageClamp.sample();
+    if (voltageClamp.active) {
+      char line[320];
+      const size_t size = formatActiveVC2(line,sizeof(line));       // Produce the same 18 fields without floating-point printf parsing.
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Format,micros());
+      if (size > 0 && size <= sizeof(line)) {
+        bool capacity_skip;
+        const size_t written = vc::writeDiagnosticUsb(reinterpret_cast<const uint8_t*>(line),size,capacity_skip);
+        if (capacity_skip) voltageClamp.trace.capacitySkipped(size);
+        else voltageClamp.trace.transmitted(size,written);
+      } else voltageClamp.trace.transmitted(0,0,true);
+      if (voltageClamp.trace.capturing) voltageClamp.trace.mark(vc::TraceStage::Write,micros());
+      return;
+    }
+    // Passive VC diagnostic: one bounded USB record, not eleven potentially
+    // blocking Serial.print calls from inside the 2-ms model loop.
+    // The CSV field layout and scientific units remain identical to VC1.
+    char line[208];
+    const int size = snprintf(line, sizeof(line),
+      "VC1,%lu,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%u,%lu,%lu\n",
+      static_cast<unsigned long>(voltageClamp.tick),
+      double(voltageClamp.tick)*neuron.dt_ms, double(patch.v_cmd),
+      double(value.voltage_mV), double(value.clamp_nA),
+      double(value.capacitive_nA), double(value.leak_nA),
+      double(value.input_nA), unsigned(voltageClamp.flags),
+      static_cast<unsigned long>(voltageClamp.solve_us),
+      static_cast<unsigned long>(voltageClamp.previous_loop_us));
+    if (size > 0 && size < int(sizeof(line))) {
+#if VC_GUARDED_HWCDC
+      bool capacity_skip;
+      const size_t written = vc::writeDiagnosticUsb(
+        reinterpret_cast<const uint8_t*>(line), size, capacity_skip);
+      if (capacity_skip) voltageClamp.trace.capacitySkipped(size);
+      else voltageClamp.trace.transmitted(size, written);
+#else
+      // Non-HWCDC builds retain a single legacy write; not protected from
+      // backpressure and not validated as an ESP32-S3 diagnostic configuration.
+      Serial.write(reinterpret_cast<const uint8_t*>(line),size);
+#endif
+    } else {
+      vc::usb_tx_fault = true;
+      voltageClamp.trace.transmitted(0,0,true);
+    }
+    return;
+  }
   pkt.v_q         = q_round(neuron.v_out * V_SCALE);                                            // Membrane Potential
   pkt.stim_state  = (int16_t)stim.state;                                                        // Stimulus State  
   patch.I_for_gui = (clampMode == ClampMode::VoltageClamp)                                      // Depending on the Patch Clamp mode:
-                  ? patch.I_clamp                                                                 // In VC: report the clamp amplifier output current (PI output).
+                  ? patch.I_clamp                                                                 // In VC: interval-average passive clamp current (nA).
                   : neuron.total_current;                                                         // In CC: keep reporting the full injected current (command + syn + PD + noise).
   pkt.Itot_q      = q_round(patch.I_for_gui * I_SCALE);                                         // Current In
   pkt.syn1_vm_q   = q_round(syn1.Vm * SYN_V_SCALE);                                             // Synapse 1 Membrane Potential
-  pkt.Isyn1_q     = q_round(syn1.current * I_SCALE);                                            // Synapse 1 Current
+  pkt.Isyn1_q     = q_round((clampMode == ClampMode::VoltageClamp
+                    ? (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current) * vc::Runtime::nA_per_legacy_unit
+                    : (pharmacology.enabled ? pharmacology.syn[0].effective_current : syn1.current)) * I_SCALE);
   pkt.syn2_vm_q   = q_round(syn2.Vm * SYN_V_SCALE);                                             // Synapse 2 Membrane Potential
-  pkt.Isyn2_q     = q_round(syn2.current * I_SCALE);                                            // Synapse 2 Current
+  pkt.Isyn2_q     = q_round((clampMode == ClampMode::VoltageClamp
+                    ? (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current) * vc::Runtime::nA_per_legacy_unit
+                    : (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current)) * I_SCALE);
   pkt.trigger_q   = (int16_t)stim.trigger;                                                      // Trigger
 
-  const uint8_t header[2] = { 0xAA, 0x55 };
-  Serial.write(header, 2);
-  Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));
+  // Normal telemetry uses one complete 18-byte USB record, even without a GUI.                // Prevent a blocked host from stopping the model.
+#if VC_GUARDED_HWCDC                                                                          // Use the validated Hardware CDC transport on ESP32-S3 core 3.3.12.
+  uint8_t frame[2 + sizeof(SamplePacket)];                                                    // Header + unchanged 16-byte sample payload.
+  frame[0] = 0xAA;                                                                            // Preserve legacy first synchronisation byte.
+  frame[1] = 0x55;                                                                            // Preserve legacy second synchronisation byte.
+  memcpy(frame + 2, &pkt, sizeof(pkt));                                                       // Copy packed sample without changing field layout or endianness.
+  if (Serial.availableForWrite() >= int(sizeof(frame))) {                                    // Never wait for a reader that may have closed the GUI.
+    const size_t accepted = Serial.write(frame, sizeof(frame));                               // Enqueue the whole 18-byte record with a zero-timeout USB policy.
+    if (accepted != sizeof(frame)) vc::usb_tx_fault = true;                                   // Record an unexpected short write without retrying partial frames.
+  }                                                                                           // Drop a complete sample if insufficient USB capacity; never drop a partial packet.
+#else                                                                                         // Retain original Arduino Serial behaviour on non-validated USB configurations.
+  const uint8_t header[2] = { 0xAA, 0x55 };                                                   // Original legacy frame marker.
+  Serial.write(header, 2);                                                                    // Original header transmission.
+  Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));                               // Original 16-byte sample payload.
+#endif                                                                                        // End ESP32-S3 Hardware CDC protection.
   // wifiSendSamplePacket(pkt);
 }
 

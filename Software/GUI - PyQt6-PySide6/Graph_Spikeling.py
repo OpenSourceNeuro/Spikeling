@@ -270,10 +270,9 @@ class SpikelingGraph(QObject):
         serial_manager.write("CON\n")
 
         for name in ("ChangeSpeed",
-                     "SelectNeuronMode", "SelectPatchClampMode",
-                     "ActivateStimFre", "ActivateStimStr",
+                     "SelectNeuronMode", "SyncPatchClampState",
                      "ActivatePhotoGain", "ActivatePRDecay", "ActivatePRRecovery",
-                     "ActivateInjectedCurrent", "ActivateNoiseLevel",
+                     "ActivateNoiseLevel",
                      "ActivateSynapticGain1", "ActivateSynapseDecay1",
                      "ActivateSynapticGain2", "ActivateSynapseDecay2"):
             handler = getattr(SpikelingPage, name, None)
@@ -283,6 +282,16 @@ class SpikelingGraph(QObject):
                 handler(self.parent)
             except Exception as error:   # one broken restorer must not kill the link
                 print(f"State restore failed for {name}: {error}")
+
+        # Restore migrated stimulus bindings after the board handshake.
+        for attribute in (
+                "stimulus_frequency_binding",
+                "stimulus_strength_binding",
+        ):
+            binding = getattr(self.parent, attribute, None)
+
+            if binding is not None:
+                binding.apply_current()
 
     def on_device_connected(self, port) -> None:
         """

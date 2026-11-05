@@ -2481,11 +2481,11 @@ class Ui_Spikeling(object):
         self.verticalLayout_273.setSpacing(0)
         self.verticalLayout_273.setObjectName(u"verticalLayout_273")
         self.verticalLayout_273.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_PatchClamp_MembraneModel_label_frame_2 = QLabel(self.Spikeling_PatchClamp_MembraneModel_label_frame)
-        self.Spikeling_PatchClamp_MembraneModel_label_frame_2.setObjectName(u"Spikeling_PatchClamp_MembraneModel_label_frame_2")
-        self.Spikeling_PatchClamp_MembraneModel_label_frame_2.setStyleSheet(u"color: rgb(88, 110, 117);")
+        self.Spikeling_PatchClamp_MembraneModel_label = QLabel(self.Spikeling_PatchClamp_MembraneModel_label_frame)
+        self.Spikeling_PatchClamp_MembraneModel_label.setObjectName(u"Spikeling_PatchClamp_MembraneModel_label")
+        self.Spikeling_PatchClamp_MembraneModel_label.setStyleSheet(u"color: rgb(88, 110, 117);")
 
-        self.verticalLayout_273.addWidget(self.Spikeling_PatchClamp_MembraneModel_label_frame_2)
+        self.verticalLayout_273.addWidget(self.Spikeling_PatchClamp_MembraneModel_label)
 
 
         self.horizontalLayout_46.addWidget(self.Spikeling_PatchClamp_MembraneModel_label_frame)
@@ -19362,7 +19362,7 @@ class Ui_Spikeling(object):
         self.Spikeling_PatchClamp_label.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; font-weight:700;\">Patch Clamp</span></p></body></html>", None))
         self.Spikeling_CurrentClamp_label.setText(QCoreApplication.translate("Spikeling", u"Current-Clamp", None))
         self.Spikeling_VoltageClamp_label.setText(QCoreApplication.translate("Spikeling", u"Voltage-Clamp", None))
-        self.Spikeling_PatchClamp_MembraneModel_label_frame_2.setText(QCoreApplication.translate("Spikeling", u"Membrane model", None))
+        self.Spikeling_PatchClamp_MembraneModel_label.setText(QCoreApplication.translate("Spikeling", u"Membrane model", None))
         self.Spikeling_PatchClamp_MembraneModel_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Active", None))
         self.Spikeling_PatchClamp_MembraneModel_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Passive", None))
 

@@ -280,9 +280,7 @@ def Buttons(self):
     # Neuron parameters
     self.ui.Spikeling_NeuronParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.NeuronParameter_page))
 
-    self.ui.PatchClampMode_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.SelectPatchClampMode(self))
-    self.ui.PatchClamp_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateInjectedCurrent(self))
-    self.ui.Spikeling_PatchClamp_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetInjectedCurrent(self))
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigurePatchClamp(self)
 
     self.ui.Noise_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateNoiseLevel(self))
     self.ui.Spikeling_Noise_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetNoiseLevel(self))
