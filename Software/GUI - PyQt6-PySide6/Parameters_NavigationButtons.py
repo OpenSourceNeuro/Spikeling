@@ -279,41 +279,21 @@ def Buttons(self):
 
     # Neuron parameters
     self.ui.Spikeling_NeuronParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.NeuronParameter_page))
-
     Page_Spikeling_NeuronInterface.Spikeling.ConfigurePatchClamp(self)
-
-    self.ui.Noise_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateNoiseLevel(self))
-    self.ui.Spikeling_Noise_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetNoiseLevel(self))
-
-    self.ui.PhotoGain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePhotoGain(self))
-    self.ui.Spikeling_PR_PhotoGain_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPhotoGain(self))
-
-    self.ui.PhotoDecay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRDecay(self))
-    self.ui.Spikeling_PR_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRDecay(self))
-
-    self.ui.PhotoRecovery_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivatePRRecovery(self))
-    self.ui.Spikeling_PR_Recovery_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetPRRecovery(self))
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureNoise(self)
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigurePhotoreceptors(self)
 
     # Pharmacology parameters
     self.ui.Spikeling_PharmacologyParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.PharmacologyParameter_page))
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureDrugSliders(self)
 
     # Synapse1 parameters
     self.ui.Spikeling_Synapse1Parameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.Synapse1Parameter_page))
-
-    self.ui.Synapse1_Gain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain1(self))
-    self.ui.Spikeling_Synapse1_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticGain1(self))
-
-    self.ui.Synapse1Decay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapseDecay1(self))
-    self.ui.Spikeling_Synapse1_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticDecay1(self))
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureSynapse1(self)
 
     # Synapse2 parameters
     self.ui.Spikeling_Synapse2Parameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.Synapse2Parameter_page))
-
-    self.ui.Synapse2_Gain_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapticGain2(self))
-    self.ui.Spikeling_Synapse2_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticGain2(self))
-
-    self.ui.Synapse2Decay_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateSynapseDecay2(self))
-    self.ui.Spikeling_Synapse2_Decay_slider.valueChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.GetSynapticDecay2(self))
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureSynapse2(self)
 
     ########################################################################
     # Spikeling Emulator Page

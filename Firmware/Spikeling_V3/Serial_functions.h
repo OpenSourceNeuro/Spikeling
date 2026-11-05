@@ -617,14 +617,45 @@ inline void VClampReset() {
   voltageClamp.command_ok = true;
 }
 
-inline void Noise_on(){
-  setFloatParam(pot.use_noise_pot, noise.current);
-}
-inline void Noise_off(){
-  if (SCmd.next() != nullptr) return;                  // No-argument command: reject unexpected data without changing state.
-  pot.use_noise_pot = true;
+/* Set a directly specified noise-current sample.
+   Preserves NO1 compatibility and stops GUI-amplitude generation.
+   Invalid commands leave the current control state unchanged. */
+inline void Noise_on() {
+  float value;                                      // Receive the requested instantaneous current.
+
+  if (!readNextFloat(value)) return;                 // Reject missing, malformed or non-finite values.
+  if (SCmd.next() != nullptr) return;                // Reject unexpected additional arguments.
+
+  pot.use_noise_pot = false;                        // Stop reading the physical noise knob.
+  noise.gui_amplitude_enabled = false;              // Hold a direct sample instead of generating noise.
+  noise.current = value;                            // Apply the specified current until another command.
 }
 
+
+/* Set a GUI noise level while generating samples on the ESP32.
+   NOA accepts levels from 0 to 100, matching the current GUI slider.
+   Standard deviation remains level / 2 with the existing scaling. */
+inline void NoiseAmplitude_on() {
+  float level;                                      // Receive the requested noise level.
+
+  if (!readNextFloat(level)) return;                 // Reject missing, malformed or non-finite values.
+  if (SCmd.next() != nullptr) return;                // Reject unexpected additional arguments.
+  if (level < 0.0f || level > 100.0f) return;         // Reject values outside the supported GUI range.
+
+  noise.gui_amp = level;                            // Store the level used by subsequent model loops.
+  noise.gui_amplitude_enabled = true;               // Enable continuous ESP32 noise generation.
+  pot.use_noise_pot = false;                        // Ignore the physical knob while GUI control is active.
+}
+
+
+/* Return noise generation to the physical knob. */
+inline void Noise_off() {
+  if (SCmd.next() != nullptr) return;                // This command takes no arguments.
+
+  noise.gui_amplitude_enabled = false;              // Stop using the GUI amplitude.
+  noise.gui_amp = 0.0f;                             // Clear the previous GUI setting.
+  pot.use_noise_pot = true;                         // Read the physical noise knob again.
+}
 
 
 inline void Syn1Gain_on(){
@@ -769,8 +800,9 @@ inline void SerialFunctions(){
   SCmd.addCommand("VIL",VILIM_set);        
   SCmd.addCommand("VSP",VSpan_set);         
   SCmd.addCommand("VRS",VClampReset);       
-  SCmd.addCommand("NO1",Noise_on);
-  SCmd.addCommand("NO0",Noise_off);
+  SCmd.addCommand("NO1", Noise_on);            // Legacy instantaneous-current override.
+  SCmd.addCommand("NOA", NoiseAmplitude_on);   // GUI level; generate samples on the ESP32.
+  SCmd.addCommand("NO0", Noise_off);           // Return to physical-knob control.
   SCmd.addCommand("STP1",Syn1STPMode);                                                       // Per-channel STP mode, valid in CC and VC
   SCmd.addCommand("STP2",Syn2STPMode);                                                       // Mode selection resets only the targeted transient state
   SCmd.addCommand("SG11",Syn1Gain_on);

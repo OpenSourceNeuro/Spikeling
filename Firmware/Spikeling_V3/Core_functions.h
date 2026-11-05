@@ -142,30 +142,46 @@ inline void update_PatchInput() {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                          Noise Generator                                              */
 
-inline void update_Noise() {  
+inline void update_Noise() {
+
+  if (pot.use_noise_pot) {                           // Physical knob controls the noise amplitude.
+    const uint16_t noise_raw = ADC2.read(noise.pot_pin);                      // Read the physical noise knob.
+    noise.pot_value = (int16_t)noise.pot_filt.update(noise_raw);      // Filter the ADC reading.
+
+    if (noise.pot_value <= pot.offset) {             // Treat the bottom dead zone as zero amplitude.
+      noise.amp = 0.0f;
+    } 
+    else {
+      noise.amp = (noise.pot_value - pot.offset) * noise.pot_scaling;                         // Preserve the existing knob-to-amplitude mapping.
+    }
+  } 
   
-  if (!pot.use_noise_pot) return;                                                             // If GUI/serial override is active (noise.enable == false), don't use the pot
-  
-  const uint16_t noise_raw = ADC2.read(noise.pot_pin);                                          // Read Noise knob raw ADC (0..4095)
-  noise.pot_value = (int16_t)noise.pot_filt.update(noise_raw);                                   // Filtered ADC (stable, reduced jitter)                                                     
-  
-  if (noise.pot_value <= pot.offset){                                                         // If Noise potentiometer value is below the offset:
-    noise.current = 0.0f;                                                                       // Set Noise current to 0
-    return;                                                                                     // Retrun and avoidf wasting time computing sigma
+  else if (noise.gui_amplitude_enabled) {
+    const float knob_max_amp = (float(bits12) - float(pot.offset)) * noise.pot_scaling; // Calculate the maximum amplitude available from the physical knob.
+    noise.amp = (noise.gui_amp / 100.0f) * knob_max_amp; // Interpret the GUI level as a percentage of that amplitude.
+
+  }
+  else {                                        // Legacy NO1 directly controls noise.current.
+    return;                                         // Preserve that sample until another command.
   }
 
-  noise.amp = (noise.pot_value - pot.offset) * noise.pot_scaling;                             // Generates Noise amplitude from the reading, substracts the offset and scales it from parameters
-  
-  noise.newSigma = noise.sigma_per_amp * noise.amp;                                           // Generate a standard variation (σ) equal to half the Noise amplitude
-  
-  if (fabsf(noise.newSigma - noise.sigma) > noise.kSigmaUpdateEps) {                          // Update Gaussian parameters if sigma has changed significantly
-    noise.sigma = noise.newSigma;                                                               // Stores the new σ in the struct
-    noise.var = noise.sigma * noise.sigma;                                                      // Compute the variance (σ²)
-    noise.dist.variance = noise.var;                                                            // Update the Gaussian distribution’s variance so that future calls to noise.dist.random() use the new σ².
-    noise.dist.mean = noise.mean;                                                               // Keeps mean as it is
+  noise.newSigma = noise.sigma_per_amp * noise.amp;                 // Preserve the existing amplitude-to-sigma mapping.
+
+  if (noise.newSigma <= 0.0f) {                      // Zero amplitude must produce exactly zero noise.
+    noise.sigma = 0.0f;
+    noise.var = 0.0f;
+    noise.current = 0.0f;
+    return;                                         // Avoid drawing from a zero-variance distribution.
   }
 
-  noise.current = noise.dist.random();                                                        // Draws one random sample from the Gaussian and generates Noise current from drawing one random sample from the Noisy gaussian 
+  if ( noise.sigma <= 0.0f || fabsf(noise.newSigma - noise.sigma) > noise.kSigmaUpdateEps) {                                               // Update distribution parameters when needed.
+    noise.sigma = noise.newSigma;                   // Store the accepted standard deviation.
+    noise.var = noise.sigma * noise.sigma;           // Calculate its variance.
+    noise.dist.variance = noise.var;                 // Configure the existing Gaussian generator.
+    noise.dist.mean = noise.mean;                    // Preserve the configured mean, normally zero.
+  }
+
+  noise.current = noise.dist.random();               // Draw a fresh sample on every model loop.
 }
 
 

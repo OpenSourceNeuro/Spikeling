@@ -534,6 +534,8 @@ struct NoiseGenerator {
   int16_t   pot_value;                                      // Raw ADC reading (0..4095)
   float     pot_scaling;                                    // Amplitude scale factor in (amp_units per ADC count after offset)
   float     amp;                                            // Noise amplitude in engineering units                   
+  bool      gui_amplitude_enabled;                          // Generate noise from a GUI level instead of holding a legacy serial sample.
+  float     gui_amp;                                        // GUI noise level; standard deviation is gui_amp * sigma_per_amp.
   float     current;                                        // Noise Input current. This is the value added into I_total.
   float     mean;                                           // Gaussian mean of the noise current (same units as current), typically 0.
   float     sigma;                                          // Gaussian standard deviation (same units as current)
@@ -548,6 +550,8 @@ inline NoiseGenerator noise{
   .pot_value       = 0,
   .pot_scaling     = 1.0f / (bits12/25.0f),                            
   .amp             = 0.0f,
+  .gui_amplitude_enabled = false,   // Start with the existing physical-knob control.
+  .gui_amp               = 0.0f,    // GUI noise level: 0–100% of the physical knob's maximum amplitude.
   .current         = 0.0f,
   .mean            = 0.0f,                                     
   .sigma           = 0.0f,

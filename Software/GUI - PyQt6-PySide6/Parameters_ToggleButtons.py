@@ -317,7 +317,7 @@ def Buttons(self):
                                                   circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                   active_color='#%02x%02x%02x' % tuple(DarkSolarized[7])
                                                   )
-    self.ui.Spikeling_Synapse1_Release_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
+    self.ui.Spikeling_Synapse1_Release_toggle_layout.addWidget(self.ui.Synapse1Release_toggleButton)
     self.ui.Spikeling_Synapse1_Release_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
 
@@ -339,7 +339,7 @@ def Buttons(self):
                                                     circle_color='#%02x%02x%02x' % tuple(DarkSolarized[15]),
                                                     active_color='#%02x%02x%02x' % tuple(DarkSolarized[10])
                                                     )
-    self.ui.Spikeling_Synapse2_Release_toggle_layout.addWidget(self.ui.Synapse1Decay_toggleButton)
+    self.ui.Spikeling_Synapse2_Release_toggle_layout.addWidget(self.ui.Synapse2Release_toggleButton)
     self.ui.Spikeling_Synapse2_Release_toggle_layout.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
 

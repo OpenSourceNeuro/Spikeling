@@ -413,84 +413,6 @@ class Spikeling():
 
 
 
-    # PhotoGain
-    def ActivatePhotoGain(self):
-        global serial_port
-        if self.ui.PhotoGain_toggleButton.isChecked():
-            self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(True)
-            self.PhotoGain = self.ui.Spikeling_PR_PhotoGain_slider.value()
-            self.ui.Spikeling_PR_Photogain_readings.setText(str(self.PhotoGain))
-            self.ui.Spikeling_PR_Photogain_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
-        else:
-            self.ui.Spikeling_PR_PhotoGain_slider.setEnabled(False)
-            self.ui.Spikeling_PR_PhotoGain_slider.setValue(0)
-            self.ui.Spikeling_PR_Photogain_readings.setText("")
-            if serial_port.is_open:
-                serial_port.write('PG0' + '\n')
-
-    def GetPhotoGain(self):
-        global serial_port
-        self.PhotoGain = self.ui.Spikeling_PR_PhotoGain_slider.value()
-        self.ui.Spikeling_PR_Photogain_readings.setText(str(self.PhotoGain))
-        self.ui.Spikeling_PR_Photogain_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('PG1 ' + str(self.PhotoGain) + '\n')
-
-
-    # PhotoDecay
-    def ActivatePRDecay(self):
-        global serial_port
-        if self.ui.PhotoDecay_toggleButton.isChecked():
-            self.ui.Spikeling_PR_Decay_slider.setEnabled(True)
-            self.PhotoDecay = self.ui.Spikeling_PR_Decay_slider.value()
-            self.ui.Spikeling_PR_Decay_readings.setText(str(self.PhotoDecay/100000))
-            self.ui.Spikeling_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
-        else:
-            self.ui.Spikeling_PR_Decay_slider.setEnabled(False)
-            self.ui.Spikeling_PR_Decay_slider.setValue(100)
-            self.ui.Spikeling_PR_Decay_readings.setText("")
-            if serial_port.is_open:
-                serial_port.write('PD0' + '\n')
-
-    def GetPRDecay(self):
-        global serial_port
-        self.PhotoDecay = self.ui.Spikeling_PR_Decay_slider.value()
-        self.ui.Spikeling_PR_Decay_readings.setText(str(self.PhotoDecay/100000))
-        self.ui.Spikeling_PR_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('PD1 ' + str(self.PhotoDecay/100000) + '\n')
-
-
-    # PhotoRecovery
-    def ActivatePRRecovery(self):
-        global serial_port
-        if self.ui.PhotoRecovery_toggleButton.isChecked():
-            self.ui.Spikeling_PR_Recovery_slider.setEnabled(True)
-            self.PhotoRecovery = self.ui.Spikeling_PR_Recovery_slider.value()
-            self.ui.Spikeling_PR_Recovery_readings.setText(str(self.PhotoRecovery/1000))
-            self.ui.Spikeling_PR_Recovery_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-            if serial_port.is_open:
-                serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
-        else:
-            self.ui.Spikeling_PR_Recovery_slider.setEnabled(False)
-            self.ui.Spikeling_PR_Recovery_slider.setValue(25)
-            self.ui.Spikeling_PR_Recovery_readings.setText("")
-            if serial_port.is_open:
-                serial_port.write('PR0' + '\n')
-
-    def GetPRRecovery(self):
-        global serial_port
-        self.PhotoRecovery = self.ui.Spikeling_PR_Recovery_slider.value()
-        self.ui.Spikeling_PR_Recovery_readings.setText(str(self.PhotoRecovery/1000))
-        self.ui.Spikeling_PR_Recovery_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-                serial_port.write('PR1 ' + str(self.PhotoRecovery/1000) + '\n')
-
-
     # Patch Clamp
     ##################################################
     def ConfigurePatchClamp(self):
@@ -673,136 +595,741 @@ class Spikeling():
         else:
             serial_port.write("PC0\n")
 
-    # NoiseLevel
-    def ActivateNoiseLevel(self):
-        global serial_port
-        if self.ui.Noise_toggleButton.isChecked():
-            self.ui.Spikeling_Noise_slider.setEnabled(True)
-            self.NoiseValue = self.ui.Spikeling_Noise_slider.value()
-            self.Noise = np.random.normal(0, self.NoiseValue/2)
-            self.ui.Spikeling_Noise_readings.setText(str(self.NoiseValue))
-            self.ui.Spikeling_Noise_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
+
+    # Noise
+    ##################################################
+    def ConfigureNoise(self):
+        """Configure GUI noise level; samples are generated by the ESP32."""
+
+        if hasattr(self, "noise_binding"):
+            return
+
+        binding = SliderBinding(
+            slider=self.ui.Spikeling_Noise_slider,
+            editor=self.ui.Spikeling_Noise_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.Noise_toggleButton.isChecked(),
+            default_position=0,
+            disabled_text="Knob control",
+            active_editor_style=("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;" ),
+            disabled_editor_style=( "color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;"),
+            to_display=float,
+            to_slider=float,
+            format_value=lambda value: f"{value:.0f}",
+            interval_ms=40,
+        )
+
+        self.noise_binding = binding
+        self.NoiseValue = binding.value
+
+        def remember_value(value):
+            self.NoiseValue = value
+
+        def apply_value(value):
+            # Send the level once; the ESP32 generates subsequent samples.
             if serial_port.is_open:
-                serial_port.write('NO1 ' + str(self.Noise) + '\n')
+                serial_port.write(f"NOA {value}\n")
+
+        def disable_control():
+            if serial_port.is_open:
+                serial_port.write("NO0\n")
+
+        def connection_changed(connected):
+            binding.cancel_pending()
+
+        binding.valueChanged.connect(remember_value)
+        binding.applyRequested.connect(apply_value)
+        binding.disableRequested.connect(disable_control)
+
+        self.ui.Noise_toggleButton.toggled.connect(binding.set_active)
+
+        serial_port.connection_changed.connect(connection_changed)
+
+    def SyncNoiseState(self):
+        """Restore the GUI noise level or physical control after connection."""
+        binding = getattr(self, "noise_binding", None)
+
+        if binding is None:
+            return
+
+        binding.cancel_pending()
+
+        if not serial_port.is_open:
+            return
+
+        if binding.active:
+            binding.apply_current()
         else:
-            self.ui.Spikeling_Noise_slider.setEnabled(False)
-            self.ui.Spikeling_Noise_slider.setValue(0)
-            self.ui.Spikeling_Noise_readings.setText("")
+            serial_port.write("NO0\n")
+
+
+
+
+    # Photoreceptor Parameters
+    ##################################################
+    def ConfigurePhotoreceptors(self):
+        """Configure gain, decay and recovery slider/editor bindings."""
+
+        active_style = (
+                "color: rgb"
+                + str(tuple(Settings.DarkSolarized[4]))
+                + "; font: 700 10pt;"
+        )
+
+        disabled_style = (
+            "color: rgb(88, 110, 117);"
+            "font-size: 9pt;"
+            "font-weight: 400;"
+        )
+
+        def register(
+                *,
+                binding_name,
+                slider,
+                editor,
+                toggle,
+                value_attribute,
+                default_position,
+                scale,
+                decimals,
+                disabled_text,
+                apply_command,
+                disable_command,
+        ):
+            """Create one binding and its parameter-specific callbacks."""
+            if hasattr(self, binding_name):
+                return
+
+            binding = SliderBinding(
+                slider=slider,
+                editor=editor,
+                alignment=Qt.AlignmentFlag.AlignCenter,
+
+                active=toggle.isChecked(),
+                default_position=default_position,
+                disabled_text=disabled_text,
+
+                active_editor_style=active_style,
+                disabled_editor_style=disabled_style,
+
+                to_display=lambda position: position / scale,
+                to_slider=lambda value: value * scale,
+                format_value=lambda value: f"{value:.{decimals}f}",
+                interval_ms=40,
+            )
+
+            setattr(self, binding_name, binding)
+
+            # Preserve existing attributes in integer slider units.
+            setattr(self, value_attribute, binding.value)
+
+            def remember_value(position):
+                setattr(self, value_attribute, position)
+
+            def apply_value(position):
+                if serial_port.is_open:
+                    argument = f"{position / scale:.{decimals}f}"
+                    serial_port.write(
+                        f"{apply_command} {argument}\n"
+                    )
+
+            def disable_control():
+                if serial_port.is_open:
+                    serial_port.write(f"{disable_command}\n")
+
+            def connection_changed(connected):
+                binding.cancel_pending()
+
+            binding.valueChanged.connect(remember_value)
+            binding.applyRequested.connect(apply_value)
+            binding.disableRequested.connect(disable_control)
+
+            toggle.toggled.connect(binding.set_active)
+            serial_port.connection_changed.connect(connection_changed)
+
+        register(
+            binding_name="photo_gain_binding",
+            slider=self.ui.Spikeling_PR_PhotoGain_slider,
+            editor=self.ui.Spikeling_PR_Photogain_readings,
+            toggle=self.ui.PhotoGain_toggleButton,
+            value_attribute="PhotoGain",
+            default_position=0,
+            scale=1,
+            decimals=0,
+            disabled_text="Knob control",
+            apply_command="PG1",
+            disable_command="PG0",
+        )
+
+        register(
+            binding_name="photo_decay_binding",
+            slider=self.ui.Spikeling_PR_Decay_slider,
+            editor=self.ui.Spikeling_PR_Decay_readings,
+            toggle=self.ui.PhotoDecay_toggleButton,
+            value_attribute="PhotoDecay",
+            default_position=100,
+            scale=100000,
+            decimals=5,
+            disabled_text="Default: 0.001",
+            apply_command="PD1",
+            disable_command="PD0",
+        )
+
+        register(
+            binding_name="photo_recovery_binding",
+            slider=self.ui.Spikeling_PR_Recovery_slider,
+            editor=self.ui.Spikeling_PR_Recovery_readings,
+            toggle=self.ui.PhotoRecovery_toggleButton,
+            value_attribute="PhotoRecovery",
+            default_position=25,
+            scale=1000,
+            decimals=3,
+            disabled_text="Default: 0.025",
+            apply_command="PR1",
+            disable_command="PR0",
+        )
+
+    def SyncPhotoreceptorState(self):
+        """Restore photoreceptor overrides or defaults after connection."""
+        if not serial_port.is_open:
+            return
+
+        controls = (
+            ("photo_gain_binding", "PG0"),
+            ("photo_decay_binding", "PD0"),
+            ("photo_recovery_binding", "PR0"),
+        )
+
+        for binding_name, disable_command in controls:
+            binding = getattr(self, binding_name, None)
+
+            if binding is None:
+                continue
+
+            binding.cancel_pending()
+
+            if binding.active:
+                binding.apply_current()
+            else:
+                serial_port.write(f"{disable_command}\n")
+
+    # Synapse 1 Parameters
+    ##################################################
+    def ConfigureSynapse1(self):
+        """Configure synapse 1 gain and decay slider/editor bindings."""
+
+        if hasattr(self, "synapse1_gain_binding"):
+            return
+
+        active_style = ("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;" )
+        disabled_style = ( "color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;" )
+
+        # Gain: displayed and transmitted in integer slider units.
+        gain = SliderBinding(
+            slider=self.ui.Spikeling_Synapse1_slider,
+            editor=self.ui.Spikeling_Synapse1_Gain_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.Synapse1_Gain_toggleButton.isChecked(),
+            default_position=0,
+            disabled_text="Knob control",
+            active_editor_style=active_style,
+            disabled_editor_style=disabled_style,
+            to_display=float,
+            to_slider=float,
+            format_value=lambda value: f"{value:.0f}",
+            interval_ms=40,
+        )
+
+        # Decay: display the factor, but transmit the integer position.
+        decay = SliderBinding(
+            slider=self.ui.Spikeling_Synapse1_Decay_slider,
+            editor=self.ui.Spikeling_Synapse1_Decay_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.Synapse1Decay_toggleButton.isChecked(),
+            default_position=995,
+            disabled_text="Default: 0.995",
+            active_editor_style=active_style,
+            disabled_editor_style=disabled_style,
+            to_display=lambda position: position / 1000,
+            to_slider=lambda value: value * 1000,
+            format_value=lambda value: f"{value:.3f}",
+            interval_ms=40,
+        )
+
+        self.synapse1_gain_binding = gain
+        self.synapse1_decay_binding = decay
+
+        # Preserve existing application attributes in slider units.
+        self.Synapse1Gain = gain.value
+        self.Synapse1Decay = decay.value
+
+        def remember_gain(position):
+            self.Synapse1Gain = position
+
+        def remember_decay(position):
+            self.Synapse1Decay = position
+
+        def apply_gain(position):
             if serial_port.is_open:
-                serial_port.write('NO0' + '\n')
+                serial_port.write(f"SG11 {position}\n")
 
-    def GetNoiseLevel(self):
-        global serial_port
-        self.NoiseValue = self.ui.Spikeling_Noise_slider.value()
-        self.Noise = np.random.normal(0, self.NoiseValue / 2)
-        self.ui.Spikeling_Noise_readings.setText(str(self.NoiseValue))
-        self.ui.Spikeling_Noise_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[4])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('NO1 ' + str(self.Noise) + '\n')
-
-
-    # Synapse1Gain
-    def ActivateSynapticGain1(self):
-        global serial_port
-        if self.ui.Synapse1_toggleButton.isChecked():
-            self.ui.Spikeling_Synapse1_slider.setEnabled(True)
-            self.Synapse1Gain = self.ui.Spikeling_Synapse1_slider.value()
-            self.ui.Spikeling_Synapse1_readings.setText(str(self.Synapse1Gain))
-            self.ui.Spikeling_Synapse1_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
+        def apply_decay(position):
             if serial_port.is_open:
-                serial_port.write('SG11 ' + str(self.Synapse1Gain) + '\n')
-        else:
-            self.ui.Spikeling_Synapse1_slider.setEnabled(False)
-            self.ui.Spikeling_Synapse1_slider.setValue(0)
-            self.ui.Spikeling_Synapse1_readings.setText("")
+                serial_port.write(f"SD11 {position}\n")
+
+        def disable_gain():
             if serial_port.is_open:
-                serial_port.write('SG10' + '\n')
+                serial_port.write("SG10\n")
 
-    def GetSynapticGain1(self):
-        global serial_port
-        self.Synapse1Gain = self.ui.Spikeling_Synapse1_slider.value()
-        self.ui.Spikeling_Synapse1_readings.setText(str(self.Synapse1Gain))
-        self.ui.Spikeling_Synapse1_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('SG11 ' + str(self.Synapse1Gain) + '\n')
-
-
-    # Synapse1Decay
-    def ActivateSynapseDecay1(self):
-        global serial_port
-        if self.ui.Synapse1Decay_toggleButton.isChecked():
-            self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(True)
-            self.Synapse1Decay = self.ui.Spikeling_Synapse1_Decay_slider.value()
-            self.ui.Spikeling_Synapse1_Decay_readings.setText(str(self.Synapse1Decay/1000))
-            self.ui.Spikeling_Synapse1_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
+        def disable_decay():
             if serial_port.is_open:
-                serial_port.write('SD11 ' + str(self.Synapse1Decay) + '\n')
-        else:
-            self.ui.Spikeling_Synapse1_Decay_slider.setEnabled(False)
-            self.ui.Spikeling_Synapse1_Decay_slider.setValue(995)
-            self.ui.Spikeling_Synapse1_Decay_readings.setText("")
+                serial_port.write("SD10\n")
+
+        def connection_changed(connected):
+            gain.cancel_pending()
+            decay.cancel_pending()
+
+        gain.valueChanged.connect(remember_gain)
+        gain.applyRequested.connect(apply_gain)
+        gain.disableRequested.connect(disable_gain)
+
+        decay.valueChanged.connect(remember_decay)
+        decay.applyRequested.connect(apply_decay)
+        decay.disableRequested.connect(disable_decay)
+
+        self.ui.Synapse1_Gain_toggleButton.toggled.connect(
+            gain.set_active
+        )
+        self.ui.Synapse1Decay_toggleButton.toggled.connect(
+            decay.set_active
+        )
+
+        serial_port.connection_changed.connect(connection_changed)
+
+    def SyncSynapse1State(self):
+        """Restore synapse 1 overrides or hardware/default control."""
+        if not serial_port.is_open:
+            return
+
+        controls = (
+            ("synapse1_gain_binding", "SG10"),
+            ("synapse1_decay_binding", "SD10"),
+        )
+
+        for binding_name, disable_command in controls:
+            binding = getattr(self, binding_name, None)
+
+            if binding is None:
+                continue
+
+            binding.cancel_pending()
+
+            if binding.active:
+                binding.apply_current()
+            else:
+                serial_port.write(f"{disable_command}\n")
+
+
+
+    # Synapse 2 Parameters
+    ##################################################
+    def ConfigureSynapse2(self):
+        """Configure synapse 2 gain and decay slider/editor bindings."""
+
+        if hasattr(self, "synapse2_gain_binding"):
+            return
+
+        active_style = ("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
+
+        disabled_style = ("color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;")
+
+        gain = SliderBinding(
+            slider=self.ui.Spikeling_Synapse2_slider,
+            editor=self.ui.Spikeling_Synapse2_Gain_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.Synapse2_Gain_toggleButton.isChecked(),
+            default_position=0,
+            disabled_text="Knob control",
+            active_editor_style=active_style,
+            disabled_editor_style=disabled_style,
+            to_display=float,
+            to_slider=float,
+            format_value=lambda value: f"{value:.0f}",
+            interval_ms=40,
+        )
+
+        decay = SliderBinding(
+            slider=self.ui.Spikeling_Synapse2_Decay_slider,
+            editor=self.ui.Spikeling_Synapse2_Decay_readings,
+            alignment=Qt.AlignmentFlag.AlignCenter,
+            active=self.ui.Synapse2Decay_toggleButton.isChecked(),
+            default_position=990,
+            disabled_text="Default: 0.990",
+            active_editor_style=active_style,
+            disabled_editor_style=disabled_style,
+            to_display=lambda position: position / 1000,
+            to_slider=lambda value: value * 1000,
+            format_value=lambda value: f"{value:.3f}",
+            interval_ms=40,
+        )
+
+        self.synapse2_gain_binding = gain
+        self.synapse2_decay_binding = decay
+
+        # Preserve existing application attributes in slider units.
+        self.Synapse2Gain = gain.value
+        self.Synapse2Decay = decay.value
+
+        def remember_gain(position):
+            self.Synapse2Gain = position
+
+        def remember_decay(position):
+            self.Synapse2Decay = position
+
+        def apply_gain(position):
             if serial_port.is_open:
-                serial_port.write('SD10' + '\n')
+                serial_port.write(f"SG21 {position}\n")
 
-    def GetSynapticDecay1(self):
-        global serial_port
-        self.Synapse1Decay = self.ui.Spikeling_Synapse1_Decay_slider.value()
-        self.ui.Spikeling_Synapse1_Decay_readings.setText(str(self.Synapse1Decay/1000))
-        self.ui.Spikeling_Synapse1_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[7])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('SD11 ' + str(self.Synapse1Decay) + '\n')
-
-
-    # Synapse2Gain
-    def ActivateSynapticGain2(self):
-        global serial_port
-        if self.ui.Synapse2_toggleButton.isChecked():
-            self.ui.Spikeling_Synapse2_slider.setEnabled(True)
-            self.Synapse2Gain = self.ui.Spikeling_Synapse2_slider.value()
-            self.ui.Spikeling_Synapse2_readings.setText(str(self.Synapse2Gain))
-            self.ui.Spikeling_Synapse2_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
+        def apply_decay(position):
             if serial_port.is_open:
-                serial_port.write('SG21 ' + str(self.Synapse2Gain) + '\n')
-        else:
-            self.ui.Spikeling_Synapse2_slider.setEnabled(False)
-            self.ui.Spikeling_Synapse2_slider.setValue(0)
-            self.ui.Spikeling_Synapse2_readings.setText("")
+                serial_port.write(f"SD21 {position}\n")
+
+        def disable_gain():
             if serial_port.is_open:
-                serial_port.write('SG20' + '\n')
+                serial_port.write("SG20\n")
 
-    def GetSynapticGain2(self):
-        global serial_port
-        self.Synapse2Gain = self.ui.Spikeling_Synapse2_slider.value()
-        self.ui.Spikeling_Synapse2_readings.setText(str(self.Synapse2Gain))
-        self.ui.Spikeling_Synapse2_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('SG21 ' + str(self.Synapse2Gain) + '\n')
-
-
-    # Synapse1Decay
-    def ActivateSynapseDecay2(self):
-        global serial_port
-        if self.ui.Synapse2Decay_toggleButton.isChecked():
-            self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(True)
-            self.Synapse2Decay = self.ui.Spikeling_Synapse2_Decay_slider.value()
-            self.ui.Spikeling_Synapse2_Decay_readings.setText(str(self.Synapse2Decay/1000))
-            self.ui.Spikeling_Synapse2_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
+        def disable_decay():
             if serial_port.is_open:
-                serial_port.write('SD21 ' + str(self.Synapse2Decay) + '\n')
-        else:
-            self.ui.Spikeling_Synapse2_Decay_slider.setEnabled(False)
-            self.ui.Spikeling_Synapse2_Decay_slider.setValue(990)
-            self.ui.Spikeling_Synapse2_Decay_readings.setText("")
-            if serial_port.is_open:
-                serial_port.write('SD20' + '\n')
+                serial_port.write("SD20\n")
 
-    def GetSynapticDecay2(self):
-        global serial_port
-        self.Synapse2Decay = self.ui.Spikeling_Synapse2_Decay_slider.value()
-        self.ui.Spikeling_Synapse2_Decay_readings.setText(str(self.Synapse2Decay/1000))
-        self.ui.Spikeling_Synapse2_Decay_readings.setStyleSheet("color: rgb" + str(tuple(Settings.DarkSolarized[10])) + "; font: 700 10pt;")
-        if serial_port.is_open:
-            serial_port.write('SD21 ' + str(self.Synapse2Decay) + '\n')
+        def connection_changed(connected):
+            gain.cancel_pending()
+            decay.cancel_pending()
+
+        gain.valueChanged.connect(remember_gain)
+        gain.applyRequested.connect(apply_gain)
+        gain.disableRequested.connect(disable_gain)
+
+        decay.valueChanged.connect(remember_decay)
+        decay.applyRequested.connect(apply_decay)
+        decay.disableRequested.connect(disable_decay)
+
+        self.ui.Synapse2_Gain_toggleButton.toggled.connect(
+            gain.set_active
+        )
+        self.ui.Synapse2Decay_toggleButton.toggled.connect(
+            decay.set_active
+        )
+
+        serial_port.connection_changed.connect(connection_changed)
+
+    def SyncSynapse2State(self):
+        """Restore synapse 2 overrides or hardware/default control."""
+        if not serial_port.is_open:
+            return
+
+        controls = (
+            ("synapse2_gain_binding", "SG20"),
+            ("synapse2_decay_binding", "SD20"),
+        )
+
+        for binding_name, disable_command in controls:
+            binding = getattr(self, binding_name, None)
+
+            if binding is None:
+                continue
+
+            binding.cancel_pending()
+
+            if binding.active:
+                binding.apply_current()
+            else:
+                serial_port.write(f"{disable_command}\n")
+
+
+
+
+    # Pharmacology Parameters
+    ##################################################
+    def ConfigureDrugSliders(self):
+        """Create one independent slider/editor binding for each drug."""
+
+        if getattr(self, "_drug_setup_complete", False):
+            return
+
+        self.drug_controls = []
+        self._drug_last_commands = {}
+
+        active_style = ("color: rgb" + str(tuple(Settings.DarkSolarized[8])) + "; font: 700 10pt;")
+        disabled_style = ("color: rgb(88, 110, 117);" "font-size: 9pt;" "font-weight: 400;")
+
+        def register(
+                *,
+                widget_key,
+                toggle,
+                drug_index,
+                scale,
+                decimals,
+                label,
+        ):
+            """Create one drug binding with its own widgets and conversions."""
+            prefix = f"Spikeling_Pharmacology_{widget_key}"
+
+            slider = getattr(self.ui, f"{prefix}_slider")
+            editor = getattr(self.ui, f"{prefix}_readings")
+
+            # More positions allow decimal concentrations to be entered.
+            with QSignalBlocker(slider):
+                slider.setRange(0, 1000)
+                slider.setSingleStep(1)
+                slider.setPageStep(100)
+                slider.setValue(0)
+
+            binding = SliderBinding(
+                slider=slider,
+                editor=editor,
+                alignment=Qt.AlignmentFlag.AlignCenter,
+                active=toggle.isChecked(),
+                default_position=0,
+                disabled_text=f"{0:.{decimals}f}",
+                active_editor_style=active_style,
+                disabled_editor_style=disabled_style,
+                to_display=lambda position: position / scale,
+                to_slider=lambda value: value * scale,
+                format_value=lambda value: f"{value:.{decimals}f}",
+                interval_ms=40,
+            )
+
+            # Keep units visible without including them in editable text.
+            getattr(self.ui, f"{prefix}_Label").setText(label)
+
+            self.drug_controls.append({
+                "binding": binding,
+                "toggle": toggle,
+                "index": drug_index,
+                "scale": scale,
+                "decimals": decimals,
+            })
+
+            def apply_value(position):
+                Spikeling.SyncDrugState(self)
+
+            def disable_drug():
+                Spikeling.SyncDrugState(self)
+
+            binding.applyRequested.connect(apply_value)
+            binding.disableRequested.connect(disable_drug)
+            toggle.toggled.connect(binding.set_active)
+
+            return binding
+
+        self.ttx_binding = register(
+            widget_key="TTX",
+            toggle=self.ui.TTX_toggleButton,
+            drug_index=0,
+            scale=10,
+            decimals=1,
+            label="TTX (nM)",
+        )
+
+        self.tea_binding = register(
+            widget_key="TEA",
+            toggle=self.ui.TEA_toggleButton,
+            drug_index=1,
+            scale=100,
+            decimals=2,
+            label="TEA (mM)",
+        )
+
+        self.fourap_binding = register(
+            widget_key="4AP",
+            toggle=self.ui.FourAP_toggleButton,
+            drug_index=3,
+            scale=100,
+            decimals=2,
+            label="4-AP (mM)",
+        )
+
+        self.apamin_binding = register(
+            widget_key="Apamin",
+            toggle=self.ui.Apamin_toggleButton,
+            drug_index=2,
+            scale=10,
+            decimals=1,
+            label="Apamin (nM)",
+        )
+
+        self.nbqx_binding = register(
+            widget_key="NBQX",
+            toggle=self.ui.NBQX_toggleButton,
+            drug_index=4,
+            scale=100,
+            decimals=2,
+            label="NBQX (µM)",
+        )
+
+        self.apv_binding = register(
+            widget_key="APV",
+            toggle=self.ui.APV_toggleButton,
+            drug_index=6,
+            scale=10,
+            decimals=1,
+            label="APV (µM)",
+        )
+
+        self.gabazine_binding = register(
+            widget_key="Gabazine",
+            toggle=self.ui.Gabazine_toggleButton,
+            drug_index=5,
+            scale=100,
+            decimals=2,
+            label="Gabazine (µM)",
+        )
+
+        self.gvia_binding = register(
+            widget_key="GVIA",
+            toggle=self.ui.GVIA_toggleButton,
+            drug_index=7,
+            scale=10,
+            decimals=1,
+            label="ω-GVIA (nM)",
+        )
+
+        def connection_changed(connected):
+            # Previously queued commands must not cross connection sessions.
+            for control in self.drug_controls:
+                control["binding"].cancel_pending()
+
+            # A new connection requires a complete configuration replay.
+            self._drug_last_commands = {}
+
+        serial_port.connection_changed.connect(connection_changed)
+
+        self.ui.Spikeling_Pharmacology_Clear_pushButton.clicked.connect(
+            lambda checked=False: Spikeling.ClearAllDrugs(self)
+        )
+
+        self._drug_setup_complete = True
+
+
+    def SyncDrugState(self, force=False):
+        """Synchronise drug concentrations and their required model settings."""
+
+        controls = getattr(self, "drug_controls", None)
+
+        if controls is None:
+            return
+
+        # Apply all currently accepted values together.
+        for control in controls:
+            control["binding"].cancel_pending()
+
+        if not serial_port.is_open:
+            return
+
+        cache = self._drug_last_commands
+
+        if force:
+            cache.clear()
+
+        def send(command, argument):
+            """Avoid repeating unchanged configuration commands."""
+            argument = str(argument)
+
+            if cache.get(command) == argument:
+                return True
+
+            if not serial_port.write(f"{command} {argument}\n"):
+                cache.clear()
+                return False
+
+            # This records local write acceptance, not firmware acknowledgement.
+            cache[command] = argument
+            return True
+
+        drug_enabled = any(
+            control["binding"].active
+            for control in controls
+        )
+
+        # Pharmacology is also needed by probabilistic release controls.
+        # Do not switch it off while either release toggle remains enabled.
+        release_enabled = any(
+            toggle is not None and toggle.isChecked()
+            for toggle in (
+                getattr(self.ui, "Synapse1Release_toggleButton", None),
+                getattr(self.ui, "Synapse2Release_toggleButton", None),
+            )
+        )
+
+        pharmacology_enabled = drug_enabled or release_enabled
+
+        # On a new session, configure concentrations before enabling effects.
+        # When the final user of pharmacology is disabled, turn effects off first.
+        if not cache or not pharmacology_enabled:
+            if not send("PH E", 0):
+                return
+
+        # APV needs the NMDA/conductance synaptic model.
+        use_nmda = self.apv_binding.active
+
+        # GVIA needs the presynaptic CaV2.2 pathway.
+        use_presynaptic_calcium = self.gvia_binding.active
+
+        settings = (
+            ("PH M", int(use_nmda)),
+            ("PH N", int(use_nmda)),
+            ("PH C", int(use_presynaptic_calcium)),
+            ("PH R 1", 3),
+            ("PH R 2", 3),
+        )
+
+        for command, argument in settings:
+            if not send(command, argument):
+                return
+
+        for control in controls:
+            binding = control["binding"]
+
+            concentration = (
+                binding.value / control["scale"]
+                if binding.active
+                else 0.0
+            )
+
+            argument = (
+                f"{concentration:.{control['decimals']}f}"
+            )
+
+            if not send(
+                    f"PH D {control['index']}",
+                    argument,
+            ):
+                return
+
+        if not send("PH E", int(pharmacology_enabled)):
+            return
+
+
+    def ClearAllDrugs(self):
+        """Reset all drug controls, then synchronise the firmware once."""
+
+        controls = getattr(self, "drug_controls", None)
+
+        if controls is None:
+            return
+
+        for control in controls:
+            binding = control["binding"]
+            toggle = control["toggle"]
+
+            # Suppress individual command callbacks while clearing the group.
+            with QSignalBlocker(binding), QSignalBlocker(toggle):
+                toggle.setChecked(False)
+                binding.set_active(False)
+                binding.set_value(0, send=False)
+
+        Spikeling.SyncDrugState(self)
 
 
     def SelectNeuronMode(self):

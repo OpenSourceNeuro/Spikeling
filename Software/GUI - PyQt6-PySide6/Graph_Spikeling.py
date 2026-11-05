@@ -192,7 +192,6 @@ class SpikelingGraph(QObject):
             self.save_plot_data()
             self.plot_curve()
             #self.handle_custom_stimulus()
-            self.handle_noise()
         except Exception as e:
             print(f"Error in update_plot: {e}")
 
@@ -283,10 +282,10 @@ class SpikelingGraph(QObject):
 
         for name in ("ChangeSpeed",
                      "SelectNeuronMode", "SyncPatchClampState",
-                     "ActivatePhotoGain", "ActivatePRDecay", "ActivatePRRecovery",
-                     "ActivateNoiseLevel",
-                     "ActivateSynapticGain1", "ActivateSynapseDecay1",
-                     "ActivateSynapticGain2", "ActivateSynapseDecay2"):
+                     "SyncNoiseState",
+                     "SyncPhotoreceptorState",
+                     "SyncDrugState",
+                     "SyncSynapse1State", "SyncSynapse2State"):
             handler = getattr(SpikelingPage, name, None)
             if not callable(handler):
                 continue
@@ -764,38 +763,3 @@ class SpikelingGraph(QObject):
         self._last_stim_value = value
         serial_manager.write(f"SC1 {value}\n")
 
-
-    def handle_noise(self):
-        """
-        Generate and send a new noise value if noise is enabled.
-
-        This function is called by the timer to continuously update the noise
-        value sent to the device.
-        """
-        try:
-            # Check if noise toggle button exists
-            if not hasattr(self.ui, 'Noise_toggleButton'):
-                return
-
-            # Check if noise is enabled
-            if self.ui.Noise_toggleButton.isChecked():
-                try:
-                    # Check if noise slider exists
-                    if not hasattr(self.ui, 'Spikeling_Noise_slider'):
-                        return
-
-                    # Get the current noise amplitude
-                    noise_value = self.ui.Spikeling_Noise_slider.value()
-
-                    # Generate a new random noise value
-                    noise = np.random.normal(0, noise_value / 2)
-
-                    # Send the noise value to the device
-                    if serial_manager.is_open:
-                        serial_manager.write(f'NO1 {noise}\n')
-                except Exception as e:
-                    # Log specific errors in noise generation
-                    print(f"Error generating noise: {e}")
-        except Exception as e:
-            # Log the error but don't crash the application
-            print(f"Error in handle_noise: {e}")

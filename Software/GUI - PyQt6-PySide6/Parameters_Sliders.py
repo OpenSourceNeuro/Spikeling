@@ -690,8 +690,15 @@ def configure_sliders(self):
                             "Spikeling_Synapse1_Decay_slider",
                             groove_color="#001E26",
                             fill_color="#2AA198",
-                            num_ticks=15,
+                            num_ticks=11,
                             handle_image=":/resources/resources/Handle.png")
+    configure_styled_slider(self.ui,
+                            "Spikeling_Synapse1_Release_slider",
+                            groove_color="#001E26",
+                            fill_color="#2AA198",
+                            num_ticks=11,
+                            handle_image=":/resources/resources/Handle.png")
+
 
     # Synapse2 Parameters
     configure_styled_slider(self.ui,
@@ -704,7 +711,13 @@ def configure_sliders(self):
                             "Spikeling_Synapse2_Decay_slider",
                             groove_color="#001E26",
                             fill_color="#D33682",
-                            num_ticks=15,
+                            num_ticks=11,
+                            handle_image=":/resources/resources/Handle.png")
+    configure_styled_slider(self.ui,
+                            "Spikeling_Synapse2_Release_slider",
+                            groove_color="#001E26",
+                            fill_color="#D33682",
+                            num_ticks=11,
                             handle_image=":/resources/resources/Handle.png")
 
     #######################################################
