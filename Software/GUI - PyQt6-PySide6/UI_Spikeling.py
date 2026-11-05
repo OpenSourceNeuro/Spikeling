@@ -19251,7 +19251,7 @@ class Ui_Spikeling(object):
 
         self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(2)
         self.mainbody_stackedWidget.setCurrentIndex(1)
-        self.Spikeling_parameter_stackedwidget.setCurrentIndex(0)
+        self.Spikeling_parameter_stackedwidget.setCurrentIndex(1)
         self.Emulator_parameter_stackedwidget.setCurrentIndex(3)
         self.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentIndex(0)
         self.Spikeling_DataAnalysis_stackedWidget.setCurrentIndex(0)
