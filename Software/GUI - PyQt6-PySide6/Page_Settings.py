@@ -208,7 +208,7 @@ class SettingsPage:
 
     def ShowPage(self) -> None:
         """Display the Settings page and refresh its controls."""
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_601)
+        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Settings)
         self._sync_controls()
 
     # ------------------------------------------------------------------

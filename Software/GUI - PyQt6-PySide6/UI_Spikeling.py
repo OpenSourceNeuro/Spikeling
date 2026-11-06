@@ -1743,95 +1743,192 @@ class Ui_Spikeling(object):
         self.Spikeling_DataRecording_box.setSizePolicy(sizePolicy5)
         self.Spikeling_DataRecording_box.setMinimumSize(QSize(0, 100))
         self.Spikeling_DataRecording_box.setMaximumSize(QSize(16777215, 100))
+        self.Spikeling_DataRecording_box.setFont(font4)
         self.Spikeling_DataRecording_box.setStyleSheet(u"")
+        self.Spikeling_DataRecording_box.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.horizontalLayout_52 = QHBoxLayout(self.Spikeling_DataRecording_box)
         self.horizontalLayout_52.setSpacing(0)
         self.horizontalLayout_52.setObjectName(u"horizontalLayout_52")
-        self.horizontalLayout_52.setContentsMargins(5, 5, 5, 5)
-        self.Spikeling_DataRecording_left_frame = QFrame(self.Spikeling_DataRecording_box)
-        self.Spikeling_DataRecording_left_frame.setObjectName(u"Spikeling_DataRecording_left_frame")
-        self.Spikeling_DataRecording_left_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_DataRecording_left_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_27 = QVBoxLayout(self.Spikeling_DataRecording_left_frame)
-        self.verticalLayout_27.setSpacing(0)
-        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
-        self.verticalLayout_27.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_DataRecording_recordingMode_frame = QFrame(self.Spikeling_DataRecording_left_frame)
-        self.Spikeling_DataRecording_recordingMode_frame.setObjectName(u"Spikeling_DataRecording_recordingMode_frame")
-        self.Spikeling_DataRecording_recordingMode_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_DataRecording_recordingMode_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_54 = QHBoxLayout(self.Spikeling_DataRecording_recordingMode_frame)
-        self.horizontalLayout_54.setSpacing(0)
-        self.horizontalLayout_54.setObjectName(u"horizontalLayout_54")
-        self.horizontalLayout_54.setContentsMargins(0, 0, 0, 0)
-
-        self.verticalLayout_27.addWidget(self.Spikeling_DataRecording_recordingMode_frame)
-
-
-        self.horizontalLayout_52.addWidget(self.Spikeling_DataRecording_left_frame)
-
-        self.Spikeling_DataRecording_right_frame = QFrame(self.Spikeling_DataRecording_box)
-        self.Spikeling_DataRecording_right_frame.setObjectName(u"Spikeling_DataRecording_right_frame")
-        self.Spikeling_DataRecording_right_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_DataRecording_right_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_28 = QVBoxLayout(self.Spikeling_DataRecording_right_frame)
-        self.verticalLayout_28.setSpacing(0)
+        self.horizontalLayout_52.setContentsMargins(10, 10, 10, 5)
+        self.Spikeling_DataRecording_frame = QFrame(self.Spikeling_DataRecording_box)
+        self.Spikeling_DataRecording_frame.setObjectName(u"Spikeling_DataRecording_frame")
+        self.Spikeling_DataRecording_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_28 = QVBoxLayout(self.Spikeling_DataRecording_frame)
+        self.verticalLayout_28.setSpacing(2)
         self.verticalLayout_28.setObjectName(u"verticalLayout_28")
         self.verticalLayout_28.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_DataRecording_directory_frame = QFrame(self.Spikeling_DataRecording_right_frame)
-        self.Spikeling_DataRecording_directory_frame.setObjectName(u"Spikeling_DataRecording_directory_frame")
-        self.Spikeling_DataRecording_directory_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Spikeling_DataRecording_directory_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_56 = QHBoxLayout(self.Spikeling_DataRecording_directory_frame)
+        self.Spikeling_DataRecording_Folder_frame = QFrame(self.Spikeling_DataRecording_frame)
+        self.Spikeling_DataRecording_Folder_frame.setObjectName(u"Spikeling_DataRecording_Folder_frame")
+        self.Spikeling_DataRecording_Folder_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_Folder_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_56 = QHBoxLayout(self.Spikeling_DataRecording_Folder_frame)
         self.horizontalLayout_56.setSpacing(10)
         self.horizontalLayout_56.setObjectName(u"horizontalLayout_56")
         self.horizontalLayout_56.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_DataRecording_SelectRecordFolder_label = QLabel(self.Spikeling_DataRecording_directory_frame)
-        self.Spikeling_DataRecording_SelectRecordFolder_label.setObjectName(u"Spikeling_DataRecording_SelectRecordFolder_label")
+        self.Spikeling_DataRecording_Folder_label_frame = QFrame(self.Spikeling_DataRecording_Folder_frame)
+        self.Spikeling_DataRecording_Folder_label_frame.setObjectName(u"Spikeling_DataRecording_Folder_label_frame")
+        self.Spikeling_DataRecording_Folder_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_Folder_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_27 = QVBoxLayout(self.Spikeling_DataRecording_Folder_label_frame)
+        self.verticalLayout_27.setSpacing(0)
+        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
+        self.verticalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_Folder_label = QLabel(self.Spikeling_DataRecording_Folder_label_frame)
+        self.Spikeling_DataRecording_Folder_label.setObjectName(u"Spikeling_DataRecording_Folder_label")
+        self.Spikeling_DataRecording_Folder_label.setMinimumSize(QSize(100, 0))
+        self.Spikeling_DataRecording_Folder_label.setMaximumSize(QSize(100, 16777215))
+        font5 = QFont()
+        font5.setPointSize(10)
+        font5.setBold(False)
+        self.Spikeling_DataRecording_Folder_label.setFont(font5)
 
-        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_SelectRecordFolder_label)
-
-        self.Spikeling_DataRecording_RecordFolder_value = QLineEdit(self.Spikeling_DataRecording_directory_frame)
-        self.Spikeling_DataRecording_RecordFolder_value.setObjectName(u"Spikeling_DataRecording_RecordFolder_value")
-        self.Spikeling_DataRecording_RecordFolder_value.setEnabled(False)
-
-        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_RecordFolder_value)
-
-        self.Spikeling_DataRecording_RecordFolderDir_pushButton = QPushButton(self.Spikeling_DataRecording_directory_frame)
-        self.Spikeling_DataRecording_RecordFolderDir_pushButton.setObjectName(u"Spikeling_DataRecording_RecordFolderDir_pushButton")
-        self.Spikeling_DataRecording_RecordFolderDir_pushButton.setMinimumSize(QSize(150, 0))
-        self.Spikeling_DataRecording_RecordFolderDir_pushButton.setFont(font4)
-
-        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_RecordFolderDir_pushButton)
+        self.verticalLayout_27.addWidget(self.Spikeling_DataRecording_Folder_label)
 
 
-        self.verticalLayout_28.addWidget(self.Spikeling_DataRecording_directory_frame)
+        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_Folder_label_frame)
 
-        self.Spikeling_DataRecording_record_frame = QFrame(self.Spikeling_DataRecording_right_frame)
+        self.Spikeling_DataRecording_Folder_lineEdit_frame = QFrame(self.Spikeling_DataRecording_Folder_frame)
+        self.Spikeling_DataRecording_Folder_lineEdit_frame.setObjectName(u"Spikeling_DataRecording_Folder_lineEdit_frame")
+        self.Spikeling_DataRecording_Folder_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_Folder_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_335 = QVBoxLayout(self.Spikeling_DataRecording_Folder_lineEdit_frame)
+        self.verticalLayout_335.setSpacing(0)
+        self.verticalLayout_335.setObjectName(u"verticalLayout_335")
+        self.verticalLayout_335.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_Folder_lineEdit = QLineEdit(self.Spikeling_DataRecording_Folder_lineEdit_frame)
+        self.Spikeling_DataRecording_Folder_lineEdit.setObjectName(u"Spikeling_DataRecording_Folder_lineEdit")
+        self.Spikeling_DataRecording_Folder_lineEdit.setEnabled(False)
+
+        self.verticalLayout_335.addWidget(self.Spikeling_DataRecording_Folder_lineEdit)
+
+
+        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_Folder_lineEdit_frame)
+
+        self.Spikeling_DataRecording_Folder_pushButton_frame = QFrame(self.Spikeling_DataRecording_Folder_frame)
+        self.Spikeling_DataRecording_Folder_pushButton_frame.setObjectName(u"Spikeling_DataRecording_Folder_pushButton_frame")
+        self.Spikeling_DataRecording_Folder_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_Folder_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_339 = QVBoxLayout(self.Spikeling_DataRecording_Folder_pushButton_frame)
+        self.verticalLayout_339.setSpacing(0)
+        self.verticalLayout_339.setObjectName(u"verticalLayout_339")
+        self.verticalLayout_339.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_Folder_pushButton = QPushButton(self.Spikeling_DataRecording_Folder_pushButton_frame)
+        self.Spikeling_DataRecording_Folder_pushButton.setObjectName(u"Spikeling_DataRecording_Folder_pushButton")
+        self.Spikeling_DataRecording_Folder_pushButton.setMinimumSize(QSize(150, 0))
+        self.Spikeling_DataRecording_Folder_pushButton.setFont(font4)
+
+        self.verticalLayout_339.addWidget(self.Spikeling_DataRecording_Folder_pushButton)
+
+
+        self.horizontalLayout_56.addWidget(self.Spikeling_DataRecording_Folder_pushButton_frame)
+
+
+        self.verticalLayout_28.addWidget(self.Spikeling_DataRecording_Folder_frame)
+
+        self.Spikeling_DataRecording_File_frame = QFrame(self.Spikeling_DataRecording_frame)
+        self.Spikeling_DataRecording_File_frame.setObjectName(u"Spikeling_DataRecording_File_frame")
+        self.Spikeling_DataRecording_File_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_File_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_199 = QHBoxLayout(self.Spikeling_DataRecording_File_frame)
+        self.horizontalLayout_199.setSpacing(10)
+        self.horizontalLayout_199.setObjectName(u"horizontalLayout_199")
+        self.horizontalLayout_199.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_File_label_frame = QFrame(self.Spikeling_DataRecording_File_frame)
+        self.Spikeling_DataRecording_File_label_frame.setObjectName(u"Spikeling_DataRecording_File_label_frame")
+        self.Spikeling_DataRecording_File_label_frame.setMinimumSize(QSize(100, 0))
+        self.Spikeling_DataRecording_File_label_frame.setMaximumSize(QSize(100, 16777215))
+        self.Spikeling_DataRecording_File_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_File_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_315 = QVBoxLayout(self.Spikeling_DataRecording_File_label_frame)
+        self.verticalLayout_315.setSpacing(0)
+        self.verticalLayout_315.setObjectName(u"verticalLayout_315")
+        self.verticalLayout_315.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_File_label = QLabel(self.Spikeling_DataRecording_File_label_frame)
+        self.Spikeling_DataRecording_File_label.setObjectName(u"Spikeling_DataRecording_File_label")
+        font6 = QFont()
+        font6.setPointSize(10)
+        self.Spikeling_DataRecording_File_label.setFont(font6)
+
+        self.verticalLayout_315.addWidget(self.Spikeling_DataRecording_File_label)
+
+
+        self.horizontalLayout_199.addWidget(self.Spikeling_DataRecording_File_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.Spikeling_DataRecording_File_lineEdit_frame = QFrame(self.Spikeling_DataRecording_File_frame)
+        self.Spikeling_DataRecording_File_lineEdit_frame.setObjectName(u"Spikeling_DataRecording_File_lineEdit_frame")
+        self.Spikeling_DataRecording_File_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_File_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_320 = QVBoxLayout(self.Spikeling_DataRecording_File_lineEdit_frame)
+        self.verticalLayout_320.setSpacing(0)
+        self.verticalLayout_320.setObjectName(u"verticalLayout_320")
+        self.verticalLayout_320.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_File_lineEdit = QLineEdit(self.Spikeling_DataRecording_File_lineEdit_frame)
+        self.Spikeling_DataRecording_File_lineEdit.setObjectName(u"Spikeling_DataRecording_File_lineEdit")
+
+        self.verticalLayout_320.addWidget(self.Spikeling_DataRecording_File_lineEdit)
+
+
+        self.horizontalLayout_199.addWidget(self.Spikeling_DataRecording_File_lineEdit_frame)
+
+        self.Spikeling_DataRecording_File_csvlabel_frame = QFrame(self.Spikeling_DataRecording_File_frame)
+        self.Spikeling_DataRecording_File_csvlabel_frame.setObjectName(u"Spikeling_DataRecording_File_csvlabel_frame")
+        self.Spikeling_DataRecording_File_csvlabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_File_csvlabel_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_330 = QVBoxLayout(self.Spikeling_DataRecording_File_csvlabel_frame)
+        self.verticalLayout_330.setSpacing(0)
+        self.verticalLayout_330.setObjectName(u"verticalLayout_330")
+        self.verticalLayout_330.setContentsMargins(0, 0, 0, 0)
+        self.Spikeling_DataRecording_File_csvlabel = QLabel(self.Spikeling_DataRecording_File_csvlabel_frame)
+        self.Spikeling_DataRecording_File_csvlabel.setObjectName(u"Spikeling_DataRecording_File_csvlabel")
+        self.Spikeling_DataRecording_File_csvlabel.setFont(font6)
+
+        self.verticalLayout_330.addWidget(self.Spikeling_DataRecording_File_csvlabel)
+
+
+        self.horizontalLayout_199.addWidget(self.Spikeling_DataRecording_File_csvlabel_frame)
+
+        self.Spikeling_DataRecording_File_empty_frame = QFrame(self.Spikeling_DataRecording_File_frame)
+        self.Spikeling_DataRecording_File_empty_frame.setObjectName(u"Spikeling_DataRecording_File_empty_frame")
+        self.Spikeling_DataRecording_File_empty_frame.setMinimumSize(QSize(150, 0))
+        self.Spikeling_DataRecording_File_empty_frame.setMaximumSize(QSize(150, 16777215))
+        self.Spikeling_DataRecording_File_empty_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Spikeling_DataRecording_File_empty_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_325 = QVBoxLayout(self.Spikeling_DataRecording_File_empty_frame)
+        self.verticalLayout_325.setSpacing(0)
+        self.verticalLayout_325.setObjectName(u"verticalLayout_325")
+        self.verticalLayout_325.setContentsMargins(0, 0, 0, 0)
+
+        self.horizontalLayout_199.addWidget(self.Spikeling_DataRecording_File_empty_frame)
+
+
+        self.verticalLayout_28.addWidget(self.Spikeling_DataRecording_File_frame)
+
+        self.Spikeling_DataRecording_record_frame = QFrame(self.Spikeling_DataRecording_frame)
         self.Spikeling_DataRecording_record_frame.setObjectName(u"Spikeling_DataRecording_record_frame")
         self.Spikeling_DataRecording_record_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Spikeling_DataRecording_record_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_57 = QHBoxLayout(self.Spikeling_DataRecording_record_frame)
-        self.horizontalLayout_57.setSpacing(0)
+        self.horizontalLayout_57.setSpacing(10)
         self.horizontalLayout_57.setObjectName(u"horizontalLayout_57")
         self.horizontalLayout_57.setContentsMargins(0, 0, 0, 0)
-        self.Spikeling_SelectedFolderLabel = QLabel(self.Spikeling_DataRecording_record_frame)
-        self.Spikeling_SelectedFolderLabel.setObjectName(u"Spikeling_SelectedFolderLabel")
-        sizePolicy3.setHeightForWidth(self.Spikeling_SelectedFolderLabel.sizePolicy().hasHeightForWidth())
-        self.Spikeling_SelectedFolderLabel.setSizePolicy(sizePolicy3)
-        self.Spikeling_SelectedFolderLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.Spikeling_DataRecording_Record_label = QLabel(self.Spikeling_DataRecording_record_frame)
+        self.Spikeling_DataRecording_Record_label.setObjectName(u"Spikeling_DataRecording_Record_label")
+        sizePolicy3.setHeightForWidth(self.Spikeling_DataRecording_Record_label.sizePolicy().hasHeightForWidth())
+        self.Spikeling_DataRecording_Record_label.setSizePolicy(sizePolicy3)
+        self.Spikeling_DataRecording_Record_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.horizontalLayout_57.addWidget(self.Spikeling_SelectedFolderLabel)
+        self.horizontalLayout_57.addWidget(self.Spikeling_DataRecording_Record_label)
 
         self.Spikeling_DataRecording_Record_pushButton = QPushButton(self.Spikeling_DataRecording_record_frame)
         self.Spikeling_DataRecording_Record_pushButton.setObjectName(u"Spikeling_DataRecording_Record_pushButton")
         sizePolicy6.setHeightForWidth(self.Spikeling_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
         self.Spikeling_DataRecording_Record_pushButton.setSizePolicy(sizePolicy6)
         self.Spikeling_DataRecording_Record_pushButton.setMinimumSize(QSize(150, 0))
-        font5 = QFont()
-        font5.setPointSize(12)
-        font5.setBold(True)
-        self.Spikeling_DataRecording_Record_pushButton.setFont(font5)
+        font7 = QFont()
+        font7.setPointSize(12)
+        font7.setBold(True)
+        self.Spikeling_DataRecording_Record_pushButton.setFont(font7)
         self.Spikeling_DataRecording_Record_pushButton.setStyleSheet(u"color: rgb(250, 250, 250);\n"
 "background-color: rgb(220, 50, 47);")
         self.Spikeling_DataRecording_Record_pushButton.setCheckable(True)
@@ -1842,7 +1939,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_28.addWidget(self.Spikeling_DataRecording_record_frame)
 
 
-        self.horizontalLayout_52.addWidget(self.Spikeling_DataRecording_right_frame)
+        self.horizontalLayout_52.addWidget(self.Spikeling_DataRecording_frame)
 
 
         self.horizontalLayout_51.addWidget(self.Spikeling_DataRecording_box)
@@ -1968,8 +2065,6 @@ class Ui_Spikeling(object):
         self.Spikeling_StimFre_Layout.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_StimFre_Label = QLabel(self.Spikeling_StimFre_Label_frame)
         self.Spikeling_StimFre_Label.setObjectName(u"Spikeling_StimFre_Label")
-        font6 = QFont()
-        font6.setPointSize(10)
         self.Spikeling_StimFre_Label.setFont(font6)
 
         self.Spikeling_StimFre_Layout.addWidget(self.Spikeling_StimFre_Label, 0, Qt.AlignmentFlag.AlignLeft)
@@ -2516,10 +2611,10 @@ class Ui_Spikeling(object):
         self.verticalLayout_137.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_CurrentClamp_label = QLabel(self.Spikeling_CurrentClamp_label_frame)
         self.Spikeling_CurrentClamp_label.setObjectName(u"Spikeling_CurrentClamp_label")
-        font7 = QFont()
-        font7.setPointSize(8)
-        font7.setBold(True)
-        self.Spikeling_CurrentClamp_label.setFont(font7)
+        font8 = QFont()
+        font8.setPointSize(8)
+        font8.setBold(True)
+        self.Spikeling_CurrentClamp_label.setFont(font8)
         self.Spikeling_CurrentClamp_label.setStyleSheet(u"color: rgb(133, 153, 0);")
 
         self.verticalLayout_137.addWidget(self.Spikeling_CurrentClamp_label)
@@ -2537,7 +2632,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_138.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_VoltageClamp_label = QLabel(self.Spikeling_VoltageClamp_label_frame)
         self.Spikeling_VoltageClamp_label.setObjectName(u"Spikeling_VoltageClamp_label")
-        self.Spikeling_VoltageClamp_label.setFont(font7)
+        self.Spikeling_VoltageClamp_label.setFont(font8)
         self.Spikeling_VoltageClamp_label.setStyleSheet(u"color: rgb(88, 110, 117);")
 
         self.verticalLayout_138.addWidget(self.Spikeling_VoltageClamp_label)
@@ -3313,10 +3408,10 @@ class Ui_Spikeling(object):
         self.verticalLayout_299.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_membrane_Title = QLabel(self.Spikeling_Pharmacology_membrane_Title_frame)
         self.Spikeling_Pharmacology_membrane_Title.setObjectName(u"Spikeling_Pharmacology_membrane_Title")
-        font8 = QFont()
-        font8.setPointSize(9)
-        font8.setBold(True)
-        self.Spikeling_Pharmacology_membrane_Title.setFont(font8)
+        font9 = QFont()
+        font9.setPointSize(9)
+        font9.setBold(True)
+        self.Spikeling_Pharmacology_membrane_Title.setFont(font9)
 
         self.verticalLayout_299.addWidget(self.Spikeling_Pharmacology_membrane_Title)
 
@@ -3361,9 +3456,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_33.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_TTX_Label = QLabel(self.Spikeling_Pharmacology_TTX_Label_frame)
         self.Spikeling_Pharmacology_TTX_Label.setObjectName(u"Spikeling_Pharmacology_TTX_Label")
-        font9 = QFont()
-        font9.setBold(True)
-        self.Spikeling_Pharmacology_TTX_Label.setFont(font9)
+        font10 = QFont()
+        font10.setBold(True)
+        self.Spikeling_Pharmacology_TTX_Label.setFont(font10)
 
         self.verticalLayout_33.addWidget(self.Spikeling_Pharmacology_TTX_Label)
 
@@ -3380,9 +3475,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_304.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_TTX_label = QLabel(self.Spikeling_Pharmacology_TTX_label_frame)
         self.Spikeling_Pharmacology_TTX_label.setObjectName(u"Spikeling_Pharmacology_TTX_label")
-        font10 = QFont()
-        font10.setPointSize(7)
-        self.Spikeling_Pharmacology_TTX_label.setFont(font10)
+        font11 = QFont()
+        font11.setPointSize(7)
+        self.Spikeling_Pharmacology_TTX_label.setFont(font11)
         self.Spikeling_Pharmacology_TTX_label.setScaledContents(True)
         self.Spikeling_Pharmacology_TTX_label.setWordWrap(True)
 
@@ -3480,7 +3575,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_191.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_TEA_Label = QLabel(self.Spikeling_Pharmacology_TEA_Label_frame)
         self.Spikeling_Pharmacology_TEA_Label.setObjectName(u"Spikeling_Pharmacology_TEA_Label")
-        self.Spikeling_Pharmacology_TEA_Label.setFont(font9)
+        self.Spikeling_Pharmacology_TEA_Label.setFont(font10)
 
         self.horizontalLayout_191.addWidget(self.Spikeling_Pharmacology_TEA_Label)
 
@@ -3497,7 +3592,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_102.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_TEA_label = QLabel(self.Spikeling_Pharmacology_TEA_label_frame)
         self.Spikeling_Pharmacology_TEA_label.setObjectName(u"Spikeling_Pharmacology_TEA_label")
-        self.Spikeling_Pharmacology_TEA_label.setFont(font10)
+        self.Spikeling_Pharmacology_TEA_label.setFont(font11)
         self.Spikeling_Pharmacology_TEA_label.setScaledContents(True)
         self.Spikeling_Pharmacology_TEA_label.setWordWrap(True)
 
@@ -3592,7 +3687,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_306.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_4AP_Label = QLabel(self.Spikeling_Pharmacology_4AP_Label_frame)
         self.Spikeling_Pharmacology_4AP_Label.setObjectName(u"Spikeling_Pharmacology_4AP_Label")
-        self.Spikeling_Pharmacology_4AP_Label.setFont(font9)
+        self.Spikeling_Pharmacology_4AP_Label.setFont(font10)
 
         self.verticalLayout_306.addWidget(self.Spikeling_Pharmacology_4AP_Label)
 
@@ -3609,7 +3704,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_307.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_4AP_label = QLabel(self.Spikeling_Pharmacology_4AP_label_frame)
         self.Spikeling_Pharmacology_4AP_label.setObjectName(u"Spikeling_Pharmacology_4AP_label")
-        self.Spikeling_Pharmacology_4AP_label.setFont(font10)
+        self.Spikeling_Pharmacology_4AP_label.setFont(font11)
         self.Spikeling_Pharmacology_4AP_label.setScaledContents(True)
         self.Spikeling_Pharmacology_4AP_label.setWordWrap(True)
 
@@ -3704,7 +3799,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_311.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_Apamin_Label = QLabel(self.Spikeling_Pharmacology_Apamin_Label_frame)
         self.Spikeling_Pharmacology_Apamin_Label.setObjectName(u"Spikeling_Pharmacology_Apamin_Label")
-        self.Spikeling_Pharmacology_Apamin_Label.setFont(font9)
+        self.Spikeling_Pharmacology_Apamin_Label.setFont(font10)
 
         self.verticalLayout_311.addWidget(self.Spikeling_Pharmacology_Apamin_Label)
 
@@ -3721,7 +3816,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_312.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_Apamin_label = QLabel(self.Spikeling_Pharmacology_Apamin_label_frame)
         self.Spikeling_Pharmacology_Apamin_label.setObjectName(u"Spikeling_Pharmacology_Apamin_label")
-        self.Spikeling_Pharmacology_Apamin_label.setFont(font10)
+        self.Spikeling_Pharmacology_Apamin_label.setFont(font11)
         self.Spikeling_Pharmacology_Apamin_label.setScaledContents(True)
         self.Spikeling_Pharmacology_Apamin_label.setWordWrap(True)
 
@@ -3808,7 +3903,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_294.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_postsynaptic_Title = QLabel(self.Spikeling_Pharmacology_postsynaptic_Title_frame)
         self.Spikeling_Pharmacology_postsynaptic_Title.setObjectName(u"Spikeling_Pharmacology_postsynaptic_Title")
-        self.Spikeling_Pharmacology_postsynaptic_Title.setFont(font8)
+        self.Spikeling_Pharmacology_postsynaptic_Title.setFont(font9)
 
         self.verticalLayout_294.addWidget(self.Spikeling_Pharmacology_postsynaptic_Title)
 
@@ -3853,7 +3948,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_332.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_NBQX_Label = QLabel(self.Spikeling_Pharmacology_NBQX_Label_frame)
         self.Spikeling_Pharmacology_NBQX_Label.setObjectName(u"Spikeling_Pharmacology_NBQX_Label")
-        self.Spikeling_Pharmacology_NBQX_Label.setFont(font9)
+        self.Spikeling_Pharmacology_NBQX_Label.setFont(font10)
 
         self.verticalLayout_332.addWidget(self.Spikeling_Pharmacology_NBQX_Label)
 
@@ -3870,7 +3965,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_333.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_NBQX_label = QLabel(self.Spikeling_Pharmacology_NBQX_label_frame)
         self.Spikeling_Pharmacology_NBQX_label.setObjectName(u"Spikeling_Pharmacology_NBQX_label")
-        self.Spikeling_Pharmacology_NBQX_label.setFont(font10)
+        self.Spikeling_Pharmacology_NBQX_label.setFont(font11)
         self.Spikeling_Pharmacology_NBQX_label.setScaledContents(True)
         self.Spikeling_Pharmacology_NBQX_label.setWordWrap(True)
 
@@ -3965,7 +4060,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_322.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_APV_Label = QLabel(self.Spikeling_Pharmacology_APV_Label_frame)
         self.Spikeling_Pharmacology_APV_Label.setObjectName(u"Spikeling_Pharmacology_APV_Label")
-        self.Spikeling_Pharmacology_APV_Label.setFont(font9)
+        self.Spikeling_Pharmacology_APV_Label.setFont(font10)
 
         self.verticalLayout_322.addWidget(self.Spikeling_Pharmacology_APV_Label)
 
@@ -3982,7 +4077,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_323.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_APV_label = QLabel(self.Spikeling_Pharmacology_APV_label_frame)
         self.Spikeling_Pharmacology_APV_label.setObjectName(u"Spikeling_Pharmacology_APV_label")
-        self.Spikeling_Pharmacology_APV_label.setFont(font10)
+        self.Spikeling_Pharmacology_APV_label.setFont(font11)
         self.Spikeling_Pharmacology_APV_label.setScaledContents(True)
         self.Spikeling_Pharmacology_APV_label.setWordWrap(True)
 
@@ -4079,7 +4174,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_327.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_Gabazine_Label = QLabel(self.Spikeling_Pharmacology_Gabazine_Label_frame)
         self.Spikeling_Pharmacology_Gabazine_Label.setObjectName(u"Spikeling_Pharmacology_Gabazine_Label")
-        self.Spikeling_Pharmacology_Gabazine_Label.setFont(font9)
+        self.Spikeling_Pharmacology_Gabazine_Label.setFont(font10)
 
         self.verticalLayout_327.addWidget(self.Spikeling_Pharmacology_Gabazine_Label)
 
@@ -4096,7 +4191,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_328.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_Gabazine_label = QLabel(self.Spikeling_Pharmacology_Gabazine_label_frame)
         self.Spikeling_Pharmacology_Gabazine_label.setObjectName(u"Spikeling_Pharmacology_Gabazine_label")
-        self.Spikeling_Pharmacology_Gabazine_label.setFont(font10)
+        self.Spikeling_Pharmacology_Gabazine_label.setFont(font11)
         self.Spikeling_Pharmacology_Gabazine_label.setScaledContents(True)
         self.Spikeling_Pharmacology_Gabazine_label.setWordWrap(True)
 
@@ -4182,7 +4277,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_337.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_presynaptic_Title = QLabel(self.Spikeling_Pharmacology_presynaptic_Title_frame)
         self.Spikeling_Pharmacology_presynaptic_Title.setObjectName(u"Spikeling_Pharmacology_presynaptic_Title")
-        self.Spikeling_Pharmacology_presynaptic_Title.setFont(font8)
+        self.Spikeling_Pharmacology_presynaptic_Title.setFont(font9)
 
         self.verticalLayout_337.addWidget(self.Spikeling_Pharmacology_presynaptic_Title)
 
@@ -4227,7 +4322,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_317.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_GVIA_Label = QLabel(self.Spikeling_Pharmacology_GVIA_Label_frame)
         self.Spikeling_Pharmacology_GVIA_Label.setObjectName(u"Spikeling_Pharmacology_GVIA_Label")
-        self.Spikeling_Pharmacology_GVIA_Label.setFont(font9)
+        self.Spikeling_Pharmacology_GVIA_Label.setFont(font10)
 
         self.verticalLayout_317.addWidget(self.Spikeling_Pharmacology_GVIA_Label)
 
@@ -4244,7 +4339,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_318.setContentsMargins(0, 0, 0, 0)
         self.Spikeling_Pharmacology_GVIA_label = QLabel(self.Spikeling_Pharmacology_GVIA_label_frame)
         self.Spikeling_Pharmacology_GVIA_label.setObjectName(u"Spikeling_Pharmacology_GVIA_label")
-        self.Spikeling_Pharmacology_GVIA_label.setFont(font10)
+        self.Spikeling_Pharmacology_GVIA_label.setFont(font11)
         self.Spikeling_Pharmacology_GVIA_label.setScaledContents(True)
         self.Spikeling_Pharmacology_GVIA_label.setWordWrap(True)
 
@@ -5212,9 +5307,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_287.setContentsMargins(5, 0, 5, 0)
         self.Spikeling_Synapse2_Release_label_frame = QFrame(self.Spikeling_Synapse2_Release_frame)
         self.Spikeling_Synapse2_Release_label_frame.setObjectName(u"Spikeling_Synapse2_Release_label_frame")
-        font11 = QFont()
-        font11.setPointSize(5)
-        self.Spikeling_Synapse2_Release_label_frame.setFont(font11)
+        font12 = QFont()
+        font12.setPointSize(5)
+        self.Spikeling_Synapse2_Release_label_frame.setFont(font12)
         self.Spikeling_Synapse2_Release_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Spikeling_Synapse2_Release_label_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_269 = QVBoxLayout(self.Spikeling_Synapse2_Release_label_frame)
@@ -5522,10 +5617,10 @@ class Ui_Spikeling(object):
         self.horizontalLayout_487.setContentsMargins(0, 0, 0, 0)
         self.Emulator_NeuronModeLabel = QLabel(self.Emulator_top_subframe2)
         self.Emulator_NeuronModeLabel.setObjectName(u"Emulator_NeuronModeLabel")
-        font12 = QFont()
-        font12.setPointSize(14)
-        font12.setBold(True)
-        self.Emulator_NeuronModeLabel.setFont(font12)
+        font13 = QFont()
+        font13.setPointSize(14)
+        font13.setBold(True)
+        self.Emulator_NeuronModeLabel.setFont(font13)
         self.Emulator_NeuronModeLabel.setStyleSheet(u"")
 
         self.horizontalLayout_487.addWidget(self.Emulator_NeuronModeLabel)
@@ -5900,7 +5995,7 @@ class Ui_Spikeling(object):
         sizePolicy6.setHeightForWidth(self.Emulator_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
         self.Emulator_DataRecording_Record_pushButton.setSizePolicy(sizePolicy6)
         self.Emulator_DataRecording_Record_pushButton.setMinimumSize(QSize(150, 0))
-        self.Emulator_DataRecording_Record_pushButton.setFont(font5)
+        self.Emulator_DataRecording_Record_pushButton.setFont(font7)
         self.Emulator_DataRecording_Record_pushButton.setStyleSheet(u"color: rgb(250, 250, 250);\n"
 "background-color: rgb(220, 50, 47);")
 
@@ -7789,9 +7884,9 @@ class Ui_Spikeling(object):
         self.verticalLayout_223.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn1_Mode_label_frame_2 = QLabel(self.Emulator_Syn1_Mode_label_frame)
         self.Emulator_Syn1_Mode_label_frame_2.setObjectName(u"Emulator_Syn1_Mode_label_frame_2")
-        font13 = QFont()
-        font13.setPointSize(14)
-        self.Emulator_Syn1_Mode_label_frame_2.setFont(font13)
+        font14 = QFont()
+        font14.setPointSize(14)
+        self.Emulator_Syn1_Mode_label_frame_2.setFont(font14)
         self.Emulator_Syn1_Mode_label_frame_2.setStyleSheet(u"color: rgb(203, 75, 22);")
 
         self.verticalLayout_223.addWidget(self.Emulator_Syn1_Mode_label_frame_2, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -8733,7 +8828,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_211.setContentsMargins(0, 0, 0, 0)
         self.Emulator_Syn2_Mode_label_frame_2 = QLabel(self.Emulator_Syn2_Mode_label_frame)
         self.Emulator_Syn2_Mode_label_frame_2.setObjectName(u"Emulator_Syn2_Mode_label_frame_2")
-        self.Emulator_Syn2_Mode_label_frame_2.setFont(font13)
+        self.Emulator_Syn2_Mode_label_frame_2.setFont(font14)
         self.Emulator_Syn2_Mode_label_frame_2.setStyleSheet(u"color: rgb(181, 137, 0);")
 
         self.verticalLayout_211.addWidget(self.Emulator_Syn2_Mode_label_frame_2, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -9981,9 +10076,9 @@ class Ui_Spikeling(object):
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setSizePolicy(sizePolicy5)
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setMinimumSize(QSize(0, 150))
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setMaximumSize(QSize(16777215, 150))
-        font14 = QFont()
-        font14.setPointSize(11)
-        self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setFont(font14)
+        font15 = QFont()
+        font15.setPointSize(11)
+        self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setFont(font15)
         self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2.setStyleSheet(u"background-color: rgb(0, 30, 38);")
 
         self.verticalLayout_49.addWidget(self.Spikeling_DataAnalysis_Oscilloscope_widget1_2_2)
@@ -11108,7 +11203,7 @@ class Ui_Spikeling(object):
         self.Imaging_Source_comboBox.setObjectName(u"Imaging_Source_comboBox")
         self.Imaging_Source_comboBox.setMinimumSize(QSize(250, 0))
         self.Imaging_Source_comboBox.setMaximumSize(QSize(250, 16777215))
-        self.Imaging_Source_comboBox.setFont(font5)
+        self.Imaging_Source_comboBox.setFont(font7)
         self.Imaging_Source_comboBox.setMouseTracking(True)
         self.Imaging_Source_comboBox.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
         self.Imaging_Source_comboBox.setAutoFillBackground(False)
@@ -11400,7 +11495,7 @@ class Ui_Spikeling(object):
         sizePolicy6.setHeightForWidth(self.Imaging_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
         self.Imaging_DataRecording_Record_pushButton.setSizePolicy(sizePolicy6)
         self.Imaging_DataRecording_Record_pushButton.setMinimumSize(QSize(150, 0))
-        self.Imaging_DataRecording_Record_pushButton.setFont(font5)
+        self.Imaging_DataRecording_Record_pushButton.setFont(font7)
         self.Imaging_DataRecording_Record_pushButton.setStyleSheet(u"color: rgb(250, 250, 250);\n"
 "background-color: rgb(220, 50, 47);")
 
@@ -11716,7 +11811,7 @@ class Ui_Spikeling(object):
         self.Imaging_GECI_ReadingsAffinity_Value.setObjectName(u"Imaging_GECI_ReadingsAffinity_Value")
         self.Imaging_GECI_ReadingsAffinity_Value.setMinimumSize(QSize(50, 0))
         self.Imaging_GECI_ReadingsAffinity_Value.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_GECI_ReadingsAffinity_Value.setFont(font7)
+        self.Imaging_GECI_ReadingsAffinity_Value.setFont(font8)
         self.Imaging_GECI_ReadingsAffinity_Value.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_310.addWidget(self.Imaging_GECI_ReadingsAffinity_Value)
@@ -11742,7 +11837,7 @@ class Ui_Spikeling(object):
         self.Imaging_GECI_ReadingsKd_Value.setObjectName(u"Imaging_GECI_ReadingsKd_Value")
         self.Imaging_GECI_ReadingsKd_Value.setMinimumSize(QSize(50, 0))
         self.Imaging_GECI_ReadingsKd_Value.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_GECI_ReadingsKd_Value.setFont(font7)
+        self.Imaging_GECI_ReadingsKd_Value.setFont(font8)
         self.Imaging_GECI_ReadingsKd_Value.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_312.addWidget(self.Imaging_GECI_ReadingsKd_Value)
@@ -11768,7 +11863,7 @@ class Ui_Spikeling(object):
         self.Imaging_GECI_ReadingsRise_Value.setObjectName(u"Imaging_GECI_ReadingsRise_Value")
         self.Imaging_GECI_ReadingsRise_Value.setMinimumSize(QSize(50, 0))
         self.Imaging_GECI_ReadingsRise_Value.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_GECI_ReadingsRise_Value.setFont(font7)
+        self.Imaging_GECI_ReadingsRise_Value.setFont(font8)
         self.Imaging_GECI_ReadingsRise_Value.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_313.addWidget(self.Imaging_GECI_ReadingsRise_Value)
@@ -11794,7 +11889,7 @@ class Ui_Spikeling(object):
         self.Imaging_GECI_ReadingsDecay_Value.setObjectName(u"Imaging_GECI_ReadingsDecay_Value")
         self.Imaging_GECI_ReadingsDecay_Value.setMinimumSize(QSize(50, 0))
         self.Imaging_GECI_ReadingsDecay_Value.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_GECI_ReadingsDecay_Value.setFont(font7)
+        self.Imaging_GECI_ReadingsDecay_Value.setFont(font8)
         self.Imaging_GECI_ReadingsDecay_Value.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_363.addWidget(self.Imaging_GECI_ReadingsDecay_Value)
@@ -11820,7 +11915,7 @@ class Ui_Spikeling(object):
         self.Imaging_GECI_ReadingsDFF_Value.setObjectName(u"Imaging_GECI_ReadingsDFF_Value")
         self.Imaging_GECI_ReadingsDFF_Value.setMinimumSize(QSize(50, 0))
         self.Imaging_GECI_ReadingsDFF_Value.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_GECI_ReadingsDFF_Value.setFont(font7)
+        self.Imaging_GECI_ReadingsDFF_Value.setFont(font8)
         self.Imaging_GECI_ReadingsDFF_Value.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_422.addWidget(self.Imaging_GECI_ReadingsDFF_Value)
@@ -13139,9 +13234,9 @@ class Ui_Spikeling(object):
         self.Imaging_IndRise_Toggle_frame = QFrame(self.Imaging_IndRise_Title_frame)
         self.Imaging_IndRise_Toggle_frame.setObjectName(u"Imaging_IndRise_Toggle_frame")
         self.Imaging_IndRise_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        font15 = QFont()
-        font15.setPointSize(1)
-        self.Imaging_IndRise_Toggle_frame.setFont(font15)
+        font16 = QFont()
+        font16.setPointSize(1)
+        self.Imaging_IndRise_Toggle_frame.setFont(font16)
         self.Imaging_IndRise_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_IndRise_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_IndRise_Toggle_layout = QHBoxLayout(self.Imaging_IndRise_Toggle_frame)
@@ -13272,7 +13367,7 @@ class Ui_Spikeling(object):
         self.Imaging_IndDecay_Toggle_frame = QFrame(self.Imaging_IndDecay_Title_frame)
         self.Imaging_IndDecay_Toggle_frame.setObjectName(u"Imaging_IndDecay_Toggle_frame")
         self.Imaging_IndDecay_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_IndDecay_Toggle_frame.setFont(font15)
+        self.Imaging_IndDecay_Toggle_frame.setFont(font16)
         self.Imaging_IndDecay_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_IndDecay_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_IndDecay_Toggle_layout = QHBoxLayout(self.Imaging_IndDecay_Toggle_frame)
@@ -13401,7 +13496,7 @@ class Ui_Spikeling(object):
         self.Imaging_DFF_Toggle_frame = QFrame(self.Imaging_DFF_Title_frame)
         self.Imaging_DFF_Toggle_frame.setObjectName(u"Imaging_DFF_Toggle_frame")
         self.Imaging_DFF_Toggle_frame.setMaximumSize(QSize(50, 16777215))
-        self.Imaging_DFF_Toggle_frame.setFont(font15)
+        self.Imaging_DFF_Toggle_frame.setFont(font16)
         self.Imaging_DFF_Toggle_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_DFF_Toggle_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.Imaging_DFF_Toggle_layout = QHBoxLayout(self.Imaging_DFF_Toggle_frame)
@@ -15212,7 +15307,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_Source_comboBox.setObjectName(u"ExtraCellular_Source_comboBox")
         self.ExtraCellular_Source_comboBox.setMinimumSize(QSize(250, 0))
         self.ExtraCellular_Source_comboBox.setMaximumSize(QSize(250, 16777215))
-        self.ExtraCellular_Source_comboBox.setFont(font5)
+        self.ExtraCellular_Source_comboBox.setFont(font7)
         self.ExtraCellular_Source_comboBox.setMouseTracking(True)
         self.ExtraCellular_Source_comboBox.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
         self.ExtraCellular_Source_comboBox.setAutoFillBackground(False)
@@ -15569,7 +15664,7 @@ class Ui_Spikeling(object):
         sizePolicy6.setHeightForWidth(self.ExtraCellular_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
         self.ExtraCellular_DataRecording_Record_pushButton.setSizePolicy(sizePolicy6)
         self.ExtraCellular_DataRecording_Record_pushButton.setMinimumSize(QSize(150, 0))
-        self.ExtraCellular_DataRecording_Record_pushButton.setFont(font5)
+        self.ExtraCellular_DataRecording_Record_pushButton.setFont(font7)
         self.ExtraCellular_DataRecording_Record_pushButton.setStyleSheet(u"color: rgb(250, 250, 250);\n"
 "background-color: rgb(220, 50, 47);")
         self.ExtraCellular_DataRecording_Record_pushButton.setCheckable(True)
@@ -15623,7 +15718,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_207.setContentsMargins(5, 0, 5, 0)
         self.ExtraCellular_Tetrode_label = QLabel(self.ExtraCellular_Tetrode_frame)
         self.ExtraCellular_Tetrode_label.setObjectName(u"ExtraCellular_Tetrode_label")
-        self.ExtraCellular_Tetrode_label.setFont(font5)
+        self.ExtraCellular_Tetrode_label.setFont(font7)
 
         self.verticalLayout_207.addWidget(self.ExtraCellular_Tetrode_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -15665,7 +15760,7 @@ class Ui_Spikeling(object):
 
         self.ExtraCellular_SignalMode_label = QLabel(self.ExtraCellular_SignalMode_frame)
         self.ExtraCellular_SignalMode_label.setObjectName(u"ExtraCellular_SignalMode_label")
-        self.ExtraCellular_SignalMode_label.setFont(font5)
+        self.ExtraCellular_SignalMode_label.setFont(font7)
 
         self.verticalLayout_136.addWidget(self.ExtraCellular_SignalMode_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -15757,7 +15852,7 @@ class Ui_Spikeling(object):
         self.horizontalLayout_307.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_Bandpass_Label = QLabel(self.ExtraCellular_Bandpass_Label_frame)
         self.ExtraCellular_Bandpass_Label.setObjectName(u"ExtraCellular_Bandpass_Label")
-        self.ExtraCellular_Bandpass_Label.setFont(font5)
+        self.ExtraCellular_Bandpass_Label.setFont(font7)
         self.ExtraCellular_Bandpass_Label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_307.addWidget(self.ExtraCellular_Bandpass_Label)
@@ -15938,7 +16033,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_141.setContentsMargins(0, 0, 0, 5)
         self.ExtraCellular_Noise_label = QLabel(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_Noise_label.setObjectName(u"ExtraCellular_Noise_label")
-        self.ExtraCellular_Noise_label.setFont(font5)
+        self.ExtraCellular_Noise_label.setFont(font7)
         self.ExtraCellular_Noise_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_141.addWidget(self.ExtraCellular_Noise_label)
@@ -16446,7 +16541,7 @@ class Ui_Spikeling(object):
         self.verticalLayout_205.setContentsMargins(0, 0, 0, 50)
         self.ExtraCellular_Spikes_Detection_label = QLabel(self.ExtraCellular_Spikes_Detection_groupBox)
         self.ExtraCellular_Spikes_Detection_label.setObjectName(u"ExtraCellular_Spikes_Detection_label")
-        self.ExtraCellular_Spikes_Detection_label.setFont(font5)
+        self.ExtraCellular_Spikes_Detection_label.setFont(font7)
 
         self.verticalLayout_205.addWidget(self.ExtraCellular_Spikes_Detection_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -16878,7 +16973,7 @@ class Ui_Spikeling(object):
         self.StimInt_value = QLineEdit(self.frame_16)
         self.StimInt_value.setObjectName(u"StimInt_value")
         self.StimInt_value.setMaximumSize(QSize(50, 16777215))
-        self.StimInt_value.setFont(font5)
+        self.StimInt_value.setFont(font7)
         self.StimInt_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_185.addWidget(self.StimInt_value, 0, Qt.AlignmentFlag.AlignTop)
@@ -16989,7 +17084,7 @@ class Ui_Spikeling(object):
         self.a_value.setSizePolicy(sizePolicy6)
         self.a_value.setMinimumSize(QSize(75, 0))
         self.a_value.setMaximumSize(QSize(50, 16777215))
-        self.a_value.setFont(font5)
+        self.a_value.setFont(font7)
         self.a_value.setStyleSheet(u"")
         self.a_value.setFrame(True)
         self.a_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -17045,7 +17140,7 @@ class Ui_Spikeling(object):
         self.b_value.setSizePolicy(sizePolicy6)
         self.b_value.setMinimumSize(QSize(75, 0))
         self.b_value.setMaximumSize(QSize(75, 16777215))
-        self.b_value.setFont(font5)
+        self.b_value.setFont(font7)
         self.b_value.setStyleSheet(u"")
         self.b_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -17099,7 +17194,7 @@ class Ui_Spikeling(object):
         self.c_value.setSizePolicy(sizePolicy6)
         self.c_value.setMinimumSize(QSize(75, 0))
         self.c_value.setMaximumSize(QSize(75, 16777215))
-        self.c_value.setFont(font5)
+        self.c_value.setFont(font7)
         self.c_value.setStyleSheet(u"")
         self.c_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -17153,7 +17248,7 @@ class Ui_Spikeling(object):
         self.d_value.setSizePolicy(sizePolicy6)
         self.d_value.setMinimumSize(QSize(75, 0))
         self.d_value.setMaximumSize(QSize(75, 16777215))
-        self.d_value.setFont(font5)
+        self.d_value.setFont(font7)
         self.d_value.setStyleSheet(u"")
         self.d_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -17254,11 +17349,11 @@ class Ui_Spikeling(object):
         self.SaveNeuronPushButton = QPushButton(self.SaveNeuron_frame)
         self.SaveNeuronPushButton.setObjectName(u"SaveNeuronPushButton")
         self.SaveNeuronPushButton.setEnabled(True)
-        font16 = QFont()
-        font16.setPointSize(10)
-        font16.setBold(True)
-        font16.setStrikeOut(False)
-        self.SaveNeuronPushButton.setFont(font16)
+        font17 = QFont()
+        font17.setPointSize(10)
+        font17.setBold(True)
+        font17.setStrikeOut(False)
+        self.SaveNeuronPushButton.setFont(font17)
         self.SaveNeuronPushButton.setStyleSheet(u"")
         self.SaveNeuronPushButton.setCheckable(False)
 
@@ -17269,7 +17364,7 @@ class Ui_Spikeling(object):
 
         self.LoadNeuron_frame = QFrame(self.Izhik_button_frame)
         self.LoadNeuron_frame.setObjectName(u"LoadNeuron_frame")
-        self.LoadNeuron_frame.setFont(font8)
+        self.LoadNeuron_frame.setFont(font9)
         self.LoadNeuron_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.LoadNeuron_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_187 = QHBoxLayout(self.LoadNeuron_frame)
@@ -17551,7 +17646,7 @@ class Ui_Spikeling(object):
         self.Step_Number_Value = QLineEdit(self.Step_Number_Value_frame)
         self.Step_Number_Value.setObjectName(u"Step_Number_Value")
         self.Step_Number_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_Number_Value.setFont(font5)
+        self.Step_Number_Value.setFont(font7)
         self.Step_Number_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_234.addWidget(self.Step_Number_Value)
@@ -17603,7 +17698,7 @@ class Ui_Spikeling(object):
         self.Step_Increment_Value = QLineEdit(self.Step_Increment_Value_frame)
         self.Step_Increment_Value.setObjectName(u"Step_Increment_Value")
         self.Step_Increment_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_Increment_Value.setFont(font5)
+        self.Step_Increment_Value.setFont(font7)
         self.Step_Increment_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_229.addWidget(self.Step_Increment_Value)
@@ -17655,7 +17750,7 @@ class Ui_Spikeling(object):
         self.Step_First_Value = QLineEdit(self.Step_First_Value_frame)
         self.Step_First_Value.setObjectName(u"Step_First_Value")
         self.Step_First_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_First_Value.setFont(font5)
+        self.Step_First_Value.setFont(font7)
         self.Step_First_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_228.addWidget(self.Step_First_Value)
@@ -17707,7 +17802,7 @@ class Ui_Spikeling(object):
         self.Step_On_Value = QLineEdit(self.Step_On_Value_frame)
         self.Step_On_Value.setObjectName(u"Step_On_Value")
         self.Step_On_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_On_Value.setFont(font5)
+        self.Step_On_Value.setFont(font7)
         self.Step_On_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_235.addWidget(self.Step_On_Value)
@@ -17759,7 +17854,7 @@ class Ui_Spikeling(object):
         self.Step_Off_Value = QLineEdit(self.Step_Off_Value_frame)
         self.Step_Off_Value.setObjectName(u"Step_Off_Value")
         self.Step_Off_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_Off_Value.setFont(font5)
+        self.Step_Off_Value.setFont(font7)
         self.Step_Off_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_238.addWidget(self.Step_Off_Value)
@@ -17810,7 +17905,7 @@ class Ui_Spikeling(object):
         self.Step_OffInt_Value.setObjectName(u"Step_OffInt_Value")
         self.Step_OffInt_Value.setMinimumSize(QSize(100, 0))
         self.Step_OffInt_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_OffInt_Value.setFont(font5)
+        self.Step_OffInt_Value.setFont(font7)
         self.Step_OffInt_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_247.addWidget(self.Step_OffInt_Value)
@@ -17870,7 +17965,7 @@ class Ui_Spikeling(object):
         self.Step_Inter_Value = QLineEdit(self.Step_Inter_Value_frame)
         self.Step_Inter_Value.setObjectName(u"Step_Inter_Value")
         self.Step_Inter_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_Inter_Value.setFont(font5)
+        self.Step_Inter_Value.setFont(font7)
         self.Step_Inter_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_241.addWidget(self.Step_Inter_Value)
@@ -17922,7 +18017,7 @@ class Ui_Spikeling(object):
         self.Step_InterInt_Value = QLineEdit(self.Step_InterInt_Value_frame)
         self.Step_InterInt_Value.setObjectName(u"Step_InterInt_Value")
         self.Step_InterInt_Value.setMaximumSize(QSize(100, 16777215))
-        self.Step_InterInt_Value.setFont(font5)
+        self.Step_InterInt_Value.setFont(font7)
         self.Step_InterInt_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_244.addWidget(self.Step_InterInt_Value)
@@ -17981,7 +18076,7 @@ class Ui_Spikeling(object):
         self.SineWave_Amplitude_Value = QLineEdit(self.SineWave_Amplitude_Value_frame)
         self.SineWave_Amplitude_Value.setObjectName(u"SineWave_Amplitude_Value")
         self.SineWave_Amplitude_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_Amplitude_Value.setFont(font5)
+        self.SineWave_Amplitude_Value.setFont(font7)
         self.SineWave_Amplitude_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_212.addWidget(self.SineWave_Amplitude_Value)
@@ -18035,7 +18130,7 @@ class Ui_Spikeling(object):
         self.SineWave_Frequency_Value = QLineEdit(self.SineWave_Frequency_Value_frame)
         self.SineWave_Frequency_Value.setObjectName(u"SineWave_Frequency_Value")
         self.SineWave_Frequency_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_Frequency_Value.setFont(font5)
+        self.SineWave_Frequency_Value.setFont(font7)
         self.SineWave_Frequency_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_211.addWidget(self.SineWave_Frequency_Value)
@@ -18089,7 +18184,7 @@ class Ui_Spikeling(object):
         self.SineWave_Mean_Value = QLineEdit(self.SineWave_Mean_Value_frame)
         self.SineWave_Mean_Value.setObjectName(u"SineWave_Mean_Value")
         self.SineWave_Mean_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_Mean_Value.setFont(font5)
+        self.SineWave_Mean_Value.setFont(font7)
         self.SineWave_Mean_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_215.addWidget(self.SineWave_Mean_Value)
@@ -18141,7 +18236,7 @@ class Ui_Spikeling(object):
         self.SineWave_StimOn_Value.setObjectName(u"SineWave_StimOn_Value")
         self.SineWave_StimOn_Value.setMinimumSize(QSize(100, 0))
         self.SineWave_StimOn_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_StimOn_Value.setFont(font5)
+        self.SineWave_StimOn_Value.setFont(font7)
         self.SineWave_StimOn_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_217.addWidget(self.SineWave_StimOn_Value)
@@ -18200,7 +18295,7 @@ class Ui_Spikeling(object):
         self.SineWave_IntOff_Value = QLineEdit(self.SineWave_IntOff_Value_frame)
         self.SineWave_IntOff_Value.setObjectName(u"SineWave_IntOff_Value")
         self.SineWave_IntOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_IntOff_Value.setFont(font5)
+        self.SineWave_IntOff_Value.setFont(font7)
         self.SineWave_IntOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_223.addWidget(self.SineWave_IntOff_Value)
@@ -18252,7 +18347,7 @@ class Ui_Spikeling(object):
         self.SineWave_StimOff_Value.setObjectName(u"SineWave_StimOff_Value")
         self.SineWave_StimOff_Value.setMinimumSize(QSize(100, 0))
         self.SineWave_StimOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.SineWave_StimOff_Value.setFont(font5)
+        self.SineWave_StimOff_Value.setFont(font7)
         self.SineWave_StimOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_222.addWidget(self.SineWave_StimOff_Value)
@@ -18301,7 +18396,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_Amplitude_Value_frame.setObjectName(u"TriangleWave_Amplitude_Value_frame")
         self.TriangleWave_Amplitude_Value_frame.setMinimumSize(QSize(150, 0))
         self.TriangleWave_Amplitude_Value_frame.setMaximumSize(QSize(150, 16777215))
-        self.TriangleWave_Amplitude_Value_frame.setFont(font5)
+        self.TriangleWave_Amplitude_Value_frame.setFont(font7)
         self.TriangleWave_Amplitude_Value_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.TriangleWave_Amplitude_Value_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_254 = QHBoxLayout(self.TriangleWave_Amplitude_Value_frame)
@@ -18312,7 +18407,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_Amplitude_Value.setObjectName(u"TriangleWave_Amplitude_Value")
         self.TriangleWave_Amplitude_Value.setMinimumSize(QSize(100, 0))
         self.TriangleWave_Amplitude_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_Amplitude_Value.setFont(font5)
+        self.TriangleWave_Amplitude_Value.setFont(font7)
         self.TriangleWave_Amplitude_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_254.addWidget(self.TriangleWave_Amplitude_Value)
@@ -18363,7 +18458,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_Frequency_Value = QLineEdit(self.TriangleWave_Frequency_Value_frame)
         self.TriangleWave_Frequency_Value.setObjectName(u"TriangleWave_Frequency_Value")
         self.TriangleWave_Frequency_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_Frequency_Value.setFont(font5)
+        self.TriangleWave_Frequency_Value.setFont(font7)
         self.TriangleWave_Frequency_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_257.addWidget(self.TriangleWave_Frequency_Value)
@@ -18413,7 +18508,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_Mean_Value = QLineEdit(self.TriangleWave_Mean_Value_frame)
         self.TriangleWave_Mean_Value.setObjectName(u"TriangleWave_Mean_Value")
         self.TriangleWave_Mean_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_Mean_Value.setFont(font5)
+        self.TriangleWave_Mean_Value.setFont(font7)
         self.TriangleWave_Mean_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_260.addWidget(self.TriangleWave_Mean_Value)
@@ -18463,7 +18558,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_StimOn_Value = QLineEdit(self.TriangleWave_StimOn_Value_frame)
         self.TriangleWave_StimOn_Value.setObjectName(u"TriangleWave_StimOn_Value")
         self.TriangleWave_StimOn_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_StimOn_Value.setFont(font5)
+        self.TriangleWave_StimOn_Value.setFont(font7)
         self.TriangleWave_StimOn_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_263.addWidget(self.TriangleWave_StimOn_Value)
@@ -18521,7 +18616,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_IntOff_Value = QLineEdit(self.TriangleWave_IntOff_Value_frame)
         self.TriangleWave_IntOff_Value.setObjectName(u"TriangleWave_IntOff_Value")
         self.TriangleWave_IntOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_IntOff_Value.setFont(font5)
+        self.TriangleWave_IntOff_Value.setFont(font7)
         self.TriangleWave_IntOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_266.addWidget(self.TriangleWave_IntOff_Value)
@@ -18571,7 +18666,7 @@ class Ui_Spikeling(object):
         self.TriangleWave_StimOff_Value = QLineEdit(self.TriangleWave_StimOff_Value_frame)
         self.TriangleWave_StimOff_Value.setObjectName(u"TriangleWave_StimOff_Value")
         self.TriangleWave_StimOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.TriangleWave_StimOff_Value.setFont(font5)
+        self.TriangleWave_StimOff_Value.setFont(font7)
         self.TriangleWave_StimOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_269.addWidget(self.TriangleWave_StimOff_Value)
@@ -18642,7 +18737,7 @@ class Ui_Spikeling(object):
         self.Chirp_Amplitude_Value_frame.setObjectName(u"Chirp_Amplitude_Value_frame")
         self.Chirp_Amplitude_Value_frame.setMinimumSize(QSize(150, 0))
         self.Chirp_Amplitude_Value_frame.setMaximumSize(QSize(150, 16777215))
-        self.Chirp_Amplitude_Value_frame.setFont(font5)
+        self.Chirp_Amplitude_Value_frame.setFont(font7)
         self.Chirp_Amplitude_Value_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Chirp_Amplitude_Value_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_383 = QHBoxLayout(self.Chirp_Amplitude_Value_frame)
@@ -18653,7 +18748,7 @@ class Ui_Spikeling(object):
         self.Chirp_Amplitude_Value.setObjectName(u"Chirp_Amplitude_Value")
         self.Chirp_Amplitude_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_Amplitude_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_Amplitude_Value.setFont(font5)
+        self.Chirp_Amplitude_Value.setFont(font7)
         self.Chirp_Amplitude_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_383.addWidget(self.Chirp_Amplitude_Value)
@@ -18707,7 +18802,7 @@ class Ui_Spikeling(object):
         self.Chirp_Frequency_Value.setObjectName(u"Chirp_Frequency_Value")
         self.Chirp_Frequency_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_Frequency_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_Frequency_Value.setFont(font5)
+        self.Chirp_Frequency_Value.setFont(font7)
         self.Chirp_Frequency_Value.setStyleSheet(u"background-color: rgb(80, 110, 117);\n"
 "border : none;")
         self.Chirp_Frequency_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -18762,7 +18857,7 @@ class Ui_Spikeling(object):
         self.Chirp_StartFrequency_Value.setObjectName(u"Chirp_StartFrequency_Value")
         self.Chirp_StartFrequency_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_StartFrequency_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_StartFrequency_Value.setFont(font5)
+        self.Chirp_StartFrequency_Value.setFont(font7)
         self.Chirp_StartFrequency_Value.setStyleSheet(u"")
         self.Chirp_StartFrequency_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -18818,7 +18913,7 @@ class Ui_Spikeling(object):
         self.Chirp_EndFrequency_Value.setEnabled(False)
         self.Chirp_EndFrequency_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_EndFrequency_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_EndFrequency_Value.setFont(font5)
+        self.Chirp_EndFrequency_Value.setFont(font7)
         self.Chirp_EndFrequency_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_386.addWidget(self.Chirp_EndFrequency_Value)
@@ -18869,7 +18964,7 @@ class Ui_Spikeling(object):
         self.Chirp_Duration_Value.setObjectName(u"Chirp_Duration_Value")
         self.Chirp_Duration_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_Duration_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_Duration_Value.setFont(font5)
+        self.Chirp_Duration_Value.setFont(font7)
         self.Chirp_Duration_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_399.addWidget(self.Chirp_Duration_Value)
@@ -18932,7 +19027,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpOn_Amplitude_Value.setObjectName(u"Chirp_PreChirpOn_Amplitude_Value")
         self.Chirp_PreChirpOn_Amplitude_Value.setMinimumSize(QSize(50, 0))
         self.Chirp_PreChirpOn_Amplitude_Value.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpOn_Amplitude_Value.setFont(font5)
+        self.Chirp_PreChirpOn_Amplitude_Value.setFont(font7)
         self.Chirp_PreChirpOn_Amplitude_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_403.addWidget(self.Chirp_PreChirpOn_Amplitude_Value)
@@ -18953,7 +19048,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpOn_Duration_Value.setObjectName(u"Chirp_PreChirpOn_Duration_Value")
         self.Chirp_PreChirpOn_Duration_Value.setMinimumSize(QSize(50, 0))
         self.Chirp_PreChirpOn_Duration_Value.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpOn_Duration_Value.setFont(font5)
+        self.Chirp_PreChirpOn_Duration_Value.setFont(font7)
         self.Chirp_PreChirpOn_Duration_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_406.addWidget(self.Chirp_PreChirpOn_Duration_Value)
@@ -19006,7 +19101,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpOff_Amplitude_Value.setObjectName(u"Chirp_PreChirpOff_Amplitude_Value")
         self.Chirp_PreChirpOff_Amplitude_Value.setMinimumSize(QSize(50, 0))
         self.Chirp_PreChirpOff_Amplitude_Value.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpOff_Amplitude_Value.setFont(font5)
+        self.Chirp_PreChirpOff_Amplitude_Value.setFont(font7)
         self.Chirp_PreChirpOff_Amplitude_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_410.addWidget(self.Chirp_PreChirpOff_Amplitude_Value)
@@ -19026,7 +19121,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpOff_Duration_Value = QLineEdit(self.Chirp_PreChirpOff_Duration_Value_Frame)
         self.Chirp_PreChirpOff_Duration_Value.setObjectName(u"Chirp_PreChirpOff_Duration_Value")
         self.Chirp_PreChirpOff_Duration_Value.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpOff_Duration_Value.setFont(font5)
+        self.Chirp_PreChirpOff_Duration_Value.setFont(font7)
         self.Chirp_PreChirpOff_Duration_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_409.addWidget(self.Chirp_PreChirpOff_Duration_Value)
@@ -19080,7 +19175,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpMid_Amplitude.setEnabled(True)
         self.Chirp_PreChirpMid_Amplitude.setMinimumSize(QSize(50, 0))
         self.Chirp_PreChirpMid_Amplitude.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpMid_Amplitude.setFont(font5)
+        self.Chirp_PreChirpMid_Amplitude.setFont(font7)
         self.Chirp_PreChirpMid_Amplitude.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_412.addWidget(self.Chirp_PreChirpMid_Amplitude)
@@ -19101,7 +19196,7 @@ class Ui_Spikeling(object):
         self.Chirp_PreChirpMid_Duration.setObjectName(u"Chirp_PreChirpMid_Duration")
         self.Chirp_PreChirpMid_Duration.setMinimumSize(QSize(50, 0))
         self.Chirp_PreChirpMid_Duration.setMaximumSize(QSize(50, 16777215))
-        self.Chirp_PreChirpMid_Duration.setFont(font5)
+        self.Chirp_PreChirpMid_Duration.setFont(font7)
         self.Chirp_PreChirpMid_Duration.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_413.addWidget(self.Chirp_PreChirpMid_Duration)
@@ -19161,7 +19256,7 @@ class Ui_Spikeling(object):
         self.Chirp_IntOff_Value.setObjectName(u"Chirp_IntOff_Value")
         self.Chirp_IntOff_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_IntOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_IntOff_Value.setFont(font5)
+        self.Chirp_IntOff_Value.setFont(font7)
         self.Chirp_IntOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_392.addWidget(self.Chirp_IntOff_Value)
@@ -19213,7 +19308,7 @@ class Ui_Spikeling(object):
         self.Chirp_StimOff_Value.setObjectName(u"Chirp_StimOff_Value")
         self.Chirp_StimOff_Value.setMinimumSize(QSize(100, 0))
         self.Chirp_StimOff_Value.setMaximumSize(QSize(100, 16777215))
-        self.Chirp_StimOff_Value.setFont(font5)
+        self.Chirp_StimOff_Value.setFont(font7)
         self.Chirp_StimOff_Value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_389.addWidget(self.Chirp_StimOff_Value)
@@ -19493,10 +19588,12 @@ class Ui_Spikeling(object):
         self.Spikeling_Syn2VmCheckbox.setText(QCoreApplication.translate("Spikeling", u"Synapse 2 Vm", None))
         self.Spikeling_Syn2InputCheckbox.setText(QCoreApplication.translate("Spikeling", u"Synapse 2 Input", None))
         self.Spikeling_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
-        self.Spikeling_DataRecording_SelectRecordFolder_label.setText(QCoreApplication.translate("Spikeling", u"Data Logging: Filename", None))
-        self.Spikeling_DataRecording_RecordFolder_value.setText("")
-        self.Spikeling_DataRecording_RecordFolderDir_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse directory", None))
-        self.Spikeling_SelectedFolderLabel.setText("")
+        self.Spikeling_DataRecording_Folder_label.setText(QCoreApplication.translate("Spikeling", u"Save to", None))
+        self.Spikeling_DataRecording_Folder_lineEdit.setText("")
+        self.Spikeling_DataRecording_Folder_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse", None))
+        self.Spikeling_DataRecording_File_label.setText(QCoreApplication.translate("Spikeling", u"File Name", None))
+        self.Spikeling_DataRecording_File_csvlabel.setText(QCoreApplication.translate("Spikeling", u".csv", None))
+        self.Spikeling_DataRecording_Record_label.setText("")
         self.Spikeling_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Record", None))
         self.Spikeling_parameter_exit_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Hide Parameters", None))
         self.StimulusLabel.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; font-weight:700;\">Stimulus</span></p></body></html>", None))

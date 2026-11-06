@@ -271,10 +271,7 @@ def Buttons(self):
 
     Page_Spikeling_NeuronInterface.Spikeling.ConfigureStimulusFrequency(self)
     Page_Spikeling_NeuronInterface.Spikeling.ConfigureStimulusStrength(self)
-
-    self.ui.StimCus_toggleButton.toggled.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ActivateCustomStimulus(self))
-    self.ui.Spikeling_CustomStimulus_Load_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.LoadStimulus(self))
-
+    Page_Spikeling_NeuronInterface.Spikeling.ConfigureCustomStimulus(self)
 
 
     # Neuron parameters

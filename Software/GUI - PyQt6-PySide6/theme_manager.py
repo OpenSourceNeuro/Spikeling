@@ -1209,9 +1209,11 @@ class ThemeManager(QObject):
         QScrollBar::add-line, QScrollBar::sub-line {{ height: 0px; width: 0px; }}
         QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
         QCheckBox, QRadioButton {{ background-color: transparent; color: {text}; }}
-        QHeaderView::section, QTableView, QListView, QTreeView {{
-            background-color: {panel}; color: {text}; border: 1px solid {border};
-        }}
+        QCheckBox::indicator {{width: 12px;height: 12px;}}
+        QCheckBox::indicator:unchecked {{border: 1px solid {text};border-radius: 2px;background-color: {panel};}}
+        QCheckBox::indicator:unchecked:hover {{border-color: {accent};}}
+        QCheckBox::indicator:unchecked:disabled {{border-color: {muted};background-color: {surface};}}
+        QHeaderView::section, QTableView, QListView, QTreeView {{background-color: {panel}; color: {text}; border: 1px solid {border};}}
         QMenu {{ background-color: {panel}; color: {text}; border: 1px solid {border}; }}
         QMenu::item:selected {{ background-color: {accent}; color: {on_accent}; }}
         """

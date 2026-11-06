@@ -187,7 +187,7 @@ class Spikeling103():
         ``setBackground``, so the panels follow later theme changes instead of
         freezing the colour that happened to be active on first display.
         """
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_103)
+        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Spikeling_DataAnalysis)
         self.ui.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentWidget(
             self.ui.page_103_1_0)
 

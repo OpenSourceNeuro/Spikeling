@@ -36,8 +36,6 @@ N_STREAM_CHANNELS = 8
 
 # Suppress redundant serial writes when the custom stimulus value is unchanged
 # (a 50 % duty square wave then costs 2 writes per period instead of ~10 000).
-SKIP_REPEATED_STIM_WRITES = True
-
 
 class SpikelingGraph(QObject):
     """
@@ -69,7 +67,6 @@ class SpikelingGraph(QObject):
 
         # Prevent duplicate resize-signal connections.
         self._resize_connected = False
-        self._last_stim_value = None
 
 
         # Set SerialFlag in parent for use in Page101
@@ -79,7 +76,6 @@ class SpikelingGraph(QObject):
         self.df_Stim = None
         self.df_yStim = None
 
-        self._cus_prev_enabled = False
 
         # Timer for GUI updates
         self.timer = QTimer()
@@ -183,7 +179,6 @@ class SpikelingGraph(QObject):
             for index, value in enumerate(values):
                 self.databuffers[index].append(value)
 
-        self.step_custom_stimulus_on_packet()
 
     def update_plot(self):
         """Main loop: called periodically by QTimer."""
@@ -279,6 +274,11 @@ class SpikelingGraph(QObject):
         from Page_Spikeling_NeuronInterface import Spikeling as SpikelingPage
 
         serial_manager.write("CON\n")
+
+        controller = getattr(self.parent, "custom_stimulus_controller", None,)
+
+        if controller is not None:
+            controller.restore_after_connection()
 
         for name in ("ChangeSpeed",
                      "SelectNeuronMode", "SyncPatchClampState",
@@ -712,54 +712,4 @@ class SpikelingGraph(QObject):
         self.ui.Spikeling_Oscilloscope_widget.clear()
         if self.current_plots:
             self.current_plots.clear()
-
-# -------------------------------------------------------------------------
-# Handlers
-# -------------------------------------------------------------------------
-
-    def step_custom_stimulus_on_packet(self):
-        """Advance custom stimulus exactly once per received data packet."""
-        # basic guards
-        if not hasattr(self.ui, "StimCus_toggleButton"):
-            return
-        if not serial_manager.is_open:
-            return
-
-        # IMPORTANT: pick ONE place where the waveform lives
-        # Prefer self.df_yStim (it exists in __init__), fall back to ui.df_yStim if you truly use that elsewhere.
-        y = self.df_yStim
-        if y is None and hasattr(self.ui, "df_yStim"):
-            y = self.ui.df_yStim
-
-        enabled = (self.ui.StimCus_toggleButton.isChecked() and y is not None and len(y) > 0)
-
-        # edge: OFF -> ON
-        if enabled and not self._cus_prev_enabled:
-            self.stim_counter = 0
-            serial_manager.write("TR\n")  # if you want a trigger pulse at start
-
-        # edge: ON -> OFF
-        if (not enabled) and self._cus_prev_enabled:
-            serial_manager.write("SC0\n")
-            self._last_stim_value = None
-
-        self._cus_prev_enabled = enabled
-        if not enabled:
-            return
-
-        # wrap + send one sample per packet
-        if self.stim_counter >= len(y):
-            self.stim_counter = 0
-            serial_manager.write("TR\n")
-
-        value = y[self.stim_counter]
-        self.stim_counter += 1
-
-        # The device latches the last received value, so identical consecutive
-        # samples need not be transmitted. A square wave then costs 2 writes
-        # per period instead of one per packet (~10 kHz).
-        if SKIP_REPEATED_STIM_WRITES and value == self._last_stim_value:
-            return
-        self._last_stim_value = value
-        serial_manager.write(f"SC1 {value}\n")
 

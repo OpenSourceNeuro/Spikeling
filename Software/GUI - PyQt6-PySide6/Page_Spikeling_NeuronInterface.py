@@ -2,9 +2,9 @@
 ########################################################################
 #                          Libraries import                            #
 
-from PySide6.QtWidgets import QFileDialog
-from PySide6.QtGui import QIcon
-from PySide6.QtCore import Qt, QSize, QFileInfo, QSignalBlocker
+from PySide6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtGui import QIcon, QIntValidator
+from PySide6.QtCore import Qt, QSize, QObject, QFileInfo, QSignalBlocker
 from Parameters_ToggleButtons import PyToggle
 from Parameters_Sliders import configure_styled_slider
 from Parameters_Sliders import SliderBinding
@@ -24,7 +24,381 @@ from connection_supervisor import ConnectionState
 # Use the global serial_manager instance
 serial_port = serial_manager
 
+class CustomStimulusController(QObject):
+    """Own custom-stimulus loading, playback and control lockout."""
 
+    SAMPLE_INTERVAL_MS = 0.1
+
+    def __init__(self, host):
+        super().__init__(host)
+
+        self.host = host
+        self.ui = host.ui
+
+        self.samples = None
+        self.filename = ""
+        self.running = False
+
+        self.index = 0
+        self.completed_loops = 0
+        self.requested_loops = 1
+        self.last_sent_value = None
+        self._locked_widgets = []
+
+        loop_editor = self.ui.Spikeling_CustomStimulus_Loop_lineEdit
+        loop_editor.setValidator(
+            QIntValidator(1, 1000000, loop_editor)
+        )
+        loop_editor.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        if not loop_editor.text().strip():
+            loop_editor.setText("1")
+
+        with QSignalBlocker(self.ui.StimCus_toggleButton):
+            self.ui.StimCus_toggleButton.setChecked(False)
+
+        self.ui.Spikeling_CustomStimulus_Load_pushButton.clicked.connect(
+            self.load
+        )
+        self.ui.StimCus_toggleButton.toggled.connect(
+            self._on_apply_toggled
+        )
+
+        serial_port.data_received.connect(self._on_packet)
+        serial_port.connection_changed.connect(
+            self._on_connection_changed
+        )
+
+        # Refresh availability after the connection handshake.
+        graph = getattr(host, "spikeling_graph", None)
+
+        if graph is not None:
+            graph.supervisor.connected.connect(
+                lambda port: self._refresh_controls()
+            )
+            graph.supervisor.reconnected.connect(
+                lambda port: self._refresh_controls()
+            )
+
+        self._refresh_controls()
+
+    def _connection_ready(self):
+        graph = getattr(self.host, "spikeling_graph", None)
+
+        return (
+            serial_port.is_open
+            and graph is not None
+            and graph.supervisor.state == ConnectionState.CONNECTED
+        )
+
+    def _refresh_controls(self):
+        self.ui.Spikeling_CustomStimulus_Load_pushButton.setEnabled(
+            not self.running
+        )
+        self.ui.Spikeling_CustomStimulus_Loop_lineEdit.setEnabled(
+            not self.running
+        )
+
+        self.ui.StimCus_toggleButton.setEnabled(
+            self.running
+            or (
+                self.samples is not None
+                and self._connection_ready()
+            )
+        )
+
+        self.ui.Spikeling_CustomStimulus_Label.setText(
+            "Stop stimulus" if self.running else "Apply stimulus"
+        )
+
+    def _set_apply_checked(self, checked):
+        # Avoid recursively calling the playback handler.
+        with QSignalBlocker(self.ui.StimCus_toggleButton):
+            self.ui.StimCus_toggleButton.setChecked(checked)
+
+        # PyToggle uses stateChanged to animate its circle.
+        self.ui.StimCus_toggleButton.start_transition(int(checked))
+
+    def load(self, checked=False):
+        if self.running:
+            return
+
+        path, _ = QFileDialog.getOpenFileName(
+            self.host,
+            caption="Select a custom stimulus",
+            dir="./Stimuli",
+            filter="CSV files (*.csv)",
+        )
+
+        if not path:
+            return
+
+        try:
+            frame = pd.read_csv(path)
+
+            if "Stim" not in frame.columns:
+                raise ValueError(
+                    "The CSV must contain a column named 'Stim'."
+                )
+
+            values = pd.to_numeric(
+                frame["Stim"],
+                errors="raise",
+            ).to_numpy(dtype=float)
+
+            if values.size == 0:
+                raise ValueError("The stimulus contains no samples.")
+
+            if not np.isfinite(values).all():
+                raise ValueError(
+                    "Stimulus values must all be finite numbers."
+                )
+
+            if ((values < -100) | (values > 100)).any():
+                raise ValueError(
+                    "Stimulus values must be between -100 and 100."
+                )
+
+            # SC1 currently accepts integer stimulus commands.
+            if not np.allclose(
+                values,
+                np.rint(values),
+                rtol=0,
+                atol=1e-9,
+            ):
+                raise ValueError(
+                    "Stimulus values must be integers "
+                    "because SC1 uses integer commands."
+                )
+
+            samples = np.rint(values).astype(np.int16)
+
+        except (
+            OSError,
+            ValueError,
+            pd.errors.ParserError,
+        ) as error:
+            QMessageBox.warning(
+                self.host,
+                "Cannot load stimulus",
+                str(error),
+            )
+            return
+
+        # Commit only after the entire file has passed validation.
+        self.samples = samples.copy()
+        self.filename = os.path.splitext(
+            os.path.basename(path)
+        )[0]
+
+        self.ui.Spikeling_CustomStimulus_StimLabel.setText(
+            self.filename
+        )
+
+        x = (
+            np.arange(samples.size, dtype=float)
+            * self.SAMPLE_INTERVAL_MS
+        )
+
+        preview = self.ui.Spikeling_CustomStimulus_display
+        preview.clear()
+        preview.showGrid(x=False, y=False)
+        preview.setLabel("bottom", "Model time", units="ms")
+        preview.setLabel("left", "Stimulus", units="%")
+        preview.plot(
+            x=x,
+            y=samples,
+            pen=Settings.DarkSolarized[5],
+        )
+
+        self._refresh_controls()
+
+    def _on_apply_toggled(self, checked):
+        if checked:
+            self.start()
+        else:
+            self.stop()
+
+    def start(self):
+        if self.running:
+            return
+
+        error = None
+        editor = self.ui.Spikeling_CustomStimulus_Loop_lineEdit
+
+        if self.samples is None:
+            error = "Load a stimulus first."
+        elif not self._connection_ready():
+            error = "Connect the board before applying a stimulus."
+        elif not editor.hasAcceptableInput():
+            error = "Enter a loop count between 1 and 1000000."
+
+        if error is not None:
+            self._set_apply_checked(False)
+            self._refresh_controls()
+            QMessageBox.warning(
+                self.host,
+                "Cannot apply stimulus",
+                error,
+            )
+            return
+
+        self.requested_loops = int(editor.text())
+        self.completed_loops = 0
+        self.index = 0
+        self.last_sent_value = None
+        self.running = True
+
+        # Enter custom mode before releasing the normal GUI overrides.
+        if not self._send_next_sample():
+            return
+
+        if not self._write("TR\n"):
+            return
+
+        self._lock_normal_controls()
+        self._set_apply_checked(True)
+        self._update_progress()
+        self._refresh_controls()
+
+    def _lock_normal_controls(self):
+        for toggle, binding in (
+            (
+                self.ui.StimFre_toggleButton,
+                self.host.stimulus_frequency_binding,
+            ),
+            (
+                self.ui.StimStr_toggleButton,
+                self.host.stimulus_strength_binding,
+            ),
+        ):
+            binding.cancel_pending()
+
+            # Allow normal toggle animation and binding synchronisation.
+            toggle.setChecked(False)
+            binding.set_active(False)
+
+            self._locked_widgets.append(
+                (toggle, toggle.isEnabled())
+            )
+            toggle.setEnabled(False)
+
+            binding.editor.setText("Custom stimulus")
+
+        # Prevent changing the waveform's interpretation mid-playback.
+        for widget in (
+            self.ui.PatchClampMode_toggleButton,
+            self.ui.Spikeling_PatchClamp_MembraneModel_comboBox,
+        ):
+            self._locked_widgets.append(
+                (widget, widget.isEnabled())
+            )
+            widget.setEnabled(False)
+
+    def _unlock_normal_controls(self):
+        for widget, was_enabled in self._locked_widgets:
+            widget.setEnabled(was_enabled)
+
+        self._locked_widgets.clear()
+
+        # Refresh normal readings through their public binding API.
+        for binding in (
+            self.host.stimulus_frequency_binding,
+            self.host.stimulus_strength_binding,
+        ):
+            binding.set_value(binding.value, send=False)
+
+    def _write(self, command):
+        if serial_port.is_open and serial_port.write(command):
+            return True
+
+        self.stop(send=False)
+        self.ui.Spikeling_CustomStimulus_StimLabel.setText(
+            "Stopped: serial write failed"
+        )
+        return False
+
+    def _send_next_sample(self):
+        value = int(self.samples[self.index])
+
+        # The firmware holds the last command between changes.
+        if value != self.last_sent_value:
+            if not self._write(f"SC1 {value}\n"):
+                return False
+
+            self.last_sent_value = value
+
+        self.index += 1
+        return True
+
+    def _on_packet(self, data):
+        if not self.running:
+            return
+
+        # Wait until the following packet before advancing beyond
+        # the final sample of a loop.
+        if self.index >= self.samples.size:
+            self.completed_loops += 1
+
+            if self.completed_loops >= self.requested_loops:
+                self.stop(completed=True)
+                return
+
+            self.index = 0
+
+            if not self._write("TR\n"):
+                return
+
+            self._update_progress()
+
+        self._send_next_sample()
+
+    def _update_progress(self):
+        self.ui.Spikeling_CustomStimulus_StimLabel.setText(
+            f"{self.filename} — "
+            f"loop {self.completed_loops + 1}/"
+            f"{self.requested_loops}"
+        )
+
+    def stop(self, *, send=True, completed=False):
+        was_running = self.running
+        self.running = False
+
+        self._set_apply_checked(False)
+
+        if was_running:
+            self._unlock_normal_controls()
+
+            if send and serial_port.is_open:
+                # Resume the standard generator with knob control.
+                serial_port.write("SC0\n")
+
+        self.last_sent_value = None
+
+        if self.filename:
+            suffix = " — completed" if completed else ""
+            self.ui.Spikeling_CustomStimulus_StimLabel.setText(
+                self.filename + suffix
+            )
+
+        self._refresh_controls()
+
+    def _on_connection_changed(self, connected):
+        if not connected:
+            self.stop(send=False)
+
+        self._refresh_controls()
+
+    def restore_after_connection(self):
+        """Abort stale playback and restore the normal stimulus route."""
+        self.stop(send=False)
+
+        if serial_port.is_open:
+            serial_port.write("SC0\n")
+            serial_port.write("FR0\n")
+            serial_port.write("ST0\n")
+
+        self._refresh_controls()
 
 class Spikeling():
 
@@ -371,46 +745,13 @@ class Spikeling():
 
 
     # Custom Stimulus
-    def ActivateCustomStimulus(self):
-        global serial_port
-        if self.ui.StimCus_toggleButton.isChecked():
-            self.StimCounter = 0
-            self.StimCusValue = self.ui.df_yStim[self.StimCounter]
+    def ConfigureCustomStimulus(self):
+        """Create the custom-stimulus controller once."""
 
-            if serial_port.is_open:
-                if self.ui.PatchClampMode_toggleButton.isChecked():
-                    serial_port.write('VH1 ' + str(self.StimCusValue) + '\n')
-                else:
-                    serial_port.write('SC1 ' + str(self.StimCusValue) + '\n')
-                serial_port.write('TR' + '\n')
+        if hasattr(self, "custom_stimulus_controller"):
+            return
 
-        else:
-            if serial_port.is_open:
-                serial_port.write('SC0' + '\n')
-
-
-
-    def LoadStimulus(self):
-        FileName, _ = QFileDialog.getOpenFileName(self,
-                                               caption='Select a custom stimulus',
-                                               dir="./Stimuli",
-                                               filter='csv files (*.csv)'
-                                               )
-        self.filename = os.path.splitext(os.path.basename(QFileInfo(FileName).fileName()))[0]
-        self.ui.Spikeling_CustomStimulus_StimLabel.setText(self.filename)
-
-        Df = pd.read_csv(FileName)
-        self.ui.df_Stim = Df["Stim"]
-
-        self.ui.df_xStim = np.linspace(0, len(self.ui.df_Stim)/10 - 1, len(self.ui.df_Stim))
-
-        self.ui.df_yStim = np.zeros(len(self.ui.df_Stim))
-        self.ui.df_yStim = self.ui.df_Stim
-
-        self.ui.Spikeling_CustomStimulus_display.clear()
-        self.ui.Spikeling_Oscilloscope_widget.showGrid(x=False, y=False)
-        self.ui.Spikeling_CustomStimulus_display.plot(x=self.ui.df_xStim, y=self.ui.df_yStim, pen=(Settings.DarkSolarized[5]))
-
+        self.custom_stimulus_controller = CustomStimulusController(self)
 
 
     # Patch Clamp

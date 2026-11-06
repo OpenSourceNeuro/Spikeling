@@ -96,7 +96,7 @@ class GitHubPage:
         it must not add a network round trip to the launch path, and a user
         who never opens this page never contacts GitHub.
         """
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_801)
+        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_GitHub)
         if not self._checked_once:
             self._checked_once = True
             self.CheckForUpdates()
