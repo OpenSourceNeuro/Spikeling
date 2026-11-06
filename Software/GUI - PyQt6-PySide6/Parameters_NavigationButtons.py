@@ -255,16 +255,11 @@ def Buttons(self):
     # Deactivate LED light
     self.ui.LED_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ControlLED(self))
 
-    # Create buffer data record folder
-    self.ui.Spikeling_FolderNameLabel = QtWidgets.QLabel(self.ui.Spikeling_DataRecording_box)
-    self.ui.Spikeling_FolderNameLabel.setObjectName("FolderNameLabel")
-
-    # Data Recording
-    self.ui.Spikeling_DataRecording_RecordFolder_value.textChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.RecordFolderText(self))
-    self.ui.Spikeling_DataRecording_RecordFolderDir_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.BrowseRecordFolder(self.ui))
+    # Data recording
+    self.spikeling_graph.configure_recording()
+    self.ui.Spikeling_DataRecording_Folder_pushButton.clicked.connect(self.spikeling_graph.browse_record_folder)
     self.ui.Spikeling_DataRecording_Record_pushButton.setCheckable(True)
-    self.ui.Spikeling_DataRecording_Record_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.RecordButton(self))
-
+    self.ui.Spikeling_DataRecording_Record_pushButton.clicked.connect(self.spikeling_graph.handle_record_button)
 
     # Stimulation parameters
     self.ui.Spikeling_StimulusParameter_pushButton.clicked.connect(lambda: self.ui.Spikeling_parameter_stackedwidget.setCurrentWidget(self.ui.StimulusParameter_page))

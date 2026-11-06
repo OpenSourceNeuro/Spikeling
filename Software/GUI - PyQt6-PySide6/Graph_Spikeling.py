@@ -5,18 +5,23 @@ This module provides functionality for plotting and recording data from the Spik
 It handles serial communication, data visualization, and data export.
 """
 
-from PySide6.QtCore import QObject, QTimer
+from PySide6.QtCore import QObject, QTimer, Qt, QSignalBlocker
+from PySide6.QtWidgets import QMessageBox, QFileDialog, QDialog
+
 import pyqtgraph as pg
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import os
+import tempfile
+import time
 
+from theme_manager import theme_manager
 import Parameters_Settings as Settings
 from serial_manager import serial_manager
 from graph_core import RingBuffer, apply_scope_timebase, configure_scope, safe_reconnect
 
-from PySide6.QtWidgets import QMessageBox
 
 from connection_supervisor import ConnectionState, SpikelingConnectionSupervisor
 from spikeling_discovery import discover_spikeling_ports
@@ -57,6 +62,13 @@ class SpikelingGraph(QObject):
         self.data = [0.0] * 8
         self.last_valid_data = None
         self.record_flag = False
+        # Recording storage is independent of the rolling plot buffers.
+        self.spikeling_data = [[] for _ in range(9)]
+        self._recording_save_pending = False
+        self._current_save_path = None
+        self._recording_error = ""
+        self._recording_stop_reason = ""
+        self._record_folder_dialog = None
         self.stim_counter = 0
         # Secondary plotting areas.
         self.current_plots = None
@@ -97,6 +109,9 @@ class SpikelingGraph(QObject):
     def disconnect_device(self):
         """Called when connect button is unchecked."""
         # user-initiated disconnect must not trigger auto-reconnect
+        if self.record_flag:
+            self.stop_recording(reason="Disconnected")
+
         self.supervisor.stop()
         self.ui.Spikeling_Speed_slider.setEnabled(False)
 
@@ -138,6 +153,8 @@ class SpikelingGraph(QObject):
         button.blockSignals(was_blocked)
 
         if not is_connected:
+            if self.record_flag:
+                self.stop_recording(reason="Connection lost")
             if self.timer.isActive():
                 self.timer.stop()
             self.parent.SerialFlag = False
@@ -153,40 +170,39 @@ class SpikelingGraph(QObject):
     # Data Handling
     # -------------------------------------------------------------------------
     def on_data_received(self, data: list):
-        """Slot for serial_manager.data_received signal.
-
-        Expects a list of 8 floats:
-        [Vm, stim_state, Itot, syn1_vm, Isyn1, syn2_vm, Isyn2, trigger]
-        """
-        if not data or len(data) != 8:
+        """Store each valid packet once for plotting and once for recording."""
+        if data is None or len(data) != N_STREAM_CHANNELS:
             return
-
-        #self.data = data
-        self.last_valid_data = data
 
         try:
-            values = [float(v) for v in data]
-        except ValueError:
+            values = [float(value) for value in data]
+        except (TypeError, ValueError):
             return
 
-        # Push one sample into each buffer PER PACKET
-        for i, v in enumerate(values):
-            getattr(self, f"databuffers")[i].append(v)
+        if not all(np.isfinite(value) for value in values):
+            return
 
-        # If recording, also store these values for CSV export
-        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
-            # spikeling_data[0] will be time (added on export)
+        self.last_valid_data = values
+
+        # One sample per channel enters the rolling display buffers.
+        for index, value in enumerate(values):
+            self.databuffers[index].append(value)
+
+        if self.record_flag:
+            # Keep one recording consistent in clamp mode and membrane model.
+            if self._recording_mode() != self._recording_mode_at_start:
+                self.stop_recording(reason="Clamp mode/model changed")
+                return
+
+            # One sample per channel enters the recording storage.
             for index, value in enumerate(values):
-                self.databuffers[index].append(value)
+                self.spikeling_data[index + 1].append(value)
 
 
     def update_plot(self):
         """Main loop: called periodically by QTimer."""
         try:
-            #self.buff_data() # Data are already pushed into databuffers in on_data_received
-            self.save_plot_data()
             self.plot_curve()
-            #self.handle_custom_stimulus()
         except Exception as e:
             print(f"Error in update_plot: {e}")
 
@@ -199,7 +215,6 @@ class SpikelingGraph(QObject):
         """
         Initialize parameters for Spikeling plotting.
         """
-        self.record_flag = False
         self.trigger = 0
         self.last_valid_data = None  # Reset the last valid data
         self.ui.Spikeling_Oscilloscope_widget.clear()
@@ -212,7 +227,6 @@ class SpikelingGraph(QObject):
         for buffer in self.databuffers:
             buffer.fill_with(0.0)
         self.x = np.linspace(-TIME_WINDOW, 0.0, self._bufsize)
-        self.spikeling_data = [[] for _ in range(9)]
 
         # Set button appearance
         if self.ui.Spikeling_ConnectButton.isChecked() and serial_manager.is_open:
@@ -359,10 +373,12 @@ class SpikelingGraph(QObject):
         pump timers, but it would also trap the user if the board is replugged
         while the dialog is up.
         """
+        if self.record_flag:
+            self.stop_recording(reason="Connection lost")
+
         self.parent.SerialFlag = False
         if self.timer.isActive():
             self.timer.stop()
-        self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
         self.ui.Spikeling_ConnectButton.setText("Reconnecting...")
 
         if self._disconnect_dialog is None:
@@ -375,6 +391,7 @@ class SpikelingGraph(QObject):
                 "settings will be restored automatically."
             )
             dialog.setStandardButtons(QMessageBox.Ok)
+            self._style_recording_dialog(dialog)
             dialog.finished.connect(lambda _: setattr(self, "_disconnect_dialog", None))
             self._disconnect_dialog = dialog
             dialog.open()
@@ -583,117 +600,494 @@ class SpikelingGraph(QObject):
     # -------------------------------------------------------------------------
     # Saving Data
     # -------------------------------------------------------------------------
+    def configure_recording(self):
+        """Configure the new recording widgets once."""
+        folder = Path(__file__).resolve().parent / "Recordings"
 
-    def save_plot_data(self):
-        """
-        Save the latest buffer data and export them as CSV when recording is stopped.
-        Handles overwrite/rename/cancel before recording starts.
-        """
-        # --- If recording is starting ---
-        if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and not self.record_flag:
-            FolderName = self.ui.Spikeling_DataRecording_SelectRecordFolder_label.text()
-            FileName = self.ui.Spikeling_DataRecording_RecordFolder_value.text()
-            folder = Path(FolderName)
+        folder_editor = self.ui.Spikeling_DataRecording_Folder_lineEdit
+        folder_editor.setEnabled(True)
+        folder_editor.setReadOnly(True)
+        folder_editor.setText(str(folder))
 
-            if not FolderName or not FileName:
-                # No folder or filename selected
-                self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
-                Settings.show_popup(self.parent,
-                                    Title="Error: no file selected",
-                                    Text="Select a file where to record your data by clicking on the - browse directory - button")
-                return
+        self.ui.Spikeling_DataRecording_File_lineEdit.setPlaceholderText("Enter a file name")
 
-            file_path = folder / f"{FileName}.csv"
+        self.recording_status_timer = QTimer(self)
+        self.recording_status_timer.setInterval(250)
+        self.recording_status_timer.timeout.connect(self.update_recording_details)
 
-            # Ask user if file exists
-            if file_path.exists():
-                action, new_path = Settings.confirm_overwrite(self.parent, file_path)
-                if action == "cancel":
-                    self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
-                    self.ui.Spikeling_DataRecording_Record_pushButton.setText("Record")
-                    self.ui.Spikeling_DataRecording_Record_pushButton.setStyleSheet("color: rgb(250, 250, 250);\n"
-                                                                                    "background-color: rgb(220, 50, 47);")
-                    return
-                elif action == "rename":
-                    self.ui.Spikeling_DataRecording_RecordFolder_value.setText(new_path.stem)
-                    save_path = new_path
-                elif action == "overwrite":
-                    save_path = file_path
-                else:
-                    # Unknown action: fail closed rather than raising NameError
-                    self.ui.Spikeling_DataRecording_Record_pushButton.setChecked(False)
-                    return
+        self._refresh_recording_theme()
+        self.ui.Spikeling_DataRecording_Record_label.setWordWrap(True)
+        self.ui.Spikeling_DataRecording_Record_label.setText("Ready to record")
 
-            else:
-                save_path = file_path
+        theme_manager.themeChanged.connect(self._refresh_recording_theme)
 
-            # Start recording
-            self.record_flag = True
-            if not hasattr(self, "spikeling_data") or not self.spikeling_data:
-                self.spikeling_data = [[] for _ in range(9)]
-            else:
-                for i in range(9):
-                    if not self.spikeling_data[i]:
-                        self.spikeling_data[i] = []
+    def _refresh_recording_theme(self, *_):
+        self._set_recording_ui()
 
-            # Save path for later use
-            self._current_save_path = save_path
+        self.ui.Spikeling_DataRecording_Record_label.setStyleSheet("color: rgb(220, 50, 47);")
 
-        # # --- If recording is on, append latest buffer data ---
-        # if self.ui.Spikeling_DataRecording_Record_pushButton.isChecked():
-        #     for i in range(8):
-        #         buffer_name = f"databuffer{i}"
-        #         if hasattr(self, buffer_name) and getattr(self, buffer_name):
-        #             self.spikeling_data[i + 1].append(getattr(self, buffer_name)[-1])
+        for dialog in (self._record_folder_dialog,getattr(self, "_disconnect_dialog", None),):
+            if dialog is not None:
+                self._style_recording_dialog(dialog)
 
-        # --- If recording is stopped, export data ---
-        if not self.ui.Spikeling_DataRecording_Record_pushButton.isChecked() and self.record_flag:
-            if hasattr(self, "_current_save_path"):
-                self.export_data_to_csv(self._current_save_path)
-            self.record_flag = False
-            # Clear data arrays
-            for i in range(9):
-                self.spikeling_data[i].clear()
+    def _style_recording_dialog(self, dialog):
+        """Apply the active GUI theme to recording-related dialogs."""
+        colour = theme_manager.active_colour
 
-    def export_data_to_csv(self, file_path: Path) -> None:
-        """
-        Export the recorded Spikeling stream to CSV.
+        background = colour("window_background")
+        panel = colour("panel_background")
+        surface = colour("surface")
+        text = colour("text_primary")
+        muted = colour("text_muted")
+        accent = colour("neuron_stimulus")
 
-        Parameters
-        ----------
-        file_path : pathlib.Path
-            Destination ``.csv`` path.
+        dialog.setStyleSheet(f"""
+            QDialog, QMessageBox, QFileDialog {{background-color: {background};color: {text};}}
+            QLabel, QCheckBox {{color: {text}; background-color: transparent;}}
+            QFrame {{background-color: transparent;}}
+            QTreeView, QListView, QTableView {{background-color: {panel}; alternate-background-color: {surface}; color: {text}; border: 1px solid {muted}; selection-background-color: {accent}; selection-color: {text};}}
+            QTreeView::item:selected,
+            QListView::item:selected,
+            QTableView::item:selected {{background-color: {accent}; color: {text};}}
+            QHeaderView::section {{background-color: {surface}; color: {text}; border: 1px solid {muted}; padding: 4px;}}
+            QLineEdit, QComboBox {{background-color: {panel}; color: {text}; border: 1px solid {muted}; border-radius: 4px; padding: 4px;}}
+            QComboBox QAbstractItemView {{background-color: {panel}; color: {text}; selection-background-color: {accent};}}
+            QPushButton, QToolButton {{ background-color: {surface}; color: {text}; border: 1px solid {muted}; border-radius: 5px; padding: 5px 10px;}}
+            QPushButton:hover, QToolButton:hover {{background-color: {panel}; border-color: {accent};}}
+            QPushButton:pressed, QToolButton:pressed {{background-color: {background};}}
+            QPushButton:disabled, QToolButton:disabled {{color: {muted};}}
+        """)
 
-        Notes
-        -----
-        The time axis is reconstructed as ``k * SAMPLE_INTERVAL`` and therefore
-        assumes no packet loss on the serial link. Prefer a device-side
-        timestamp if sample-accurate timing matters for the analysis.
-        """
-        n_samples = len(self.spikeling_data[1])
-        if n_samples == 0:
-            print("No data to save.")
+    def _recording_message(self, title, text, question=False):
+        """Use the active GUI colours for recording messages."""
+        box = QMessageBox(self.parent)
+        box.setWindowTitle(title)
+        box.setTextFormat(Qt.TextFormat.PlainText)
+        box.setText(text)
+        box.setIcon(QMessageBox.Icon.Question if question else QMessageBox.Icon.Warning)
+
+
+        if question:
+            box.setStandardButtons(
+                QMessageBox.StandardButton.Yes
+                | QMessageBox.StandardButton.No
+            )
+            box.setDefaultButton(QMessageBox.StandardButton.No)
+        else:
+            box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+        self._style_recording_dialog(box)
+        return box.exec()
+
+    def browse_record_folder(self, checked=False):
+        """Open a reusable folder browser without a nested event loop."""
+        if self.record_flag:
             return
 
-        columns = [
-            'Spikeling Vm (mV)', 'Stimulus (%)', 'Total Current Input (a.u.)',
-            'Synapse 1 Vm (mV)', 'Synapse 1 Input (a.u.)',
-            'Synapse 2 Vm (mV)', 'Synapse 2 Input (a.u.)', 'Trigger',
-        ]
-        frame = {'Time (ms)': np.arange(n_samples, dtype=float) * SAMPLE_INTERVAL}
-        frame.update({
-            name: np.asarray(self.spikeling_data[j + 1], dtype=float)
-            for j, name in enumerate(columns)
-        })
+        dialog = self._record_folder_dialog
+
+        if dialog is None:
+            dialog = QFileDialog(self.parent)
+
+            # Set these options before configuring the browser.
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True,)
+            dialog.setOption(QFileDialog.Option.DontUseCustomDirectoryIcons, True,)
+            dialog.setOption(QFileDialog.Option.ShowDirsOnly, True,)
+
+            dialog.setWindowTitle("Select a recording folder")
+            dialog.setFileMode(QFileDialog.FileMode.Directory)
+            dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
+
+            dialog.setLabelText(QFileDialog.DialogLabel.Accept, "Select folder",)
+
+            dialog.finished.connect(self._record_folder_dialog_finished)
+
+            # Keep the dialog and its filesystem model for subsequent uses.
+            self._record_folder_dialog = dialog
+
+        if dialog.isVisible():
+            dialog.raise_()
+            dialog.activateWindow()
+            return
+
+        folder = (self.ui.Spikeling_DataRecording_Folder_lineEdit.text())
+        dialog.setDirectory(folder)
+        self._style_recording_dialog(dialog)
+
+        # Returns immediately; acquisition continues in the main event loop.
+        dialog.open()
+
+    def _record_folder_dialog_finished(self, result):
+        """Update the destination only when a folder was accepted."""
+        dialog = self._record_folder_dialog
+
+        if dialog is None:
+            return
+
+        if result != QDialog.DialogCode.Accepted:
+            return
+
+        if self.record_flag:
+            return
+
+        folders = dialog.selectedFiles()
+
+        if folders:
+            self.ui.Spikeling_DataRecording_Folder_lineEdit.setText(folders[0])
+
+
+    def _recording_path(self):
+        """Validate the destination and confirm any replacement."""
+        folder_text = (self.ui.Spikeling_DataRecording_Folder_lineEdit.text().strip())
+        name = (self.ui.Spikeling_DataRecording_File_lineEdit.text().strip())
+
+        if name.lower().endswith(".csv"):
+            name = name[:-4].strip()
+
+        invalid = '<>:"/\\|?*'
+
+        reserved = {"CON", "PRN", "AUX", "NUL"}
+        reserved.update(f"COM{i}" for i in range(1, 10))
+        reserved.update(f"LPT{i}" for i in range(1, 10))
+
+        if (
+            not name
+            or name in {".", ".."}
+            or name.endswith((".", " "))
+            or any(c in invalid or ord(c) < 32 for c in name)
+            or name.split(".")[0].upper() in reserved
+        ):
+            raise ValueError(
+                "Enter a valid file name without a folder path. "
+                "The .csv extension is added automatically."
+            )
+
+        if not folder_text:
+            raise ValueError(
+                "Select a recording folder using Browse."
+            )
+
+        folder = Path(folder_text)
+        default = Path(__file__).resolve().parent / "Recordings"
+
+        if folder == default:
+            folder.mkdir(parents=True, exist_ok=True)
+
+        if not folder.is_dir():
+            raise ValueError(
+                "The recording folder does not exist. "
+                "Select it again."
+            )
+
+        # Test actual file creation in the selected directory.
+        with tempfile.TemporaryFile(dir=folder):
+            pass
+
+        path = folder / f"{name}.csv"
+
+        if path.exists():
+            answer = self._recording_message(
+                "File already exists",
+                f"{path.name} already exists.\n\n"
+                "Replace it when this recording is saved?\n"
+                "Choose No to enter another file name.",
+                question=True,
+            )
+
+            if answer != QMessageBox.StandardButton.Yes:
+                return None
+
+        self.ui.Spikeling_DataRecording_File_lineEdit.setText(name)
+
+        return path
+
+    def _recording_mode(self):
+        vc = self.ui.PatchClampMode_toggleButton.isChecked()
+
+        model = (self.ui.Spikeling_PatchClamp_MembraneModel_comboBox.currentText() if vc else "")
+
+        return vc, model
+
+
+    def handle_record_button(self, checked=False):
+        """Choose the action from recording state."""
+        if self.record_flag:
+            self.stop_recording()
+
+        elif self._recording_save_pending:
+            try:
+                path = self._recording_path()
+            except (OSError, ValueError) as error:
+                self._set_recording_ui()
+                self._recording_message(
+                    "Cannot save recording",
+                    str(error),
+                )
+                return
+
+            if path is not None:
+                self._current_save_path = path
+                self.stop_recording()
+            else:
+                self._set_recording_ui()
+
+        else:
+            self.start_recording()
+
+    def start_recording(self):
+        if not (
+            serial_manager.is_open
+            and self.supervisor.state == ConnectionState.CONNECTED
+        ):
+            self._set_recording_ui()
+            self._recording_message(
+                "Spikeling not connected",
+                "Connect a Spikeling board and wait until it is ready.",
+            )
+            return
 
         try:
-            pd.DataFrame(frame).to_csv(file_path, index=False)
-        except Exception as error:
-            print(f"Failed to save data: {error}")
-            Settings.show_popup(
-                self.parent, Title="Error saving file",
-                Text=f"Could not save recording to {file_path}.\nError: {error}",
+            path = self._recording_path()
+        except (OSError, ValueError) as error:
+            self._set_recording_ui()
+            self._recording_message(
+                "Cannot start recording",
+                str(error),
             )
+            return
+
+        if path is None:
+            self._set_recording_ui()
+            return
+
+        # Modal dialogs process events, so check the connection again.
+        if not (
+            serial_manager.is_open
+            and self.supervisor.state == ConnectionState.CONNECTED
+        ):
+            self._set_recording_ui()
+            self._recording_message(
+                "Spikeling not connected",
+                "The board disconnected before recording started.",
+            )
+            return
+
+        self.spikeling_data = [[] for _ in range(9)]
+        self._current_save_path = path
+
+        self._recording_mode_at_start = self._recording_mode()
+        self._recording_started = time.monotonic()
+        self._recording_stop_reason = ""
+        self._recording_save_pending = False
+
+        self.record_flag = True
+
+        self.recording_status_timer.start()
+        self._set_recording_ui()
+        self.update_recording_details()
+
+
+    def _set_recording_ui(self):
+        button = self.ui.Spikeling_DataRecording_Record_pushButton
+
+        with QSignalBlocker(button):
+            button.setChecked(self.record_flag)
+
+        button.setText(
+            "Stop recording"
+            if self.record_flag
+            else "Retry save"
+            if self._recording_save_pending
+            else "Record"
+        )
+
+        # Preserve the existing red idle / green recording convention.
+        palette = theme_manager.palette()
+        background = palette[4] if self.record_flag else palette[3]
+        rgb = tuple(background)
+
+        button.setStyleSheet(
+            f"QPushButton {{"
+            f"color: white;"
+            f"background-color: rgb{rgb};"
+            f"}}"
+            "QPushButton:hover { border: 2px solid white; }"
+            "QPushButton:pressed { border: 2px solid #586e75; }"
+        )
+
+        for widget in (self.ui.Spikeling_DataRecording_Folder_pushButton, self.ui.Spikeling_DataRecording_File_lineEdit,):
+            widget.setEnabled(not self.record_flag)
+
+    def update_recording_details(self):
+        if not self.record_flag:
+            return
+
+        count = len(self.spikeling_data[1])
+        elapsed = time.monotonic() - self._recording_started
+
+        vc, model = self._recording_mode_at_start
+        mode = f"VC ({model})" if vc else "CC"
+
+        neuron = self.ui.Spikeling_NeuronModeComboBox.currentText()
+
+        stimulus = getattr(self.parent, "custom_stimulus_controller", None,)
+
+        if stimulus is not None and stimulus.running:
+            source = (
+                f"Custom: {stimulus.filename} "
+                f"(GUI loop {stimulus.completed_loops + 1}/"
+                f"{stimulus.requested_loops})"
+            )
+        else:
+            source = "Built-in stimulus"
+
+        text = (
+            f"Recording • {elapsed:.1f} s elapsed • {count:,} samples\n"
+            f"{mode} • Preset selection: {neuron} • "
+            f"Model step {SAMPLE_INTERVAL:g} ms\n"
+            f"{source}"
+        )
+
+        label = self.ui.Spikeling_DataRecording_Record_label
+        label.setText(text)
+        label.setToolTip(
+            f"File: {self._current_save_path}\n"
+            "Time in CSV is reconstructed from sample count. "
+            "This stream cannot yet detect missing samples."
+        )
+
+
+    def stop_recording(self, reason="Stopped"):
+        """Stop capture, save, and retain samples if saving fails."""
+        if not self.record_flag and not self._recording_save_pending:
+            return True
+
+        if self.record_flag:
+            self._recording_stop_reason = reason
+
+        self.record_flag = False
+        self.recording_status_timer.stop()
+
+        count = len(self.spikeling_data[1])
+        self._recording_save_pending = count > 0
+
+        self._set_recording_ui()
+
+        if not count:
+            self.ui.Spikeling_DataRecording_Record_label.setText(
+                "Stopped • No samples received"
+            )
+            self._recording_message(
+                "No samples recorded",
+                "No samples were received. "
+                "No recording file was created.",
+            )
+            return True
+
+        if not self.export_data_to_csv(self._current_save_path):
+            self._recording_save_pending = True
+            self._set_recording_ui()
+
+            self.ui.Spikeling_DataRecording_Record_label.setText(
+                f"Save failed • {count:,} samples retained • Retry save"
+            )
+
+            self._recording_message(
+                "Recording could not be saved",
+                f"{self._recording_error}\n\n"
+                "Samples are still held in memory. "
+                "Select another folder or file name if needed, "
+                "then click Retry save. "
+                "Keep the application open until saving succeeds.",
+            )
+            return False
+
+        self._recording_save_pending = False
+        self.spikeling_data = [[] for _ in range(9)]
+
+        self._set_recording_ui()
+
+        self.ui.Spikeling_DataRecording_Record_label.setText(
+            f"{self._recording_stop_reason} • "
+            f"Saved {count:,} samples\n"
+            f"{self._current_save_path.name}"
+        )
+
+        return True
+
+
+    def export_data_to_csv(self, file_path):
+        """Replace the destination only after writing a complete CSV."""
+        temporary_path = None
+
+        try:
+            count = len(self.spikeling_data[1])
+
+            if any(
+                len(channel) != count
+                for channel in self.spikeling_data[1:]
+            ):
+                raise ValueError(
+                    "Recorded channels have different sample counts."
+                )
+
+            vc, _ = self._recording_mode_at_start
+            unit = "nA" if vc else "a.u."
+            current = "Clamp current" if vc else "Total Current Input"
+
+            columns = [
+                "Spikeling Vm (mV)",
+                "Stimulus (%)",
+                f"{current} ({unit})",
+                "Synapse 1 Vm (mV)",
+                f"Synapse 1 Input ({unit})",
+                "Synapse 2 Vm (mV)",
+                f"Synapse 2 Input ({unit})",
+                "Trigger",
+            ]
+
+            frame = {
+                "Time (ms)": (
+                    np.arange(count, dtype=float) * SAMPLE_INTERVAL
+                )
+            }
+
+            frame.update({
+                name: self.spikeling_data[index + 1]
+                for index, name in enumerate(columns)
+            })
+
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                newline="",
+                dir=file_path.parent,
+                prefix=f".{file_path.stem}_",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                temporary_path = Path(handle.name)
+
+                pd.DataFrame(frame).to_csv(handle, index=False)
+
+                handle.flush()
+                os.fsync(handle.fileno())
+
+            os.replace(temporary_path, file_path)
+
+            return True
+
+        except Exception as error:
+            self._recording_error = str(error)
+            return False
+
+        finally:
+            if temporary_path is not None:
+                try:
+                    temporary_path.unlink(missing_ok=True)
+                except OSError:
+                    pass
+
 
 # -------------------------------------------------------------------------
 # Cleanup
@@ -701,6 +1095,9 @@ class SpikelingGraph(QObject):
 
     def cleanup(self):
         """Release resources."""
+        if self.record_flag:
+            self.stop_recording(reason="Disconnected")
+
         if self.timer.isActive():
             self.timer.stop()
 

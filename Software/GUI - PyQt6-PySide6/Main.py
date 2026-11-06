@@ -214,7 +214,6 @@ class MainWindow(QMainWindow):
         self.geci_hover = GeciHoverController(self.ui.Imaging_GECI_comboBox, self)
 
         self.SerialFlag = False
-        self.ui.NeuronRecordFolderFlag = False
 
         self.EmulatorConnectionFlag = False
         self.ui.EmulatorRecordFolderFlag = False
@@ -238,6 +237,17 @@ class MainWindow(QMainWindow):
     ## GUI events
     def mousePressEvent(self, event):
         self.dragPos = event.globalPosition().toPoint()
+
+    def closeEvent(self, event):
+        graph = getattr(self, "spikeling_graph", None)
+
+        if graph is not None:
+            if not graph.stop_recording(reason="Window closed"):
+                # Retain the window and its unsaved recording.
+                event.ignore()
+                return
+
+        super().closeEvent(event)
 
 
 

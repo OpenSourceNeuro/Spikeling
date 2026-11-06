@@ -15,21 +15,21 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
-    QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
-    QSlider, QSpacerItem, QStackedWidget, QTextBrowser,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox,
+    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QRadioButton, QSizePolicy, QSlider, QSpacerItem,
+    QStackedWidget, QTabWidget, QTextBrowser, QVBoxLayout,
+    QWidget)
 
 from pyqtgraph import PlotWidget
-import resources_rc
 import resources_rc
 
 class Ui_Spikeling(object):
     def setupUi(self, Spikeling):
         if not Spikeling.objectName():
             Spikeling.setObjectName(u"Spikeling")
-        Spikeling.resize(1280, 720)
+        Spikeling.resize(1280, 735)
         Spikeling.setMinimumSize(QSize(1280, 720))
         Spikeling.setStyleSheet(u"*{\n"
 "	border:none;\n"
@@ -1918,7 +1918,7 @@ class Ui_Spikeling(object):
         self.Spikeling_DataRecording_Record_label.setSizePolicy(sizePolicy3)
         self.Spikeling_DataRecording_Record_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.horizontalLayout_57.addWidget(self.Spikeling_DataRecording_Record_label)
+        self.horizontalLayout_57.addWidget(self.Spikeling_DataRecording_Record_label, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.Spikeling_DataRecording_Record_pushButton = QPushButton(self.Spikeling_DataRecording_record_frame)
         self.Spikeling_DataRecording_Record_pushButton.setObjectName(u"Spikeling_DataRecording_Record_pushButton")
@@ -19332,25 +19332,1566 @@ class Ui_Spikeling(object):
         self.mainbody_stackedWidget.addWidget(self.page_StimulusGenerator)
         self.page_Settings = QWidget()
         self.page_Settings.setObjectName(u"page_Settings")
-        self.horizontalLayout_119 = QHBoxLayout(self.page_Settings)
-        self.horizontalLayout_119.setObjectName(u"horizontalLayout_119")
-        self.frame_11 = QFrame(self.page_Settings)
-        self.frame_11.setObjectName(u"frame_11")
-        self.frame_11.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_11.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_160 = QHBoxLayout(self.frame_11)
+        self.verticalLayout_340 = QVBoxLayout(self.page_Settings)
+        self.verticalLayout_340.setSpacing(20)
+        self.verticalLayout_340.setObjectName(u"verticalLayout_340")
+        self.verticalLayout_340.setContentsMargins(0, 0, 0, 0)
+        self.Settings_Header_frame = QFrame(self.page_Settings)
+        self.Settings_Header_frame.setObjectName(u"Settings_Header_frame")
+        self.Settings_Header_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Header_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_341 = QVBoxLayout(self.Settings_Header_frame)
+        self.verticalLayout_341.setSpacing(5)
+        self.verticalLayout_341.setObjectName(u"verticalLayout_341")
+        self.verticalLayout_341.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Header_Title = QLabel(self.Settings_Header_frame)
+        self.Settings_Header_Title.setObjectName(u"Settings_Header_Title")
+        font18 = QFont()
+        font18.setPointSize(24)
+        font18.setBold(True)
+        self.Settings_Header_Title.setFont(font18)
+
+        self.verticalLayout_341.addWidget(self.Settings_Header_Title)
+
+        self.Settings_Header_label = QLabel(self.Settings_Header_frame)
+        self.Settings_Header_label.setObjectName(u"Settings_Header_label")
+        self.Settings_Header_label.setFont(font15)
+
+        self.verticalLayout_341.addWidget(self.Settings_Header_label)
+
+
+        self.verticalLayout_340.addWidget(self.Settings_Header_frame)
+
+        self.widget = QWidget(self.page_Settings)
+        self.widget.setObjectName(u"widget")
+        self.gridLayout = QGridLayout(self.widget)
+        self.gridLayout.setSpacing(10)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.Settings_Appearance_groupBox = QGroupBox(self.widget)
+        self.Settings_Appearance_groupBox.setObjectName(u"Settings_Appearance_groupBox")
+        self.Settings_Appearance_groupBox.setFont(font7)
+        self.Settings_Appearance_groupBox.setStyleSheet(u"QGroupBox {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 8px;\n"
+"\n"
+"    padding-top: 5px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"    padding-bottom: 0px;\n"
+"}")
+        self.verticalLayout_347 = QVBoxLayout(self.Settings_Appearance_groupBox)
+        self.verticalLayout_347.setSpacing(5)
+        self.verticalLayout_347.setObjectName(u"verticalLayout_347")
+        self.verticalLayout_347.setContentsMargins(0, 20, 0, 10)
+        self.Settings_Appearance_pushButton_frame = QFrame(self.Settings_Appearance_groupBox)
+        self.Settings_Appearance_pushButton_frame.setObjectName(u"Settings_Appearance_pushButton_frame")
+        self.Settings_Appearance_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Appearance_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_160 = QHBoxLayout(self.Settings_Appearance_pushButton_frame)
         self.horizontalLayout_160.setSpacing(0)
         self.horizontalLayout_160.setObjectName(u"horizontalLayout_160")
-        self.horizontalLayout_160.setContentsMargins(0, 0, 0, 0)
-        self.label_20 = QLabel(self.frame_11)
-        self.label_20.setObjectName(u"label_20")
-        self.label_20.setPixmap(QPixmap(u":/resources/resources/under_construction.svg"))
-        self.label_20.setScaledContents(True)
+        self.horizontalLayout_160.setContentsMargins(50, 0, 50, 0)
+        self.Settings_Dark_pushButton = QPushButton(self.Settings_Appearance_pushButton_frame)
+        self.Settings_Theme_buttonGroup = QButtonGroup(Spikeling)
+        self.Settings_Theme_buttonGroup.setObjectName(u"Settings_Theme_buttonGroup")
+        self.Settings_Theme_buttonGroup.addButton(self.Settings_Dark_pushButton)
+        self.Settings_Dark_pushButton.setObjectName(u"Settings_Dark_pushButton")
+        self.Settings_Dark_pushButton.setMinimumSize(QSize(0, 32))
+        font19 = QFont()
+        font19.setFamilies([u"Segoe UI"])
+        font19.setPointSize(11)
+        font19.setBold(False)
+        self.Settings_Dark_pushButton.setFont(font19)
+        self.Settings_Dark_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Dark_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"\n"
+"    border-top-left-radius: 6px;\n"
+"    border-bottom-left-radius: 6px;\n"
+"    border-top-right-radius: 0px;\n"
+"    border-bottom-right-radius: 0px;\n"
+"\n"
+"    padding: 6px 18px;\n"
+"\n"
+"    font-family: \"Segoe UI\";\n"
+"    font-size: 11pt;\n"
+"    font-weight: 400;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(22, 70, 83);\n"
+"}\n"
+"\n"
+"QPushButton:checked {\n"
+"    background-color: rgb(0, 153, 176);\n"
+"    color: rgb(253, 246, 227);\n"
+"    border-color: rgb(74, 190, 204);\n"
+"    font-weight: 700;\n"
+"}\n"
+"\n"
+"QPushButton:checked:hover {\n"
+"    background-color: rgb(0, 174, 196);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(0, 127, 146);\n"
+"}\n"
+"\n"
+"QPushButton:focus {\n"
+"    border-color: rgb(253, 246, 227);\n"
+"}")
+        self.Settings_Dark_pushButton.setCheckable(True)
+        self.Settings_Dark_pushButton.setChecked(True)
 
-        self.horizontalLayout_160.addWidget(self.label_20)
+        self.horizontalLayout_160.addWidget(self.Settings_Dark_pushButton)
+
+        self.Settings_Ligth_pushButton = QPushButton(self.Settings_Appearance_pushButton_frame)
+        self.Settings_Theme_buttonGroup.addButton(self.Settings_Ligth_pushButton)
+        self.Settings_Ligth_pushButton.setObjectName(u"Settings_Ligth_pushButton")
+        self.Settings_Ligth_pushButton.setMinimumSize(QSize(0, 32))
+        self.Settings_Ligth_pushButton.setFont(font19)
+        self.Settings_Ligth_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Ligth_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"\n"
+"    border-top-left-radius: 0px;\n"
+"    border-bottom-left-radius: 0px;\n"
+"    border-top-right-radius: 6px;\n"
+"    border-bottom-right-radius: 6px;\n"
+"\n"
+"    padding: 6px 18px;\n"
+"\n"
+"    font-family: \"Segoe UI\";\n"
+"    font-size: 11pt;\n"
+"    font-weight: 400;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(22, 70, 83);\n"
+"}\n"
+"\n"
+"QPushButton:checked {\n"
+"    background-color: rgb(0, 153, 176);\n"
+"    color: rgb(253, 246, 227);\n"
+"    border-color: rgb(74, 190, 204);\n"
+"    font-weight: 700;\n"
+"}\n"
+"\n"
+"QPushButton:checked:hover {\n"
+"    background-color: rgb(0, 174, 196);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(0, 127, 146);\n"
+"}\n"
+"\n"
+"QPushButton:focus {\n"
+"    border-color: rgb(253, 246, 227);\n"
+"}")
+        self.Settings_Ligth_pushButton.setCheckable(True)
+
+        self.horizontalLayout_160.addWidget(self.Settings_Ligth_pushButton)
+
+        self.horizontalLayout_160.setStretch(0, 1)
+        self.horizontalLayout_160.setStretch(1, 1)
+
+        self.verticalLayout_347.addWidget(self.Settings_Appearance_pushButton_frame)
+
+        self.Settings_Appearance_Colour_frame = QFrame(self.Settings_Appearance_groupBox)
+        self.Settings_Appearance_Colour_frame.setObjectName(u"Settings_Appearance_Colour_frame")
+        self.Settings_Appearance_Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Appearance_Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_348 = QVBoxLayout(self.Settings_Appearance_Colour_frame)
+        self.verticalLayout_348.setSpacing(5)
+        self.verticalLayout_348.setObjectName(u"verticalLayout_348")
+        self.verticalLayout_348.setContentsMargins(0, 0, 0, 0)
+        self.Settings_WindowColour_frame = QFrame(self.Settings_Appearance_Colour_frame)
+        self.Settings_WindowColour_frame.setObjectName(u"Settings_WindowColour_frame")
+        self.Settings_WindowColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_WindowColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_274 = QHBoxLayout(self.Settings_WindowColour_frame)
+        self.horizontalLayout_274.setSpacing(20)
+        self.horizontalLayout_274.setObjectName(u"horizontalLayout_274")
+        self.horizontalLayout_274.setContentsMargins(10, 0, 10, 0)
+        self.Settings_WindowColour_label = QLabel(self.Settings_WindowColour_frame)
+        self.Settings_WindowColour_label.setObjectName(u"Settings_WindowColour_label")
+        self.Settings_WindowColour_label.setFont(font6)
+
+        self.horizontalLayout_274.addWidget(self.Settings_WindowColour_label)
+
+        self.Settings_WindowColour_pushButton = QPushButton(self.Settings_WindowColour_frame)
+        self.Settings_WindowColour_pushButton.setObjectName(u"Settings_WindowColour_pushButton")
+        self.Settings_WindowColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_WindowColour_pushButton.setStyleSheet(u"background-color: rgb(0, 30,38);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_274.addWidget(self.Settings_WindowColour_pushButton)
+
+        self.Settings_WindowColour_Value_label = QLabel(self.Settings_WindowColour_frame)
+        self.Settings_WindowColour_Value_label.setObjectName(u"Settings_WindowColour_Value_label")
+        self.Settings_WindowColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_274.addWidget(self.Settings_WindowColour_Value_label)
 
 
-        self.horizontalLayout_119.addWidget(self.frame_11)
+        self.verticalLayout_348.addWidget(self.Settings_WindowColour_frame)
+
+        self.Settings_PanelColour_frame = QFrame(self.Settings_Appearance_Colour_frame)
+        self.Settings_PanelColour_frame.setObjectName(u"Settings_PanelColour_frame")
+        self.Settings_PanelColour_frame.setMinimumSize(QSize(64, 26))
+        self.Settings_PanelColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_PanelColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_272 = QHBoxLayout(self.Settings_PanelColour_frame)
+        self.horizontalLayout_272.setSpacing(20)
+        self.horizontalLayout_272.setObjectName(u"horizontalLayout_272")
+        self.horizontalLayout_272.setContentsMargins(10, 0, 10, 0)
+        self.Settings_PanelColour_label = QLabel(self.Settings_PanelColour_frame)
+        self.Settings_PanelColour_label.setObjectName(u"Settings_PanelColour_label")
+        self.Settings_PanelColour_label.setFont(font6)
+
+        self.horizontalLayout_272.addWidget(self.Settings_PanelColour_label)
+
+        self.Settings_PanelColour_pushButton = QPushButton(self.Settings_PanelColour_frame)
+        self.Settings_PanelColour_pushButton.setObjectName(u"Settings_PanelColour_pushButton")
+        self.Settings_PanelColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_PanelColour_pushButton.setStyleSheet(u"background-color: rgb(0, 43, 54);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_272.addWidget(self.Settings_PanelColour_pushButton)
+
+        self.Settings_PanelColour_Value_label = QLabel(self.Settings_PanelColour_frame)
+        self.Settings_PanelColour_Value_label.setObjectName(u"Settings_PanelColour_Value_label")
+        self.Settings_PanelColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_272.addWidget(self.Settings_PanelColour_Value_label)
+
+
+        self.verticalLayout_348.addWidget(self.Settings_PanelColour_frame)
+
+        self.Settings_SurfaceColour_frame = QFrame(self.Settings_Appearance_Colour_frame)
+        self.Settings_SurfaceColour_frame.setObjectName(u"Settings_SurfaceColour_frame")
+        self.Settings_SurfaceColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_SurfaceColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_250 = QHBoxLayout(self.Settings_SurfaceColour_frame)
+        self.horizontalLayout_250.setSpacing(20)
+        self.horizontalLayout_250.setObjectName(u"horizontalLayout_250")
+        self.horizontalLayout_250.setContentsMargins(10, 0, 10, 0)
+        self.Settings_SurfaceColour_label = QLabel(self.Settings_SurfaceColour_frame)
+        self.Settings_SurfaceColour_label.setObjectName(u"Settings_SurfaceColour_label")
+        self.Settings_SurfaceColour_label.setFont(font6)
+
+        self.horizontalLayout_250.addWidget(self.Settings_SurfaceColour_label)
+
+        self.Settings_SurfaceColour_pushButton = QPushButton(self.Settings_SurfaceColour_frame)
+        self.Settings_SurfaceColour_pushButton.setObjectName(u"Settings_SurfaceColour_pushButton")
+        self.Settings_SurfaceColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_SurfaceColour_pushButton.setStyleSheet(u"background-color: rgb(7, 54, 66);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_250.addWidget(self.Settings_SurfaceColour_pushButton)
+
+        self.Settings_SurfaceColour_Value_label = QLabel(self.Settings_SurfaceColour_frame)
+        self.Settings_SurfaceColour_Value_label.setObjectName(u"Settings_SurfaceColour_Value_label")
+        self.Settings_SurfaceColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_250.addWidget(self.Settings_SurfaceColour_Value_label)
+
+
+        self.verticalLayout_348.addWidget(self.Settings_SurfaceColour_frame)
+
+        self.Settings_TextColour_frame = QFrame(self.Settings_Appearance_Colour_frame)
+        self.Settings_TextColour_frame.setObjectName(u"Settings_TextColour_frame")
+        self.Settings_TextColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_TextColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_273 = QHBoxLayout(self.Settings_TextColour_frame)
+        self.horizontalLayout_273.setSpacing(20)
+        self.horizontalLayout_273.setObjectName(u"horizontalLayout_273")
+        self.horizontalLayout_273.setContentsMargins(10, 0, 10, 0)
+        self.Settings_TextColour_label = QLabel(self.Settings_TextColour_frame)
+        self.Settings_TextColour_label.setObjectName(u"Settings_TextColour_label")
+        self.Settings_TextColour_label.setFont(font6)
+
+        self.horizontalLayout_273.addWidget(self.Settings_TextColour_label)
+
+        self.Settings_TextColour_pushButton = QPushButton(self.Settings_TextColour_frame)
+        self.Settings_TextColour_pushButton.setObjectName(u"Settings_TextColour_pushButton")
+        self.Settings_TextColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_TextColour_pushButton.setStyleSheet(u"background-color: rgb(190, 205, 205);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_273.addWidget(self.Settings_TextColour_pushButton)
+
+        self.Settings_TextColour_Value_label = QLabel(self.Settings_TextColour_frame)
+        self.Settings_TextColour_Value_label.setObjectName(u"Settings_TextColour_Value_label")
+        self.Settings_TextColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_273.addWidget(self.Settings_TextColour_Value_label)
+
+
+        self.verticalLayout_348.addWidget(self.Settings_TextColour_frame)
+
+
+        self.verticalLayout_347.addWidget(self.Settings_Appearance_Colour_frame)
+
+
+        self.gridLayout.addWidget(self.Settings_Appearance_groupBox, 0, 1, 1, 1)
+
+        self.Settings_General_groupBox = QGroupBox(self.widget)
+        self.Settings_General_groupBox.setObjectName(u"Settings_General_groupBox")
+        self.Settings_General_groupBox.setFont(font7)
+        self.Settings_General_groupBox.setStyleSheet(u"QGroupBox {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 8px;\n"
+"\n"
+"    padding-top: 5px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"    padding-bottom: 0px;\n"
+"}")
+        self.verticalLayout_342 = QVBoxLayout(self.Settings_General_groupBox)
+        self.verticalLayout_342.setSpacing(0)
+        self.verticalLayout_342.setObjectName(u"verticalLayout_342")
+        self.verticalLayout_342.setContentsMargins(0, 20, 0, 10)
+        self.Settings_LanguageHint_frame = QFrame(self.Settings_General_groupBox)
+        self.Settings_LanguageHint_frame.setObjectName(u"Settings_LanguageHint_frame")
+        self.Settings_LanguageHint_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_LanguageHint_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_343 = QVBoxLayout(self.Settings_LanguageHint_frame)
+        self.verticalLayout_343.setSpacing(20)
+        self.verticalLayout_343.setObjectName(u"verticalLayout_343")
+        self.verticalLayout_343.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Language_label_frame = QFrame(self.Settings_LanguageHint_frame)
+        self.Settings_Language_label_frame.setObjectName(u"Settings_Language_label_frame")
+        self.Settings_Language_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Language_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_54 = QHBoxLayout(self.Settings_Language_label_frame)
+        self.horizontalLayout_54.setSpacing(0)
+        self.horizontalLayout_54.setObjectName(u"horizontalLayout_54")
+        self.horizontalLayout_54.setContentsMargins(0, 0, 0, 0)
+        self.Settings_Language_label = QLabel(self.Settings_Language_label_frame)
+        self.Settings_Language_label.setObjectName(u"Settings_Language_label")
+        self.Settings_Language_label.setFont(font1)
+
+        self.horizontalLayout_54.addWidget(self.Settings_Language_label)
+
+        self.Settings_Language_comboBox = QComboBox(self.Settings_Language_label_frame)
+        icon24 = QIcon()
+        icon24.addFile(u":/resources/resources/English.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Settings_Language_comboBox.addItem(icon24, "")
+        icon25 = QIcon()
+        icon25.addFile(u":/resources/resources/French.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Settings_Language_comboBox.addItem(icon25, "")
+        icon26 = QIcon()
+        icon26.addFile(u":/resources/resources/Greek.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Settings_Language_comboBox.addItem(icon26, "")
+        icon27 = QIcon()
+        icon27.addFile(u":/resources/resources/Italian.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Settings_Language_comboBox.addItem(icon27, "")
+        icon28 = QIcon()
+        icon28.addFile(u":/resources/resources/Spanish.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Settings_Language_comboBox.addItem(icon28, "")
+        self.Settings_Language_comboBox.setObjectName(u"Settings_Language_comboBox")
+        self.Settings_Language_comboBox.setMinimumSize(QSize(0, 0))
+        self.Settings_Language_comboBox.setMaximumSize(QSize(16777215, 16777215))
+        self.Settings_Language_comboBox.setFont(font1)
+        self.Settings_Language_comboBox.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_54.addWidget(self.Settings_Language_comboBox)
+
+
+        self.verticalLayout_343.addWidget(self.Settings_Language_label_frame)
+
+
+        self.verticalLayout_342.addWidget(self.Settings_LanguageHint_frame)
+
+        self.Settings_RecordingFolder_frame = QFrame(self.Settings_General_groupBox)
+        self.Settings_RecordingFolder_frame.setObjectName(u"Settings_RecordingFolder_frame")
+        self.Settings_RecordingFolder_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_RecordingFolder_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_346 = QVBoxLayout(self.Settings_RecordingFolder_frame)
+        self.verticalLayout_346.setSpacing(0)
+        self.verticalLayout_346.setObjectName(u"verticalLayout_346")
+        self.verticalLayout_346.setContentsMargins(10, 0, 10, 0)
+        self.Settings_RecordingFolder_label_frame = QFrame(self.Settings_RecordingFolder_frame)
+        self.Settings_RecordingFolder_label_frame.setObjectName(u"Settings_RecordingFolder_label_frame")
+        self.Settings_RecordingFolder_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_RecordingFolder_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_345 = QVBoxLayout(self.Settings_RecordingFolder_label_frame)
+        self.verticalLayout_345.setSpacing(0)
+        self.verticalLayout_345.setObjectName(u"verticalLayout_345")
+        self.verticalLayout_345.setContentsMargins(0, 0, 0, 0)
+        self.Settings_RecordingFolder_label = QLabel(self.Settings_RecordingFolder_label_frame)
+        self.Settings_RecordingFolder_label.setObjectName(u"Settings_RecordingFolder_label")
+        self.Settings_RecordingFolder_label.setFont(font1)
+
+        self.verticalLayout_345.addWidget(self.Settings_RecordingFolder_label)
+
+
+        self.verticalLayout_346.addWidget(self.Settings_RecordingFolder_label_frame)
+
+        self.Settings_RecordingFolderBrowse_frame = QFrame(self.Settings_RecordingFolder_frame)
+        self.Settings_RecordingFolderBrowse_frame.setObjectName(u"Settings_RecordingFolderBrowse_frame")
+        self.Settings_RecordingFolderBrowse_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_RecordingFolderBrowse_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_119 = QHBoxLayout(self.Settings_RecordingFolderBrowse_frame)
+        self.horizontalLayout_119.setSpacing(20)
+        self.horizontalLayout_119.setObjectName(u"horizontalLayout_119")
+        self.horizontalLayout_119.setContentsMargins(0, 0, 0, 0)
+        self.Settings_RecordingFolder_lineEdit = QLineEdit(self.Settings_RecordingFolderBrowse_frame)
+        self.Settings_RecordingFolder_lineEdit.setObjectName(u"Settings_RecordingFolder_lineEdit")
+        self.Settings_RecordingFolder_lineEdit.setFont(font6)
+        self.Settings_RecordingFolder_lineEdit.setStyleSheet(u"background-color: #101D24;\n"
+"color: #E6F0F2;\n"
+"border: 1px solid #3B5661;\n"
+"border-radius: 6px;\n"
+"padding: 6px;")
+        self.Settings_RecordingFolder_lineEdit.setReadOnly(True)
+
+        self.horizontalLayout_119.addWidget(self.Settings_RecordingFolder_lineEdit)
+
+        self.Settings_RecordingFolderBrowse_pushButton = QPushButton(self.Settings_RecordingFolderBrowse_frame)
+        self.Settings_RecordingFolderBrowse_pushButton.setObjectName(u"Settings_RecordingFolderBrowse_pushButton")
+        self.Settings_RecordingFolderBrowse_pushButton.setMinimumSize(QSize(100, 0))
+        self.Settings_RecordingFolderBrowse_pushButton.setFont(font6)
+        self.Settings_RecordingFolderBrowse_pushButton.setStyleSheet(u"background-color: #244B56;\n"
+"color: #FFFFFF;\n"
+"border: 1px solid #40747D;\n"
+"border-radius: 6px;\n"
+"padding: 6px 12px;")
+
+        self.horizontalLayout_119.addWidget(self.Settings_RecordingFolderBrowse_pushButton)
+
+
+        self.verticalLayout_346.addWidget(self.Settings_RecordingFolderBrowse_frame)
+
+
+        self.verticalLayout_342.addWidget(self.Settings_RecordingFolder_frame)
+
+
+        self.gridLayout.addWidget(self.Settings_General_groupBox, 0, 0, 1, 1)
+
+        self.Settings_SignalColours_groupBox = QGroupBox(self.widget)
+        self.Settings_SignalColours_groupBox.setObjectName(u"Settings_SignalColours_groupBox")
+        self.Settings_SignalColours_groupBox.setFont(font7)
+        self.Settings_SignalColours_groupBox.setStyleSheet(u"QGroupBox {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 8px;\n"
+"\n"
+"    padding-top: 5px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"    padding-bottom: 0px;\n"
+"}")
+        self.verticalLayout_351 = QVBoxLayout(self.Settings_SignalColours_groupBox)
+        self.verticalLayout_351.setSpacing(0)
+        self.verticalLayout_351.setObjectName(u"verticalLayout_351")
+        self.verticalLayout_351.setContentsMargins(0, 20, 0, 10)
+        self.Settings_SignalColours_tabWidget = QTabWidget(self.Settings_SignalColours_groupBox)
+        self.Settings_SignalColours_tabWidget.setObjectName(u"Settings_SignalColours_tabWidget")
+        self.Settings_SignalColours_tabWidget.setStyleSheet(u"/* All tabs */\n"
+"QTabBar::tab {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    font-size: 10pt;\n"
+"    padding: 8px 14px;\n"
+"\n"
+"    border: 1px solid rgb(88, 110, 117);\n"
+"}\n"
+"\n"
+"/* Selected tab */\n"
+"QTabBar::tab:selected {\n"
+"    background-color: rgb(0, 153, 176);\n"
+"    color: rgb(253, 246, 227);\n"
+"\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"/* Hover over an unselected tab */\n"
+"QTabBar::tab:!selected:hover {\n"
+"    background-color: rgb(22, 70, 83);\n"
+"}\n"
+"\n"
+"/* Content area border */\n"
+"QTabWidget::pane {\n"
+"    border: 1px solid rgb(88, 110, 117);\n"
+"}")
+        self.Settings_NeuronColours_tab = QWidget()
+        self.Settings_NeuronColours_tab.setObjectName(u"Settings_NeuronColours_tab")
+        self.verticalLayout_352 = QVBoxLayout(self.Settings_NeuronColours_tab)
+        self.verticalLayout_352.setSpacing(5)
+        self.verticalLayout_352.setObjectName(u"verticalLayout_352")
+        self.verticalLayout_352.setContentsMargins(10, 0, 10, 0)
+        self.Settings_NeuronVmColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_NeuronVmColour_frame.setObjectName(u"Settings_NeuronVmColour_frame")
+        self.Settings_NeuronVmColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_NeuronVmColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_278 = QHBoxLayout(self.Settings_NeuronVmColour_frame)
+        self.horizontalLayout_278.setSpacing(20)
+        self.horizontalLayout_278.setObjectName(u"horizontalLayout_278")
+        self.horizontalLayout_278.setContentsMargins(10, 0, 10, 0)
+        self.Settings_NeuronVmColour_label = QLabel(self.Settings_NeuronVmColour_frame)
+        self.Settings_NeuronVmColour_label.setObjectName(u"Settings_NeuronVmColour_label")
+        self.Settings_NeuronVmColour_label.setFont(font6)
+
+        self.horizontalLayout_278.addWidget(self.Settings_NeuronVmColour_label)
+
+        self.Settings_NeuronVmColour_pushButton = QPushButton(self.Settings_NeuronVmColour_frame)
+        self.Settings_NeuronVmColour_pushButton.setObjectName(u"Settings_NeuronVmColour_pushButton")
+        self.Settings_NeuronVmColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_NeuronVmColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_NeuronVmColour_pushButton.setStyleSheet(u"background-color: rgb(220, 50, 47);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_278.addWidget(self.Settings_NeuronVmColour_pushButton)
+
+        self.Settings_NeuronVmColour_Value_label = QLabel(self.Settings_NeuronVmColour_frame)
+        self.Settings_NeuronVmColour_Value_label.setObjectName(u"Settings_NeuronVmColour_Value_label")
+        self.Settings_NeuronVmColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_278.addWidget(self.Settings_NeuronVmColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_NeuronVmColour_frame)
+
+        self.Settings_NeuronCurrentColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_NeuronCurrentColour_frame.setObjectName(u"Settings_NeuronCurrentColour_frame")
+        self.Settings_NeuronCurrentColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_NeuronCurrentColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_282 = QHBoxLayout(self.Settings_NeuronCurrentColour_frame)
+        self.horizontalLayout_282.setSpacing(20)
+        self.horizontalLayout_282.setObjectName(u"horizontalLayout_282")
+        self.horizontalLayout_282.setContentsMargins(10, 0, 10, 0)
+        self.Settings_NeuronCurrentColour_label = QLabel(self.Settings_NeuronCurrentColour_frame)
+        self.Settings_NeuronCurrentColour_label.setObjectName(u"Settings_NeuronCurrentColour_label")
+        self.Settings_NeuronCurrentColour_label.setFont(font6)
+
+        self.horizontalLayout_282.addWidget(self.Settings_NeuronCurrentColour_label)
+
+        self.Settings_NeuronCurrentColour_pushButton = QPushButton(self.Settings_NeuronCurrentColour_frame)
+        self.Settings_NeuronCurrentColour_pushButton.setObjectName(u"Settings_NeuronCurrentColour_pushButton")
+        self.Settings_NeuronCurrentColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_NeuronCurrentColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_NeuronCurrentColour_pushButton.setStyleSheet(u"background-color: rgb(133, 153, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_282.addWidget(self.Settings_NeuronCurrentColour_pushButton)
+
+        self.Settings_NeuronCurrentColour_Value_label = QLabel(self.Settings_NeuronCurrentColour_frame)
+        self.Settings_NeuronCurrentColour_Value_label.setObjectName(u"Settings_NeuronCurrentColour_Value_label")
+        self.Settings_NeuronCurrentColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_282.addWidget(self.Settings_NeuronCurrentColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_NeuronCurrentColour_frame)
+
+        self.Settings_NeuronStimulusColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_NeuronStimulusColour_frame.setObjectName(u"Settings_NeuronStimulusColour_frame")
+        self.Settings_NeuronStimulusColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_NeuronStimulusColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_281 = QHBoxLayout(self.Settings_NeuronStimulusColour_frame)
+        self.horizontalLayout_281.setSpacing(20)
+        self.horizontalLayout_281.setObjectName(u"horizontalLayout_281")
+        self.horizontalLayout_281.setContentsMargins(10, 0, 10, 0)
+        self.Settings_NeuronStimulusColour_label = QLabel(self.Settings_NeuronStimulusColour_frame)
+        self.Settings_NeuronStimulusColour_label.setObjectName(u"Settings_NeuronStimulusColour_label")
+        self.Settings_NeuronStimulusColour_label.setFont(font6)
+
+        self.horizontalLayout_281.addWidget(self.Settings_NeuronStimulusColour_label)
+
+        self.Settings_NeuronStimulusColour_pushButton = QPushButton(self.Settings_NeuronStimulusColour_frame)
+        self.Settings_NeuronStimulusColour_pushButton.setObjectName(u"Settings_NeuronStimulusColour_pushButton")
+        self.Settings_NeuronStimulusColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_NeuronStimulusColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_NeuronStimulusColour_pushButton.setStyleSheet(u"background-color: rgb(38, 139, 210);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_281.addWidget(self.Settings_NeuronStimulusColour_pushButton)
+
+        self.Settings_NeuronStimulusColour_Value_label = QLabel(self.Settings_NeuronStimulusColour_frame)
+        self.Settings_NeuronStimulusColour_Value_label.setObjectName(u"Settings_NeuronStimulusColour_Value_label")
+        self.Settings_NeuronStimulusColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_281.addWidget(self.Settings_NeuronStimulusColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_NeuronStimulusColour_frame)
+
+        self.Settings_Synapse1VmColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_Synapse1VmColour_frame.setObjectName(u"Settings_Synapse1VmColour_frame")
+        self.Settings_Synapse1VmColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Synapse1VmColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_276 = QHBoxLayout(self.Settings_Synapse1VmColour_frame)
+        self.horizontalLayout_276.setSpacing(20)
+        self.horizontalLayout_276.setObjectName(u"horizontalLayout_276")
+        self.horizontalLayout_276.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Synapse1VmColour_label = QLabel(self.Settings_Synapse1VmColour_frame)
+        self.Settings_Synapse1VmColour_label.setObjectName(u"Settings_Synapse1VmColour_label")
+        self.Settings_Synapse1VmColour_label.setFont(font6)
+
+        self.horizontalLayout_276.addWidget(self.Settings_Synapse1VmColour_label)
+
+        self.Settings_Synapse1VmColour_pushButton = QPushButton(self.Settings_Synapse1VmColour_frame)
+        self.Settings_Synapse1VmColour_pushButton.setObjectName(u"Settings_Synapse1VmColour_pushButton")
+        self.Settings_Synapse1VmColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_Synapse1VmColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Synapse1VmColour_pushButton.setStyleSheet(u"background-color: rgb(203, 75, 22);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_276.addWidget(self.Settings_Synapse1VmColour_pushButton)
+
+        self.Settings_Synapse1VmColour_Value_label = QLabel(self.Settings_Synapse1VmColour_frame)
+        self.Settings_Synapse1VmColour_Value_label.setObjectName(u"Settings_Synapse1VmColour_Value_label")
+        self.Settings_Synapse1VmColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_276.addWidget(self.Settings_Synapse1VmColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_Synapse1VmColour_frame)
+
+        self.Settings_Synapse1InputColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_Synapse1InputColour_frame.setObjectName(u"Settings_Synapse1InputColour_frame")
+        self.Settings_Synapse1InputColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Synapse1InputColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_280 = QHBoxLayout(self.Settings_Synapse1InputColour_frame)
+        self.horizontalLayout_280.setSpacing(20)
+        self.horizontalLayout_280.setObjectName(u"horizontalLayout_280")
+        self.horizontalLayout_280.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Synapse1InputColour_label = QLabel(self.Settings_Synapse1InputColour_frame)
+        self.Settings_Synapse1InputColour_label.setObjectName(u"Settings_Synapse1InputColour_label")
+        self.Settings_Synapse1InputColour_label.setFont(font6)
+
+        self.horizontalLayout_280.addWidget(self.Settings_Synapse1InputColour_label)
+
+        self.Settings_Synapse1InputColour_pushButton = QPushButton(self.Settings_Synapse1InputColour_frame)
+        self.Settings_Synapse1InputColour_pushButton.setObjectName(u"Settings_Synapse1InputColour_pushButton")
+        self.Settings_Synapse1InputColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_Synapse1InputColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Synapse1InputColour_pushButton.setStyleSheet(u"background-color: rgb(42, 161, 152);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_280.addWidget(self.Settings_Synapse1InputColour_pushButton)
+
+        self.Settings_Synapse1InputColour_Value_label = QLabel(self.Settings_Synapse1InputColour_frame)
+        self.Settings_Synapse1InputColour_Value_label.setObjectName(u"Settings_Synapse1InputColour_Value_label")
+        self.Settings_Synapse1InputColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_280.addWidget(self.Settings_Synapse1InputColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_Synapse1InputColour_frame)
+
+        self.Settings_Synapse2VmColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_Synapse2VmColour_frame.setObjectName(u"Settings_Synapse2VmColour_frame")
+        self.Settings_Synapse2VmColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Synapse2VmColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_277 = QHBoxLayout(self.Settings_Synapse2VmColour_frame)
+        self.horizontalLayout_277.setSpacing(20)
+        self.horizontalLayout_277.setObjectName(u"horizontalLayout_277")
+        self.horizontalLayout_277.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Synapse2VmColour_label = QLabel(self.Settings_Synapse2VmColour_frame)
+        self.Settings_Synapse2VmColour_label.setObjectName(u"Settings_Synapse2VmColour_label")
+        self.Settings_Synapse2VmColour_label.setFont(font6)
+
+        self.horizontalLayout_277.addWidget(self.Settings_Synapse2VmColour_label)
+
+        self.Settings_Synapse2VmColour_pushButton = QPushButton(self.Settings_Synapse2VmColour_frame)
+        self.Settings_Synapse2VmColour_pushButton.setObjectName(u"Settings_Synapse2VmColour_pushButton")
+        self.Settings_Synapse2VmColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_Synapse2VmColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Synapse2VmColour_pushButton.setStyleSheet(u"background-color: rgb(181, 137, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_277.addWidget(self.Settings_Synapse2VmColour_pushButton)
+
+        self.Settings_Synapse2VmColour_Value_label = QLabel(self.Settings_Synapse2VmColour_frame)
+        self.Settings_Synapse2VmColour_Value_label.setObjectName(u"Settings_Synapse2VmColour_Value_label")
+        self.Settings_Synapse2VmColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_277.addWidget(self.Settings_Synapse2VmColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_Synapse2VmColour_frame)
+
+        self.Settings_Synapse2InputColour_frame = QFrame(self.Settings_NeuronColours_tab)
+        self.Settings_Synapse2InputColour_frame.setObjectName(u"Settings_Synapse2InputColour_frame")
+        self.Settings_Synapse2InputColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Synapse2InputColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_279 = QHBoxLayout(self.Settings_Synapse2InputColour_frame)
+        self.horizontalLayout_279.setSpacing(20)
+        self.horizontalLayout_279.setObjectName(u"horizontalLayout_279")
+        self.horizontalLayout_279.setContentsMargins(10, 0, 10, 0)
+        self.Settings_Synapse2InputColour_label = QLabel(self.Settings_Synapse2InputColour_frame)
+        self.Settings_Synapse2InputColour_label.setObjectName(u"Settings_Synapse2InputColour_label")
+        self.Settings_Synapse2InputColour_label.setFont(font6)
+
+        self.horizontalLayout_279.addWidget(self.Settings_Synapse2InputColour_label)
+
+        self.Settings_Synapse2InputColour_pushButton = QPushButton(self.Settings_Synapse2InputColour_frame)
+        self.Settings_Synapse2InputColour_pushButton.setObjectName(u"Settings_Synapse2InputColour_pushButton")
+        self.Settings_Synapse2InputColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_Synapse2InputColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Synapse2InputColour_pushButton.setStyleSheet(u"background-color: rgb(211, 54, 130);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_279.addWidget(self.Settings_Synapse2InputColour_pushButton)
+
+        self.Settings_Synapse2InputColour_Value_label = QLabel(self.Settings_Synapse2InputColour_frame)
+        self.Settings_Synapse2InputColour_Value_label.setObjectName(u"Settings_Synapse2InputColour_Value_label")
+        self.Settings_Synapse2InputColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_279.addWidget(self.Settings_Synapse2InputColour_Value_label)
+
+
+        self.verticalLayout_352.addWidget(self.Settings_Synapse2InputColour_frame)
+
+        self.Settings_SignalColours_tabWidget.addTab(self.Settings_NeuronColours_tab, "")
+        self.Settings_ImagingColours_tab = QWidget()
+        self.Settings_ImagingColours_tab.setObjectName(u"Settings_ImagingColours_tab")
+        self.verticalLayout_353 = QVBoxLayout(self.Settings_ImagingColours_tab)
+        self.verticalLayout_353.setSpacing(5)
+        self.verticalLayout_353.setObjectName(u"verticalLayout_353")
+        self.verticalLayout_353.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingFluo1Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingFluo1Colour_frame.setObjectName(u"Settings_ImagingFluo1Colour_frame")
+        self.Settings_ImagingFluo1Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingFluo1Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_288 = QHBoxLayout(self.Settings_ImagingFluo1Colour_frame)
+        self.horizontalLayout_288.setSpacing(20)
+        self.horizontalLayout_288.setObjectName(u"horizontalLayout_288")
+        self.horizontalLayout_288.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingFluo1Colour_Colour_label = QLabel(self.Settings_ImagingFluo1Colour_frame)
+        self.Settings_ImagingFluo1Colour_Colour_label.setObjectName(u"Settings_ImagingFluo1Colour_Colour_label")
+        self.Settings_ImagingFluo1Colour_Colour_label.setFont(font6)
+
+        self.horizontalLayout_288.addWidget(self.Settings_ImagingFluo1Colour_Colour_label)
+
+        self.Settings_ImagingFluo1Colour_pushButton = QPushButton(self.Settings_ImagingFluo1Colour_frame)
+        self.Settings_ImagingFluo1Colour_pushButton.setObjectName(u"Settings_ImagingFluo1Colour_pushButton")
+        self.Settings_ImagingFluo1Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingFluo1Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingFluo1Colour_pushButton.setStyleSheet(u"background-color: rgb(133, 153, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_288.addWidget(self.Settings_ImagingFluo1Colour_pushButton)
+
+        self.Settings_ImagingFluo1Colour_Value_label = QLabel(self.Settings_ImagingFluo1Colour_frame)
+        self.Settings_ImagingFluo1Colour_Value_label.setObjectName(u"Settings_ImagingFluo1Colour_Value_label")
+        self.Settings_ImagingFluo1Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_288.addWidget(self.Settings_ImagingFluo1Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingFluo1Colour_frame)
+
+        self.Settings_ImagingFluo2Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingFluo2Colour_frame.setObjectName(u"Settings_ImagingFluo2Colour_frame")
+        self.Settings_ImagingFluo2Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingFluo2Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_285 = QHBoxLayout(self.Settings_ImagingFluo2Colour_frame)
+        self.horizontalLayout_285.setSpacing(20)
+        self.horizontalLayout_285.setObjectName(u"horizontalLayout_285")
+        self.horizontalLayout_285.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingFluo2Colour_label = QLabel(self.Settings_ImagingFluo2Colour_frame)
+        self.Settings_ImagingFluo2Colour_label.setObjectName(u"Settings_ImagingFluo2Colour_label")
+        self.Settings_ImagingFluo2Colour_label.setFont(font6)
+
+        self.horizontalLayout_285.addWidget(self.Settings_ImagingFluo2Colour_label)
+
+        self.Settings_ImagingFluo2Colour_pushButton = QPushButton(self.Settings_ImagingFluo2Colour_frame)
+        self.Settings_ImagingFluo2Colour_pushButton.setObjectName(u"Settings_ImagingFluo2Colour_pushButton")
+        self.Settings_ImagingFluo2Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingFluo2Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingFluo2Colour_pushButton.setStyleSheet(u"background-color: rgb(0, 255, 133);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_285.addWidget(self.Settings_ImagingFluo2Colour_pushButton)
+
+        self.Settings_ImagingFluo2Colour_Value_label = QLabel(self.Settings_ImagingFluo2Colour_frame)
+        self.Settings_ImagingFluo2Colour_Value_label.setObjectName(u"Settings_ImagingFluo2Colour_Value_label")
+        self.Settings_ImagingFluo2Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_285.addWidget(self.Settings_ImagingFluo2Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingFluo2Colour_frame)
+
+        self.Settings_ImagingFluo3Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingFluo3Colour_frame.setObjectName(u"Settings_ImagingFluo3Colour_frame")
+        self.Settings_ImagingFluo3Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingFluo3Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_291 = QHBoxLayout(self.Settings_ImagingFluo3Colour_frame)
+        self.horizontalLayout_291.setSpacing(20)
+        self.horizontalLayout_291.setObjectName(u"horizontalLayout_291")
+        self.horizontalLayout_291.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingFluo3Colour_label = QLabel(self.Settings_ImagingFluo3Colour_frame)
+        self.Settings_ImagingFluo3Colour_label.setObjectName(u"Settings_ImagingFluo3Colour_label")
+        self.Settings_ImagingFluo3Colour_label.setFont(font6)
+
+        self.horizontalLayout_291.addWidget(self.Settings_ImagingFluo3Colour_label)
+
+        self.Settings_ImagingFluo3Colour_pushButton = QPushButton(self.Settings_ImagingFluo3Colour_frame)
+        self.Settings_ImagingFluo3Colour_pushButton.setObjectName(u"Settings_ImagingFluo3Colour_pushButton")
+        self.Settings_ImagingFluo3Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingFluo3Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingFluo3Colour_pushButton.setStyleSheet(u"background-color: rgb(133, 255, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_291.addWidget(self.Settings_ImagingFluo3Colour_pushButton)
+
+        self.Settings_ImagingFluo3Colour_Value_label = QLabel(self.Settings_ImagingFluo3Colour_frame)
+        self.Settings_ImagingFluo3Colour_Value_label.setObjectName(u"Settings_ImagingFluo3Colour_Value_label")
+        self.Settings_ImagingFluo3Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_291.addWidget(self.Settings_ImagingFluo3Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingFluo3Colour_frame)
+
+        self.Settings_ImagingCalcium1Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingCalcium1Colour_frame.setObjectName(u"Settings_ImagingCalcium1Colour_frame")
+        self.Settings_ImagingCalcium1Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingCalcium1Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_284 = QHBoxLayout(self.Settings_ImagingCalcium1Colour_frame)
+        self.horizontalLayout_284.setSpacing(20)
+        self.horizontalLayout_284.setObjectName(u"horizontalLayout_284")
+        self.horizontalLayout_284.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingCalcium1Colour_label = QLabel(self.Settings_ImagingCalcium1Colour_frame)
+        self.Settings_ImagingCalcium1Colour_label.setObjectName(u"Settings_ImagingCalcium1Colour_label")
+        self.Settings_ImagingCalcium1Colour_label.setFont(font6)
+
+        self.horizontalLayout_284.addWidget(self.Settings_ImagingCalcium1Colour_label)
+
+        self.Settings_ImagingCalcium1Colour_pushButton = QPushButton(self.Settings_ImagingCalcium1Colour_frame)
+        self.Settings_ImagingCalcium1Colour_pushButton.setObjectName(u"Settings_ImagingCalcium1Colour_pushButton")
+        self.Settings_ImagingCalcium1Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingCalcium1Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingCalcium1Colour_pushButton.setStyleSheet(u"background-color: rgb(211, 54, 130);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_284.addWidget(self.Settings_ImagingCalcium1Colour_pushButton)
+
+        self.Settings_ImagingCalcium1Colour_Value_label = QLabel(self.Settings_ImagingCalcium1Colour_frame)
+        self.Settings_ImagingCalcium1Colour_Value_label.setObjectName(u"Settings_ImagingCalcium1Colour_Value_label")
+        self.Settings_ImagingCalcium1Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_284.addWidget(self.Settings_ImagingCalcium1Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingCalcium1Colour_frame)
+
+        self.Settings_ImagingCalcium2Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingCalcium2Colour_frame.setObjectName(u"Settings_ImagingCalcium2Colour_frame")
+        self.Settings_ImagingCalcium2Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingCalcium2Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_286 = QHBoxLayout(self.Settings_ImagingCalcium2Colour_frame)
+        self.horizontalLayout_286.setSpacing(20)
+        self.horizontalLayout_286.setObjectName(u"horizontalLayout_286")
+        self.horizontalLayout_286.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingCalcium2Colour_label = QLabel(self.Settings_ImagingCalcium2Colour_frame)
+        self.Settings_ImagingCalcium2Colour_label.setObjectName(u"Settings_ImagingCalcium2Colour_label")
+        self.Settings_ImagingCalcium2Colour_label.setFont(font6)
+
+        self.horizontalLayout_286.addWidget(self.Settings_ImagingCalcium2Colour_label)
+
+        self.Settings_ImagingCalcium2Colour_pushButton = QPushButton(self.Settings_ImagingCalcium2Colour_frame)
+        self.Settings_ImagingCalcium2Colour_pushButton.setObjectName(u"Settings_ImagingCalcium2Colour_pushButton")
+        self.Settings_ImagingCalcium2Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingCalcium2Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingCalcium2Colour_pushButton.setStyleSheet(u"background-color: rgb(108, 113, 196);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_286.addWidget(self.Settings_ImagingCalcium2Colour_pushButton)
+
+        self.Settings_ImagingCalcium2Colour_Value_label = QLabel(self.Settings_ImagingCalcium2Colour_frame)
+        self.Settings_ImagingCalcium2Colour_Value_label.setObjectName(u"Settings_ImagingCalcium2Colour_Value_label")
+        self.Settings_ImagingCalcium2Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_286.addWidget(self.Settings_ImagingCalcium2Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingCalcium2Colour_frame)
+
+        self.Settings_ImagingCalcium3Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingCalcium3Colour_frame.setObjectName(u"Settings_ImagingCalcium3Colour_frame")
+        self.Settings_ImagingCalcium3Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingCalcium3Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_289 = QHBoxLayout(self.Settings_ImagingCalcium3Colour_frame)
+        self.horizontalLayout_289.setSpacing(20)
+        self.horizontalLayout_289.setObjectName(u"horizontalLayout_289")
+        self.horizontalLayout_289.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingCalcium3Colour_label = QLabel(self.Settings_ImagingCalcium3Colour_frame)
+        self.Settings_ImagingCalcium3Colour_label.setObjectName(u"Settings_ImagingCalcium3Colour_label")
+        self.Settings_ImagingCalcium3Colour_label.setFont(font6)
+
+        self.horizontalLayout_289.addWidget(self.Settings_ImagingCalcium3Colour_label)
+
+        self.Settings_ImagingCalcium3Colour_pushButton = QPushButton(self.Settings_ImagingCalcium3Colour_frame)
+        self.Settings_ImagingCalcium3Colour_pushButton.setObjectName(u"Settings_ImagingCalcium3Colour_pushButton")
+        self.Settings_ImagingCalcium3Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingCalcium3Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingCalcium3Colour_pushButton.setStyleSheet(u"background-color: rgb(42, 161, 152);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_289.addWidget(self.Settings_ImagingCalcium3Colour_pushButton)
+
+        self.Settings_ImagingCalcium3Colour_Value_label = QLabel(self.Settings_ImagingCalcium3Colour_frame)
+        self.Settings_ImagingCalcium3Colour_Value_label.setObjectName(u"Settings_ImagingCalcium3Colour_Value_label")
+        self.Settings_ImagingCalcium3Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_289.addWidget(self.Settings_ImagingCalcium3Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingCalcium3Colour_frame)
+
+        self.Settings_ImagingVm1Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingVm1Colour_frame.setObjectName(u"Settings_ImagingVm1Colour_frame")
+        self.Settings_ImagingVm1Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingVm1Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_287 = QHBoxLayout(self.Settings_ImagingVm1Colour_frame)
+        self.horizontalLayout_287.setSpacing(20)
+        self.horizontalLayout_287.setObjectName(u"horizontalLayout_287")
+        self.horizontalLayout_287.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingVm1Colour_label = QLabel(self.Settings_ImagingVm1Colour_frame)
+        self.Settings_ImagingVm1Colour_label.setObjectName(u"Settings_ImagingVm1Colour_label")
+        self.Settings_ImagingVm1Colour_label.setFont(font6)
+
+        self.horizontalLayout_287.addWidget(self.Settings_ImagingVm1Colour_label)
+
+        self.Settings_ImagingVm1Colour_pushButton = QPushButton(self.Settings_ImagingVm1Colour_frame)
+        self.Settings_ImagingVm1Colour_pushButton.setObjectName(u"Settings_ImagingVm1Colour_pushButton")
+        self.Settings_ImagingVm1Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingVm1Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingVm1Colour_pushButton.setStyleSheet(u"background-color: rgb(220, 50, 47);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_287.addWidget(self.Settings_ImagingVm1Colour_pushButton)
+
+        self.Settings_ImagingVm1Colour_Value_label = QLabel(self.Settings_ImagingVm1Colour_frame)
+        self.Settings_ImagingVm1Colour_Value_label.setObjectName(u"Settings_ImagingVm1Colour_Value_label")
+        self.Settings_ImagingVm1Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_287.addWidget(self.Settings_ImagingVm1Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingVm1Colour_frame)
+
+        self.Settings_ImagingVm2Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingVm2Colour_frame.setObjectName(u"Settings_ImagingVm2Colour_frame")
+        self.Settings_ImagingVm2Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingVm2Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_283 = QHBoxLayout(self.Settings_ImagingVm2Colour_frame)
+        self.horizontalLayout_283.setSpacing(20)
+        self.horizontalLayout_283.setObjectName(u"horizontalLayout_283")
+        self.horizontalLayout_283.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingVm2Colour_label = QLabel(self.Settings_ImagingVm2Colour_frame)
+        self.Settings_ImagingVm2Colour_label.setObjectName(u"Settings_ImagingVm2Colour_label")
+        self.Settings_ImagingVm2Colour_label.setFont(font6)
+
+        self.horizontalLayout_283.addWidget(self.Settings_ImagingVm2Colour_label)
+
+        self.Settings_ImagingVm2Colour_pushButton = QPushButton(self.Settings_ImagingVm2Colour_frame)
+        self.Settings_ImagingVm2Colour_pushButton.setObjectName(u"Settings_ImagingVm2Colour_pushButton")
+        self.Settings_ImagingVm2Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingVm2Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingVm2Colour_pushButton.setStyleSheet(u"background-color: rgb(203, 75, 22);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_283.addWidget(self.Settings_ImagingVm2Colour_pushButton)
+
+        self.Settings_ImagingVm2Colour_Value_label = QLabel(self.Settings_ImagingVm2Colour_frame)
+        self.Settings_ImagingVm2Colour_Value_label.setObjectName(u"Settings_ImagingVm2Colour_Value_label")
+        self.Settings_ImagingVm2Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_283.addWidget(self.Settings_ImagingVm2Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingVm2Colour_frame)
+
+        self.Settings_ImagingVm3Colour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingVm3Colour_frame.setObjectName(u"Settings_ImagingVm3Colour_frame")
+        self.Settings_ImagingVm3Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingVm3Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_292 = QHBoxLayout(self.Settings_ImagingVm3Colour_frame)
+        self.horizontalLayout_292.setSpacing(20)
+        self.horizontalLayout_292.setObjectName(u"horizontalLayout_292")
+        self.horizontalLayout_292.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingVm3Colour_label = QLabel(self.Settings_ImagingVm3Colour_frame)
+        self.Settings_ImagingVm3Colour_label.setObjectName(u"Settings_ImagingVm3Colour_label")
+        self.Settings_ImagingVm3Colour_label.setFont(font6)
+
+        self.horizontalLayout_292.addWidget(self.Settings_ImagingVm3Colour_label)
+
+        self.Settings_ImagingVm3Colour_pushButton = QPushButton(self.Settings_ImagingVm3Colour_frame)
+        self.Settings_ImagingVm3Colour_pushButton.setObjectName(u"Settings_ImagingVm3Colour_pushButton")
+        self.Settings_ImagingVm3Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingVm3Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingVm3Colour_pushButton.setStyleSheet(u"background-color: rgb(181, 137, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_292.addWidget(self.Settings_ImagingVm3Colour_pushButton)
+
+        self.Settings_ImagingVm3Colour_Value_label = QLabel(self.Settings_ImagingVm3Colour_frame)
+        self.Settings_ImagingVm3Colour_Value_label.setObjectName(u"Settings_ImagingVm3Colour_Value_label")
+        self.Settings_ImagingVm3Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_292.addWidget(self.Settings_ImagingVm3Colour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingVm3Colour_frame)
+
+        self.Settings_ImagingStimulusColour_frame = QFrame(self.Settings_ImagingColours_tab)
+        self.Settings_ImagingStimulusColour_frame.setObjectName(u"Settings_ImagingStimulusColour_frame")
+        self.Settings_ImagingStimulusColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ImagingStimulusColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_290 = QHBoxLayout(self.Settings_ImagingStimulusColour_frame)
+        self.horizontalLayout_290.setSpacing(20)
+        self.horizontalLayout_290.setObjectName(u"horizontalLayout_290")
+        self.horizontalLayout_290.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ImagingStimulusColour_label = QLabel(self.Settings_ImagingStimulusColour_frame)
+        self.Settings_ImagingStimulusColour_label.setObjectName(u"Settings_ImagingStimulusColour_label")
+        self.Settings_ImagingStimulusColour_label.setFont(font6)
+
+        self.horizontalLayout_290.addWidget(self.Settings_ImagingStimulusColour_label)
+
+        self.Settings_ImagingStimulusColour_pushButton = QPushButton(self.Settings_ImagingStimulusColour_frame)
+        self.Settings_ImagingStimulusColour_pushButton.setObjectName(u"Settings_ImagingStimulusColour_pushButton")
+        self.Settings_ImagingStimulusColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ImagingStimulusColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ImagingStimulusColour_pushButton.setStyleSheet(u"background-color: rgb(38, 139, 210);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_290.addWidget(self.Settings_ImagingStimulusColour_pushButton)
+
+        self.Settings_ImagingStimulusColour_Value_label = QLabel(self.Settings_ImagingStimulusColour_frame)
+        self.Settings_ImagingStimulusColour_Value_label.setObjectName(u"Settings_ImagingStimulusColour_Value_label")
+        self.Settings_ImagingStimulusColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_290.addWidget(self.Settings_ImagingStimulusColour_Value_label)
+
+
+        self.verticalLayout_353.addWidget(self.Settings_ImagingStimulusColour_frame)
+
+        self.Settings_SignalColours_tabWidget.addTab(self.Settings_ImagingColours_tab, "")
+        self.Settings_ExtracellularColours_tab = QWidget()
+        self.Settings_ExtracellularColours_tab.setObjectName(u"Settings_ExtracellularColours_tab")
+        self.verticalLayout_354 = QVBoxLayout(self.Settings_ExtracellularColours_tab)
+        self.verticalLayout_354.setSpacing(5)
+        self.verticalLayout_354.setObjectName(u"verticalLayout_354")
+        self.verticalLayout_354.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraCh1Colour_frame = QFrame(self.Settings_ExtracellularColours_tab)
+        self.Settings_ExtraCh1Colour_frame.setObjectName(u"Settings_ExtraCh1Colour_frame")
+        self.Settings_ExtraCh1Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ExtraCh1Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_296 = QHBoxLayout(self.Settings_ExtraCh1Colour_frame)
+        self.horizontalLayout_296.setSpacing(20)
+        self.horizontalLayout_296.setObjectName(u"horizontalLayout_296")
+        self.horizontalLayout_296.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraCh1Colour_label = QLabel(self.Settings_ExtraCh1Colour_frame)
+        self.Settings_ExtraCh1Colour_label.setObjectName(u"Settings_ExtraCh1Colour_label")
+        self.Settings_ExtraCh1Colour_label.setFont(font6)
+
+        self.horizontalLayout_296.addWidget(self.Settings_ExtraCh1Colour_label)
+
+        self.Settings_ExtraCh1Colour_pushButton = QPushButton(self.Settings_ExtraCh1Colour_frame)
+        self.Settings_ExtraCh1Colour_pushButton.setObjectName(u"Settings_ExtraCh1Colour_pushButton")
+        self.Settings_ExtraCh1Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ExtraCh1Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ExtraCh1Colour_pushButton.setStyleSheet(u"background-color: rgb(38, 139, 210);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_296.addWidget(self.Settings_ExtraCh1Colour_pushButton)
+
+        self.Settings_ExtraCh1Colour_Value_label = QLabel(self.Settings_ExtraCh1Colour_frame)
+        self.Settings_ExtraCh1Colour_Value_label.setObjectName(u"Settings_ExtraCh1Colour_Value_label")
+        self.Settings_ExtraCh1Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_296.addWidget(self.Settings_ExtraCh1Colour_Value_label)
+
+
+        self.verticalLayout_354.addWidget(self.Settings_ExtraCh1Colour_frame)
+
+        self.Settings_ExtraCh2Colour_frame = QFrame(self.Settings_ExtracellularColours_tab)
+        self.Settings_ExtraCh2Colour_frame.setObjectName(u"Settings_ExtraCh2Colour_frame")
+        self.Settings_ExtraCh2Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ExtraCh2Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_295 = QHBoxLayout(self.Settings_ExtraCh2Colour_frame)
+        self.horizontalLayout_295.setSpacing(20)
+        self.horizontalLayout_295.setObjectName(u"horizontalLayout_295")
+        self.horizontalLayout_295.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraCh2Colour_label = QLabel(self.Settings_ExtraCh2Colour_frame)
+        self.Settings_ExtraCh2Colour_label.setObjectName(u"Settings_ExtraCh2Colour_label")
+        self.Settings_ExtraCh2Colour_label.setFont(font6)
+
+        self.horizontalLayout_295.addWidget(self.Settings_ExtraCh2Colour_label)
+
+        self.Settings_ExtraCh2Colour_pushButton = QPushButton(self.Settings_ExtraCh2Colour_frame)
+        self.Settings_ExtraCh2Colour_pushButton.setObjectName(u"Settings_ExtraCh2Colour_pushButton")
+        self.Settings_ExtraCh2Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ExtraCh2Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ExtraCh2Colour_pushButton.setStyleSheet(u"background-color: rgb(42, 161, 152);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_295.addWidget(self.Settings_ExtraCh2Colour_pushButton)
+
+        self.Settings_ExtraCh2Colour_Value_label = QLabel(self.Settings_ExtraCh2Colour_frame)
+        self.Settings_ExtraCh2Colour_Value_label.setObjectName(u"Settings_ExtraCh2Colour_Value_label")
+        self.Settings_ExtraCh2Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_295.addWidget(self.Settings_ExtraCh2Colour_Value_label)
+
+
+        self.verticalLayout_354.addWidget(self.Settings_ExtraCh2Colour_frame)
+
+        self.Settings_ExtraCh3Colour_frame = QFrame(self.Settings_ExtracellularColours_tab)
+        self.Settings_ExtraCh3Colour_frame.setObjectName(u"Settings_ExtraCh3Colour_frame")
+        self.Settings_ExtraCh3Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ExtraCh3Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_293 = QHBoxLayout(self.Settings_ExtraCh3Colour_frame)
+        self.horizontalLayout_293.setSpacing(20)
+        self.horizontalLayout_293.setObjectName(u"horizontalLayout_293")
+        self.horizontalLayout_293.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraCh3Colour_label = QLabel(self.Settings_ExtraCh3Colour_frame)
+        self.Settings_ExtraCh3Colour_label.setObjectName(u"Settings_ExtraCh3Colour_label")
+        self.Settings_ExtraCh3Colour_label.setFont(font6)
+
+        self.horizontalLayout_293.addWidget(self.Settings_ExtraCh3Colour_label)
+
+        self.Settings_ExtraCh3Colour_pushButton = QPushButton(self.Settings_ExtraCh3Colour_frame)
+        self.Settings_ExtraCh3Colour_pushButton.setObjectName(u"Settings_ExtraCh3Colour_pushButton")
+        self.Settings_ExtraCh3Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ExtraCh3Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ExtraCh3Colour_pushButton.setStyleSheet(u"background-color: rgb(133, 153, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_293.addWidget(self.Settings_ExtraCh3Colour_pushButton)
+
+        self.Settings_ExtraCh3Colour_Value_label = QLabel(self.Settings_ExtraCh3Colour_frame)
+        self.Settings_ExtraCh3Colour_Value_label.setObjectName(u"Settings_ExtraCh3Colour_Value_label")
+        self.Settings_ExtraCh3Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_293.addWidget(self.Settings_ExtraCh3Colour_Value_label)
+
+
+        self.verticalLayout_354.addWidget(self.Settings_ExtraCh3Colour_frame)
+
+        self.Settings_ExtraCh4Colour_frame = QFrame(self.Settings_ExtracellularColours_tab)
+        self.Settings_ExtraCh4Colour_frame.setObjectName(u"Settings_ExtraCh4Colour_frame")
+        self.Settings_ExtraCh4Colour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ExtraCh4Colour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_294 = QHBoxLayout(self.Settings_ExtraCh4Colour_frame)
+        self.horizontalLayout_294.setSpacing(20)
+        self.horizontalLayout_294.setObjectName(u"horizontalLayout_294")
+        self.horizontalLayout_294.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraCh4Colour_label = QLabel(self.Settings_ExtraCh4Colour_frame)
+        self.Settings_ExtraCh4Colour_label.setObjectName(u"Settings_ExtraCh4Colour_label")
+        self.Settings_ExtraCh4Colour_label.setFont(font6)
+
+        self.horizontalLayout_294.addWidget(self.Settings_ExtraCh4Colour_label)
+
+        self.Settings_ExtraCh4Colour_pushButton = QPushButton(self.Settings_ExtraCh4Colour_frame)
+        self.Settings_ExtraCh4Colour_pushButton.setObjectName(u"Settings_ExtraCh4Colour_pushButton")
+        self.Settings_ExtraCh4Colour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ExtraCh4Colour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ExtraCh4Colour_pushButton.setStyleSheet(u"background-color: rgb(108, 113, 196);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_294.addWidget(self.Settings_ExtraCh4Colour_pushButton)
+
+        self.Settings_ExtraCh4Colour_Value_label = QLabel(self.Settings_ExtraCh4Colour_frame)
+        self.Settings_ExtraCh4Colour_Value_label.setObjectName(u"Settings_ExtraCh4Colour_Value_label")
+        self.Settings_ExtraCh4Colour_Value_label.setFont(font6)
+
+        self.horizontalLayout_294.addWidget(self.Settings_ExtraCh4Colour_Value_label)
+
+
+        self.verticalLayout_354.addWidget(self.Settings_ExtraCh4Colour_frame)
+
+        self.Settings_ExtraThresholdColour_frame = QFrame(self.Settings_ExtracellularColours_tab)
+        self.Settings_ExtraThresholdColour_frame.setObjectName(u"Settings_ExtraThresholdColour_frame")
+        self.Settings_ExtraThresholdColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ExtraThresholdColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_297 = QHBoxLayout(self.Settings_ExtraThresholdColour_frame)
+        self.horizontalLayout_297.setSpacing(20)
+        self.horizontalLayout_297.setObjectName(u"horizontalLayout_297")
+        self.horizontalLayout_297.setContentsMargins(10, 0, 10, 0)
+        self.Settings_ExtraThresholdColour_label = QLabel(self.Settings_ExtraThresholdColour_frame)
+        self.Settings_ExtraThresholdColour_label.setObjectName(u"Settings_ExtraThresholdColour_label")
+        self.Settings_ExtraThresholdColour_label.setFont(font6)
+
+        self.horizontalLayout_297.addWidget(self.Settings_ExtraThresholdColour_label)
+
+        self.Settings_ExtraThresholdColour_pushButton = QPushButton(self.Settings_ExtraThresholdColour_frame)
+        self.Settings_ExtraThresholdColour_pushButton.setObjectName(u"Settings_ExtraThresholdColour_pushButton")
+        self.Settings_ExtraThresholdColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_ExtraThresholdColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_ExtraThresholdColour_pushButton.setStyleSheet(u"background-color: rgb(181, 137, 0);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_297.addWidget(self.Settings_ExtraThresholdColour_pushButton)
+
+        self.Settings_ExtraThresholdColour_Value_label = QLabel(self.Settings_ExtraThresholdColour_frame)
+        self.Settings_ExtraThresholdColour_Value_label.setObjectName(u"Settings_ExtraThresholdColour_Value_label")
+        self.Settings_ExtraThresholdColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_297.addWidget(self.Settings_ExtraThresholdColour_Value_label)
+
+
+        self.verticalLayout_354.addWidget(self.Settings_ExtraThresholdColour_frame)
+
+        self.Settings_SignalColours_tabWidget.addTab(self.Settings_ExtracellularColours_tab, "")
+        self.Settings_AnalysisColours_tab_ = QWidget()
+        self.Settings_AnalysisColours_tab_.setObjectName(u"Settings_AnalysisColours_tab_")
+        self.verticalLayout_355 = QVBoxLayout(self.Settings_AnalysisColours_tab_)
+        self.verticalLayout_355.setSpacing(5)
+        self.verticalLayout_355.setObjectName(u"verticalLayout_355")
+        self.verticalLayout_355.setContentsMargins(10, 0, 10, 0)
+        self.Settings_AnalysisSpikeColour_frame = QFrame(self.Settings_AnalysisColours_tab_)
+        self.Settings_AnalysisSpikeColour_frame.setObjectName(u"Settings_AnalysisSpikeColour_frame")
+        self.Settings_AnalysisSpikeColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_AnalysisSpikeColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_298 = QHBoxLayout(self.Settings_AnalysisSpikeColour_frame)
+        self.horizontalLayout_298.setSpacing(20)
+        self.horizontalLayout_298.setObjectName(u"horizontalLayout_298")
+        self.horizontalLayout_298.setContentsMargins(10, 0, 10, 0)
+        self.Settings_AnalysisSpikeColour_label = QLabel(self.Settings_AnalysisSpikeColour_frame)
+        self.Settings_AnalysisSpikeColour_label.setObjectName(u"Settings_AnalysisSpikeColour_label")
+        self.Settings_AnalysisSpikeColour_label.setFont(font6)
+
+        self.horizontalLayout_298.addWidget(self.Settings_AnalysisSpikeColour_label)
+
+        self.Settings_AnalysisSpikeColour_pushButton = QPushButton(self.Settings_AnalysisSpikeColour_frame)
+        self.Settings_AnalysisSpikeColour_pushButton.setObjectName(u"Settings_AnalysisSpikeColour_pushButton")
+        self.Settings_AnalysisSpikeColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_AnalysisSpikeColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_AnalysisSpikeColour_pushButton.setStyleSheet(u"background-color: rgb(190, 205, 205);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_298.addWidget(self.Settings_AnalysisSpikeColour_pushButton)
+
+        self.Settings_AnalysisSpikeColour_Value_label = QLabel(self.Settings_AnalysisSpikeColour_frame)
+        self.Settings_AnalysisSpikeColour_Value_label.setObjectName(u"Settings_AnalysisSpikeColour_Value_label")
+        self.Settings_AnalysisSpikeColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_298.addWidget(self.Settings_AnalysisSpikeColour_Value_label)
+
+
+        self.verticalLayout_355.addWidget(self.Settings_AnalysisSpikeColour_frame)
+
+        self.Settings_AnalysisLoopColour_frame = QFrame(self.Settings_AnalysisColours_tab_)
+        self.Settings_AnalysisLoopColour_frame.setObjectName(u"Settings_AnalysisLoopColour_frame")
+        self.Settings_AnalysisLoopColour_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_AnalysisLoopColour_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_299 = QHBoxLayout(self.Settings_AnalysisLoopColour_frame)
+        self.horizontalLayout_299.setSpacing(20)
+        self.horizontalLayout_299.setObjectName(u"horizontalLayout_299")
+        self.horizontalLayout_299.setContentsMargins(10, 0, 10, 0)
+        self.Settings_AnalysisLoopColour_label = QLabel(self.Settings_AnalysisLoopColour_frame)
+        self.Settings_AnalysisLoopColour_label.setObjectName(u"Settings_AnalysisLoopColour_label")
+        self.Settings_AnalysisLoopColour_label.setFont(font6)
+
+        self.horizontalLayout_299.addWidget(self.Settings_AnalysisLoopColour_label)
+
+        self.Settings_AnalysisLoopColour_pushButton = QPushButton(self.Settings_AnalysisLoopColour_frame)
+        self.Settings_AnalysisLoopColour_pushButton.setObjectName(u"Settings_AnalysisLoopColour_pushButton")
+        self.Settings_AnalysisLoopColour_pushButton.setMinimumSize(QSize(64, 26))
+        self.Settings_AnalysisLoopColour_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_AnalysisLoopColour_pushButton.setStyleSheet(u"background-color: rgb(88, 110, 117);\n"
+"border: 1px solid rgb(147, 161, 161);\n"
+"border-radius: 0px;")
+
+        self.horizontalLayout_299.addWidget(self.Settings_AnalysisLoopColour_pushButton)
+
+        self.Settings_AnalysisLoopColour_Value_label = QLabel(self.Settings_AnalysisLoopColour_frame)
+        self.Settings_AnalysisLoopColour_Value_label.setObjectName(u"Settings_AnalysisLoopColour_Value_label")
+        self.Settings_AnalysisLoopColour_Value_label.setFont(font6)
+
+        self.horizontalLayout_299.addWidget(self.Settings_AnalysisLoopColour_Value_label)
+
+
+        self.verticalLayout_355.addWidget(self.Settings_AnalysisLoopColour_frame)
+
+        self.Settings_SignalColours_tabWidget.addTab(self.Settings_AnalysisColours_tab_, "")
+
+        self.verticalLayout_351.addWidget(self.Settings_SignalColours_tabWidget)
+
+
+        self.gridLayout.addWidget(self.Settings_SignalColours_groupBox, 1, 1, 1, 1)
+
+        self.Settings_GraphDisplay_groupBox = QGroupBox(self.widget)
+        self.Settings_GraphDisplay_groupBox.setObjectName(u"Settings_GraphDisplay_groupBox")
+        self.Settings_GraphDisplay_groupBox.setFont(font7)
+        self.Settings_GraphDisplay_groupBox.setStyleSheet(u"QGroupBox {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 8px;\n"
+"\n"
+"    padding-top: 5px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"    padding-bottom: 0px;\n"
+"}")
+        self.verticalLayout_349 = QVBoxLayout(self.Settings_GraphDisplay_groupBox)
+        self.verticalLayout_349.setSpacing(0)
+        self.verticalLayout_349.setObjectName(u"verticalLayout_349")
+        self.verticalLayout_349.setContentsMargins(0, 20, 0, 10)
+        self.Settings_Trace_frame = QFrame(self.Settings_GraphDisplay_groupBox)
+        self.Settings_Trace_frame.setObjectName(u"Settings_Trace_frame")
+        self.Settings_Trace_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_Trace_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_275 = QHBoxLayout(self.Settings_Trace_frame)
+        self.horizontalLayout_275.setObjectName(u"horizontalLayout_275")
+        self.Settings_Trace_label = QLabel(self.Settings_Trace_frame)
+        self.Settings_Trace_label.setObjectName(u"Settings_Trace_label")
+        self.Settings_Trace_label.setFont(font6)
+
+        self.horizontalLayout_275.addWidget(self.Settings_Trace_label)
+
+        self.Settings_Trace_slider = QSlider(self.Settings_Trace_frame)
+        self.Settings_Trace_slider.setObjectName(u"Settings_Trace_slider")
+        self.Settings_Trace_slider.setMinimum(1)
+        self.Settings_Trace_slider.setMaximum(12)
+        self.Settings_Trace_slider.setPageStep(1)
+        self.Settings_Trace_slider.setValue(3)
+        self.Settings_Trace_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.horizontalLayout_275.addWidget(self.Settings_Trace_slider)
+
+        self.Settings_Trace_lineEdit = QLineEdit(self.Settings_Trace_frame)
+        self.Settings_Trace_lineEdit.setObjectName(u"Settings_Trace_lineEdit")
+        self.Settings_Trace_lineEdit.setFont(font6)
+
+        self.horizontalLayout_275.addWidget(self.Settings_Trace_lineEdit)
+
+
+        self.verticalLayout_349.addWidget(self.Settings_Trace_frame)
+
+        self.Settings_TracePreview_widget = QWidget(self.Settings_GraphDisplay_groupBox)
+        self.Settings_TracePreview_widget.setObjectName(u"Settings_TracePreview_widget")
+        sizePolicy4.setHeightForWidth(self.Settings_TracePreview_widget.sizePolicy().hasHeightForWidth())
+        self.Settings_TracePreview_widget.setSizePolicy(sizePolicy4)
+        self.Settings_TracePreview_widget.setMinimumSize(QSize(280, 180))
+
+        self.verticalLayout_349.addWidget(self.Settings_TracePreview_widget)
+
+        self.Settings_ShowGrid_checkBox_frame = QFrame(self.Settings_GraphDisplay_groupBox)
+        self.Settings_ShowGrid_checkBox_frame.setObjectName(u"Settings_ShowGrid_checkBox_frame")
+        self.Settings_ShowGrid_checkBox_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Settings_ShowGrid_checkBox_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_350 = QVBoxLayout(self.Settings_ShowGrid_checkBox_frame)
+        self.verticalLayout_350.setObjectName(u"verticalLayout_350")
+        self.Settings_ShowGrid_checkBox = QCheckBox(self.Settings_ShowGrid_checkBox_frame)
+        self.Settings_ShowGrid_checkBox.setObjectName(u"Settings_ShowGrid_checkBox")
+        self.Settings_ShowGrid_checkBox.setChecked(True)
+
+        self.verticalLayout_350.addWidget(self.Settings_ShowGrid_checkBox)
+
+
+        self.verticalLayout_349.addWidget(self.Settings_ShowGrid_checkBox_frame)
+
+        self.verticalLayout_349.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.Settings_GraphDisplay_groupBox, 1, 0, 1, 1)
+
+        self.gridLayout.setRowStretch(1, 1)
+        self.gridLayout.setColumnStretch(0, 1)
+        self.gridLayout.setColumnStretch(1, 1)
+
+        self.verticalLayout_340.addWidget(self.widget)
+
+        self.Setting_Footer_frame = QFrame(self.page_Settings)
+        self.Setting_Footer_frame.setObjectName(u"Setting_Footer_frame")
+        self.Setting_Footer_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Setting_Footer_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_300 = QHBoxLayout(self.Setting_Footer_frame)
+        self.horizontalLayout_300.setSpacing(20)
+        self.horizontalLayout_300.setObjectName(u"horizontalLayout_300")
+        self.horizontalLayout_300.setContentsMargins(20, 10, 20, 10)
+        self.Settings_Status_label = QLabel(self.Setting_Footer_frame)
+        self.Settings_Status_label.setObjectName(u"Settings_Status_label")
+        self.Settings_Status_label.setFont(font6)
+
+        self.horizontalLayout_300.addWidget(self.Settings_Status_label)
+
+        self.Settings_Footer_Spacer = QSpacerItem(436, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_300.addItem(self.Settings_Footer_Spacer)
+
+        self.Settings_Defaults_pushButton = QPushButton(self.Setting_Footer_frame)
+        self.Settings_Defaults_pushButton.setObjectName(u"Settings_Defaults_pushButton")
+        self.Settings_Defaults_pushButton.setMinimumSize(QSize(100, 35))
+        self.Settings_Defaults_pushButton.setFont(font19)
+        self.Settings_Defaults_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Defaults_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 6px;\n"
+"\n"
+"    padding: 7px 18px;\n"
+"\n"
+"    font-family: \"Segoe UI\";\n"
+"    font-size: 11pt;\n"
+"    font-weight: 400;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(22, 70, 83);\n"
+"    border-color: rgb(0, 153, 176);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(0, 30, 38);\n"
+"    border-color: rgb(42, 161, 152);\n"
+"}\n"
+"\n"
+"QPushButton:focus {\n"
+"    border: 1px solid rgb(0, 153, 176);\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(88, 110, 117);\n"
+"    border-color: rgb(52, 81, 90);\n"
+"}")
+
+        self.horizontalLayout_300.addWidget(self.Settings_Defaults_pushButton)
+
+        self.Settings_Revert_pushButton = QPushButton(self.Setting_Footer_frame)
+        self.Settings_Revert_pushButton.setObjectName(u"Settings_Revert_pushButton")
+        self.Settings_Revert_pushButton.setMinimumSize(QSize(100, 35))
+        self.Settings_Revert_pushButton.setFont(font19)
+        self.Settings_Revert_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Revert_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(190, 205, 205);\n"
+"\n"
+"    border: 1px solid rgb(123, 157, 163);\n"
+"    border-radius: 6px;\n"
+"\n"
+"    padding: 7px 18px;\n"
+"\n"
+"    font-family: \"Segoe UI\";\n"
+"    font-size: 11pt;\n"
+"    font-weight: 400;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(22, 70, 83);\n"
+"    border-color: rgb(0, 153, 176);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(0, 30, 38);\n"
+"    border-color: rgb(42, 161, 152);\n"
+"}\n"
+"\n"
+"QPushButton:focus {\n"
+"    border: 1px solid rgb(0, 153, 176);\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: rgb(0, 43, 54);\n"
+"    color: rgb(88, 110, 117);\n"
+"    border-color: rgb(52, 81, 90);\n"
+"}")
+
+        self.horizontalLayout_300.addWidget(self.Settings_Revert_pushButton)
+
+        self.Settings_Apply_pushButton = QPushButton(self.Setting_Footer_frame)
+        self.Settings_Apply_pushButton.setObjectName(u"Settings_Apply_pushButton")
+        self.Settings_Apply_pushButton.setMinimumSize(QSize(100, 35))
+        font20 = QFont()
+        font20.setFamilies([u"Segoe UI"])
+        font20.setPointSize(11)
+        font20.setBold(True)
+        self.Settings_Apply_pushButton.setFont(font20)
+        self.Settings_Apply_pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.Settings_Apply_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgb(0, 153, 176);\n"
+"    color: rgb(253, 246, 227);\n"
+"\n"
+"    border: 1px solid rgb(74, 190, 204);\n"
+"    border-radius: 6px;\n"
+"\n"
+"    padding: 7px 22px;\n"
+"\n"
+"    font-family: \"Segoe UI\";\n"
+"    font-size: 11pt;\n"
+"    font-weight: 700;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(0, 174, 196);\n"
+"    border-color: rgb(120, 220, 230);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgb(0, 127, 146);\n"
+"    border-color: rgb(42, 161, 152);\n"
+"}\n"
+"\n"
+"QPushButton:focus {\n"
+"    border: 1px solid rgb(253, 246, 227);\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: rgb(7, 54, 66);\n"
+"    color: rgb(88, 110, 117);\n"
+"    border-color: rgb(52, 81, 90);\n"
+"}")
+
+        self.horizontalLayout_300.addWidget(self.Settings_Apply_pushButton)
+
+
+        self.verticalLayout_340.addWidget(self.Setting_Footer_frame)
 
         self.mainbody_stackedWidget.addWidget(self.page_Settings)
         self.page_About = QWidget()
@@ -19501,7 +21042,7 @@ class Ui_Spikeling(object):
         self.retranslateUi(Spikeling)
 
         self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(2)
-        self.mainbody_stackedWidget.setCurrentIndex(1)
+        self.mainbody_stackedWidget.setCurrentIndex(14)
         self.Spikeling_parameter_stackedwidget.setCurrentIndex(4)
         self.Emulator_parameter_stackedwidget.setCurrentIndex(3)
         self.Spikeling_DataAnalysis_Display_StackedWidget.setCurrentIndex(0)
@@ -19510,6 +21051,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Display_StackedWidget_2.setCurrentIndex(5)
         self.DataAnalysis_stackedWidget_2.setCurrentIndex(0)
         self.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(2)
+        self.Settings_SignalColours_tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Spikeling)
@@ -20395,7 +21937,276 @@ class Ui_Spikeling(object):
         self.Chirp_IntOff_Value.setText(QCoreApplication.translate("Spikeling", u"0", None))
         self.Chirp_StimOff_Label.setText(QCoreApplication.translate("Spikeling", u"Inter-stimulus time (ms)", None))
         self.Chirp_StimOff_Value.setText(QCoreApplication.translate("Spikeling", u"100", None))
-        self.label_20.setText("")
+        self.Settings_Header_Title.setText(QCoreApplication.translate("Spikeling", u"Settings", None))
+        self.Settings_Header_label.setText(QCoreApplication.translate("Spikeling", u"Customise your workspace", None))
+        self.Settings_Appearance_groupBox.setTitle(QCoreApplication.translate("Spikeling", u"Appearance", None))
+        self.Settings_Appearance_groupBox.setProperty(u"themeBox", QCoreApplication.translate("Spikeling", u"true", None))
+        self.Settings_Dark_pushButton.setText(QCoreApplication.translate("Spikeling", u"Dark", None))
+        self.Settings_Ligth_pushButton.setText(QCoreApplication.translate("Spikeling", u"Light", None))
+        self.Settings_WindowColour_label.setText(QCoreApplication.translate("Spikeling", u"Window:", None))
+        self.Settings_WindowColour_pushButton.setText("")
+        self.Settings_WindowColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"window_background", None))
+        self.Settings_WindowColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#001E26", None))
+        self.Settings_PanelColour_label.setText(QCoreApplication.translate("Spikeling", u"Panels:", None))
+        self.Settings_PanelColour_pushButton.setText("")
+        self.Settings_PanelColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"panel_background", None))
+        self.Settings_PanelColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#002B36", None))
+        self.Settings_SurfaceColour_label.setText(QCoreApplication.translate("Spikeling", u"Surfaces:", None))
+        self.Settings_SurfaceColour_pushButton.setText("")
+        self.Settings_SurfaceColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"surface", None))
+        self.Settings_SurfaceColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#073642", None))
+        self.Settings_TextColour_label.setText(QCoreApplication.translate("Spikeling", u"Text:", None))
+        self.Settings_TextColour_pushButton.setText("")
+        self.Settings_TextColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"text_primary", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_TextColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_TextColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#BECDCD", None))
+        self.Settings_General_groupBox.setTitle(QCoreApplication.translate("Spikeling", u"General", None))
+        self.Settings_General_groupBox.setProperty(u"themeBox", QCoreApplication.translate("Spikeling", u"true", None))
+        self.Settings_Language_label.setText(QCoreApplication.translate("Spikeling", u"Language", None))
+        self.Settings_Language_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"English", None))
+        self.Settings_Language_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Fran\u00e7ais", None))
+        self.Settings_Language_comboBox.setItemText(2, QCoreApplication.translate("Spikeling", u"Greek", None))
+        self.Settings_Language_comboBox.setItemText(3, QCoreApplication.translate("Spikeling", u"Italian", None))
+        self.Settings_Language_comboBox.setItemText(4, QCoreApplication.translate("Spikeling", u"Spanish", None))
+
+        self.Settings_RecordingFolder_label.setText(QCoreApplication.translate("Spikeling", u"Recording folder", None))
+        self.Settings_RecordingFolder_lineEdit.setPlaceholderText(QCoreApplication.translate("Spikeling", u"Choose a recording folder", None))
+        self.Settings_RecordingFolderBrowse_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse", None))
+        self.Settings_SignalColours_groupBox.setTitle(QCoreApplication.translate("Spikeling", u"Signal colours", None))
+        self.Settings_SignalColours_groupBox.setProperty(u"themeBox", QCoreApplication.translate("Spikeling", u"true", None))
+        self.Settings_NeuronVmColour_label.setText(QCoreApplication.translate("Spikeling", u"Membrane potential:", None))
+        self.Settings_NeuronVmColour_pushButton.setText("")
+        self.Settings_NeuronVmColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_vm", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_NeuronVmColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_NeuronVmColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#DC322F", None))
+        self.Settings_NeuronCurrentColour_label.setText(QCoreApplication.translate("Spikeling", u"Current:", None))
+        self.Settings_NeuronCurrentColour_pushButton.setText("")
+        self.Settings_NeuronCurrentColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_current", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_NeuronCurrentColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_NeuronCurrentColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#859900", None))
+        self.Settings_NeuronStimulusColour_label.setText(QCoreApplication.translate("Spikeling", u"Stimulus:", None))
+        self.Settings_NeuronStimulusColour_pushButton.setText("")
+        self.Settings_NeuronStimulusColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_stimulus", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_NeuronStimulusColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_NeuronStimulusColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#268BD2", None))
+        self.Settings_Synapse1VmColour_label.setText(QCoreApplication.translate("Spikeling", u"Synapse 1 Vm:", None))
+        self.Settings_Synapse1VmColour_pushButton.setText("")
+        self.Settings_Synapse1VmColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_syn1_vm", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_Synapse1VmColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_Synapse1VmColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#CB4B16", None))
+        self.Settings_Synapse1InputColour_label.setText(QCoreApplication.translate("Spikeling", u"Synapse 1 input:", None))
+        self.Settings_Synapse1InputColour_pushButton.setText("")
+        self.Settings_Synapse1InputColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_syn1_input", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_Synapse1InputColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_Synapse1InputColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#2AA198", None))
+        self.Settings_Synapse2VmColour_label.setText(QCoreApplication.translate("Spikeling", u"Synapse 2 Vm:", None))
+        self.Settings_Synapse2VmColour_pushButton.setText("")
+        self.Settings_Synapse2VmColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_syn2_vm", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_Synapse2VmColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_Synapse2VmColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#B58900", None))
+        self.Settings_Synapse2InputColour_label.setText(QCoreApplication.translate("Spikeling", u"Synapse 2 input:", None))
+        self.Settings_Synapse2InputColour_pushButton.setText("")
+        self.Settings_Synapse2InputColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"neuron_syn2_input", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_Synapse2InputColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_Synapse2InputColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#D33682", None))
+        self.Settings_SignalColours_tabWidget.setTabText(self.Settings_SignalColours_tabWidget.indexOf(self.Settings_NeuronColours_tab), QCoreApplication.translate("Spikeling", u"Neuron", None))
+        self.Settings_ImagingFluo1Colour_Colour_label.setText(QCoreApplication.translate("Spikeling", u"Fluorescence 1:", None))
+        self.Settings_ImagingFluo1Colour_pushButton.setText("")
+        self.Settings_ImagingFluo1Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_fluo1", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo1Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo1Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#859900", None))
+        self.Settings_ImagingFluo2Colour_label.setText(QCoreApplication.translate("Spikeling", u"Fluorescence 2:", None))
+        self.Settings_ImagingFluo2Colour_pushButton.setText("")
+        self.Settings_ImagingFluo2Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_fluo2", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo2Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo2Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"#00FF85", None))
+        self.Settings_ImagingFluo3Colour_label.setText(QCoreApplication.translate("Spikeling", u"Fluorescence 3:", None))
+        self.Settings_ImagingFluo3Colour_pushButton.setText("")
+        self.Settings_ImagingFluo3Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_fluo3", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo3Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingFluo3Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"85FF00", None))
+        self.Settings_ImagingCalcium1Colour_label.setText(QCoreApplication.translate("Spikeling", u"Calcium 1:", None))
+        self.Settings_ImagingCalcium1Colour_pushButton.setText("")
+        self.Settings_ImagingCalcium1Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_calcium1", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium1Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium1Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"D33682", None))
+        self.Settings_ImagingCalcium2Colour_label.setText(QCoreApplication.translate("Spikeling", u"Calcium 2:", None))
+        self.Settings_ImagingCalcium2Colour_pushButton.setText("")
+        self.Settings_ImagingCalcium2Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_calcium2", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium2Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium2Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"6C71C4", None))
+        self.Settings_ImagingCalcium3Colour_label.setText(QCoreApplication.translate("Spikeling", u"Calcium 3:", None))
+        self.Settings_ImagingCalcium3Colour_pushButton.setText("")
+        self.Settings_ImagingCalcium3Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_calcium3", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium3Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingCalcium3Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"2AA198", None))
+        self.Settings_ImagingVm1Colour_label.setText(QCoreApplication.translate("Spikeling", u"Vm 1:", None))
+        self.Settings_ImagingVm1Colour_pushButton.setText("")
+        self.Settings_ImagingVm1Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_vm1", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingVm1Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingVm1Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"DC322F", None))
+        self.Settings_ImagingVm2Colour_label.setText(QCoreApplication.translate("Spikeling", u"Vm 2:", None))
+        self.Settings_ImagingVm2Colour_pushButton.setText("")
+        self.Settings_ImagingVm2Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_vm2", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingVm2Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingVm2Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"CB4B16", None))
+        self.Settings_ImagingVm3Colour_label.setText(QCoreApplication.translate("Spikeling", u"Vm 3:", None))
+        self.Settings_ImagingVm3Colour_pushButton.setText("")
+        self.Settings_ImagingVm3Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_vm3", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingVm3Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingVm3Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"B58900", None))
+        self.Settings_ImagingStimulusColour_label.setText(QCoreApplication.translate("Spikeling", u"Stimulus:", None))
+        self.Settings_ImagingStimulusColour_pushButton.setText("")
+        self.Settings_ImagingStimulusColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"imaging_stimulus", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ImagingStimulusColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ImagingStimulusColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"268BD2", None))
+        self.Settings_SignalColours_tabWidget.setTabText(self.Settings_SignalColours_tabWidget.indexOf(self.Settings_ImagingColours_tab), QCoreApplication.translate("Spikeling", u"Imaging", None))
+        self.Settings_ExtraCh1Colour_label.setText(QCoreApplication.translate("Spikeling", u"Channel 1:", None))
+        self.Settings_ExtraCh1Colour_pushButton.setText("")
+        self.Settings_ExtraCh1Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"extra_ch1", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ExtraCh1Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ExtraCh1Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"268BD2", None))
+        self.Settings_ExtraCh2Colour_label.setText(QCoreApplication.translate("Spikeling", u"Channel 2:", None))
+        self.Settings_ExtraCh2Colour_pushButton.setText("")
+        self.Settings_ExtraCh2Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"extra_ch2", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ExtraCh2Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ExtraCh2Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"2AA198", None))
+        self.Settings_ExtraCh3Colour_label.setText(QCoreApplication.translate("Spikeling", u"Channel 3", None))
+        self.Settings_ExtraCh3Colour_pushButton.setText("")
+        self.Settings_ExtraCh3Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"extra_ch3", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ExtraCh3Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ExtraCh3Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"859900", None))
+        self.Settings_ExtraCh4Colour_label.setText(QCoreApplication.translate("Spikeling", u"Channel 4:", None))
+        self.Settings_ExtraCh4Colour_pushButton.setText("")
+        self.Settings_ExtraCh4Colour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"extra_ch4", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ExtraCh4Colour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ExtraCh4Colour_Value_label.setText(QCoreApplication.translate("Spikeling", u"6C71C4", None))
+        self.Settings_ExtraThresholdColour_label.setText(QCoreApplication.translate("Spikeling", u"Threshold:", None))
+        self.Settings_ExtraThresholdColour_pushButton.setText("")
+        self.Settings_ExtraThresholdColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"extra_threshold", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_ExtraThresholdColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_ExtraThresholdColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"B58900", None))
+        self.Settings_SignalColours_tabWidget.setTabText(self.Settings_SignalColours_tabWidget.indexOf(self.Settings_ExtracellularColours_tab), QCoreApplication.translate("Spikeling", u"Extracellular", None))
+        self.Settings_AnalysisSpikeColour_label.setText(QCoreApplication.translate("Spikeling", u"Spike Rate:", None))
+        self.Settings_AnalysisSpikeColour_pushButton.setText("")
+        self.Settings_AnalysisSpikeColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"analysis_spike_rate", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_AnalysisSpikeColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_AnalysisSpikeColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"BECDCD", None))
+        self.Settings_AnalysisLoopColour_label.setText(QCoreApplication.translate("Spikeling", u"Loop:", None))
+        self.Settings_AnalysisLoopColour_pushButton.setText("")
+        self.Settings_AnalysisLoopColour_pushButton.setProperty(u"themeRole", QCoreApplication.translate("Spikeling", u"analysis_loop", None))
+#if QT_CONFIG(tooltip)
+        self.Settings_AnalysisLoopColour_Value_label.setToolTip(QCoreApplication.translate("Spikeling", u"<b>Holding voltage</b><br>\n"
+"Sets the membrane potential maintained in voltage clamp mode.<br><br>\n"
+"<b>Unit:</b> mV", None))
+#endif // QT_CONFIG(tooltip)
+        self.Settings_AnalysisLoopColour_Value_label.setText(QCoreApplication.translate("Spikeling", u"586E75", None))
+        self.Settings_SignalColours_tabWidget.setTabText(self.Settings_SignalColours_tabWidget.indexOf(self.Settings_AnalysisColours_tab_), QCoreApplication.translate("Spikeling", u"Analysis", None))
+        self.Settings_GraphDisplay_groupBox.setTitle(QCoreApplication.translate("Spikeling", u"Graph display", None))
+        self.Settings_GraphDisplay_groupBox.setProperty(u"themeBox", QCoreApplication.translate("Spikeling", u"true", None))
+        self.Settings_Trace_label.setText(QCoreApplication.translate("Spikeling", u"Trace thickness", None))
+        self.Settings_Trace_lineEdit.setText(QCoreApplication.translate("Spikeling", u"1.5 px", None))
+        self.Settings_ShowGrid_checkBox.setText(QCoreApplication.translate("Spikeling", u"Show grid", None))
+        self.Settings_Status_label.setText(QCoreApplication.translate("Spikeling", u"No unapplied changes", None))
+        self.Settings_Defaults_pushButton.setText(QCoreApplication.translate("Spikeling", u"	Restore defaults", None))
+        self.Settings_Revert_pushButton.setText(QCoreApplication.translate("Spikeling", u"	Revert", None))
+        self.Settings_Apply_pushButton.setText(QCoreApplication.translate("Spikeling", u"	Apply", None))
         self.textBrowser.setHtml(QCoreApplication.translate("Spikeling", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

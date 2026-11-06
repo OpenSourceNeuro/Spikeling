@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>720</height>
+    <height>735</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -1966,7 +1966,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>14</number>
                </property>
                <widget class="QWidget" name="page_Home">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -3832,7 +3832,7 @@ border-radius:10px;</string>
                                    <property name="bottomMargin">
                                     <number>0</number>
                                    </property>
-                                   <item>
+                                   <item alignment="Qt::AlignmentFlag::AlignHCenter">
                                     <widget class="QLabel" name="Spikeling_DataRecording_Record_label">
                                      <property name="sizePolicy">
                                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -44508,19 +44508,77 @@ border : none;</string>
                 </layout>
                </widget>
                <widget class="QWidget" name="page_Settings">
-                <layout class="QHBoxLayout" name="horizontalLayout_119">
+                <layout class="QVBoxLayout" name="verticalLayout_340">
+                 <property name="spacing">
+                  <number>20</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
                  <item>
-                  <widget class="QFrame" name="frame_11">
+                  <widget class="QFrame" name="Settings_Header_frame">
                    <property name="frameShape">
                     <enum>QFrame::Shape::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Shadow::Raised</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_160">
+                   <layout class="QVBoxLayout" name="verticalLayout_341">
                     <property name="spacing">
+                     <number>5</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>10</number>
+                    </property>
+                    <property name="topMargin">
                      <number>0</number>
                     </property>
+                    <property name="rightMargin">
+                     <number>10</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="Settings_Header_Title">
+                      <property name="font">
+                       <font>
+                        <pointsize>24</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Settings</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="Settings_Header_label">
+                      <property name="font">
+                       <font>
+                        <pointsize>11</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Customise your workspace</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget" native="true">
+                   <layout class="QGridLayout" name="gridLayout" rowstretch="0,1" columnstretch="1,1">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -44533,16 +44591,3334 @@ border : none;</string>
                     <property name="bottomMargin">
                      <number>0</number>
                     </property>
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <item row="0" column="1">
+                     <widget class="QGroupBox" name="Settings_Appearance_groupBox">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QGroupBox {
+    background-color: rgb(0, 43, 54);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 8px;
+
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+}</string>
+                      </property>
+                      <property name="title">
+                       <string>Appearance</string>
+                      </property>
+                      <property name="themeBox" stdset="0">
+                       <string>true</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_347">
+                       <property name="spacing">
+                        <number>5</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>20</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="Settings_Appearance_pushButton_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_160" stretch="1,1">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>50</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>50</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QPushButton" name="Settings_Dark_pushButton">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>32</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <family>Segoe UI</family>
+                              <pointsize>11</pointsize>
+                              <bold>false</bold>
+                             </font>
+                            </property>
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">QPushButton {
+    background-color: rgb(7, 54, 66);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    padding: 6px 18px;
+
+    font-family: &quot;Segoe UI&quot;;
+    font-size: 11pt;
+    font-weight: 400;
+}
+
+QPushButton:hover {
+    background-color: rgb(22, 70, 83);
+}
+
+QPushButton:checked {
+    background-color: rgb(0, 153, 176);
+    color: rgb(253, 246, 227);
+    border-color: rgb(74, 190, 204);
+    font-weight: 700;
+}
+
+QPushButton:checked:hover {
+    background-color: rgb(0, 174, 196);
+}
+
+QPushButton:pressed {
+    background-color: rgb(0, 127, 146);
+}
+
+QPushButton:focus {
+    border-color: rgb(253, 246, 227);
+}</string>
+                            </property>
+                            <property name="text">
+                             <string>Dark</string>
+                            </property>
+                            <property name="checkable">
+                             <bool>true</bool>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                            <attribute name="buttonGroup">
+                             <string notr="true">Settings_Theme_buttonGroup</string>
+                            </attribute>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="Settings_Ligth_pushButton">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>32</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <family>Segoe UI</family>
+                              <pointsize>11</pointsize>
+                              <bold>false</bold>
+                             </font>
+                            </property>
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">QPushButton {
+    background-color: rgb(7, 54, 66);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+
+    padding: 6px 18px;
+
+    font-family: &quot;Segoe UI&quot;;
+    font-size: 11pt;
+    font-weight: 400;
+}
+
+QPushButton:hover {
+    background-color: rgb(22, 70, 83);
+}
+
+QPushButton:checked {
+    background-color: rgb(0, 153, 176);
+    color: rgb(253, 246, 227);
+    border-color: rgb(74, 190, 204);
+    font-weight: 700;
+}
+
+QPushButton:checked:hover {
+    background-color: rgb(0, 174, 196);
+}
+
+QPushButton:pressed {
+    background-color: rgb(0, 127, 146);
+}
+
+QPushButton:focus {
+    border-color: rgb(253, 246, 227);
+}</string>
+                            </property>
+                            <property name="text">
+                             <string>Light</string>
+                            </property>
+                            <property name="checkable">
+                             <bool>true</bool>
+                            </property>
+                            <attribute name="buttonGroup">
+                             <string notr="true">Settings_Theme_buttonGroup</string>
+                            </attribute>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="Settings_Appearance_Colour_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_348">
+                          <property name="spacing">
+                           <number>5</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="Settings_WindowColour_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_274">
+                             <property name="spacing">
+                              <number>20</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_WindowColour_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Window:</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="Settings_WindowColour_pushButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: rgb(0, 30,38);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="themeRole" stdset="0">
+                                <string>window_background</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="Settings_WindowColour_Value_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>#001E26</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="Settings_PanelColour_frame">
+                            <property name="minimumSize">
+                             <size>
+                              <width>64</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_272">
+                             <property name="spacing">
+                              <number>20</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_PanelColour_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Panels:</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="Settings_PanelColour_pushButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: rgb(0, 43, 54);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="themeRole" stdset="0">
+                                <string>panel_background</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="Settings_PanelColour_Value_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>#002B36</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="Settings_SurfaceColour_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_250">
+                             <property name="spacing">
+                              <number>20</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_SurfaceColour_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Surfaces:</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="Settings_SurfaceColour_pushButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: rgb(7, 54, 66);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="themeRole" stdset="0">
+                                <string>surface</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="Settings_SurfaceColour_Value_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>#073642</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="Settings_TextColour_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_273">
+                             <property name="spacing">
+                              <number>20</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>10</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_TextColour_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Text:</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="Settings_TextColour_pushButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: rgb(190, 205, 205);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="themeRole" stdset="0">
+                                <string>text_primary</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="Settings_TextColour_Value_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="toolTip">
+                                <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                               </property>
+                               <property name="text">
+                                <string>#BECDCD</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QGroupBox" name="Settings_General_groupBox">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QGroupBox {
+    background-color: rgb(0, 43, 54);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 8px;
+
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+}</string>
+                      </property>
+                      <property name="title">
+                       <string>General</string>
+                      </property>
+                      <property name="themeBox" stdset="0">
+                       <string>true</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_342">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>20</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="Settings_LanguageHint_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_343">
+                          <property name="spacing">
+                           <number>20</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="Settings_Language_label_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_54">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_Language_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Language</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QComboBox" name="Settings_Language_comboBox">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>0</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>16777215</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="iconSize">
+                                <size>
+                                 <width>30</width>
+                                 <height>30</height>
+                                </size>
+                               </property>
+                               <item>
+                                <property name="text">
+                                 <string>English</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="resources.qrc">
+                                  <normaloff>:/resources/resources/English.png</normaloff>:/resources/resources/English.png</iconset>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Français</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="resources.qrc">
+                                  <normaloff>:/resources/resources/French.png</normaloff>:/resources/resources/French.png</iconset>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Greek</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="resources.qrc">
+                                  <normaloff>:/resources/resources/Greek.png</normaloff>:/resources/resources/Greek.png</iconset>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Italian</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="resources.qrc">
+                                  <normaloff>:/resources/resources/Italian.png</normaloff>:/resources/resources/Italian.png</iconset>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Spanish</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="resources.qrc">
+                                  <normaloff>:/resources/resources/Spanish.png</normaloff>:/resources/resources/Spanish.png</iconset>
+                                </property>
+                               </item>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="Settings_RecordingFolder_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_346">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>10</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="Settings_RecordingFolder_label_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_345">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="Settings_RecordingFolder_label">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Recording folder</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="Settings_RecordingFolderBrowse_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_119">
+                             <property name="spacing">
+                              <number>20</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLineEdit" name="Settings_RecordingFolder_lineEdit">
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: #101D24;
+color: #E6F0F2;
+border: 1px solid #3B5661;
+border-radius: 6px;
+padding: 6px;</string>
+                               </property>
+                               <property name="readOnly">
+                                <bool>true</bool>
+                               </property>
+                               <property name="placeholderText">
+                                <string>Choose a recording folder</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="Settings_RecordingFolderBrowse_pushButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>100</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="font">
+                                <font>
+                                 <pointsize>10</pointsize>
+                                </font>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">background-color: #244B56;
+color: #FFFFFF;
+border: 1px solid #40747D;
+border-radius: 6px;
+padding: 6px 12px;</string>
+                               </property>
+                               <property name="text">
+                                <string>Browse</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QGroupBox" name="Settings_SignalColours_groupBox">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QGroupBox {
+    background-color: rgb(0, 43, 54);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 8px;
+
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+}</string>
+                      </property>
+                      <property name="title">
+                       <string>Signal colours</string>
+                      </property>
+                      <property name="themeBox" stdset="0">
+                       <string>true</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_351">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>20</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QTabWidget" name="Settings_SignalColours_tabWidget">
+                         <property name="styleSheet">
+                          <string notr="true">/* All tabs */
+QTabBar::tab {
+    background-color: rgb(7, 54, 66);
+    color: rgb(190, 205, 205);
+
+    font-size: 10pt;
+    padding: 8px 14px;
+
+    border: 1px solid rgb(88, 110, 117);
+}
+
+/* Selected tab */
+QTabBar::tab:selected {
+    background-color: rgb(0, 153, 176);
+    color: rgb(253, 246, 227);
+
+    font-weight: bold;
+}
+
+/* Hover over an unselected tab */
+QTabBar::tab:!selected:hover {
+    background-color: rgb(22, 70, 83);
+}
+
+/* Content area border */
+QTabWidget::pane {
+    border: 1px solid rgb(88, 110, 117);
+}</string>
+                         </property>
+                         <property name="currentIndex">
+                          <number>0</number>
+                         </property>
+                         <widget class="QWidget" name="Settings_NeuronColours_tab">
+                          <attribute name="title">
+                           <string>Neuron</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="verticalLayout_352">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QFrame" name="Settings_NeuronVmColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_278">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronVmColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Membrane potential:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_NeuronVmColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(220, 50, 47);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_vm</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronVmColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#DC322F</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_NeuronCurrentColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_282">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronCurrentColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Current:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_NeuronCurrentColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(133, 153, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_current</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronCurrentColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#859900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_NeuronStimulusColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_281">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronStimulusColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Stimulus:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_NeuronStimulusColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(38, 139, 210);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_stimulus</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_NeuronStimulusColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#268BD2</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_Synapse1VmColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_276">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse1VmColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Synapse 1 Vm:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_Synapse1VmColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(203, 75, 22);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_syn1_vm</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse1VmColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#CB4B16</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_Synapse1InputColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_280">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse1InputColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Synapse 1 input:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_Synapse1InputColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(42, 161, 152);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_syn1_input</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse1InputColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#2AA198</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_Synapse2VmColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_277">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse2VmColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Synapse 2 Vm:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_Synapse2VmColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(181, 137, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_syn2_vm</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse2VmColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#B58900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_Synapse2InputColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_279">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse2InputColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Synapse 2 input:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_Synapse2InputColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(211, 54, 130);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>neuron_syn2_input</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_Synapse2InputColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#D33682</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="Settings_ImagingColours_tab">
+                          <attribute name="title">
+                           <string>Imaging</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="verticalLayout_353">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingFluo1Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_288">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo1Colour_Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Fluorescence 1:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingFluo1Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(133, 153, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_fluo1</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo1Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#859900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingFluo2Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_285">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo2Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Fluorescence 2:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingFluo2Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(0, 255, 133);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_fluo2</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo2Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>#00FF85</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingFluo3Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_291">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo3Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Fluorescence 3:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingFluo3Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(133, 255, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_fluo3</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingFluo3Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>85FF00</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingCalcium1Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_284">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium1Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Calcium 1:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingCalcium1Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(211, 54, 130);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_calcium1</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium1Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>D33682</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingCalcium2Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_286">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium2Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Calcium 2:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingCalcium2Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(108, 113, 196);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_calcium2</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium2Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>6C71C4</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingCalcium3Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_289">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium3Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Calcium 3:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingCalcium3Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(42, 161, 152);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_calcium3</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingCalcium3Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>2AA198</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingVm1Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_287">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm1Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Vm 1:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingVm1Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(220, 50, 47);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_vm1</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm1Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>DC322F</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingVm2Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_283">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm2Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Vm 2:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingVm2Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(203, 75, 22);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_vm2</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm2Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>CB4B16</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingVm3Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_292">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm3Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Vm 3:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingVm3Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(181, 137, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_vm3</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingVm3Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>B58900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ImagingStimulusColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_290">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingStimulusColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Stimulus:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ImagingStimulusColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(38, 139, 210);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>imaging_stimulus</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ImagingStimulusColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>268BD2</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="Settings_ExtracellularColours_tab">
+                          <attribute name="title">
+                           <string>Extracellular</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="verticalLayout_354">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QFrame" name="Settings_ExtraCh1Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_296">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh1Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Channel 1:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ExtraCh1Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(38, 139, 210);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>extra_ch1</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh1Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>268BD2</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ExtraCh2Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_295">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh2Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Channel 2:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ExtraCh2Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(42, 161, 152);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>extra_ch2</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh2Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>2AA198</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ExtraCh3Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_293">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh3Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Channel 3</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ExtraCh3Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(133, 153, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>extra_ch3</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh3Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>859900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ExtraCh4Colour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_294">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh4Colour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Channel 4:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ExtraCh4Colour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(108, 113, 196);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>extra_ch4</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraCh4Colour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>6C71C4</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_ExtraThresholdColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_297">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraThresholdColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Threshold:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_ExtraThresholdColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(181, 137, 0);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>extra_threshold</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_ExtraThresholdColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>B58900</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="Settings_AnalysisColours_tab_">
+                          <attribute name="title">
+                           <string>Analysis</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="verticalLayout_355">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>10</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QFrame" name="Settings_AnalysisSpikeColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_298">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_AnalysisSpikeColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Spike Rate:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_AnalysisSpikeColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(190, 205, 205);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>analysis_spike_rate</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_AnalysisSpikeColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>BECDCD</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QFrame" name="Settings_AnalysisLoopColour_frame">
+                             <property name="frameShape">
+                              <enum>QFrame::Shape::StyledPanel</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Shadow::Raised</enum>
+                             </property>
+                             <layout class="QHBoxLayout" name="horizontalLayout_299">
+                              <property name="spacing">
+                               <number>20</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QLabel" name="Settings_AnalysisLoopColour_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Loop:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="Settings_AnalysisLoopColour_pushButton">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">background-color: rgb(88, 110, 117);
+border: 1px solid rgb(147, 161, 161);
+border-radius: 0px;</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="themeRole" stdset="0">
+                                 <string>analysis_loop</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Settings_AnalysisLoopColour_Value_label">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>10</pointsize>
+                                 </font>
+                                </property>
+                                <property name="toolTip">
+                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
+Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Unit:&lt;/b&gt; mV</string>
+                                </property>
+                                <property name="text">
+                                 <string>586E75</string>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QGroupBox" name="Settings_GraphDisplay_groupBox">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QGroupBox {
+    background-color: rgb(0, 43, 54);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 8px;
+
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+}</string>
+                      </property>
+                      <property name="title">
+                       <string>Graph display</string>
+                      </property>
+                      <property name="themeBox" stdset="0">
+                       <string>true</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_349" stretch="0,1,0">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>20</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="Settings_Trace_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_275">
+                          <item>
+                           <widget class="QLabel" name="Settings_Trace_label">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Trace thickness</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSlider" name="Settings_Trace_slider">
+                            <property name="minimum">
+                             <number>1</number>
+                            </property>
+                            <property name="maximum">
+                             <number>12</number>
+                            </property>
+                            <property name="pageStep">
+                             <number>1</number>
+                            </property>
+                            <property name="value">
+                             <number>3</number>
+                            </property>
+                            <property name="orientation">
+                             <enum>Qt::Orientation::Horizontal</enum>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLineEdit" name="Settings_Trace_lineEdit">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>1.5 px</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="Settings_TracePreview_widget" native="true">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>280</width>
+                           <height>180</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="Settings_ShowGrid_checkBox_frame">
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_350">
+                          <item>
+                           <widget class="QCheckBox" name="Settings_ShowGrid_checkBox">
+                            <property name="text">
+                             <string>Show grid</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="Setting_Footer_frame">
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Shadow::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_300">
+                    <property name="spacing">
+                     <number>20</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>20</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>10</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>20</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>10</number>
+                    </property>
                     <item>
-                     <widget class="QLabel" name="label_20">
+                     <widget class="QLabel" name="Settings_Status_label">
+                      <property name="font">
+                       <font>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
                       <property name="text">
-                       <string/>
+                       <string>No unapplied changes</string>
                       </property>
-                      <property name="pixmap">
-                       <pixmap>:/resources/resources/under_construction.svg</pixmap>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="Settings_Footer_Spacer">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Horizontal</enum>
                       </property>
-                      <property name="scaledContents">
-                       <bool>true</bool>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>436</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="Settings_Defaults_pushButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI</family>
+                        <pointsize>11</pointsize>
+                        <bold>false</bold>
+                       </font>
+                      </property>
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+    background-color: rgb(7, 54, 66);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 6px;
+
+    padding: 7px 18px;
+
+    font-family: &quot;Segoe UI&quot;;
+    font-size: 11pt;
+    font-weight: 400;
+}
+
+QPushButton:hover {
+    background-color: rgb(22, 70, 83);
+    border-color: rgb(0, 153, 176);
+}
+
+QPushButton:pressed {
+    background-color: rgb(0, 30, 38);
+    border-color: rgb(42, 161, 152);
+}
+
+QPushButton:focus {
+    border: 1px solid rgb(0, 153, 176);
+}
+
+QPushButton:disabled {
+    background-color: rgb(0, 43, 54);
+    color: rgb(88, 110, 117);
+    border-color: rgb(52, 81, 90);
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>	Restore defaults</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="Settings_Revert_pushButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI</family>
+                        <pointsize>11</pointsize>
+                        <bold>false</bold>
+                       </font>
+                      </property>
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+    background-color: rgb(7, 54, 66);
+    color: rgb(190, 205, 205);
+
+    border: 1px solid rgb(123, 157, 163);
+    border-radius: 6px;
+
+    padding: 7px 18px;
+
+    font-family: &quot;Segoe UI&quot;;
+    font-size: 11pt;
+    font-weight: 400;
+}
+
+QPushButton:hover {
+    background-color: rgb(22, 70, 83);
+    border-color: rgb(0, 153, 176);
+}
+
+QPushButton:pressed {
+    background-color: rgb(0, 30, 38);
+    border-color: rgb(42, 161, 152);
+}
+
+QPushButton:focus {
+    border: 1px solid rgb(0, 153, 176);
+}
+
+QPushButton:disabled {
+    background-color: rgb(0, 43, 54);
+    color: rgb(88, 110, 117);
+    border-color: rgb(52, 81, 90);
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>	Revert</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="Settings_Apply_pushButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI</family>
+                        <pointsize>11</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+    background-color: rgb(0, 153, 176);
+    color: rgb(253, 246, 227);
+
+    border: 1px solid rgb(74, 190, 204);
+    border-radius: 6px;
+
+    padding: 7px 22px;
+
+    font-family: &quot;Segoe UI&quot;;
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+QPushButton:hover {
+    background-color: rgb(0, 174, 196);
+    border-color: rgb(120, 220, 230);
+}
+
+QPushButton:pressed {
+    background-color: rgb(0, 127, 146);
+    border-color: rgb(42, 161, 152);
+}
+
+QPushButton:focus {
+    border: 1px solid rgb(253, 246, 227);
+}
+
+QPushButton:disabled {
+    background-color: rgb(7, 54, 66);
+    color: rgb(88, 110, 117);
+    border-color: rgb(52, 81, 90);
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>	Apply</string>
                       </property>
                      </widget>
                     </item>
@@ -44934,7 +48310,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
  </customwidgets>
  <resources>
   <include location="resources.qrc"/>
-  <include location="resources.qrc"/>
  </resources>
  <connections/>
  <designerdata>
@@ -44954,4 +48329,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <bool>true</bool>
   </property>
  </designerdata>
+ <buttongroups>
+  <buttongroup name="Settings_Theme_buttonGroup"/>
+ </buttongroups>
 </ui>
