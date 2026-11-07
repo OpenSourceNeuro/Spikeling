@@ -28,6 +28,10 @@ icon_file = os.path.join(spec_dir, 'Spikeling.ico')
 if os.path.exists(icon_file):
     app_datas.append((icon_file, '.'))
 
+translation_dir = os.path.join(spec_dir, 'translations')
+if os.path.isdir(translation_dir):
+    app_datas.append((translation_dir, 'translations'))
+
 hidden_imports = [
     'PySide6.QtCore',
     'PySide6.QtGui',
@@ -35,6 +39,7 @@ hidden_imports = [
     'PySide6.QtNetwork',
     'theme_manager',
     'Page_Settings',
+    'app_preferences',
     'Page_GitHub',
     'update_service',
     'update_installer',

@@ -1,549 +1,345 @@
+"""Controller for the Settings page saved in UI_Spikeling.ui.
+
+Designer owns the controls and layouts; only the preview graph is inserted
+here. Edits affect local previews until Apply. Revert and Restore defaults
+never silently commit settings. Language changes take effect on restart.
 """
-Settings page: user-editable application theme.
-
-Interaction model
------------------
-Every control edits the *pending* theme held by :data:`theme_manager` and
-nothing else. The interface keeps its current appearance until **Apply** is
-pressed, so dragging the thickness slider or trying ten background colours
-costs nothing: no style sheet is rebuilt and no curve is re-penned.
-
-Feedback is therefore local to this page: each swatch paints itself with its
-pending colour, and :class:`TracePreview` draws a sample spike with the
-pending width and colour.
-"""
-
-from __future__ import annotations
-
-from typing import Dict, List, Optional
-
-from PySide6.QtCore import QPointF, Qt
-from PySide6.QtGui import QColor, QPainter, QPen
-from PySide6.QtWidgets import (
-    QColorDialog, QComboBox, QFileDialog, QFrame, QGridLayout, QGroupBox,
-    QHBoxLayout, QLabel, QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QVBoxLayout, QWidget,
-)
-
-from Parameters_Sliders import TickSlider
-from theme_manager import (
-    SECTIONS, THEME_ROLES, TRACE_WIDTH_MAX, TRACE_WIDTH_MIN, TRACE_WIDTH_STEP,
-    ThemeRole, contrast_of, mix, theme_manager,
-)
-
+from functools import partial
+import math
 from pathlib import Path
-import sys
 
-SWATCH_SIZE = (116, 28)
-ACTION_BUTTON_SIZE = (150, 34)
-SWATCHES_PER_ROW = 3
-PREVIEW_SIZE = (150, 34)
+from PySide6.QtCore import QCoreApplication, QSignalBlocker, QTimer, Qt
+from PySide6.QtGui import QColor
+from PySide6.QtWidgets import (
+    QApplication, QColorDialog, QDialog, QFileDialog, QLabel, QMessageBox,
+    QPushButton, QVBoxLayout,
+)
+import pyqtgraph as pg
 
-# The slider is integer-valued; this converts a tick index to a pen width.
-WIDTH_SLIDER_SCALE = 1.0 / TRACE_WIDTH_STEP
-
-# Normalised sample waveform: baseline, fast depolarisation, after-
-# hyperpolarisation, recovery. Drawn so the chosen thickness is judged on a
-# spike rather than on a straight line, where a thick pen always looks fine.
-SAMPLE_SPIKE = (
-    (0.00, 0.72), (0.22, 0.70), (0.30, 0.74), (0.38, 0.06),
-    (0.46, 0.96), (0.56, 0.68), (0.70, 0.71), (1.00, 0.70),
+from app_preferences import (
+    LANGUAGES, LANGUAGE_KEY, RECORDING_DIRECTORY_KEY,
+    default_recording_directory, language_available, preference_store,
+)
+from theme_manager import (
+    ROLES_BY_KEY, TRACE_WIDTH_MAX, TRACE_WIDTH_MIN, TRACE_WIDTH_STEP,
+    mix, theme_manager,
 )
 
 
-class TracePreview(QWidget):
-    """
-    Live sample of the pending trace colour and thickness.
+class TracePreview:
+    """Illustrative Vm/current examples, independent of board or simulation."""
 
-    Parameters
-    ----------
-    manager : theme_manager.ThemeManager
-        Theme owner queried for the pending values on every repaint.
-    role_key : str, optional
-        Role supplying the preview colour.
-    parent : PySide6.QtWidgets.QWidget, optional
-        Qt parent.
-    """
-
-    def __init__(self, manager, role_key: str = "neuron_vm", parent=None) -> None:
-        super().__init__(parent)
+    def __init__(self, host, manager):
         self.manager = manager
-        self.role_key = role_key
-        self.setFixedSize(*PREVIEW_SIZE)
-        self.setToolTip("Preview of the selected trace thickness")
-
-    def paintEvent(self, event) -> None:  # noqa: N802
-        """Draw the framed sample spike with the pending pen."""
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing, True)
-
-        background = self.manager.active_colour("window_background")
-        border = mix(background, self.manager.active_colour("text_primary"), 0.30)
-
-        painter.setPen(QPen(QColor(border), 1))
-        painter.setBrush(QColor(background))
-        painter.drawRoundedRect(self.rect().adjusted(0, 0, -1, -1), 5, 5)
-
-        inset_x, inset_y = 8.0, 6.0
-        usable_w = self.width() - 2 * inset_x
-        usable_h = self.height() - 2 * inset_y
-
-        points = [
-            QPointF(inset_x + x * usable_w, inset_y + y * usable_h)
-            for x, y in SAMPLE_SPIKE
-        ]
-
-        pen = QPen(QColor(self.manager.colour(self.role_key)))
-        pen.setWidthF(self.manager.trace_width)
-        pen.setCapStyle(Qt.RoundCap)
-        pen.setJoinStyle(Qt.RoundJoin)
-        painter.setPen(pen)
-        painter.drawPolyline(points)
-        painter.end()
-
-
-class ColourSwatchButton(QPushButton):
-    """
-    Button showing a pending colour and opening a picker when clicked.
-
-    Parameters
-    ----------
-    role : theme_manager.ThemeRole
-        Role edited by this button.
-    manager : theme_manager.ThemeManager
-        Theme owner notified of the new colour.
-    parent : PySide6.QtWidgets.QWidget, optional
-        Qt parent.
-    """
-
-    def __init__(self, role: ThemeRole, manager, parent=None) -> None:
-        super().__init__(parent)
-        self.role = role
-        self.manager = manager
-        self.setFixedSize(*SWATCH_SIZE)
-        self.setCursor(Qt.PointingHandCursor)
-        self.clicked.connect(self._pick_colour)
+        self.widget = pg.GraphicsLayoutWidget(host)
+        self.widget.setObjectName("Settings_TracePreview_graph")
+        self.widget.setToolTip(QCoreApplication.translate("SettingsPage", "Illustrative appearance preview; not a live recording or model simulation."))
+        layout = host.layout()
+        if layout is None:
+            layout = QVBoxLayout(host)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.widget)
+        self.vm_plot = self.widget.addPlot(row=0, col=0)
+        self.current_plot = self.widget.addPlot(row=1, col=0)
+        self.current_plot.setXLink(self.vm_plot)
+        self.vm_plot.hideAxis("bottom")
+        self.vm_plot.setLabel("left", "Vm", units="mV")
+        self.current_plot.setLabel("left", QCoreApplication.translate("SettingsPage", "Input current (a.u.)"))
+        self.current_plot.setLabel("bottom", QCoreApplication.translate("SettingsPage", "Time"), units="ms")
+        self.widget.ci.layout.setRowStretchFactor(0, 3)
+        self.widget.ci.layout.setRowStretchFactor(1, 1)
+        for plot in (self.vm_plot, self.current_plot):
+            plot.setMenuEnabled(False)
+            plot.setMouseEnabled(x=False, y=False)
+            plot.hideButtons()
+            plot.setXRange(0, 100, padding=0)
+            plot.getAxis("left").setWidth(72)
+        self.vm_plot.setYRange(-90, 40, padding=0)
+        self.current_plot.setYRange(-0.15, 1.2, padding=0)
+        times = [i / 10 for i in range(1001)]
+        vm = [-70 + 105 * math.exp(-((t - 36) / 1.5) ** 2)
+              - 10 * math.exp(-((t - 41) / 3.5) ** 2) for t in times]
+        current = [1.0 if 20 <= t < 80 else 0.0 for t in times]
+        self._sample_data = times, vm, current
+        self.vm_curve = self.vm_plot.plot(times, vm, antialias=True)
+        self.current_curve = self.current_plot.plot(times, current, antialias=True)
         self.refresh()
 
-    def refresh(self) -> None:
-        """Repaint the swatch from the manager's pending colour."""
-        colour = self.manager.colour(self.role.key)
-        self.setText(colour.upper())
-        self.setStyleSheet(
-            f"background-color: {colour};"
-            f"color: {contrast_of(colour)};"
-            f"border: 1px solid rgba(128, 128, 128, 140);"
-            f"border-radius: 5px; font: 700 9pt 'Courier New';"
-        )
+    def refresh(self):
+        """Use pending colours, width and grid without a global repaint."""
+        colour = self.manager.colour
+        self.widget.setBackground(colour("window_background"))
+        foreground = colour("text_primary")
+        for plot in (self.vm_plot, self.current_plot):
+            plot.showGrid(x=self.manager.show_grid, y=self.manager.show_grid, alpha=0.2)
+            for side in ("left", "bottom"):
+                axis = plot.getAxis(side)
+                axis.setPen(pg.mkPen(foreground))
+                axis.setTextPen(pg.mkPen(foreground))
+                axis.setLabel(axis.labelText, units=axis.labelUnits, color=foreground)
+        self.vm_curve.setPen(pg.mkPen(colour("neuron_vm"), width=self.manager.trace_width))
+        self.current_curve.setPen(pg.mkPen(colour("neuron_current"), width=self.manager.trace_width))
+        self.widget.viewport().update()
 
-    def _pick_colour(self) -> None:
-        """Open a modal colour dialog and stage the selection."""
-        initial = QColor(self.manager.colour(self.role.key))
-        chosen = QColorDialog.getColor(initial, self, f"Select: {self.role.label}")
-        if chosen.isValid():
-            self.manager.set_colour(self.role.key, chosen.name())
-            self.refresh()
+    def redraw_after_show(self):
+        """Refresh curve geometry once the previously hidden page is laid out."""
+        times, vm, current = self._sample_data
+        self.vm_curve.setData(times, vm)
+        self.current_curve.setData(times, current)
+        self.refresh()
 
-
-def default_theme_directory() -> str:
-    """
-    Return a writable directory for theme import/export dialogs.
-
-    The relative ``./`` default is unusable in a frozen build: the working
-    directory is the launch location, which is ``/`` when a macOS bundle is
-    opened from Finder. Prefers the folder holding the executable, which is
-    where the release zip also places ``Recordings``, ``Neurons`` and
-    ``Stimuli``, and falls back to the user's home directory.
-
-    Returns
-    -------
-    str
-        Absolute path to an existing, writable directory.
-    """
-    if getattr(sys, "frozen", False):
-        candidate = Path(sys.executable).resolve().parent
-    else:
-        candidate = Path(__file__).resolve().parent
-
-    import os
-    if candidate.is_dir() and os.access(candidate, os.W_OK):
-        return str(candidate)
-    return str(Path.home())
 
 class SettingsPage:
-    """
-    Controller for the appearance section of the Settings page.
+    """Connect Designer controls to staged preferences exactly once."""
 
-    Parameters
-    ----------
-    parent : PySide6.QtWidgets.QMainWindow
-        Main window owning ``self.ui``.
-    manager : theme_manager.ThemeManager, optional
-        Theme owner; defaults to the module singleton.
-    """
-
-    def __init__(self, parent, manager=theme_manager) -> None:
-        self.parent = parent
-        self.ui = parent.ui
-        self.manager = manager
-
-        self._swatches: Dict[str, ColourSwatchButton] = {}
-        self._group_boxes: List[QGroupBox] = []
-        self._mode_combo: Optional[QComboBox] = None
-        self._width_slider: Optional[TickSlider] = None
-        self._width_readout: Optional[QLabel] = None
-        self._preview: Optional[TracePreview] = None
-        self._apply_button: Optional[QPushButton] = None
-        self._revert_button: Optional[QPushButton] = None
-        self._status_label: Optional[QLabel] = None
-
-        self._build_controls()
+    def __init__(self, parent, manager=theme_manager, preferences=None):
+        if getattr(parent, "_settings_controller", None) is not None:
+            raise RuntimeError("SettingsPage must be constructed only once per window")
+        self.parent, self.ui, self.manager = parent, parent.ui, manager
+        self.page = self.ui.page_Settings
+        self.preferences = preferences if preferences is not None else preference_store()
+        self._folder_dialog = self._colour_dialog = self._message = None
+        self._swatches = {}
+        self._saved_language = str(self.preferences.value(LANGUAGE_KEY, "en"))
+        self._pending_language = self._saved_language
+        self._saved_folder = str(default_recording_directory(self.preferences))
+        self._pending_folder = self._saved_folder
+        self._launch_language = getattr(QApplication.instance(), "_spikeling_language", "en")
+        for button in self.page.findChildren(QPushButton):
+            key = button.property("themeRole")
+            if not key:
+                continue
+            if key not in ROLES_BY_KEY or key in self._swatches:
+                raise ValueError(f"Invalid or duplicate Settings themeRole: {key}")
+            stem = button.objectName().removesuffix("_pushButton")
+            label = self.page.findChild(QLabel, stem + "_Value_label")
+            if label is None:
+                raise ValueError(f"Missing colour value label for {button.objectName()}")
+            self._swatches[key] = (button, label)
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
+            button.clicked.connect(partial(self._pick_colour, key))
+        self.ui.Settings_Trace_lineEdit.setReadOnly(True)
+        self.ui.Settings_Trace_lineEdit.setMaximumWidth(80)
+        self.ui.Settings_RecordingFolder_lineEdit.setReadOnly(True)
+        slider = self.ui.Settings_Trace_slider
+        slider.setRange(round(TRACE_WIDTH_MIN / TRACE_WIDTH_STEP),
+                        round(TRACE_WIDTH_MAX / TRACE_WIDTH_STEP))
+        slider.setSingleStep(1)
+        slider.setPageStep(1)
+        slider.valueChanged.connect(lambda value: self.manager.set_trace_width(value * TRACE_WIDTH_STEP))
+        self.ui.Settings_ShowGrid_checkBox.toggled.connect(self.manager.set_show_grid)
+        self.ui.Settings_Dark_pushButton.clicked.connect(lambda: self.manager.set_mode("dark"))
+        self.ui.Settings_Light_pushButton.clicked.connect(lambda: self.manager.set_mode("light"))
+        self.ui.Settings_Apply_pushButton.clicked.connect(self.ApplyTheme)
+        self.ui.Settings_Revert_pushButton.clicked.connect(self.RevertTheme)
+        self.ui.Settings_Defaults_pushButton.clicked.connect(self.ResetTheme)
+        self.ui.Settings_Defaults_pushButton.setToolTip(QCoreApplication.translate(
+            "SettingsPage", "Restore default appearance and English. The recording folder is retained. Changes wait for Apply."))
+        self.ui.Settings_RecordingFolderBrowse_pushButton.clicked.connect(self._browse_folder)
+        self._configure_languages()
+        self.ui.Settings_Language_comboBox.currentIndexChanged.connect(self._language_changed)
+        self._preview = TracePreview(self.ui.Settings_TracePreview_widget, manager)
         self.manager.pendingChanged.connect(self._on_pending_changed)
         self.manager.themeChanged.connect(self._on_theme_applied)
+        parent._settings_controller = self
         self._sync_controls()
 
-    # ------------------------------------------------------------------
-    # Page selection
-    # ------------------------------------------------------------------
+    def ShowPage(self):
+        self.ui.mainbody_stackedWidget.setCurrentWidget(self.page)
+        self._sync_controls()
+        QTimer.singleShot(0, self._preview.redraw_after_show)
 
-    def ShowPage(self) -> None:
-        """Display the Settings page and refresh its controls."""
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_Settings)
+    def _configure_languages(self):
+        """Preserve flag icons and disable languages without installed catalogues."""
+        combo = self.ui.Settings_Language_comboBox
+        for index, (code, name) in enumerate(LANGUAGES):
+            if index >= combo.count():
+                combo.addItem(name)
+            combo.setItemData(index, code)
+            available = language_available(code)
+            combo.model().item(index).setEnabled(available)
+            combo.setItemData(index, QCoreApplication.translate("SettingsPage", "Translation catalogue not installed.") if not available else "",
+                              Qt.ItemDataRole.ToolTipRole)
+        combo.setToolTip(QCoreApplication.translate("SettingsPage", "Language changes take effect after restarting. Languages without an installed translation are unavailable."))
+
+    def _language_changed(self, index):
+        code = self.ui.Settings_Language_comboBox.itemData(index)
+        if code and language_available(code):
+            self._pending_language = code
+        self._sync_status()
+
+    def _on_pending_changed(self, *_):
         self._sync_controls()
 
-    # ------------------------------------------------------------------
-    # Construction
-    # ------------------------------------------------------------------
+    def _on_theme_applied(self, *_):
+        self._sync_controls()
+        for dialog in (self._folder_dialog, self._colour_dialog, self._message):
+            if dialog is not None:
+                dialog.setStyleSheet(self.manager.stylesheet())
 
-    def _build_controls(self) -> None:
-        """Create the appearance widgets inside ``page_601``."""
-        page = self.ui.page_Settings
-        layout = page.layout()
-        if layout is None:
-            layout = QVBoxLayout(page)
-            layout.setContentsMargins(16, 16, 16, 16)
-            layout.setSpacing(10)
+    def _sync_controls(self):
+        """Refresh the existing controls under signal blockers."""
+        for key, (button, label) in self._swatches.items():
+            colour = self.manager.colour(key)
+            border = mix(self.manager.active_colour("panel_background"),
+                         self.manager.active_colour("text_primary"), 0.55)
+            button.setStyleSheet(
+                f"QPushButton {{background-color: {colour}; border: 1px solid {border}; border-radius: 0px;}}"
+                f"QPushButton:hover {{border: 2px solid {self.manager.active_colour('text_primary')};}}"
+                f"QPushButton:pressed {{border: 2px solid {self.manager.active_colour('neuron_stimulus')};}}")
+            label.setText(colour.upper())
+            label.setToolTip(QCoreApplication.translate("SettingsPage", "Hexadecimal colour: {colour}").format(colour=colour.upper()))
+        buttons = self.ui.Settings_Theme_buttonGroup
+        # A custom palette must not falsely advertise either built-in preset.
+        buttons.setExclusive(False)
+        for mode, button in (("dark", self.ui.Settings_Dark_pushButton),
+                             ("light", self.ui.Settings_Light_pushButton)):
+            with QSignalBlocker(button):
+                button.setChecked(self.manager.mode == mode)
+        buttons.setExclusive(True)
+        with QSignalBlocker(self.ui.Settings_Trace_slider):
+            self.ui.Settings_Trace_slider.setValue(round(self.manager.trace_width / TRACE_WIDTH_STEP))
+        self.ui.Settings_Trace_lineEdit.setText(f"{self.manager.trace_width:g} px")
+        with QSignalBlocker(self.ui.Settings_ShowGrid_checkBox):
+            self.ui.Settings_ShowGrid_checkBox.setChecked(self.manager.show_grid)
+        combo = self.ui.Settings_Language_comboBox
+        with QSignalBlocker(combo):
+            index = combo.findData(self._pending_language)
+            combo.setCurrentIndex(index if index >= 0 else 0)
+        self.ui.Settings_RecordingFolder_lineEdit.setText(self._pending_folder)
+        self._style_width_slider()
+        self._preview.refresh()
+        self._sync_status()
 
-        container = QWidget(page)
-        container.setObjectName("Settings_Appearance_container")
-        outer = QVBoxLayout(container)
-        outer.setContentsMargins(4, 4, 4, 4)
-        outer.setSpacing(16)
+    def _style_width_slider(self):
+        colour = self.manager.active_colour
+        border = mix(colour('panel_background'), colour('text_primary'), 0.4)
+        for editor in (self.ui.Settings_RecordingFolder_lineEdit,
+                       self.ui.Settings_Trace_lineEdit, self.ui.Settings_Language_comboBox):
+            editor.setStyleSheet(f"""
+                QLineEdit, QComboBox {{background: {colour('panel_background')}; color: {colour('text_primary')};
+                    border: 1px solid {border}; border-radius: 5px; padding: 4px 8px;}}
+                QComboBox QAbstractItemView {{background: {colour('panel_background')}; color: {colour('text_primary')};
+                    selection-background-color: {colour('neuron_stimulus')};}}
+            """)
+        self.ui.Settings_RecordingFolderBrowse_pushButton.setStyleSheet(f"""
+            QPushButton {{background: {colour('surface')}; color: {colour('text_primary')};
+                border: 1px solid {border}; border-radius: 5px; padding: 5px 12px;}}
+            QPushButton:hover {{border-color: {colour('neuron_stimulus')};}}
+            QPushButton:pressed {{background: {colour('window_background')};}}
+        """)
+        self.ui.Settings_Trace_slider.setStyleSheet(f"""
+            QSlider::groove:horizontal {{height: 6px; background: {colour('text_muted')}; border-radius: 3px;}}
+            QSlider::sub-page:horizontal {{background: {colour('neuron_stimulus')}; border-radius: 3px;}}
+            QSlider::handle:horizontal {{width: 16px; margin: -5px 0; background: {colour('text_primary')};
+                border: 1px solid {colour('neuron_stimulus')}; border-radius: 8px;}}
+        """)
 
-        outer.addWidget(self._build_header(container))
-        outer.addWidget(self._build_action_box(container))
-        outer.addWidget(self._build_width_box(container))
-        for section in SECTIONS:
-            outer.addWidget(self._build_colour_box(container, section))
-        outer.addItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))
+    @property
+    def is_dirty(self):
+        return (self.manager.is_dirty or self._pending_language != self._saved_language
+                or self._pending_folder != self._saved_folder)
 
-        scroll = QScrollArea(page)
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.NoFrame)
-        scroll.setWidget(container)
-        layout.addWidget(scroll)
-
-    def _make_group_box(self, parent: QWidget, title: str, name: str) -> QGroupBox:
-        """
-        Create a framed section box.
-
-        The ``themeBox`` dynamic property is what the application style sheet
-        selects on: an attribute selector outranks the plain ``QFrame`` type
-        selector that would otherwise make the box transparent, since
-        :class:`QGroupBox` inherits from :class:`QFrame`.
-
-        Parameters
-        ----------
-        parent : PySide6.QtWidgets.QWidget
-            Qt parent.
-        title : str
-            Text shown in the box header.
-        name : str
-            Object name, used for styling and for tests.
-
-        Returns
-        -------
-        PySide6.QtWidgets.QGroupBox
-            Empty, registered group box.
-        """
-        box = QGroupBox(title, parent)
-        box.setObjectName(name)
-        box.setProperty("themeBox", "true")
-        box.setFlat(False)
-        self._group_boxes.append(box)
-        return box
-
-    def _build_header(self, parent: QWidget) -> QWidget:
-        """Build the title row plus the light / dark selector."""
-        frame = QFrame(parent)
-        row = QHBoxLayout(frame)
-        row.setContentsMargins(0, 0, 0, 0)
-        row.setSpacing(10)
-
-        title = QLabel("Appearance", frame)
-        title.setStyleSheet("font: 700 15pt; background: transparent;")
-        row.addWidget(title)
-        row.addStretch(1)
-
-        row.addWidget(QLabel("Mode", frame))
-        self._mode_combo = QComboBox(frame)
-        self._mode_combo.addItem("Dark", userData="dark")
-        self._mode_combo.addItem("Light", userData="light")
-        self._mode_combo.addItem("Custom", userData="custom")
-        self._mode_combo.setFixedWidth(140)
-        self._mode_combo.activated.connect(self._on_mode_selected)
-        row.addWidget(self._mode_combo)
-
-        return frame
-
-    def _build_action_box(self, parent: QWidget) -> QGroupBox:
-        """Build the framed Apply / Revert / Reset / Import / Export box."""
-        box = self._make_group_box(parent, "Theme actions",
-                                   "Settings_ThemeActions_groupBox")
-        column = QVBoxLayout(box)
-        column.setContentsMargins(14, 18, 14, 14)
-        column.setSpacing(8)
-
-        row = QHBoxLayout()
-        row.setSpacing(10)
-
-        self._apply_button = self._make_action_button(box, "Apply", self.ApplyTheme)
-        self._revert_button = self._make_action_button(box, "Revert", self.RevertTheme)
-        row.addWidget(self._apply_button)
-        row.addWidget(self._revert_button)
-        row.addWidget(self._make_action_button(box, "Reset to default", self.ResetTheme))
-        row.addWidget(self._make_action_button(box, "Import...", self.ImportTheme))
-        row.addWidget(self._make_action_button(box, "Export...", self.ExportTheme))
-        row.addStretch(1)
-        column.addLayout(row)
-
-        self._status_label = QLabel("", box)
-        self._status_label.setStyleSheet("font: 700 9pt; background: transparent;")
-        column.addWidget(self._status_label)
-
-        return box
-
-    def _build_width_box(self, parent: QWidget) -> QGroupBox:
-        """Build the framed trace-thickness control and its preview."""
-        box = self._make_group_box(parent, "Trace rendering",
-                                   "Settings_TraceRendering_groupBox")
-        row = QHBoxLayout(box)
-        row.setContentsMargins(14, 18, 14, 14)
-        row.setSpacing(12)
-
-        row.addWidget(QLabel("Trace thickness", box))
-
-        ticks = int(round((TRACE_WIDTH_MAX - TRACE_WIDTH_MIN) * WIDTH_SLIDER_SCALE)) + 1
-        self._width_slider = TickSlider(box, num_ticks=ticks)
-        self._width_slider.setOrientation(Qt.Horizontal)
-        self._width_slider.setRange(
-            int(round(TRACE_WIDTH_MIN * WIDTH_SLIDER_SCALE)),
-            int(round(TRACE_WIDTH_MAX * WIDTH_SLIDER_SCALE)),
-        )
-        self._width_slider.setSingleStep(1)
-        self._width_slider.setPageStep(1)
-        self._width_slider.setMinimumWidth(240)
-        self._width_slider.valueChanged.connect(self._on_width_changed)
-        row.addWidget(self._width_slider)
-
-        self._width_readout = QLabel("", box)
-        self._width_readout.setFixedWidth(58)
-        self._width_readout.setStyleSheet("font: 700 10pt; background: transparent;")
-        row.addWidget(self._width_readout)
-
-        self._preview = TracePreview(self.manager, "neuron_vm", box)
-        row.addWidget(self._preview)
-
-        row.addStretch(1)
-        hint = QLabel("Applies to every oscilloscope once applied.", box)
-        hint.setStyleSheet("font: 9pt; background: transparent;")
-        row.addWidget(hint)
-
-        return box
-
-    def _build_colour_box(self, parent: QWidget, section: str) -> QGroupBox:
-        """
-        Build one framed grid of colour swatches.
-
-        Parameters
-        ----------
-        parent : PySide6.QtWidgets.QWidget
-            Qt parent.
-        section : str
-            Entry of :data:`theme_manager.SECTIONS` to render.
-
-        Returns
-        -------
-        PySide6.QtWidgets.QGroupBox
-            Populated group box.
-        """
-        box = self._make_group_box(
-            parent, section, f"Settings_{section.split()[0]}_groupBox")
-
-        grid = QGridLayout(box)
-        grid.setContentsMargins(14, 18, 14, 14)
-        grid.setHorizontalSpacing(18)
-        grid.setVerticalSpacing(8)
-
-        roles = [role for role in THEME_ROLES if role.section == section]
-        for position, role in enumerate(roles):
-            row, column = divmod(position, SWATCHES_PER_ROW)
-            grid.addWidget(QLabel(role.label, box), row, column * 2)
-            swatch = ColourSwatchButton(role, self.manager, box)
-            self._swatches[role.key] = swatch
-            grid.addWidget(swatch, row, column * 2 + 1)
-
-        for column in range(SWATCHES_PER_ROW):
-            grid.setColumnStretch(column * 2, 1)
-        return box
-
-    @staticmethod
-    def _make_action_button(parent: QWidget, text: str, slot) -> QPushButton:
-        """Create one uniformly sized action button."""
-        button = QPushButton(text, parent)
-        button.setMinimumSize(*ACTION_BUTTON_SIZE)
-        button.setCursor(Qt.PointingHandCursor)
-        button.clicked.connect(slot)
-        return button
-
-    # ------------------------------------------------------------------
-    # Slots
-    # ------------------------------------------------------------------
-
-    def _on_mode_selected(self, index: int) -> None:
-        """Stage the preset chosen in the mode combo box."""
-        mode = self._mode_combo.itemData(index)
-        if mode in ("dark", "light"):
-            self.manager.set_mode(mode)
-            self._refresh_swatches()
+    def _sync_status(self):
+        self.ui.Settings_Apply_pushButton.setEnabled(self.is_dirty)
+        self.ui.Settings_Revert_pushButton.setEnabled(self.is_dirty)
+        if self.is_dirty:
+            text = QCoreApplication.translate("SettingsPage", "Unapplied changes")
+        elif self._saved_language != self._launch_language:
+            text = QCoreApplication.translate("SettingsPage", "Settings saved. Restart to change language.")
         else:
-            self._sync_mode_combo()
+            text = QCoreApplication.translate("SettingsPage", "Settings applied and saved")
+        self.ui.Settings_Status_label.setText(text)
 
-    def _on_width_changed(self, raw_value: int) -> None:
-        """
-        Stage the pen width and refresh only the local preview.
-
-        Deliberately does *not* trigger a repaint: a full restyle per slider
-        tick is what made the control unusable.
-        """
-        self.manager.set_trace_width(raw_value / WIDTH_SLIDER_SCALE)
-        if self._width_readout is not None:
-            self._width_readout.setText(f"{self.manager.trace_width:g} px")
-        if self._preview is not None:
-            self._preview.update()
-
-    def _on_pending_changed(self, dirty: bool) -> None:
-        """Update the dirty indicators without touching the whole page."""
-        self._sync_mode_combo()
-        self._sync_status(dirty)
-        if self._preview is not None:
-            self._preview.update()
-
-    def _on_theme_applied(self, *_) -> None:
-        """Re-sync everything after the active theme has been repainted."""
-        self._sync_controls()
-
-    # ------------------------------------------------------------------
-    # Synchronisation
-    # ------------------------------------------------------------------
-
-    def _sync_controls(self) -> None:
-        """Refresh every control from the manager's pending state."""
-        self._refresh_swatches()
-        self._sync_mode_combo()
-
-        if self._width_slider is not None:
-            self._width_slider.blockSignals(True)
-            self._width_slider.setValue(
-                int(round(self.manager.trace_width * WIDTH_SLIDER_SCALE)))
-            self._width_slider.blockSignals(False)
-            self._width_slider.apply_style(
-                groove_color=self.manager.active_colour("window_background"),
-                fill_color=self.manager.active_colour("neuron_stimulus"),
-                handle_image=":/resources/resources/Handle.png",
-                height=6,
-                margin_h=10,
-            )
-
-        if self._width_readout is not None:
-            self._width_readout.setText(f"{self.manager.trace_width:g} px")
-        if self._preview is not None:
-            self._preview.update()
-
-        self._sync_status(self.manager.is_dirty)
-
-    def _refresh_swatches(self) -> None:
-        """Repaint every swatch from the pending palette."""
-        for swatch in self._swatches.values():
-            swatch.refresh()
-
-    def _sync_mode_combo(self) -> None:
-        """Select the entry matching the pending mode."""
-        if self._mode_combo is None:
+    def _pick_colour(self, key, checked=False):
+        """A themed asynchronous picker leaves acquisition event processing alive."""
+        if self._colour_dialog is not None:
+            self._colour_dialog.raise_()
             return
-        index = self._mode_combo.findData(self.manager.mode)
-        self._mode_combo.blockSignals(True)
-        self._mode_combo.setCurrentIndex(index if index >= 0 else 2)
-        self._mode_combo.blockSignals(False)
+        button = self._swatches[key][0]
+        label = button.parentWidget().findChild(QLabel, button.objectName().replace("_pushButton", "_label"))
+        title = label.text() if label is not None else key
+        dialog = QColorDialog(QColor(self.manager.colour(key)), self.parent)
+        dialog.setOption(QColorDialog.ColorDialogOption.DontUseNativeDialog, True)
+        dialog.setWindowTitle(QCoreApplication.translate("SettingsPage", "Select colour: {signal}").format(signal=title))
+        dialog.setStyleSheet(self.manager.stylesheet())
+        dialog.colorSelected.connect(lambda colour: self.manager.set_colour(key, colour.name()))
+        dialog.finished.connect(self._colour_dialog_finished)
+        self._colour_dialog = dialog
+        dialog.open()
 
-    def _sync_status(self, dirty: bool) -> None:
-        """Show whether staged edits are still waiting to be applied."""
-        if self._status_label is not None:
-            self._status_label.setText(
-                "Unapplied changes - press Apply to update the interface"
-                if dirty else "Theme applied and saved - restored on next launch"
-            )
+    def _colour_dialog_finished(self, *_):
+        dialog, self._colour_dialog = self._colour_dialog, None
+        if dialog is not None:
+            dialog.deleteLater()
 
-        accent = self.manager.active_colour("neuron_stimulus")
-        if self._apply_button is not None:
-            self._apply_button.setEnabled(dirty)
-            self._apply_button.setStyleSheet(
-                f"background-color: {accent}; color: {contrast_of(accent)};"
-                f"border: 1px solid {accent}; border-radius: 6px; font: 700 10pt;"
-                if dirty else ""
-            )
-        if self._revert_button is not None:
-            self._revert_button.setEnabled(dirty)
+    def _browse_folder(self, checked=False):
+        if self._folder_dialog is None:
+            dialog = QFileDialog(self.parent)
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
+            dialog.setOption(QFileDialog.Option.DontUseCustomDirectoryIcons, True)
+            dialog.setFileMode(QFileDialog.FileMode.Directory)
+            dialog.setOption(QFileDialog.Option.ShowDirsOnly, True)
+            dialog.setWindowTitle(QCoreApplication.translate("SettingsPage", "Select default recording folder"))
+            dialog.finished.connect(self._folder_selected)
+            self._folder_dialog = dialog
+        self._folder_dialog.setStyleSheet(self.manager.stylesheet())
+        self._folder_dialog.setDirectory(self._pending_folder)
+        self._folder_dialog.open()
 
-    # ------------------------------------------------------------------
-    # Actions
-    # ------------------------------------------------------------------
+    def _folder_selected(self, result):
+        if result == QDialog.DialogCode.Accepted:
+            paths = self._folder_dialog.selectedFiles()
+            if paths:
+                self._pending_folder = str(Path(paths[0]).resolve())
+                self._sync_controls()
 
-    def ApplyTheme(self) -> None:
-        """Commit the staged theme: repaint the interface and persist it."""
-        self.manager.apply_and_save()
+    def _show_error(self, text):
+        self._message = QMessageBox(self.parent)
+        self._message.setWindowTitle(QCoreApplication.translate("SettingsPage", "Settings could not be saved"))
+        self._message.setText(text)
+        self._message.setIcon(QMessageBox.Icon.Warning)
+        self._message.setStyleSheet(self.manager.stylesheet())
+        self._message.open()
 
-    def RevertTheme(self) -> None:
-        """Drop the staged edits and restore the applied theme."""
+    def ApplyTheme(self, checked=False):
+        """Save preferences without redirecting any active recording."""
+        if self._pending_folder != self._saved_folder and not Path(self._pending_folder).is_dir():
+            self._show_error(QCoreApplication.translate("SettingsPage", "The selected recording folder does not exist."))
+            return
+        if not language_available(self._pending_language):
+            self._show_error(QCoreApplication.translate("SettingsPage", "The selected language translation is not installed."))
+            return
+        self.preferences.setValue(LANGUAGE_KEY, self._pending_language)
+        self.preferences.setValue(RECORDING_DIRECTORY_KEY, self._pending_folder)
+        self.preferences.sync()
+        if self.preferences.status() != self.preferences.Status.NoError:
+            self._show_error(QCoreApplication.translate("SettingsPage", "Your preferences could not be written to disk."))
+            return
+        try:
+            self.manager.apply_and_save()
+        except OSError:
+            # Keep the general preferences in step with the unsaved theme.
+            self.preferences.setValue(LANGUAGE_KEY, self._saved_language)
+            self.preferences.setValue(RECORDING_DIRECTORY_KEY, self._saved_folder)
+            self.preferences.sync()
+            self._show_error(QCoreApplication.translate("SettingsPage", "Your appearance settings could not be written to disk."))
+            return
+        self._saved_language = self._pending_language
+        self._saved_folder = self._pending_folder
+        self._sync_controls()
+
+    def RevertTheme(self, checked=False):
+        self._pending_language = self._saved_language
+        self._pending_folder = self._saved_folder
         self.manager.discard_changes()
-        self._sync_controls()
 
-    def ResetTheme(self) -> None:
-        """Restore, apply and persist the factory dark theme."""
-        self.manager.reset()
-        self._sync_controls()
+    def ResetTheme(self, checked=False):
+        """Stage factory appearance and English, keeping the data destination."""
+        self._pending_language = "en"
+        self.manager.stage_defaults()
 
-    def ExportTheme(self) -> None:
-        """Write the staged theme to a user-selected ``.json`` file."""
-        suggested = str(Path(default_theme_directory()) / "spikeling_theme.json")
-        path, _ = QFileDialog.getSaveFileName(
-            self.parent, "Save theme", suggested, "JSON files (*.json)")
-        if path:
-            self.manager.export_to(path)
 
-    def ImportTheme(self) -> None:
-        """Stage a theme from a user-selected ``.json`` file."""
-        path, _ = QFileDialog.getOpenFileName(
-            self.parent, "Load theme", default_theme_directory(),
-            "JSON files (*.json)")
-        if path:
-            self.manager.import_from(path)
-            self._sync_controls()
-
-def ShowPage(self) -> None:
-    """Display the Settings page from a ``MainWindow`` instance."""
-    page = getattr(self, "settings_page", None)
-    if page is not None:
-        page.ShowPage()
-    else:
-        self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_601)
+def ShowPage(self):
+    """Navigation entry point retained for Parameters_NavigationButtons."""
+    self.settings_page.ShowPage()

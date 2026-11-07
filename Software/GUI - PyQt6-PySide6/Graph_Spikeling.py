@@ -602,7 +602,13 @@ class SpikelingGraph(QObject):
     # -------------------------------------------------------------------------
     def configure_recording(self):
         """Configure the new recording widgets once."""
-        folder = Path(__file__).resolve().parent / "Recordings"
+        from app_preferences import default_recording_directory
+        folder = default_recording_directory()
+        try:
+            folder.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            # The normal recording validation explains unavailable destinations.
+            pass
 
         folder_editor = self.ui.Spikeling_DataRecording_Folder_lineEdit
         folder_editor.setEnabled(True)

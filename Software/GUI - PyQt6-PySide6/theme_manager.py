@@ -31,6 +31,7 @@ application restart. Edits are staged and previewed live; only
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 from dataclasses import dataclass, field
@@ -707,15 +708,17 @@ class ThemeState:
     mode: str
     colours: Dict[str, str]
     trace_width: float
+    show_grid: bool = True
 
     def copy(self) -> "ThemeState":
         """Return an independent copy, safe to mutate."""
-        return ThemeState(self.mode, dict(self.colours), self.trace_width)
+        return ThemeState(self.mode, dict(self.colours), self.trace_width, self.show_grid)
 
     def matches(self, other: "ThemeState") -> bool:
         """Return ``True`` when two states are visually identical."""
         return (
             self.mode == other.mode
+            and self.show_grid == other.show_grid
             and self.colours == other.colours
             and abs(self.trace_width - other.trace_width) < 1e-9
         )
@@ -725,6 +728,7 @@ class ThemeState:
         return {
             "mode": self.mode,
             "trace_width": self.trace_width,
+            "show_grid": self.show_grid,
             "colours": self.colours,
         }
 
@@ -819,6 +823,26 @@ class ThemeManager(QObject):
         return self._pending.trace_width
 
     @property
+    def show_grid(self) -> bool:
+        """Pending grid visibility for previews."""
+        return self._pending.show_grid
+
+    @property
+    def active_show_grid(self) -> bool:
+        """Grid visibility applied to the live plots."""
+        return self._active.show_grid
+
+    def set_show_grid(self, visible: bool) -> None:
+        """Stage a grid change; do not touch acquisition or live plots."""
+        self._pending.show_grid = bool(visible)
+        self.pendingChanged.emit(self.is_dirty)
+
+    def stage_defaults(self) -> None:
+        """Stage factory appearance so Restore defaults can be reverted."""
+        self._pending = default_state()
+        self.pendingChanged.emit(self.is_dirty)
+
+    @property
     def is_dirty(self) -> bool:
         """``True`` when the pending state differs from the active one."""
         return not self._pending.matches(self._active)
@@ -876,37 +900,15 @@ class ThemeManager(QObject):
 
     def apply_and_save(self) -> None:
         """Promote the pending state to active, persist it and repaint once."""
-        self._active = self._pending.copy()
+        candidate = self._pending.copy()
         self._settings.setValue(
-            SETTINGS_KEY, json.dumps(self._active.to_payload(), indent=2))
+            SETTINGS_KEY, json.dumps(candidate.to_payload(), indent=2))
         self._settings.sync()
+        if self._settings.status() != QSettings.Status.NoError:
+            raise OSError("The appearance settings could not be saved")
+        self._active = candidate
         self.repaint()
         self.pendingChanged.emit(False)
-
-    def export_to(self, path: str) -> None:
-        """
-        Write the pending state to a standalone ``.json`` file.
-
-        The pending state is exported rather than the active one so that
-        "tweak, export, share" works without first committing the theme to
-        the local machine.
-        """
-        with open(path, "w", encoding="utf-8") as handle:
-            json.dump(self._pending.to_payload(), handle, indent=2)
-
-    def import_from(self, path: str) -> None:
-        """
-        Stage a theme written by :meth:`export_to`.
-
-        The file is loaded into the pending state only; :meth:`apply_and_save`
-        still has to run, so an imported theme can be inspected in the
-        Settings page and rejected without ever repainting the interface.
-        """
-        with open(path, "r", encoding="utf-8") as handle:
-            data = json.load(handle)
-
-        self._pending = self._state_from_payload(data, self._pending)
-        self.pendingChanged.emit(self.is_dirty)
 
     def _state_from_payload(self, data: dict, fallback: ThemeState) -> ThemeState:
         """
@@ -924,13 +926,17 @@ class ThemeManager(QObject):
         ThemeState
             Fully populated state.
         """
+        if not isinstance(data, dict):
+            data = {}
         mode = str(data.get("mode", fallback.mode))
         colours = dict(PRESETS.get(mode, fallback.colours))
-        stored = data.get("colours", {}) or {}
+        stored = data.get("colours", {})
+        if not isinstance(stored, dict):
+            stored = {}
 
         for role in THEME_ROLES:
             value = stored.get(role.key)
-            if value and QColor(value).isValid():
+            if isinstance(value, str) and QColor(value).isValid():
                 colours[role.key] = to_hex(value)
             elif role.key not in colours:
                 colours[role.key] = fallback.colours.get(role.key, "#000000")
@@ -939,7 +945,9 @@ class ThemeManager(QObject):
             mode = DEFAULT_MODE
 
         return ThemeState(mode, colours,
-                          self._clamp_width(data.get("trace_width", fallback.trace_width)))
+                          self._clamp_width(data.get("trace_width", fallback.trace_width)),
+                          data.get("show_grid") if isinstance(data.get("show_grid"), bool)
+                          else fallback.show_grid)
 
     @staticmethod
     def _clamp_width(value) -> float:
@@ -947,6 +955,8 @@ class ThemeManager(QObject):
         try:
             width = float(value)
         except (TypeError, ValueError):
+            return DEFAULT_TRACE_WIDTH
+        if not math.isfinite(width):
             return DEFAULT_TRACE_WIDTH
         return min(max(width, TRACE_WIDTH_MIN), TRACE_WIDTH_MAX)
 
@@ -959,7 +969,7 @@ class ThemeManager(QObject):
         mode = str(mode).strip().lower()
         if mode not in PRESETS:
             return
-        self._pending = ThemeState(mode, dict(PRESETS[mode]), self._pending.trace_width)
+        self._pending = ThemeState(mode, dict(PRESETS[mode]), self._pending.trace_width, self._pending.show_grid)
         self.pendingChanged.emit(self.is_dirty)
 
     def set_colour(self, role_key: str, colour: str) -> None:
@@ -992,11 +1002,6 @@ class ThemeManager(QObject):
         """Drop every staged edit and return to the applied theme."""
         self._pending = self._active.copy()
         self.pendingChanged.emit(False)
-
-    def reset(self) -> None:
-        """Stage the factory dark theme and apply it immediately."""
-        self._pending = default_state()
-        self.apply_and_save()
 
     # ------------------------------------------------------------------
     # Painting
@@ -1383,6 +1388,7 @@ class ThemeManager(QObject):
                 colour = self.active_colour(role_key) if role_key else default_background
                 plot_widget.setBackground(QColor(colour))
 
+                plot_widget.showGrid(x=self._active.show_grid, y=self._active.show_grid)
                 plot_item = plot_widget.getPlotItem()
                 for side in ("left", "bottom", "right", "top"):
                     axis = plot_item.getAxis(side)
@@ -1474,6 +1480,7 @@ class ThemeManager(QObject):
             except RuntimeError:
                 continue
             for plot_widget in plot_widgets:
+                plot_widget.showGrid(x=self._active.show_grid, y=self._active.show_grid)
                 for item in list(plot_widget.getPlotItem().items):
                     self._apply_role_to_item(item)
 

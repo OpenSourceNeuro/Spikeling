@@ -1966,7 +1966,7 @@ centerMenuSubContainer_menu_stackedwidget{
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>14</number>
+                <number>15</number>
                </property>
                <widget class="QWidget" name="page_Home">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -44508,9 +44508,9 @@ border : none;</string>
                 </layout>
                </widget>
                <widget class="QWidget" name="page_Settings">
-                <layout class="QVBoxLayout" name="verticalLayout_340">
+                <layout class="QVBoxLayout" name="verticalLayout_340" stretch="0,1,0">
                  <property name="spacing">
-                  <number>20</number>
+                  <number>5</number>
                  </property>
                  <property name="leftMargin">
                   <number>0</number>
@@ -44577,7 +44577,7 @@ border : none;</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget" native="true">
+                  <widget class="QWidget" name="Settings_Content_widget" native="true">
                    <layout class="QGridLayout" name="gridLayout" rowstretch="0,1" columnstretch="1,1">
                     <property name="leftMargin">
                      <number>0</number>
@@ -44592,7 +44592,7 @@ border : none;</string>
                      <number>0</number>
                     </property>
                     <property name="spacing">
-                     <number>10</number>
+                     <number>5</number>
                     </property>
                     <item row="0" column="1">
                      <widget class="QGroupBox" name="Settings_Appearance_groupBox">
@@ -44737,7 +44737,7 @@ QPushButton:focus {
                            </widget>
                           </item>
                           <item>
-                           <widget class="QPushButton" name="Settings_Ligth_pushButton">
+                           <widget class="QPushButton" name="Settings_Light_pushButton">
                             <property name="minimumSize">
                              <size>
                               <width>0</width>
@@ -44878,6 +44878,12 @@ QPushButton:focus {
                                  <height>26</height>
                                 </size>
                                </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
                                <property name="styleSheet">
                                 <string notr="true">background-color: rgb(0, 30,38);
 border: 1px solid rgb(147, 161, 161);
@@ -44899,7 +44905,7 @@ border-radius: 0px;</string>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>#001E26</string>
+                                <string notr="true">#001E26</string>
                                </property>
                               </widget>
                              </item>
@@ -44956,6 +44962,12 @@ border-radius: 0px;</string>
                                  <height>26</height>
                                 </size>
                                </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
                                <property name="styleSheet">
                                 <string notr="true">background-color: rgb(0, 43, 54);
 border: 1px solid rgb(147, 161, 161);
@@ -44977,7 +44989,7 @@ border-radius: 0px;</string>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>#002B36</string>
+                                <string notr="true">#002B36</string>
                                </property>
                               </widget>
                              </item>
@@ -45028,6 +45040,12 @@ border-radius: 0px;</string>
                                  <height>26</height>
                                 </size>
                                </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
                                <property name="styleSheet">
                                 <string notr="true">background-color: rgb(7, 54, 66);
 border: 1px solid rgb(147, 161, 161);
@@ -45049,7 +45067,7 @@ border-radius: 0px;</string>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>#073642</string>
+                                <string notr="true">#073642</string>
                                </property>
                               </widget>
                              </item>
@@ -45100,6 +45118,12 @@ border-radius: 0px;</string>
                                  <height>26</height>
                                 </size>
                                </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>64</width>
+                                 <height>26</height>
+                                </size>
+                               </property>
                                <property name="styleSheet">
                                 <string notr="true">background-color: rgb(190, 205, 205);
 border: 1px solid rgb(147, 161, 161);
@@ -45120,13 +45144,8 @@ border-radius: 0px;</string>
                                  <pointsize>10</pointsize>
                                 </font>
                                </property>
-                               <property name="toolTip">
-                                <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                               </property>
                                <property name="text">
-                                <string>#BECDCD</string>
+                                <string notr="true">#BECDCD</string>
                                </property>
                               </widget>
                              </item>
@@ -45288,7 +45307,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                </item>
                                <item>
                                 <property name="text">
-                                 <string>Greek</string>
+                                 <string>Ελληνικά</string>
                                 </property>
                                 <property name="icon">
                                  <iconset resource="resources.qrc">
@@ -45297,7 +45316,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                </item>
                                <item>
                                 <property name="text">
-                                 <string>Italian</string>
+                                 <string>Italiano</string>
                                 </property>
                                 <property name="icon">
                                  <iconset resource="resources.qrc">
@@ -45306,7 +45325,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                </item>
                                <item>
                                 <property name="text">
-                                 <string>Spanish</string>
+                                 <string>Español</string>
                                 </property>
                                 <property name="icon">
                                  <iconset resource="resources.qrc">
@@ -45414,6 +45433,9 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                 <font>
                                  <pointsize>10</pointsize>
                                 </font>
+                               </property>
+                               <property name="toolTip">
+                                <string>Default destination for new application sessions. Active recordings are not moved.</string>
                                </property>
                                <property name="styleSheet">
                                 <string notr="true">background-color: #101D24;
@@ -45555,7 +45577,7 @@ QTabWidget::pane {
                             <number>10</number>
                            </property>
                            <property name="topMargin">
-                            <number>0</number>
+                            <number>5</number>
                            </property>
                            <property name="rightMargin">
                             <number>10</number>
@@ -45607,6 +45629,12 @@ QTabWidget::pane {
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -45630,13 +45658,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#DC322F</string>
+                                 <string notr="true">#DC322F</string>
                                 </property>
                                </widget>
                               </item>
@@ -45687,6 +45710,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -45710,13 +45739,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#859900</string>
+                                 <string notr="true">#859900</string>
                                 </property>
                                </widget>
                               </item>
@@ -45767,6 +45791,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -45790,13 +45820,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#268BD2</string>
+                                 <string notr="true">#268BD2</string>
                                 </property>
                                </widget>
                               </item>
@@ -45847,6 +45872,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -45870,13 +45901,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#CB4B16</string>
+                                 <string notr="true">#CB4B16</string>
                                 </property>
                                </widget>
                               </item>
@@ -45927,6 +45953,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -45950,13 +45982,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#2AA198</string>
+                                 <string notr="true">#2AA198</string>
                                 </property>
                                </widget>
                               </item>
@@ -46007,6 +46034,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46030,13 +46063,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#B58900</string>
+                                 <string notr="true">#B58900</string>
                                 </property>
                                </widget>
                               </item>
@@ -46087,6 +46115,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46110,18 +46144,26 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#D33682</string>
+                                 <string notr="true">#D33682</string>
                                 </property>
                                </widget>
                               </item>
                              </layout>
                             </widget>
+                           </item>
+                           <item>
+                            <spacer name="Settings_NeuronColours_tab_spacer">
+                             <property name="orientation">
+                              <enum>Qt::Orientation::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                            </spacer>
                            </item>
                           </layout>
                          </widget>
@@ -46137,7 +46179,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                             <number>10</number>
                            </property>
                            <property name="topMargin">
-                            <number>0</number>
+                            <number>5</number>
                            </property>
                            <property name="rightMargin">
                             <number>10</number>
@@ -46189,6 +46231,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46212,13 +46260,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#859900</string>
+                                 <string notr="true">#859900</string>
                                 </property>
                                </widget>
                               </item>
@@ -46269,6 +46312,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46292,13 +46341,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>#00FF85</string>
+                                 <string notr="true">#00FF85</string>
                                 </property>
                                </widget>
                               </item>
@@ -46349,6 +46393,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46372,13 +46422,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>85FF00</string>
+                                 <string notr="true">#85FF00</string>
                                 </property>
                                </widget>
                               </item>
@@ -46429,6 +46474,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46452,13 +46503,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>D33682</string>
+                                 <string notr="true">#D33682</string>
                                 </property>
                                </widget>
                               </item>
@@ -46509,6 +46555,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46532,13 +46584,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>6C71C4</string>
+                                 <string notr="true">#6C71C4</string>
                                 </property>
                                </widget>
                               </item>
@@ -46589,6 +46636,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46612,13 +46665,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>2AA198</string>
+                                 <string notr="true">#2AA198</string>
                                 </property>
                                </widget>
                               </item>
@@ -46669,6 +46717,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46692,13 +46746,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>DC322F</string>
+                                 <string notr="true">#DC322F</string>
                                 </property>
                                </widget>
                               </item>
@@ -46749,6 +46798,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46772,13 +46827,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>CB4B16</string>
+                                 <string notr="true">#CB4B16</string>
                                 </property>
                                </widget>
                               </item>
@@ -46829,6 +46879,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46852,13 +46908,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>B58900</string>
+                                 <string notr="true">#B58900</string>
                                 </property>
                                </widget>
                               </item>
@@ -46909,6 +46960,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -46932,18 +46989,26 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>268BD2</string>
+                                 <string notr="true">#268BD2</string>
                                 </property>
                                </widget>
                               </item>
                              </layout>
                             </widget>
+                           </item>
+                           <item>
+                            <spacer name="Settings_ImagingColours_tab_spacer">
+                             <property name="orientation">
+                              <enum>Qt::Orientation::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                            </spacer>
                            </item>
                           </layout>
                          </widget>
@@ -46959,7 +47024,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                             <number>10</number>
                            </property>
                            <property name="topMargin">
-                            <number>0</number>
+                            <number>5</number>
                            </property>
                            <property name="rightMargin">
                             <number>10</number>
@@ -47011,6 +47076,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47034,13 +47105,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>268BD2</string>
+                                 <string notr="true">#268BD2</string>
                                 </property>
                                </widget>
                               </item>
@@ -47091,6 +47157,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47114,13 +47186,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>2AA198</string>
+                                 <string notr="true">#2AA198</string>
                                 </property>
                                </widget>
                               </item>
@@ -47171,6 +47238,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47194,13 +47267,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>859900</string>
+                                 <string notr="true">#859900</string>
                                 </property>
                                </widget>
                               </item>
@@ -47251,6 +47319,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47274,13 +47348,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>6C71C4</string>
+                                 <string notr="true">#6C71C4</string>
                                 </property>
                                </widget>
                               </item>
@@ -47331,6 +47400,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47354,22 +47429,30 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>B58900</string>
+                                 <string notr="true">#B58900</string>
                                 </property>
                                </widget>
                               </item>
                              </layout>
                             </widget>
                            </item>
+                           <item>
+                            <spacer name="Settings_ExtracellularColours_tab_spacer">
+                             <property name="orientation">
+                              <enum>Qt::Orientation::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
                           </layout>
                          </widget>
-                         <widget class="QWidget" name="Settings_AnalysisColours_tab_">
+                         <widget class="QWidget" name="Settings_AnalysisColours_tab">
                           <attribute name="title">
                            <string>Analysis</string>
                           </attribute>
@@ -47381,7 +47464,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                             <number>10</number>
                            </property>
                            <property name="topMargin">
-                            <number>0</number>
+                            <number>5</number>
                            </property>
                            <property name="rightMargin">
                             <number>10</number>
@@ -47433,6 +47516,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47456,13 +47545,8 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>BECDCD</string>
+                                 <string notr="true">#BECDCD</string>
                                 </property>
                                </widget>
                               </item>
@@ -47513,6 +47597,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                                   <height>26</height>
                                  </size>
                                 </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>64</width>
+                                  <height>26</height>
+                                 </size>
+                                </property>
                                 <property name="cursor">
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
@@ -47536,18 +47626,26 @@ border-radius: 0px;</string>
                                   <pointsize>10</pointsize>
                                  </font>
                                 </property>
-                                <property name="toolTip">
-                                 <string>&lt;b&gt;Holding voltage&lt;/b&gt;&lt;br&gt;
-Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Unit:&lt;/b&gt; mV</string>
-                                </property>
                                 <property name="text">
-                                 <string>586E75</string>
+                                 <string notr="true">#586E75</string>
                                 </property>
                                </widget>
                               </item>
                              </layout>
                             </widget>
+                           </item>
+                           <item>
+                            <spacer name="Settings_AnalysisColours_tab_spacer">
+                             <property name="orientation">
+                              <enum>Qt::Orientation::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                            </spacer>
                            </item>
                           </layout>
                          </widget>
@@ -47642,6 +47740,12 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                           </item>
                           <item>
                            <widget class="QLineEdit" name="Settings_Trace_lineEdit">
+                            <property name="maximumSize">
+                             <size>
+                              <width>80</width>
+                              <height>16777215</height>
+                             </size>
+                            </property>
                             <property name="font">
                              <font>
                               <pointsize>10</pointsize>
@@ -47649,6 +47753,9 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                             </property>
                             <property name="text">
                              <string>1.5 px</string>
+                            </property>
+                            <property name="readOnly">
+                             <bool>true</bool>
                             </property>
                            </widget>
                           </item>
@@ -47700,7 +47807,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="Setting_Footer_frame">
+                  <widget class="QFrame" name="Settings_Footer_frame">
                    <property name="frameShape">
                     <enum>QFrame::Shape::StyledPanel</enum>
                    </property>
@@ -47715,13 +47822,13 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                      <number>20</number>
                     </property>
                     <property name="topMargin">
-                     <number>10</number>
+                     <number>5</number>
                     </property>
                     <property name="rightMargin">
                      <number>20</number>
                     </property>
                     <property name="bottomMargin">
-                     <number>10</number>
+                     <number>5</number>
                     </property>
                     <item>
                      <widget class="QLabel" name="Settings_Status_label">
@@ -47733,6 +47840,9 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                       <property name="text">
                        <string>No unapplied changes</string>
                       </property>
+                      <property name="wordWrap">
+                       <bool>false</bool>
+                      </property>
                      </widget>
                     </item>
                     <item>
@@ -47742,7 +47852,7 @@ Sets the membrane potential maintained in voltage clamp mode.&lt;br&gt;&lt;br&gt
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
-                        <width>436</width>
+                        <width>0</width>
                         <height>20</height>
                        </size>
                       </property>
@@ -47802,12 +47912,15 @@ QPushButton:disabled {
 }</string>
                       </property>
                       <property name="text">
-                       <string>	Restore defaults</string>
+                       <string>Restore defaults</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="Settings_Revert_pushButton">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="minimumSize">
                        <size>
                         <width>100</width>
@@ -47860,12 +47973,15 @@ QPushButton:disabled {
 }</string>
                       </property>
                       <property name="text">
-                       <string>	Revert</string>
+                       <string>Revert</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="Settings_Apply_pushButton">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="minimumSize">
                        <size>
                         <width>100</width>
@@ -47918,7 +48034,7 @@ QPushButton:disabled {
 }</string>
                       </property>
                       <property name="text">
-                       <string>	Apply</string>
+                       <string>Apply</string>
                       </property>
                      </widget>
                     </item>
@@ -47928,60 +48044,943 @@ QPushButton:disabled {
                 </layout>
                </widget>
                <widget class="QWidget" name="page_About">
-                <layout class="QHBoxLayout" name="horizontalLayout_124">
+                <layout class="QVBoxLayout" name="About_rootLayout">
                  <property name="spacing">
-                  <number>0</number>
+                  <number>10</number>
                  </property>
                  <property name="leftMargin">
-                  <number>20</number>
+                  <number>10</number>
                  </property>
                  <property name="topMargin">
-                  <number>5</number>
+                  <number>0</number>
                  </property>
                  <property name="rightMargin">
-                  <number>20</number>
+                  <number>10</number>
                  </property>
                  <property name="bottomMargin">
-                  <number>5</number>
+                  <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextBrowser" name="textBrowser">
-                   <property name="styleSheet">
-                    <string notr="true">color: rgb(190, 205, 205);</string>
+                  <widget class="QLabel" name="About_titleLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>22</pointsize>
+                     <bold>true</bold>
+                    </font>
                    </property>
-                   <property name="html">
-                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;- About Spikeling&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Spikeling is an open-source neurophysiology teaching platform designed to make core electrophysiology concepts &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;practical, repeatable, and affordable&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; without the cost and logistics of conventional electrophysiology rigs or live preparations. &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Why it was developed&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Hands-on electrophysiology is &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;foundational&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to neuroscience education, but access is often limited by equipment cost, maintenance, space, safety constraints, and the availability of biological material. &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Spikeling was developed to remove these barriers while preserving the logic of real experiments: &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;hypothesis-driven protocols&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;controlled stimulation&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;measurable response&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;s, and &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;data analysis&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; that supports interpretation and reporting.      &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Project objectives&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:2px; margin-left:14px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        • Democratise neurophysiology teaching with &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;affordable&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;robust&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, and &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;portable&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; tools.  &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:2px; margin-left:14px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        • Support&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt; inquiry-based learning&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;: students design protocols, test predictions, and analyse results.  &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:2px; margin-left:14px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        • Teach&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt; modern standards&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;: quantitative reasoning, computational literacy, and reproducible workflows.  &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:10px; margin-left:14px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Open science, by design&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Spikeling is released under open licenses to encourage inspection, replication, and improvement.    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Educators can adapt activities to local curricula, labs can extend features, and students can learn by studying real hardware and real code.      &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Outreach &amp;amp; global accessibility&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Spikeling is built for teaching environments where conventional electrophysiology is impractical due to logistics or economics.    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        It has supported hands-on workshops &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;including in Africa&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;, enabling practical training with minimal infrastructure and a lightweight setup.      &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Ethical commitment (3Rs)&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;        Spikeling supports the &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;3Rs&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; in education and early training by helping:&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;        &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;• &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Replace&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; animal-based practicals for many introductory concepts,    &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;        &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;• &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Reduce&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; the need for live preparations, &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;        &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;• &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Refine&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; learners’ skills before any advanced biological work.  &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <property name="text">
+                    <string>About &amp; Scientific foundations</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="About_subtitleLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Understand the science. Explore the models. Reproduce the experiment.</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="About_navigationLayout">
+                   <property name="spacing">
+                    <number>12</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="About_navProject">
+                     <property name="text">
+                      <string>The project</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_navModels">
+                     <property name="text">
+                      <string>Models &amp;&amp; methods</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_navReferences">
+                     <property name="text">
+                      <string>References</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_navScience">
+                     <property name="text">
+                      <string>Open science</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_navSoftware">
+                     <property name="text">
+                      <string>Software &amp;&amp; device</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="About_breadcrumbLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>9</pointsize>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>About / The project</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QStackedWidget" name="About_stack">
+                   <property name="currentIndex">
+                    <number>0</number>
+                   </property>
+                   <widget class="QWidget" name="About_projectPage">
+                    <layout class="QVBoxLayout" name="About_projectLayout">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>5</number>
+                     </property>
+                     <item>
+                      <widget class="QScrollArea" name="About_projectScroll">
+                       <property name="widgetResizable">
+                        <bool>true</bool>
+                       </property>
+                       <widget class="QWidget" name="About_projectContents">
+                        <property name="geometry">
+                         <rect>
+                          <x>0</x>
+                          <y>0</y>
+                          <width>998</width>
+                          <height>605</height>
+                         </rect>
+                        </property>
+                        <layout class="QVBoxLayout" name="About_projectContentsLayout">
+                         <property name="spacing">
+                          <number>10</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>5</number>
+                         </property>
+                         <item>
+                          <widget class="QGroupBox" name="About_heroBox">
+                           <property name="title">
+                            <string>Spikeling</string>
+                           </property>
+                           <layout class="QVBoxLayout" name="About_heroLayout">
+                            <property name="spacing">
+                             <number>10</number>
+                            </property>
+                            <property name="leftMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="topMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="rightMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="bottomMargin">
+                             <number>5</number>
+                            </property>
+                            <item>
+                             <widget class="QLabel" name="About_missionLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>14</pointsize>
+                                <bold>true</bold>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string>An open-source platform for teaching neurophysiology, experimental design and neural data analysis.</string>
+                              </property>
+                              <property name="wordWrap">
+                               <bool>true</bool>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QLabel" name="About_introLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>11</pointsize>
+                                <bold>false</bold>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string>Connect neuronal models with hands-on experimentation: design stimuli, observe activity, record experiments and interpret data. Spikeling combines open hardware, firmware and desktop software for education and outreach.</string>
+                              </property>
+                              <property name="wordWrap">
+                               <bool>true</bool>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLabel" name="About_exploreLabel">
+                           <property name="font">
+                            <font>
+                             <pointsize>15</pointsize>
+                             <bold>true</bold>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Explore the scientific foundations</string>
+                           </property>
+                           <property name="wordWrap">
+                            <bool>true</bool>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QGridLayout" name="About_cardsLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <item row="0" column="0">
+                            <widget class="QCommandLinkButton" name="About_cardModels">
+                             <property name="text">
+                              <string>Models &amp;&amp; methods</string>
+                             </property>
+                             <property name="description">
+                              <string>Neuron dynamics, synapses, clamp modes and imaging.
+Explore the models →</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="0" column="1">
+                            <widget class="QCommandLinkButton" name="About_cardReferences">
+                             <property name="text">
+                              <string>References</string>
+                             </property>
+                             <property name="description">
+                              <string>Find the papers behind the models and methods.
+Browse papers →</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="1" column="0">
+                            <widget class="QCommandLinkButton" name="About_cardScience">
+                             <property name="text">
+                              <string>Open science</string>
+                             </property>
+                             <property name="description">
+                              <string>Source code, licences and reproducibility.
+Explore the project →</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="1" column="1">
+                            <widget class="QCommandLinkButton" name="About_cardSoftware">
+                             <property name="text">
+                              <string>Software &amp;&amp; device</string>
+                             </property>
+                             <property name="description">
+                              <string>Versions, compatibility and diagnostic details.
+View information →</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="About_shortcutsLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <item>
+                            <widget class="QPushButton" name="About_izhShortcut">
+                             <property name="text">
+                              <string>Izhikevich model →</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QPushButton" name="About_imagingShortcut">
+                             <property name="text">
+                              <string>Calcium &amp;&amp; fluorescence →</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item>
+                          <widget class="QGroupBox" name="About_creditsBox">
+                           <property name="title">
+                            <string>People &amp;&amp; origins</string>
+                           </property>
+                           <layout class="QVBoxLayout" name="About_creditsLayout">
+                            <property name="spacing">
+                             <number>10</number>
+                            </property>
+                            <property name="leftMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="topMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="rightMargin">
+                             <number>5</number>
+                            </property>
+                            <property name="bottomMargin">
+                             <number>5</number>
+                            </property>
+                            <item>
+                             <widget class="QLabel" name="About_creditsLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                                <bold>false</bold>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string>Developed by M. J. Y. Zimmermann
+Maintained by P. Rignanese and A. Koumoundourou
+Based on an original idea by T. Baden
+Open Source Neuro — open tools for neuroscience education and outreach.</string>
+                              </property>
+                              <property name="wordWrap">
+                               <bool>true</bool>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QPushButton" name="About_citeProject">
+                              <property name="text">
+                               <string>Cite Spikeling →</string>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="About_projectStretch">
+                           <property name="orientation">
+                            <enum>Qt::Orientation::Vertical</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>20</width>
+                             <height>10</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </widget>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="About_modelsPage">
+                    <layout class="QHBoxLayout" name="About_modelsLayout">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>5</number>
+                     </property>
+                     <item>
+                      <layout class="QVBoxLayout" name="About_modelSidebarLayout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QLineEdit" name="About_modelSearch">
+                         <property name="accessibleName">
+                          <string>Find a model or method</string>
+                         </property>
+                         <property name="placeholderText">
+                          <string>Find a model or method…</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QListWidget" name="About_modelList"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="About_articleLayout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="About_articleTitle">
+                         <property name="font">
+                          <font>
+                           <pointsize>17</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Neuron dynamics</string>
+                         </property>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="About_provenanceLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>9</pointsize>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Model provenance</string>
+                         </property>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QTabWidget" name="About_articleTabs">
+                         <widget class="QWidget" name="About_tabOverview">
+                          <attribute name="title">
+                           <string>Overview</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="About_tabOverviewLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>5</number>
+                           </property>
+                           <item>
+                            <widget class="QTextBrowser" name="About_browserOverview">
+                             <property name="openExternalLinks">
+                              <bool>false</bool>
+                             </property>
+                             <property name="openLinks">
+                              <bool>false</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="About_tabEquations">
+                          <attribute name="title">
+                           <string>Equations</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="About_tabEquationsLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>5</number>
+                           </property>
+                           <item>
+                            <widget class="QTextBrowser" name="About_browserEquations">
+                             <property name="openExternalLinks">
+                              <bool>false</bool>
+                             </property>
+                             <property name="openLinks">
+                              <bool>false</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="About_tabImplementation">
+                          <attribute name="title">
+                           <string>Implementation</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="About_tabImplementationLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>5</number>
+                           </property>
+                           <item>
+                            <widget class="QTextBrowser" name="About_browserImplementation">
+                             <property name="openExternalLinks">
+                              <bool>false</bool>
+                             </property>
+                             <property name="openLinks">
+                              <bool>false</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="About_tabLimitations">
+                          <attribute name="title">
+                           <string>Limitations</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="About_tabLimitationsLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>5</number>
+                           </property>
+                           <item>
+                            <widget class="QTextBrowser" name="About_browserLimitations">
+                             <property name="openExternalLinks">
+                              <bool>false</bool>
+                             </property>
+                             <property name="openLinks">
+                              <bool>false</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="About_tabReferences">
+                          <attribute name="title">
+                           <string>References</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="About_tabReferencesLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>5</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>5</number>
+                           </property>
+                           <item>
+                            <widget class="QTextBrowser" name="About_browserReferences">
+                             <property name="openExternalLinks">
+                              <bool>false</bool>
+                             </property>
+                             <property name="openLinks">
+                              <bool>false</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_viewSource">
+                         <property name="text">
+                          <string>View implementation ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="About_referencesPage">
+                    <layout class="QVBoxLayout" name="About_referencesLayout">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>5</number>
+                     </property>
+                     <item>
+                      <widget class="QLineEdit" name="About_referenceSearch">
+                       <property name="accessibleName">
+                        <string>Search references</string>
+                       </property>
+                       <property name="placeholderText">
+                        <string>Search authors, titles, years or DOI…</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSplitter" name="About_referenceSplitter">
+                       <property name="orientation">
+                        <enum>Qt::Orientation::Horizontal</enum>
+                       </property>
+                       <widget class="QListWidget" name="About_referenceList"/>
+                       <widget class="QTextBrowser" name="About_referenceDetail"/>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="About_referenceActionsLayout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="About_OpenPaper">
+                         <property name="text">
+                          <string>Read publication ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_CopyCitation">
+                         <property name="text">
+                          <string>Copy citation</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_CopyBibtex">
+                         <property name="text">
+                          <string>Copy BibTeX</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="About_sciencePage">
+                    <layout class="QVBoxLayout" name="About_scienceLayout">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>5</number>
+                     </property>
+                     <item>
+                      <widget class="QTextBrowser" name="About_scienceBrowser">
+                       <property name="openExternalLinks">
+                        <bool>false</bool>
+                       </property>
+                       <property name="openLinks">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="About_scienceActionsLayout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="About_Repository">
+                         <property name="text">
+                          <string>Source code ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_Issues">
+                         <property name="text">
+                          <string>Report an issue ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_SoftwareLicence">
+                         <property name="text">
+                          <string>Software licence ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_HardwareLicence">
+                         <property name="text">
+                          <string>Hardware licence ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="About_softwarePage">
+                    <layout class="QVBoxLayout" name="About_softwareLayout">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>5</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="About_softwareTitle">
+                       <property name="font">
+                        <font>
+                         <pointsize>17</pointsize>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Software &amp; device information</string>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="About_deviceNote">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                         <bold>false</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>This report reads existing connection information. It does not open a port or send commands to the board.</string>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPlainTextEdit" name="About_diagnostics">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="About_softwareActionsLayout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="About_RefreshInfo">
+                         <property name="text">
+                          <string>Refresh information</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_CopyInfo">
+                         <property name="text">
+                          <string>Copy version information</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="About_Updates">
+                         <property name="text">
+                          <string>Updates &amp;&amp; releases ↗</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="About_footerLayout">
+                   <property name="spacing">
+                    <number>12</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="About_footerLabel">
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Open Source Neuro</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_Website">
+                     <property name="text">
+                      <string>Project website ↗</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="About_Documentation">
+                     <property name="text">
+                      <string>Documentation ↗</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="About_versionLabel">
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>GUI version</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="About_statusLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>9</pointsize>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>

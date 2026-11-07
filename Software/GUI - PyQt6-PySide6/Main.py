@@ -27,6 +27,7 @@ import Parameters_Sliders as Sliders
 from resource_path import resource_path
 from theme_manager import theme_manager
 from Page_Settings import SettingsPage
+from app_preferences import initialise_language
 from Page_GitHub import GitHubPage
 
 GlobalState = 0
@@ -197,12 +198,11 @@ class MainWindow(QMainWindow):
         # animated toggles are all re-themed, then expose the Settings controller.
         self.settings_page = SettingsPage(self, theme_manager)
 
-        theme_manager.bind(app=QApplication.instance(), window=self)
+        theme_manager.bind(app=QApplication.instance(), main_window=self)
         theme_manager.bind(window=self.aux_window)
         theme_manager.bind(window=self.tetrode_window)
         theme_manager.repaint()
 
-        self.settings_page = SettingsPage(self, theme_manager)
         self.github_page = GitHubPage(self)
 
         self.spikeling_graph.supervisor.manual_action_required.connect(
@@ -262,6 +262,7 @@ if __name__ == "__main__":
     # native Windows style ignores the palette for most widgets, which would
     # leave the custom theme half-applied on the Windows build only.
     app.setStyle("Fusion")
+    initialise_language(app)
 
     # Load the stored palette before any widget exists, so toggles, sliders
     # and plot pens are constructed with the user's colours and trace width.

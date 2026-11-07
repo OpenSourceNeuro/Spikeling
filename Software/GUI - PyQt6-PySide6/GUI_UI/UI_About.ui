@@ -1,0 +1,898 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ui version="4.0">
+ <class>AboutPanel</class>
+ <widget class="QWidget" name="AboutPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1120</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>About &amp; Scientific foundations</string>
+  </property>
+  <property name="font">
+   <font>
+    <family>Segoe UI</family>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <layout class="QVBoxLayout" name="About_rootLayout">
+   <property name="spacing">
+    <number>12</number>
+   </property>
+   <property name="leftMargin">
+    <number>22</number>
+   </property>
+   <property name="topMargin">
+    <number>22</number>
+   </property>
+   <property name="rightMargin">
+    <number>22</number>
+   </property>
+   <property name="bottomMargin">
+    <number>22</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="About_titleLabel">
+     <property name="text">
+      <string>About &amp; Scientific foundations</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>22</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="About_subtitleLabel">
+     <property name="text">
+      <string>Understand the science. Explore the models. Reproduce the experiment.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="About_navigation">
+     <layout class="QHBoxLayout" name="About_navigationLayout">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="About_navProject">
+        <property name="text">
+         <string>The project</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_navModels">
+        <property name="text">
+         <string>Models &amp;&amp; methods</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_navReferences">
+        <property name="text">
+         <string>References</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_navScience">
+        <property name="text">
+         <string>Open science</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_navSoftware">
+        <property name="text">
+         <string>Software &amp;&amp; device</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="About_breadcrumbLabel">
+     <property name="text">
+      <string>About / The project</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="About_stack">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="About_projectPage">
+      <layout class="QVBoxLayout" name="About_projectLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="About_projectScroll">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="About_projectContents">
+          <layout class="QVBoxLayout" name="About_projectContentsLayout">
+           <property name="spacing">
+            <number>12</number>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="About_heroBox">
+             <property name="title">
+              <string>Spikeling</string>
+             </property>
+             <layout class="QVBoxLayout" name="About_heroLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="About_missionLabel">
+                <property name="text">
+                 <string>An open-source platform for teaching neurophysiology, experimental design and neural data analysis.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="About_introLabel">
+                <property name="text">
+                 <string>Connect neuronal models with hands-on experimentation: design stimuli, observe activity, record experiments and interpret data. Spikeling combines open hardware, firmware and desktop software for education and outreach.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>11</pointsize>
+                  <bold>false</bold>
+                 </font>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="About_exploreLabel">
+             <property name="text">
+              <string>Explore the scientific foundations</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="About_cards">
+             <layout class="QGridLayout" name="About_cardsLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QCommandLinkButton" name="About_cardModels">
+                <property name="text">
+                 <string>Models &amp;&amp; methods</string>
+                </property>
+                <property name="description">
+                 <string>Neuron dynamics, synapses, clamp modes and imaging.
+Explore the models →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>120</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCommandLinkButton" name="About_cardReferences">
+                <property name="text">
+                 <string>References</string>
+                </property>
+                <property name="description">
+                 <string>Find the papers behind the models and methods.
+Browse papers →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>120</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCommandLinkButton" name="About_cardScience">
+                <property name="text">
+                 <string>Open science</string>
+                </property>
+                <property name="description">
+                 <string>Source code, licences and reproducibility.
+Explore the project →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>120</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCommandLinkButton" name="About_cardSoftware">
+                <property name="text">
+                 <string>Software &amp;&amp; device</string>
+                </property>
+                <property name="description">
+                 <string>Versions, compatibility and diagnostic details.
+View information →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>120</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="About_shortcuts">
+             <layout class="QHBoxLayout" name="About_shortcutsLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="About_izhShortcut">
+                <property name="text">
+                 <string>Izhikevich model →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>40</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="About_imagingShortcut">
+                <property name="text">
+                 <string>Calcium &amp;&amp; fluorescence →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>40</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="About_creditsBox">
+             <property name="title">
+              <string>People &amp;&amp; origins</string>
+             </property>
+             <layout class="QVBoxLayout" name="About_creditsLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="About_creditsLabel">
+                <property name="text">
+                 <string>Developed by M. J. Y. Zimmermann
+Maintained by P. Rignanese and A. Koumoundourou
+Based on an original idea by T. Baden
+Open Source Neuro — open tools for neuroscience education and outreach.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <bold>false</bold>
+                 </font>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="About_citeProject">
+                <property name="text">
+                 <string>Cite Spikeling →</string>
+                </property>
+                <property name="minimumHeight">
+                 <number>40</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="About_projectStretch">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>10</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="About_modelsPage">
+      <layout class="QHBoxLayout" name="About_modelsLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QWidget" name="About_modelSidebar">
+         <property name="maximumWidth">
+          <number>270</number>
+         </property>
+         <layout class="QVBoxLayout" name="About_modelSidebarLayout">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="About_modelSearch">
+            <property name="placeholderText">
+             <string>Find a model or method…</string>
+            </property>
+            <property name="accessibleName">
+             <string>Find a model or method</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="About_modelList" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="About_article">
+         <layout class="QVBoxLayout" name="About_articleLayout">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="About_articleTitle">
+            <property name="text">
+             <string>Neuron dynamics</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>17</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="About_provenanceLabel">
+            <property name="text">
+             <string>Model provenance</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+              <bold>false</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTabWidget" name="About_articleTabs">
+            <widget class="QWidget" name="About_tabOverview">
+             <attribute name="title">
+              <string>Overview</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="About_tabOverviewLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="About_browserOverview">
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="openLinks">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="About_tabEquations">
+             <attribute name="title">
+              <string>Equations</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="About_tabEquationsLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="About_browserEquations">
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="openLinks">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="About_tabImplementation">
+             <attribute name="title">
+              <string>Implementation</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="About_tabImplementationLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="About_browserImplementation">
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="openLinks">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="About_tabLimitations">
+             <attribute name="title">
+              <string>Limitations</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="About_tabLimitationsLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="About_browserLimitations">
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="openLinks">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="About_tabReferences">
+             <attribute name="title">
+              <string>References</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="About_tabReferencesLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="About_browserReferences">
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="openLinks">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_viewSource">
+            <property name="text">
+             <string>View implementation ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="About_referencesPage">
+      <layout class="QVBoxLayout" name="About_referencesLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="About_referenceSearch">
+         <property name="placeholderText">
+          <string>Search authors, titles, years or DOI…</string>
+         </property>
+         <property name="accessibleName">
+          <string>Search references</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSplitter" name="About_referenceSplitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QListWidget" name="About_referenceList" />
+         <widget class="QTextBrowser" name="About_referenceDetail" />
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="About_referenceActions">
+         <layout class="QHBoxLayout" name="About_referenceActionsLayout">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="About_OpenPaper">
+            <property name="text">
+             <string>Read publication ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_CopyCitation">
+            <property name="text">
+             <string>Copy citation</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_CopyBibtex">
+            <property name="text">
+             <string>Copy BibTeX</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="About_sciencePage">
+      <layout class="QVBoxLayout" name="About_scienceLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QTextBrowser" name="About_scienceBrowser">
+         <property name="openExternalLinks">
+          <bool>false</bool>
+         </property>
+         <property name="openLinks">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="About_scienceActions">
+         <layout class="QHBoxLayout" name="About_scienceActionsLayout">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="About_Repository">
+            <property name="text">
+             <string>Source code ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_Issues">
+            <property name="text">
+             <string>Report an issue ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_SoftwareLicence">
+            <property name="text">
+             <string>Software licence ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_HardwareLicence">
+            <property name="text">
+             <string>Hardware licence ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="About_softwarePage">
+      <layout class="QVBoxLayout" name="About_softwareLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="About_softwareTitle">
+         <property name="text">
+          <string>Software &amp; device information</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="About_deviceNote">
+         <property name="text">
+          <string>This report reads existing connection information. It does not open a port or send commands to the board.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="About_diagnostics">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="About_softwareActions">
+         <layout class="QHBoxLayout" name="About_softwareActionsLayout">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="About_RefreshInfo">
+            <property name="text">
+             <string>Refresh information</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_CopyInfo">
+            <property name="text">
+             <string>Copy version information</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="About_Updates">
+            <property name="text">
+             <string>Updates &amp;&amp; releases ↗</string>
+            </property>
+            <property name="minimumHeight">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="About_footer">
+     <layout class="QHBoxLayout" name="About_footerLayout">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="About_footerLabel">
+        <property name="text">
+         <string>Open Source Neuro</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>false</bold>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_Website">
+        <property name="text">
+         <string>Project website ↗</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="About_Documentation">
+        <property name="text">
+         <string>Documentation ↗</string>
+        </property>
+        <property name="minimumHeight">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="About_versionLabel">
+        <property name="text">
+         <string>GUI version</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <bold>false</bold>
+         </font>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="About_statusLabel">
+     <property name="text">
+      <string />
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>
