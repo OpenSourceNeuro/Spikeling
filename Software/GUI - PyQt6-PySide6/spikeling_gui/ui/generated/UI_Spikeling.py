@@ -6245,7 +6245,7 @@ class Ui_Spikeling(object):
         self.Emulator_StimulusParameter_scrollArea.setWidgetResizable(True)
         self.Emulator_StimulusParameter_scrollContents = QWidget()
         self.Emulator_StimulusParameter_scrollContents.setObjectName(u"Emulator_StimulusParameter_scrollContents")
-        self.Emulator_StimulusParameter_scrollContents.setGeometry(QRect(0, 0, 183, 583))
+        self.Emulator_StimulusParameter_scrollContents.setGeometry(QRect(0, 0, 190, 583))
         self.Emulator_verticalLayout_58 = QVBoxLayout(self.Emulator_StimulusParameter_scrollContents)
         self.Emulator_verticalLayout_58.setSpacing(10)
         self.Emulator_verticalLayout_58.setObjectName(u"Emulator_verticalLayout_58")
@@ -9892,7 +9892,7 @@ class Ui_Spikeling(object):
         self.Emulator_AuxiliaryNeuron1_scrollArea.setWidgetResizable(True)
         self.Emulator_AuxiliaryNeuron1_scrollContents = QWidget()
         self.Emulator_AuxiliaryNeuron1_scrollContents.setObjectName(u"Emulator_AuxiliaryNeuron1_scrollContents")
-        self.Emulator_AuxiliaryNeuron1_scrollContents.setGeometry(QRect(0, 0, 200, 647))
+        self.Emulator_AuxiliaryNeuron1_scrollContents.setGeometry(QRect(0, 0, 213, 657))
         self.Emulator_AuxiliaryNeuron1_verticalLayout_208 = QVBoxLayout(self.Emulator_AuxiliaryNeuron1_scrollContents)
         self.Emulator_AuxiliaryNeuron1_verticalLayout_208.setSpacing(0)
         self.Emulator_AuxiliaryNeuron1_verticalLayout_208.setObjectName(u"Emulator_AuxiliaryNeuron1_verticalLayout_208")
@@ -12554,11 +12554,16 @@ class Ui_Spikeling(object):
         self.DataAnalysis_stepPage = QWidget()
         self.DataAnalysis_stepPage.setObjectName(u"DataAnalysis_stepPage")
         self.DataAnalysis_Sweeps_sweepsLayout = QVBoxLayout(self.DataAnalysis_stepPage)
+        self.DataAnalysis_Sweeps_sweepsLayout.setSpacing(2)
         self.DataAnalysis_Sweeps_sweepsLayout.setObjectName(u"DataAnalysis_Sweeps_sweepsLayout")
+        self.DataAnalysis_Sweeps_sweepsLayout.setContentsMargins(5, 0, 5, 0)
         self.DataAnalysis_Sweeps_headerLayout = QHBoxLayout()
+        self.DataAnalysis_Sweeps_headerLayout.setSpacing(5)
         self.DataAnalysis_Sweeps_headerLayout.setObjectName(u"DataAnalysis_Sweeps_headerLayout")
         self.DataAnalysis_Sweeps_recordingLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_recordingLabel.setObjectName(u"DataAnalysis_Sweeps_recordingLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_recordingLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_recordingLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_headerLayout.addWidget(self.DataAnalysis_Sweeps_recordingLabel)
 
@@ -12601,11 +12606,15 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_sweepsLayout.addLayout(self.DataAnalysis_Sweeps_headerLayout)
 
         self.DataAnalysis_Sweeps_settingsLayout = QHBoxLayout()
+        self.DataAnalysis_Sweeps_settingsLayout.setSpacing(10)
         self.DataAnalysis_Sweeps_settingsLayout.setObjectName(u"DataAnalysis_Sweeps_settingsLayout")
         self.DataAnalysis_Sweeps_inputField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_inputField.setSpacing(0)
         self.DataAnalysis_Sweeps_inputField.setObjectName(u"DataAnalysis_Sweeps_inputField")
         self.DataAnalysis_Sweeps_inputLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_inputLabel.setObjectName(u"DataAnalysis_Sweeps_inputLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_inputLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_inputLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_inputField.addWidget(self.DataAnalysis_Sweeps_inputLabel)
 
@@ -12621,9 +12630,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_settingsLayout.addLayout(self.DataAnalysis_Sweeps_inputField)
 
         self.DataAnalysis_Sweeps_methodField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_methodField.setSpacing(0)
         self.DataAnalysis_Sweeps_methodField.setObjectName(u"DataAnalysis_Sweeps_methodField")
         self.DataAnalysis_Sweeps_methodFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_methodFieldLabel.setObjectName(u"DataAnalysis_Sweeps_methodFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_methodFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_methodFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_methodField.addWidget(self.DataAnalysis_Sweeps_methodFieldLabel)
 
@@ -12638,6 +12650,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_settingsLayout.addLayout(self.DataAnalysis_Sweeps_methodField)
 
         self.DataAnalysis_Sweeps_stimulusBaselineField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_stimulusBaselineField.setSpacing(0)
         self.DataAnalysis_Sweeps_stimulusBaselineField.setObjectName(u"DataAnalysis_Sweeps_stimulusBaselineField")
         self.DataAnalysis_Sweeps_stimulusBaselineFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_stimulusBaselineFieldLabel.setObjectName(u"DataAnalysis_Sweeps_stimulusBaselineFieldLabel")
@@ -12653,6 +12666,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_settingsLayout.addLayout(self.DataAnalysis_Sweeps_stimulusBaselineField)
 
         self.DataAnalysis_Sweeps_preField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_preField.setSpacing(0)
         self.DataAnalysis_Sweeps_preField.setObjectName(u"DataAnalysis_Sweeps_preField")
         self.DataAnalysis_Sweeps_preFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_preFieldLabel.setObjectName(u"DataAnalysis_Sweeps_preFieldLabel")
@@ -12668,9 +12682,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_settingsLayout.addLayout(self.DataAnalysis_Sweeps_preField)
 
         self.DataAnalysis_Sweeps_postField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_postField.setSpacing(0)
         self.DataAnalysis_Sweeps_postField.setObjectName(u"DataAnalysis_Sweeps_postField")
         self.DataAnalysis_Sweeps_postFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_postFieldLabel.setObjectName(u"DataAnalysis_Sweeps_postFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_postFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_postFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_postField.addWidget(self.DataAnalysis_Sweeps_postFieldLabel)
 
@@ -12683,9 +12700,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_settingsLayout.addLayout(self.DataAnalysis_Sweeps_postField)
 
         self.DataAnalysis_Sweeps_lateField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_lateField.setSpacing(0)
         self.DataAnalysis_Sweeps_lateField.setObjectName(u"DataAnalysis_Sweeps_lateField")
         self.DataAnalysis_Sweeps_lateFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_lateFieldLabel.setObjectName(u"DataAnalysis_Sweeps_lateFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_lateFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_lateFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_lateField.addWidget(self.DataAnalysis_Sweeps_lateFieldLabel)
 
@@ -12711,12 +12731,19 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_timingStack.setSizePolicy(sizePolicy5)
         self.DataAnalysis_Sweeps_automaticPage = QWidget()
         self.DataAnalysis_Sweeps_automaticPage.setObjectName(u"DataAnalysis_Sweeps_automaticPage")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_automaticPage.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_automaticPage.setSizePolicy(sizePolicy5)
         self.DataAnalysis_Sweeps_automaticLayout = QHBoxLayout(self.DataAnalysis_Sweeps_automaticPage)
+        self.DataAnalysis_Sweeps_automaticLayout.setSpacing(15)
         self.DataAnalysis_Sweeps_automaticLayout.setObjectName(u"DataAnalysis_Sweeps_automaticLayout")
+        self.DataAnalysis_Sweeps_automaticLayout.setContentsMargins(0, 0, 0, 0)
         self.DataAnalysis_Sweeps_toleranceField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_toleranceField.setSpacing(0)
         self.DataAnalysis_Sweeps_toleranceField.setObjectName(u"DataAnalysis_Sweeps_toleranceField")
         self.DataAnalysis_Sweeps_toleranceFieldLabel = QLabel(self.DataAnalysis_Sweeps_automaticPage)
         self.DataAnalysis_Sweeps_toleranceFieldLabel.setObjectName(u"DataAnalysis_Sweeps_toleranceFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_toleranceFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_toleranceFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_toleranceField.addWidget(self.DataAnalysis_Sweeps_toleranceFieldLabel)
 
@@ -12729,9 +12756,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_automaticLayout.addLayout(self.DataAnalysis_Sweeps_toleranceField)
 
         self.DataAnalysis_Sweeps_minField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_minField.setSpacing(0)
         self.DataAnalysis_Sweeps_minField.setObjectName(u"DataAnalysis_Sweeps_minField")
         self.DataAnalysis_Sweeps_minFieldLabel = QLabel(self.DataAnalysis_Sweeps_automaticPage)
         self.DataAnalysis_Sweeps_minFieldLabel.setObjectName(u"DataAnalysis_Sweeps_minFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_minFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_minFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_minField.addWidget(self.DataAnalysis_Sweeps_minFieldLabel)
 
@@ -12744,9 +12774,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_automaticLayout.addLayout(self.DataAnalysis_Sweeps_minField)
 
         self.DataAnalysis_Sweeps_expectedField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_expectedField.setSpacing(0)
         self.DataAnalysis_Sweeps_expectedField.setObjectName(u"DataAnalysis_Sweeps_expectedField")
         self.DataAnalysis_Sweeps_expectedFieldLabel = QLabel(self.DataAnalysis_Sweeps_automaticPage)
         self.DataAnalysis_Sweeps_expectedFieldLabel.setObjectName(u"DataAnalysis_Sweeps_expectedFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_expectedFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_expectedFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_expectedField.addWidget(self.DataAnalysis_Sweeps_expectedFieldLabel)
 
@@ -12762,8 +12795,11 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualPage = QWidget()
         self.DataAnalysis_Sweeps_manualPage.setObjectName(u"DataAnalysis_Sweeps_manualPage")
         self.DataAnalysis_Sweeps_manualLayout = QHBoxLayout(self.DataAnalysis_Sweeps_manualPage)
+        self.DataAnalysis_Sweeps_manualLayout.setSpacing(10)
         self.DataAnalysis_Sweeps_manualLayout.setObjectName(u"DataAnalysis_Sweeps_manualLayout")
+        self.DataAnalysis_Sweeps_manualLayout.setContentsMargins(0, 0, 0, 0)
         self.DataAnalysis_Sweeps_offsetField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_offsetField.setSpacing(0)
         self.DataAnalysis_Sweeps_offsetField.setObjectName(u"DataAnalysis_Sweeps_offsetField")
         self.DataAnalysis_Sweeps_offsetFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_offsetFieldLabel.setObjectName(u"DataAnalysis_Sweeps_offsetFieldLabel")
@@ -12779,9 +12815,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualLayout.addLayout(self.DataAnalysis_Sweeps_offsetField)
 
         self.DataAnalysis_Sweeps_onField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_onField.setSpacing(0)
         self.DataAnalysis_Sweeps_onField.setObjectName(u"DataAnalysis_Sweeps_onField")
         self.DataAnalysis_Sweeps_onFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_onFieldLabel.setObjectName(u"DataAnalysis_Sweeps_onFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_onFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_onFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_onField.addWidget(self.DataAnalysis_Sweeps_onFieldLabel)
 
@@ -12794,9 +12833,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualLayout.addLayout(self.DataAnalysis_Sweeps_onField)
 
         self.DataAnalysis_Sweeps_offField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_offField.setSpacing(0)
         self.DataAnalysis_Sweeps_offField.setObjectName(u"DataAnalysis_Sweeps_offField")
         self.DataAnalysis_Sweeps_offFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_offFieldLabel.setObjectName(u"DataAnalysis_Sweeps_offFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_offFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_offFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_offField.addWidget(self.DataAnalysis_Sweeps_offFieldLabel)
 
@@ -12809,6 +12851,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualLayout.addLayout(self.DataAnalysis_Sweeps_offField)
 
         self.DataAnalysis_Sweeps_countField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_countField.setSpacing(0)
         self.DataAnalysis_Sweeps_countField.setObjectName(u"DataAnalysis_Sweeps_countField")
         self.DataAnalysis_Sweeps_countFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_countFieldLabel.setObjectName(u"DataAnalysis_Sweeps_countFieldLabel")
@@ -12824,9 +12867,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualLayout.addLayout(self.DataAnalysis_Sweeps_countField)
 
         self.DataAnalysis_Sweeps_anchorField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_anchorField.setSpacing(0)
         self.DataAnalysis_Sweeps_anchorField.setObjectName(u"DataAnalysis_Sweeps_anchorField")
         self.DataAnalysis_Sweeps_anchorFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_anchorFieldLabel.setObjectName(u"DataAnalysis_Sweeps_anchorFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_anchorFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_anchorFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_anchorField.addWidget(self.DataAnalysis_Sweeps_anchorFieldLabel)
 
@@ -12839,9 +12885,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_manualLayout.addLayout(self.DataAnalysis_Sweeps_anchorField)
 
         self.DataAnalysis_Sweeps_pauseField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_pauseField.setSpacing(0)
         self.DataAnalysis_Sweeps_pauseField.setObjectName(u"DataAnalysis_Sweeps_pauseField")
         self.DataAnalysis_Sweeps_pauseFieldLabel = QLabel(self.DataAnalysis_Sweeps_manualPage)
         self.DataAnalysis_Sweeps_pauseFieldLabel.setObjectName(u"DataAnalysis_Sweeps_pauseFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_pauseFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_pauseFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_pauseField.addWidget(self.DataAnalysis_Sweeps_pauseFieldLabel)
 
@@ -12858,11 +12907,15 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_sweepsLayout.addWidget(self.DataAnalysis_Sweeps_timingStack)
 
         self.DataAnalysis_Sweeps_displayLayout = QHBoxLayout()
+        self.DataAnalysis_Sweeps_displayLayout.setSpacing(10)
         self.DataAnalysis_Sweeps_displayLayout.setObjectName(u"DataAnalysis_Sweeps_displayLayout")
         self.DataAnalysis_Sweeps_neuronField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_neuronField.setSpacing(0)
         self.DataAnalysis_Sweeps_neuronField.setObjectName(u"DataAnalysis_Sweeps_neuronField")
         self.DataAnalysis_Sweeps_neuronFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_neuronFieldLabel.setObjectName(u"DataAnalysis_Sweeps_neuronFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_neuronFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_neuronFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_neuronField.addWidget(self.DataAnalysis_Sweeps_neuronFieldLabel)
 
@@ -12878,9 +12931,12 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_displayLayout.addLayout(self.DataAnalysis_Sweeps_neuronField)
 
         self.DataAnalysis_Sweeps_signalField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_signalField.setSpacing(0)
         self.DataAnalysis_Sweeps_signalField.setObjectName(u"DataAnalysis_Sweeps_signalField")
         self.DataAnalysis_Sweeps_signalFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_signalFieldLabel.setObjectName(u"DataAnalysis_Sweeps_signalFieldLabel")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_signalFieldLabel.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_signalFieldLabel.setSizePolicy(sizePolicy5)
 
         self.DataAnalysis_Sweeps_signalField.addWidget(self.DataAnalysis_Sweeps_signalFieldLabel)
 
@@ -12895,6 +12951,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_displayLayout.addLayout(self.DataAnalysis_Sweeps_signalField)
 
         self.DataAnalysis_Sweeps_conditionField = QVBoxLayout()
+        self.DataAnalysis_Sweeps_conditionField.setSpacing(0)
         self.DataAnalysis_Sweeps_conditionField.setObjectName(u"DataAnalysis_Sweeps_conditionField")
         self.DataAnalysis_Sweeps_conditionFieldLabel = QLabel(self.DataAnalysis_stepPage)
         self.DataAnalysis_Sweeps_conditionFieldLabel.setObjectName(u"DataAnalysis_Sweeps_conditionFieldLabel")
@@ -12924,11 +12981,15 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Sweeps_plotPane = QFrame(self.DataAnalysis_Sweeps_sweepSplitter)
         self.DataAnalysis_Sweeps_plotPane.setObjectName(u"DataAnalysis_Sweeps_plotPane")
         self.DataAnalysis_Sweeps_plotLayout = QVBoxLayout(self.DataAnalysis_Sweeps_plotPane)
+        self.DataAnalysis_Sweeps_plotLayout.setSpacing(2)
         self.DataAnalysis_Sweeps_plotLayout.setObjectName(u"DataAnalysis_Sweeps_plotLayout")
+        self.DataAnalysis_Sweeps_plotLayout.setContentsMargins(5, 5, 5, 5)
         self.DataAnalysis_Sweeps_tracesHeading = QLabel(self.DataAnalysis_Sweeps_plotPane)
         self.DataAnalysis_Sweeps_tracesHeading.setObjectName(u"DataAnalysis_Sweeps_tracesHeading")
+        sizePolicy5.setHeightForWidth(self.DataAnalysis_Sweeps_tracesHeading.sizePolicy().hasHeightForWidth())
+        self.DataAnalysis_Sweeps_tracesHeading.setSizePolicy(sizePolicy5)
 
-        self.DataAnalysis_Sweeps_plotLayout.addWidget(self.DataAnalysis_Sweeps_tracesHeading)
+        self.DataAnalysis_Sweeps_plotLayout.addWidget(self.DataAnalysis_Sweeps_tracesHeading, 0, Qt.AlignmentFlag.AlignTop)
 
         self.DataAnalysis_Sweeps_overviewPlot = PlotWidget(self.DataAnalysis_Sweeps_plotPane)
         self.DataAnalysis_Sweeps_overviewPlot.setObjectName(u"DataAnalysis_Sweeps_overviewPlot")
@@ -12960,9 +13021,9 @@ class Ui_Spikeling(object):
         self.DataAnalysis_cyclePage = QWidget()
         self.DataAnalysis_cyclePage.setObjectName(u"DataAnalysis_cyclePage")
         self.DataAnalysis_Cycles_layout = QVBoxLayout(self.DataAnalysis_cyclePage)
-        self.DataAnalysis_Cycles_layout.setSpacing(5)
+        self.DataAnalysis_Cycles_layout.setSpacing(2)
         self.DataAnalysis_Cycles_layout.setObjectName(u"DataAnalysis_Cycles_layout")
-        self.DataAnalysis_Cycles_layout.setContentsMargins(0, 0, 0, 0)
+        self.DataAnalysis_Cycles_layout.setContentsMargins(5, 0, 5, 0)
         self.DataAnalysis_Cycles_controls = QHBoxLayout()
         self.DataAnalysis_Cycles_controls.setSpacing(100)
         self.DataAnalysis_Cycles_controls.setObjectName(u"DataAnalysis_Cycles_controls")
@@ -13128,8 +13189,11 @@ class Ui_Spikeling(object):
         self.DataAnalysis_stepSummaryPage = QWidget()
         self.DataAnalysis_stepSummaryPage.setObjectName(u"DataAnalysis_stepSummaryPage")
         self.DataAnalysis_Summary_summaryLayout = QVBoxLayout(self.DataAnalysis_stepSummaryPage)
+        self.DataAnalysis_Summary_summaryLayout.setSpacing(2)
         self.DataAnalysis_Summary_summaryLayout.setObjectName(u"DataAnalysis_Summary_summaryLayout")
+        self.DataAnalysis_Summary_summaryLayout.setContentsMargins(5, 0, 5, 0)
         self.DataAnalysis_Summary_header = QHBoxLayout()
+        self.DataAnalysis_Summary_header.setSpacing(10)
         self.DataAnalysis_Summary_header.setObjectName(u"DataAnalysis_Summary_header")
         self.DataAnalysis_Summary_heading = QLabel(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_heading.setObjectName(u"DataAnalysis_Summary_heading")
@@ -13155,8 +13219,10 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_summaryLayout.addLayout(self.DataAnalysis_Summary_header)
 
         self.DataAnalysis_Summary_controls = QHBoxLayout()
+        self.DataAnalysis_Summary_controls.setSpacing(10)
         self.DataAnalysis_Summary_controls.setObjectName(u"DataAnalysis_Summary_controls")
         self.DataAnalysis_Summary_inputField = QVBoxLayout()
+        self.DataAnalysis_Summary_inputField.setSpacing(0)
         self.DataAnalysis_Summary_inputField.setObjectName(u"DataAnalysis_Summary_inputField")
         self.DataAnalysis_Summary_inputLabel = QLabel(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_inputLabel.setObjectName(u"DataAnalysis_Summary_inputLabel")
@@ -13172,6 +13238,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_controls.addLayout(self.DataAnalysis_Summary_inputField)
 
         self.DataAnalysis_Summary_protocolField = QVBoxLayout()
+        self.DataAnalysis_Summary_protocolField.setSpacing(0)
         self.DataAnalysis_Summary_protocolField.setObjectName(u"DataAnalysis_Summary_protocolField")
         self.DataAnalysis_Summary_protocolLabel = QLabel(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_protocolLabel.setObjectName(u"DataAnalysis_Summary_protocolLabel")
@@ -13187,6 +13254,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_controls.addLayout(self.DataAnalysis_Summary_protocolField)
 
         self.DataAnalysis_Summary_metricField = QVBoxLayout()
+        self.DataAnalysis_Summary_metricField.setSpacing(0)
         self.DataAnalysis_Summary_metricField.setObjectName(u"DataAnalysis_Summary_metricField")
         self.DataAnalysis_Summary_metricLabel = QLabel(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_metricLabel.setObjectName(u"DataAnalysis_Summary_metricLabel")
@@ -13202,6 +13270,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_controls.addLayout(self.DataAnalysis_Summary_metricField)
 
         self.DataAnalysis_Summary_toleranceField = QVBoxLayout()
+        self.DataAnalysis_Summary_toleranceField.setSpacing(0)
         self.DataAnalysis_Summary_toleranceField.setObjectName(u"DataAnalysis_Summary_toleranceField")
         self.DataAnalysis_Summary_toleranceLabel = QLabel(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_toleranceLabel.setObjectName(u"DataAnalysis_Summary_toleranceLabel")
@@ -13231,6 +13300,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_plotPane = QWidget(self.DataAnalysis_Summary_summarySplitter)
         self.DataAnalysis_Summary_plotPane.setObjectName(u"DataAnalysis_Summary_plotPane")
         self.DataAnalysis_Summary_plotLayout = QVBoxLayout(self.DataAnalysis_Summary_plotPane)
+        self.DataAnalysis_Summary_plotLayout.setSpacing(5)
         self.DataAnalysis_Summary_plotLayout.setObjectName(u"DataAnalysis_Summary_plotLayout")
         self.DataAnalysis_Summary_plotLayout.setContentsMargins(0, 0, 0, 0)
         self.DataAnalysis_Summary_averageInputPlot = PlotWidget(self.DataAnalysis_Summary_plotPane)
@@ -13266,6 +13336,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Summary_summaryLayout.addWidget(self.DataAnalysis_Summary_summarySplitter)
 
         self.DataAnalysis_Summary_actionLayout = QHBoxLayout()
+        self.DataAnalysis_Summary_actionLayout.setSpacing(10)
         self.DataAnalysis_Summary_actionLayout.setObjectName(u"DataAnalysis_Summary_actionLayout")
         self.DataAnalysis_Summary_silentCheck = QCheckBox(self.DataAnalysis_stepSummaryPage)
         self.DataAnalysis_Summary_silentCheck.setObjectName(u"DataAnalysis_Summary_silentCheck")
@@ -23860,7 +23931,7 @@ class Ui_Spikeling(object):
         self.Emulator_parameter_stackedwidget.setCurrentIndex(5)
         self.DataAnalysis_stack.setCurrentIndex(0)
         self.DataAnalysis_recordingStack.setCurrentIndex(0)
-        self.DataAnalysis_sweepStack.setCurrentIndex(1)
+        self.DataAnalysis_sweepStack.setCurrentIndex(3)
         self.Imaging_parameter_stackedWidget.setCurrentIndex(0)
         self.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(2)
         self.Settings_SignalColours_tabWidget.setCurrentIndex(0)
@@ -24717,16 +24788,16 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Compare_differenceDirectionCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Comparison \u2212 Reference", None))
         self.DataAnalysis_Compare_differenceDirectionCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Reference \u2212 Comparison", None))
 
+#if QT_CONFIG(tooltip)
+        self.DataAnalysis_Compare_differenceDirectionCombo.setToolTip(QCoreApplication.translate("Spikeling", u"Choose which condition to subtract from the other.", None))
+#endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(accessibility)
         self.DataAnalysis_Compare_differenceDirectionCombo.setAccessibleName(QCoreApplication.translate("Spikeling", u"Subtraction direction", None))
 #endif // QT_CONFIG(accessibility)
 #if QT_CONFIG(tooltip)
-        self.DataAnalysis_Compare_differenceDirectionCombo.setToolTip(QCoreApplication.translate("Spikeling", u"Choose which condition to subtract from the other.", None))
-#endif // QT_CONFIG(tooltip)
-        self.DataAnalysis_Compare_differenceOverlayCheck.setText(QCoreApplication.translate("Spikeling", u"Overlay matched voltages", None))
-#if QT_CONFIG(tooltip)
         self.DataAnalysis_Compare_differenceOverlayCheck.setToolTip(QCoreApplication.translate("Spikeling", u"Show the difference trace for every matched command voltage. The table still shows the selected group.", None))
 #endif // QT_CONFIG(tooltip)
+        self.DataAnalysis_Compare_differenceOverlayCheck.setText(QCoreApplication.translate("Spikeling", u"Overlay matched voltages", None))
         self.DataAnalysis_Compare_timingButton.setText(QCoreApplication.translate("Spikeling", u"Spike timing", None))
         self.DataAnalysis_Compare_differenceLabel.setText("")
         self.DataAnalysis_Compare_tracesHeading.setText(QCoreApplication.translate("Spikeling", u"Matched responses", None))

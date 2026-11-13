@@ -13931,7 +13931,7 @@ background-color: rgb(220, 50, 47);</string>
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>183</width>
+                             <width>190</width>
                              <height>583</height>
                             </rect>
                            </property>
@@ -22546,8 +22546,8 @@ background-color: rgb(220, 50, 47);</string>
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>200</width>
-                             <height>647</height>
+                             <width>213</width>
+                             <height>657</height>
                             </rect>
                            </property>
                            <layout class="QVBoxLayout" name="Emulator_AuxiliaryNeuron1_verticalLayout_208">
@@ -28288,7 +28288,7 @@ QLineEdit:focus, QComboBox:focus {
                      <item>
                       <widget class="QStackedWidget" name="DataAnalysis_sweepStack">
                        <property name="currentIndex">
-                        <number>1</number>
+                        <number>3</number>
                        </property>
                        <widget class="QWidget" name="DataAnalysis_sweepsEmpty">
                         <layout class="QVBoxLayout" name="DataAnalysis_sweepsEmptyLayout">
@@ -28331,10 +28331,34 @@ QLineEdit:focus, QComboBox:focus {
                          <string>Sweeps</string>
                         </property>
                         <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_sweepsLayout" stretch="0,0,0,0,0,1">
+                         <property name="spacing">
+                          <number>2</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Sweeps_headerLayout">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
                            <item>
                             <widget class="QLabel" name="DataAnalysis_Sweeps_recordingLabel">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
                              <property name="text">
                               <string>Sweeps</string>
                              </property>
@@ -28404,10 +28428,22 @@ QLineEdit:focus, QComboBox:focus {
                          </item>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Sweeps_settingsLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_inputField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_inputLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Step input</string>
                                </property>
@@ -28439,8 +28475,17 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_methodField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_methodFieldLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>How to find steps</string>
                                </property>
@@ -28464,6 +28509,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_stimulusBaselineField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_stimulusBaselineFieldLabel">
                                <property name="text">
@@ -28482,6 +28530,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_preField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_preFieldLabel">
                                <property name="text">
@@ -28500,8 +28551,17 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_postField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_postFieldLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Time after step (ms)</string>
                                </property>
@@ -28518,8 +28578,17 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_lateField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_lateFieldLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Late window (ms)</string>
                                </property>
@@ -28552,11 +28621,41 @@ QLineEdit:focus, QComboBox:focus {
                             </sizepolicy>
                            </property>
                            <widget class="QWidget" name="DataAnalysis_Sweeps_automaticPage">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <layout class="QHBoxLayout" name="DataAnalysis_Sweeps_automaticLayout">
+                             <property name="spacing">
+                              <number>15</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_toleranceField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_toleranceFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>Minimum change (%)</string>
                                  </property>
@@ -28576,8 +28675,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_minField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_minFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>Minimum on-time (ms)</string>
                                  </property>
@@ -28594,8 +28702,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_expectedField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_expectedFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>Expected on-time (ms)</string>
                                  </property>
@@ -28617,8 +28734,26 @@ QLineEdit:focus, QComboBox:focus {
                            </widget>
                            <widget class="QWidget" name="DataAnalysis_Sweeps_manualPage">
                             <layout class="QHBoxLayout" name="DataAnalysis_Sweeps_manualLayout">
+                             <property name="spacing">
+                              <number>10</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_offsetField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_offsetFieldLabel">
                                  <property name="text">
@@ -28637,8 +28772,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_onField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_onFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>On-time (ms)</string>
                                  </property>
@@ -28655,8 +28799,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_offField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_offFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>Off-time (ms)</string>
                                  </property>
@@ -28673,6 +28826,9 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_countField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_countFieldLabel">
                                  <property name="text">
@@ -28691,8 +28847,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_anchorField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_anchorFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>First anchor (ms)</string>
                                  </property>
@@ -28712,8 +28877,17 @@ QLineEdit:focus, QComboBox:focus {
                              </item>
                              <item>
                               <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_pauseField">
+                               <property name="spacing">
+                                <number>0</number>
+                               </property>
                                <item>
                                 <widget class="QLabel" name="DataAnalysis_Sweeps_pauseFieldLabel">
+                                 <property name="sizePolicy">
+                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                   <horstretch>0</horstretch>
+                                   <verstretch>0</verstretch>
+                                  </sizepolicy>
+                                 </property>
                                  <property name="text">
                                   <string>Series pause (ms)</string>
                                  </property>
@@ -28737,10 +28911,22 @@ QLineEdit:focus, QComboBox:focus {
                          </item>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Sweeps_displayLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_neuronField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_neuronFieldLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Neuron</string>
                                </property>
@@ -28769,8 +28955,17 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_signalField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_signalFieldLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Response</string>
                                </property>
@@ -28794,6 +28989,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_conditionField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Sweeps_conditionFieldLabel">
                                <property name="text">
@@ -28832,8 +29030,29 @@ QLineEdit:focus, QComboBox:focus {
                            </property>
                            <widget class="QFrame" name="DataAnalysis_Sweeps_plotPane">
                             <layout class="QVBoxLayout" name="DataAnalysis_Sweeps_plotLayout">
-                             <item>
+                             <property name="spacing">
+                              <number>2</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>5</number>
+                             </property>
+                             <item alignment="Qt::AlignmentFlag::AlignTop">
                               <widget class="QLabel" name="DataAnalysis_Sweeps_tracesHeading">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string>Aligned sweeps</string>
                                </property>
@@ -28868,16 +29087,16 @@ QLineEdit:focus, QComboBox:focus {
                        <widget class="QWidget" name="DataAnalysis_cyclePage">
                         <layout class="QVBoxLayout" name="DataAnalysis_Cycles_layout" stretch="0,0,3">
                          <property name="spacing">
-                          <number>5</number>
+                          <number>2</number>
                          </property>
                          <property name="leftMargin">
-                          <number>0</number>
+                          <number>5</number>
                          </property>
                          <property name="topMargin">
                           <number>0</number>
                          </property>
                          <property name="rightMargin">
-                          <number>0</number>
+                          <number>5</number>
                          </property>
                          <property name="bottomMargin">
                           <number>0</number>
@@ -29147,8 +29366,26 @@ QLineEdit:focus, QComboBox:focus {
                        </widget>
                        <widget class="QWidget" name="DataAnalysis_stepSummaryPage">
                         <layout class="QVBoxLayout" name="DataAnalysis_Summary_summaryLayout" stretch="0,0,0,1,0">
+                         <property name="spacing">
+                          <number>2</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>5</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Summary_header">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
                            <item>
                             <widget class="QLabel" name="DataAnalysis_Summary_heading">
                              <property name="text">
@@ -29190,8 +29427,14 @@ QLineEdit:focus, QComboBox:focus {
                          </item>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Summary_controls">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Summary_inputField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Summary_inputLabel">
                                <property name="text">
@@ -29206,6 +29449,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Summary_protocolField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Summary_protocolLabel">
                                <property name="text">
@@ -29220,6 +29466,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Summary_metricField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Summary_metricLabel">
                                <property name="text">
@@ -29234,6 +29483,9 @@ QLineEdit:focus, QComboBox:focus {
                            </item>
                            <item>
                             <layout class="QVBoxLayout" name="DataAnalysis_Summary_toleranceField">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="QLabel" name="DataAnalysis_Summary_toleranceLabel">
                                <property name="text">
@@ -29269,10 +29521,21 @@ QLineEdit:focus, QComboBox:focus {
                            </property>
                            <widget class="QWidget" name="DataAnalysis_Summary_plotPane">
                             <layout class="QVBoxLayout" name="DataAnalysis_Summary_plotLayout" stretch="1,3">
-                             <property name="leftMargin"><number>0</number></property>
-                             <property name="topMargin"><number>0</number></property>
-                             <property name="rightMargin"><number>0</number></property>
-                             <property name="bottomMargin"><number>0</number></property>
+                             <property name="spacing">
+                              <number>5</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
                              <item>
                               <widget class="PlotWidget" name="DataAnalysis_Summary_averageInputPlot" native="true"/>
                              </item>
@@ -29315,6 +29578,9 @@ QLineEdit:focus, QComboBox:focus {
                          </item>
                          <item>
                           <layout class="QHBoxLayout" name="DataAnalysis_Summary_actionLayout">
+                           <property name="spacing">
+                            <number>10</number>
+                           </property>
                            <item>
                             <widget class="QCheckBox" name="DataAnalysis_Summary_silentCheck">
                              <property name="toolTip">
@@ -29936,16 +30202,32 @@ QLineEdit:focus, QComboBox:focus {
                        </item>
                        <item>
                         <widget class="QComboBox" name="DataAnalysis_Compare_differenceDirectionCombo">
-                         <property name="accessibleName"><string>Subtraction direction</string></property>
-                         <property name="toolTip"><string>Choose which condition to subtract from the other.</string></property>
-                         <item><property name="text"><string>Comparison − Reference</string></property></item>
-                         <item><property name="text"><string>Reference − Comparison</string></property></item>
+                         <property name="toolTip">
+                          <string>Choose which condition to subtract from the other.</string>
+                         </property>
+                         <property name="accessibleName">
+                          <string>Subtraction direction</string>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Comparison − Reference</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Reference − Comparison</string>
+                          </property>
+                         </item>
                         </widget>
                        </item>
                        <item>
                         <widget class="QCheckBox" name="DataAnalysis_Compare_differenceOverlayCheck">
-                         <property name="text"><string>Overlay matched voltages</string></property>
-                         <property name="toolTip"><string>Show the difference trace for every matched command voltage. The table still shows the selected group.</string></property>
+                         <property name="toolTip">
+                          <string>Show the difference trace for every matched command voltage. The table still shows the selected group.</string>
+                         </property>
+                         <property name="text">
+                          <string>Overlay matched voltages</string>
+                         </property>
                         </widget>
                        </item>
                        <item>
