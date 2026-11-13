@@ -102,7 +102,6 @@ Its structure shows a modular design with separate pages and graph logic for dif
 - `Graph_Emulator.py`
 
 ### **GUI page modules**
-- `Page_Home.py`
 - `Page_About.py`
 - `Page_Settings.py`
 - `Page_GitHub.py`

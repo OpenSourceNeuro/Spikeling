@@ -1,0 +1,12 @@
+# Keep personal GUI data out of commits.
+*/*
+!/Recordings/README.txt
+!/Neurons/TonicBursting_LightOffSustained.csv
+!/Neurons/TonicBursting_LightOffTransient.csv
+!/Neurons/TonicBursting_LightOnSustained.csv
+!/Neurons/TonicBursting_LightOnTransient.csv
+!/Neurons/TonicSpiking_LightOffSustained.csv
+!/Neurons/TonicSpiking_LightOffTransient.csv
+!/Neurons/TonicSpiking_LightOnSustained.csv
+!/Neurons/TonicSpiking_LightOnTransient.csv
+!/Stimuli/steps_10x15_10ms.csv

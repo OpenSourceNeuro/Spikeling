@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os, sys
+import runpy
 from PySide6 import QtCore
 from PyInstaller.building.datastruct import Tree
 
@@ -26,9 +27,7 @@ for plugin_type in ['platforms', 'imageformats', 'tls', 'networkinformation']:
 
 # Loose files addressed through resource_path() at runtime.
 app_datas = []
-icon_file = os.path.join(spec_dir, 'Spikeling.ico')
-if os.path.exists(icon_file):
-    app_datas.append((icon_file, '.'))
+icon_file = os.path.join(spec_dir, 'resources', 'Spikeling.ico')
 
 translation_dir = os.path.join(spec_dir, 'translations')
 if os.path.isdir(translation_dir):
@@ -39,13 +38,13 @@ hidden_imports = [
     'PySide6.QtGui',
     'PySide6.QtWidgets',
     'PySide6.QtNetwork',
-    'theme_manager',
-    'Page_Settings',
-    'app_preferences',
-    'Page_GitHub',
-    'update_service',
-    'update_installer',
-    'version',
+    'spikeling_gui.appearance.theme_manager',
+    'spikeling_gui.features.settings.page',
+    'spikeling_gui.preferences',
+    'spikeling_gui.updates.page',
+    'spikeling_gui.updates.service',
+    'spikeling_gui.updates.installer',
+    'spikeling_gui.version',
 ]
 
 a = Analysis(
@@ -57,7 +56,6 @@ a = Analysis(
     hookspath=[],
     runtime_hooks=[],
     excludes=[
-        'geometry_view',          # injected into sys.modules by Tetrode.py
         'PySide6.QtQml',
         'PySide6.QtQuick',
         'PySide6.QtQuickControls2',
@@ -89,8 +87,8 @@ a = Analysis(
 # A missing module here produces an application that launches normally and
 # then does nothing on the Settings page, which is far more expensive to
 # diagnose than a red CI job.
-_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis',
-                     'Page_GitHub', 'update_service', 'update_installer', 'version'}
+_required_modules = {'spikeling_gui.appearance.theme_manager', 'spikeling_gui.features.settings.page', 'spikeling_gui.features.data_analysis.page',
+                     'spikeling_gui.updates.page', 'spikeling_gui.updates.service', 'spikeling_gui.updates.installer', 'spikeling_gui.version'}
 
 _bundled_modules = {entry[0] for entry in a.pure}
 _missing_modules = _required_modules - _bundled_modules
@@ -128,3 +126,9 @@ exe = EXE(
     console=False,
     icon=icon_file if os.path.exists(icon_file) else None,
 )
+
+# Stage editable data beside the executable after building it.
+stage_release_data = runpy.run_path(
+    os.path.join(spec_dir, "spikeling_gui", "stage_release_data.py")
+)["stage_release_data"]
+stage_release_data(os.path.join(spec_dir, "Data"), DISTPATH)

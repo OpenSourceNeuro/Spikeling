@@ -18,8 +18,7 @@ inline SerialCommand SCmd;
 /* Parse an entire floating-point argument; never treat malformed tokens as zero.
    Input/output: next ASCII parameter and floating result, in the receiving command's units.
    Rejected commands preserve their previous settings; extra tokens are checked by callers. */
-static inline bool readNextFloat(float &out) {
-  char *arg = SCmd.next();                             // Receive exactly one ASCII token.
+static inline bool parseFloatToken(const char *arg, float &out) {
   if (!arg || !*arg) return false;                     // Missing and empty arguments are invalid.
   errno = 0;                                          // Clear the previous numeric conversion status.
   char *end = nullptr;                                // Capture any unconsumed suffix.
@@ -27,6 +26,11 @@ static inline bool readNextFloat(float &out) {
   if (errno == ERANGE || end == arg || *end || !isfinite(parsed)) return false; // Reject overflow, suffixes and NaN/Inf.
   out = parsed;                                       // Commit the checked result only after validation.
   return true;
+}
+
+// Read and validate one floating-point argument from the serial command.
+static inline bool readNextFloat(float &out) {
+  return parseFloatToken(SCmd.next(), out);
 }
 
 /* Parse one complete signed integer without atoi's silent zero-on-error behaviour.
@@ -706,9 +710,20 @@ inline void Syn2Decay_off(){
 // remains independent of PH E and the receiving clamp mode.
 inline void SetSTPMode(Synapse &syn) {
   int mode;                                                                                     // 0 Off; 1 Facilitation; 2 Depression; 3 Combined
-  if (!readNextInt(mode) || SCmd.next() != nullptr) return;                                    // Missing/extra mode leaves state unchanged
+  if (!readNextInt(mode)) return;                                                               // Missing/invalid mode leaves state unchanged
   if (mode < 0 || mode > 3) return;                                                             // Reject undefined classroom presets
-  STP_setMode(syn.stp, static_cast<uint8_t>(mode));                                              // Preserve raw synaptic-current tail across mode changes
+  const uint8_t stpMode = static_cast<uint8_t>(mode);                                            // Convert the validated mode
+  const char *firstParameter = SCmd.next();                                                     // Optional U, facilitation ms, recovery ms
+  if (firstParameter == nullptr) {
+    STP_setMode(syn.stp, stpMode);                                                               // Mode-only commands still use the factory preset
+    return;
+  }
+  if (stpMode == 0) return;                                                                     // Off takes no custom parameters
+  STPPreset parameters;                                                                        // Parse the full configuration before applying it
+  if (!parseFloatToken(firstParameter, parameters.U)
+      || !readNextFloat(parameters.tauFac_ms) || !readNextFloat(parameters.tauRec_ms)
+      || SCmd.next() != nullptr) return;
+  STP_setMode(syn.stp, stpMode, parameters);                                                     // Validate ranges and preserve the current tail
 }
 
 inline void Syn1STPMode() {

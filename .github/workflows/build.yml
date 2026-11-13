@@ -107,9 +107,13 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          for f in Main.py theme_manager.py Page_Settings.py \
-                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
-                   Parameters_ToggleButtons.py Spikeling-mac.spec; do
+          for f in Main.py \
+         spikeling_gui/appearance/theme_manager.py \
+         spikeling_gui/features/settings/page.py \
+         spikeling_gui/features/data_analysis/page.py \
+         spikeling_gui/widgets/sliders.py \
+         spikeling_gui/widgets/toggle_buttons.py \
+         Spikeling-mac.spec; do
             if [ ! -f "$f" ]; then
               echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
               missing=1
@@ -141,9 +145,7 @@ jobs:
           mkdir -p release
           cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
           chmod +x release/Spikeling
-          cp -r "${{ env.GUI_DIR }}/Recordings" release/
-          cp -r "${{ env.GUI_DIR }}/Neurons" release/
-          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+          python "${{ env.GUI_DIR }}/spikeling_gui/stage_release_data.py" release
 
           zip -r "$zipName" release/*
           mkdir -p "${{ env.GUI_DIR }}/macOS"
@@ -208,9 +210,13 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          for f in Main.py theme_manager.py Page_Settings.py \
-                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
-                   Parameters_ToggleButtons.py Spikeling-linux.spec; do
+          for f in Main.py \
+         spikeling_gui/appearance/theme_manager.py \
+         spikeling_gui/features/settings/page.py \
+         spikeling_gui/features/data_analysis/page.py \
+         spikeling_gui/widgets/sliders.py \
+         spikeling_gui/widgets/toggle_buttons.py \
+         Spikeling-linux.spec; do
             if [ ! -f "$f" ]; then
               echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
               missing=1
@@ -242,9 +248,7 @@ jobs:
           mkdir -p release
           cp "${{ env.GUI_DIR }}/dist/Spikeling" release/
           chmod +x release/Spikeling
-          cp -r "${{ env.GUI_DIR }}/Recordings" release/
-          cp -r "${{ env.GUI_DIR }}/Neurons" release/
-          cp -r "${{ env.GUI_DIR }}/Stimuli" release/
+          python "${{ env.GUI_DIR }}/spikeling_gui/stage_release_data.py" release
 
           zip -r "$zipName" release/*
           mkdir -p "${{ env.GUI_DIR }}/Linux"
@@ -309,9 +313,13 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          for f in Main.py theme_manager.py Page_Settings.py \
-                   Page_Spikeling_DataAnalysis.py Parameters_Sliders.py \
-                   Parameters_ToggleButtons.py Spikeling-win.spec; do
+          for f in Main.py \
+         spikeling_gui/appearance/theme_manager.py \
+         spikeling_gui/features/settings/page.py \
+         spikeling_gui/features/data_analysis/page.py \
+         spikeling_gui/widgets/sliders.py \
+         spikeling_gui/widgets/toggle_buttons.py \
+         Spikeling-win.spec; do
             if [ ! -f "$f" ]; then
               echo "::error file=$f::Required source file is missing from ${{ env.GUI_DIR }}"
               missing=1
@@ -343,9 +351,7 @@ jobs:
 
           New-Item -ItemType Directory -Force -Path release | Out-Null
           Copy-Item -Path "${{ env.GUI_DIR }}/dist/Spikeling.exe" -Destination release/
-          Copy-Item -Path "${{ env.GUI_DIR }}/Recordings" -Destination release/ -Recurse
-          Copy-Item -Path "${{ env.GUI_DIR }}/Neurons" -Destination release/ -Recurse
-          Copy-Item -Path "${{ env.GUI_DIR }}/Stimuli" -Destination release/ -Recurse
+          python "${{ env.GUI_DIR }}/spikeling_gui/stage_release_data.py" release
 
           New-Item -ItemType Directory -Force -Path "${{ env.GUI_DIR }}/Windows" | Out-Null
           Compress-Archive -Path "release\*" -DestinationPath "${{ env.GUI_DIR }}/Windows/$zipName" -Force

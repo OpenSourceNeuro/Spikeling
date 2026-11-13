@@ -1,6 +1,10 @@
 <RCC>
   <qresource prefix="resources">
     <file>resources/English.png</file>
+    <file>resources/Neuron_pink.png</file>
+    <file>resources/Neuron_teal.png</file>
+    <file>resources/Synapse1_teal.png</file>
+    <file>resources/Synapse2_pink.png</file>
     <file>resources/French.png</file>
     <file>resources/Greek.png</file>
     <file>resources/Italian.png</file>
@@ -45,10 +49,47 @@
     <file>resources/StimGen.png</file>
     <file>resources/StimStrenght.png</file>
     <file>resources/Synapse1.png</file>
+    <file>resources/TReND_CaMinA.jpg</file>
     <file>resources/Synapse2.png</file>
     <file>resources/Tetrode_Scope.png</file>
     <file>resources/Tetrode_Sorting.png</file>
     <file>resources/Tetrode_Spikes.png</file>
-    <file>resources/under_construction.png</file>
+    <file>resources/About_light.png</file>
+    <file>resources/Calcium_light.png</file>
+    <file>resources/CaMinA_light.png</file>
+    <file>resources/DataAnalysis_light.png</file>
+    <file>resources/Drop_light.png</file>
+    <file>resources/DropMenuLeft_light.png</file>
+    <file>resources/DropMenuRight_light.png</file>
+    <file>resources/Exercices_light.png</file>
+    <file>resources/Exit_light.png</file>
+    <file>resources/Expand_light.png</file>
+    <file>resources/GitHub_light.png</file>
+    <file>resources/Handle_light.png</file>
+    <file>resources/Hide_light.png</file>
+    <file>resources/Imaging_light.png</file>
+    <file>resources/LEDOFF_light.png</file>
+    <file>resources/LEDON_light.png</file>
+    <file>resources/MenuLeft_light.png</file>
+    <file>resources/MenuRight_light.png</file>
+    <file>resources/NeuroGen_light.png</file>
+    <file>resources/Neuron_light.png</file>
+    <file>resources/Pharmacology_light.png</file>
+    <file>resources/Reduce_light.png</file>
+    <file>resources/Scope_light.png</file>
+    <file>resources/SizeGrip_light.png</file>
+    <file>resources/SN-Logo_light.png</file>
+    <file>resources/SoundOFF_light.png</file>
+    <file>resources/SoundON_light.png</file>
+    <file>resources/SqaureStim_light.png</file>
+    <file>resources/StimFrequency_light.png</file>
+    <file>resources/StimGen_light.png</file>
+    <file>resources/StimStrenght_light.png</file>
+    <file>resources/Synapse1_light.png</file>
+    <file>resources/Synapse2_light.png</file>
+    <file>resources/Tetrode_Scope_light.png</file>
+    <file>resources/Tetrode_Sorting_light.png</file>
+    <file>resources/Tetrode_Spikes_light.png</file>
+    <file>resources/Tutorial_light.png</file>
   </qresource>
 </RCC>

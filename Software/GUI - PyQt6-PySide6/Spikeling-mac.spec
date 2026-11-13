@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os, sys
+import runpy
 from PySide6 import QtCore
 from PyInstaller.building.datastruct import Tree
 
@@ -22,20 +23,15 @@ for plugin_type in ['platforms', 'imageformats', 'tls', 'networkinformation']:
     if os.path.exists(src):
         qt_plugins.append((src, os.path.join('PySide6/Qt/plugins', plugin_type)))
 
-# The previous spec pointed at 'GUI/PyQt/Spikeling.icns', a path relative to the
-# working directory that no longer exists under the current repository layout.
-# Resolve against the spec directory and degrade gracefully instead.
+# Use the macOS icon, with the Windows icon as a fallback.
 icon_file = next(
-    (os.path.join(spec_dir, name)
+    (os.path.join(spec_dir, 'resources', name)
      for name in ('Spikeling.icns', 'Spikeling.ico')
-     if os.path.exists(os.path.join(spec_dir, name))),
+     if os.path.exists(os.path.join(spec_dir, 'resources', name))),
     None,
 )
 
 app_datas = []
-runtime_icon = os.path.join(spec_dir, 'Spikeling.ico')
-if os.path.exists(runtime_icon):
-    app_datas.append((runtime_icon, '.'))
 
 translation_dir = os.path.join(spec_dir, 'translations')
 if os.path.isdir(translation_dir):
@@ -46,13 +42,13 @@ hidden_imports = [
     'PySide6.QtGui',
     'PySide6.QtWidgets',
     'PySide6.QtNetwork',
-    'theme_manager',
-    'Page_Settings',
-    'app_preferences',
-    'Page_GitHub',
-    'update_service',
-    'update_installer',
-    'version',
+    'spikeling_gui.appearance.theme_manager',
+    'spikeling_gui.features.settings.page',
+    'spikeling_gui.preferences',
+    'spikeling_gui.updates.page',
+    'spikeling_gui.updates.service',
+    'spikeling_gui.updates.installer',
+    'spikeling_gui.version',
 ]
 
 a = Analysis(
@@ -64,7 +60,6 @@ a = Analysis(
     hookspath=[],
     runtime_hooks=[],
     excludes=[
-        'geometry_view',
         'PySide6.QtQml',
         'PySide6.QtQuick',
         'PySide6.QtQuickControls2',
@@ -96,8 +91,8 @@ a = Analysis(
 # A missing module here produces an application that launches normally and
 # then does nothing on the Settings page, which is far more expensive to
 # diagnose than a red CI job.
-_required_modules = {'theme_manager', 'Page_Settings', 'Page_Spikeling_DataAnalysis',
-                     'Page_GitHub', 'update_service', 'update_installer', 'version'}
+_required_modules = {'spikeling_gui.appearance.theme_manager', 'spikeling_gui.features.settings.page', 'spikeling_gui.features.data_analysis.page',
+                     'spikeling_gui.updates.page', 'spikeling_gui.updates.service', 'spikeling_gui.updates.installer', 'spikeling_gui.version'}
 
 _bundled_modules = {entry[0] for entry in a.pure}
 _missing_modules = _required_modules - _bundled_modules
@@ -133,3 +128,9 @@ exe = EXE(
     console=False,
     icon=icon_file,
 )
+
+# Stage editable data beside the executable after building it.
+stage_release_data = runpy.run_path(
+    os.path.join(spec_dir, "spikeling_gui", "stage_release_data.py")
+)["stage_release_data"]
+stage_release_data(os.path.join(spec_dir, "Data"), DISTPATH)

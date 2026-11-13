@@ -11,18 +11,19 @@
 #include <stdint.h>
 #include <math.h>
 
-struct STPState {
-  uint8_t  mode = 0;                                      // Plasticity mode; zero keeps the original static synapse
-  float    u = 0.0f;                                      // Transient synaptic utilisation at the most recent event
-  float    x = 1.0f;                                      // Fraction of synaptic resources available at the most recent event
-  uint32_t lastEventStep = 0;                             // Simulated integration-step index of the previous presynaptic event
-  bool     hasEvent = false;                              // Distinguishes the first event from subsequent events
-};
-
 struct STPPreset {
   float U;                                                // Resting utilisation (dimensionless)
   float tauFac_ms;                                        // Facilitation recovery time constant, 0 disables facilitation
   float tauRec_ms;                                        // Resource recovery time constant, 0 disables depletion
+};
+
+struct STPState {
+  uint8_t  mode = 0;                                      // Plasticity mode; zero keeps the original static synapse
+  STPPreset parameters = {1.0f, 0.0f, 0.0f};              // Active parameters for this synapse, initially Off
+  float    u = 0.0f;                                      // Transient synaptic utilisation at the most recent event
+  float    x = 1.0f;                                      // Fraction of synaptic resources available at the most recent event
+  uint32_t lastEventStep = 0;                             // Simulated integration-step index of the previous presynaptic event
+  bool     hasEvent = false;                              // Distinguishes the first event from subsequent events
 };
 
 inline STPPreset STP_preset(uint8_t mode) {
@@ -32,19 +33,32 @@ inline STPPreset STP_preset(uint8_t mode) {
   return {1.0f, 0.0f, 0.0f};                             // Off: original gain, no additional plasticity
 }
 
-inline void STP_setMode(STPState &state, uint8_t mode) {
-  if (mode > 3) return;                                   // Reject undefined modes instead of changing synaptic behaviour
-  state.mode          = mode;                             // Store the newly selected classroom preset
-  state.u             = STP_preset(mode).U;               // Restore resting utilisation
+// Apply a complete configuration and reset the transient state together.
+inline void STP_setMode(STPState &state, uint8_t mode, const STPPreset &parameters) {
+  if (mode > 3) return;                                   // Reject undefined modes
+  const STPPreset defaults = STP_preset(mode);            // The mode determines which processes are active
+  if (!(parameters.U >= 0.001f && parameters.U <= 1.0f)) return; // Keep utilisation positive for normalisation
+  if (defaults.tauFac_ms == 0.0f ? parameters.tauFac_ms != 0.0f
+      : !(parameters.tauFac_ms >= 1.0f && parameters.tauFac_ms <= 60000.0f)) return;
+  if (defaults.tauRec_ms == 0.0f ? parameters.tauRec_ms != 0.0f
+      : !(parameters.tauRec_ms >= 1.0f && parameters.tauRec_ms <= 60000.0f)) return;
+  state.mode          = mode;                             // Store the selected mode
+  state.parameters    = parameters;                       // Keep the configuration local to this synapse
+  state.u             = parameters.U;                     // Restore resting utilisation
   state.x             = 1.0f;                             // Replenish synaptic resources
   state.lastEventStep = 0;                                // Clear the previous event's time
   state.hasEvent      = false;                            // The next spike is the baseline response
 }
 
+// Select a mode with its factory parameters.
+inline void STP_setMode(STPState &state, uint8_t mode) {
+  STP_setMode(state, mode, STP_preset(mode));                // Keep the original mode-only interface
+}
+
 inline float STP_spikeMultiplier(STPState &state, uint32_t step, float dt_ms) {
   if (state.mode == 0) return 1.0f;                       // Disabled mode is exactly equivalent to the original firmware
 
-  const STPPreset preset = STP_preset(state.mode);         // Select the fixed educational parameter set
+  const STPPreset &preset = state.parameters;              // Use this synapse's current configuration
   if (state.hasEvent) {                                   // Recover transient state only between distinct spike events
     const uint32_t elapsedSteps = step - state.lastEventStep; // Unsigned subtraction also handles counter rollover
     const float elapsed_ms = (float)elapsedSteps * dt_ms;  // Use simulated model time, not the adjustable real-time loop delay
