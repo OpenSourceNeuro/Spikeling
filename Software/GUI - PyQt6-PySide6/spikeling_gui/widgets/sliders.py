@@ -178,6 +178,7 @@ def configure_styled_slider(
 
     # Keep identity/behaviour consistent
     s.setObjectName(old.objectName())   # helpful if you ever move to global QSS selectors
+    s.setToolTip(old.toolTip())
     s.setOrientation(old.orientation())
     s.setRange(old.minimum(), old.maximum())
     s.setSingleStep(old.singleStep())
@@ -228,7 +229,7 @@ class SliderBinding(QObject):
     Features:
         - Configurable text alignment.
         - Separate active and disabled reading styles.
-        - Hardware-control text when disabled.
+        - Disabled text, or the numeric default when disabled_text is None.
         - Reset to the configured default when disabled.
         - Conversion between slider positions and displayed values.
         - Validation of typed values when editing finishes.
@@ -382,7 +383,7 @@ class SliderBinding(QObject):
 
     def _refresh_editor(self):
         """Display the accepted value or hardware-control text."""
-        if self._active:
+        if self._active or self._disabled_text is None:
             text = self._format_value(
                 self._to_display(self._value)
             )
@@ -966,7 +967,7 @@ def configure_sliders(self):
                             num_ticks=11,
                             handle_image=":/resources/resources/Handle.png")
     configure_styled_slider(self.ui,
-                            "Imaging_FluoScale_Slider",
+                            "Imaging_DFF_Slider",
                             groove_color="#001E26",
                             fill_color="#859900",
                             num_ticks=11,

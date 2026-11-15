@@ -164,6 +164,10 @@ class MainWindow(QMainWindow):
         ).exec()
 
     def closeEvent(self, event):
+        imaging = getattr(self, "imaging_graph", None)
+        if imaging is not None and not imaging.stop_recording(imaging.tr("Window closed")):
+            event.ignore()
+            return
         if not FinishRecording(self):
             event.ignore()
             return

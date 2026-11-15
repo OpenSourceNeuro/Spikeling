@@ -36,9 +36,9 @@ import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
-from PySide6.QtCore import QObject, QSettings, Signal
+from PySide6.QtCore import QEvent, QObject, QSettings, Qt, Signal
 from PySide6.QtGui import QColor, QPalette
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QToolTip, QWidget
 
 from spikeling_gui.appearance.artwork import (
     ARTWORK_PROPERTY, apply_artwork, substitute_artwork,
@@ -1021,8 +1021,11 @@ class ThemeManager(QObject):
         main_window : PySide6.QtWidgets.QWidget, optional
             Window owning the graph controllers; also registered as a window.
         """
-        if app is not None:
+        if app is not None and app is not self._app:
+            if self._app is not None:
+                self._app.removeEventFilter(self)
             self._app = app
+            app.installEventFilter(self)
         if main_window is not None:
             self._main_window = main_window
             window = window or main_window
@@ -1045,7 +1048,12 @@ class ThemeManager(QObject):
 
         if self._app is not None:
             self._app.setStyleSheet(self.stylesheet())
-            self._app.setPalette(self.qpalette())
+            palette = self.qpalette()
+            self._app.setPalette(palette)
+            QToolTip.setPalette(palette)
+            for widget in self._app.topLevelWidgets():
+                if widget.isVisible() and self._is_tooltip(widget):
+                    self._apply_tooltip_style(widget)
 
         retheme = self._widget_retheme()
         for widget in list(self._windows):
@@ -1059,6 +1067,37 @@ class ThemeManager(QObject):
         self.style_traces()
 
         self.themeChanged.emit(self._active.mode, dict(self._active.colours))
+
+    @staticmethod
+    def _is_tooltip(widget) -> bool:
+        return (isinstance(widget, QWidget)
+                and widget.windowType() == Qt.WindowType.ToolTip
+                and widget.inherits("QLabel"))
+
+    def eventFilter(self, watched, event):
+        # Qt can reuse an existing popup and reset its QSS when the owner changes.
+        if (event.type() in (QEvent.Type.Show, QEvent.Type.StyleChange)
+                and self._is_tooltip(watched)):
+            self._apply_tooltip_style(watched)
+        return super().eventFilter(watched, event)
+
+    def _apply_tooltip_style(self, widget) -> None:
+        # Qt resolves the owner's inline sheets ahead of app QSS for its tip.
+        # Apply the theme to the popup itself to outrank a universal owner rule.
+        style = self._tooltip_stylesheet()
+        if widget.styleSheet() != style:
+            widget.setStyleSheet(style)
+
+    def _tooltip_stylesheet(self) -> str:
+        panel = self.active_colour("panel_background")
+        text = self.active_colour("text_primary")
+        border = mix(panel, text, 0.30)
+        return f"""
+        QToolTip {{
+            background-color: {panel}; color: {text};
+            border: 1px solid {border}; padding: 4px;
+        }}
+        """
 
     # Backwards-compatible alias used by the start-up wiring.
     apply = repaint
@@ -1164,10 +1203,7 @@ class ThemeManager(QObject):
             background-color: transparent; color: {text};
         }}
         QLabel {{ background-color: transparent; color: {text}; }}
-        QToolTip {{
-            background-color: {panel}; color: {text};
-            border: 1px solid {border}; padding: 4px;
-        }}
+        {self._tooltip_stylesheet()}
         QPushButton {{
             background-color: {surface}; color: {text};
             border: 1px solid {border}; border-radius: 6px; padding: 4px 10px;

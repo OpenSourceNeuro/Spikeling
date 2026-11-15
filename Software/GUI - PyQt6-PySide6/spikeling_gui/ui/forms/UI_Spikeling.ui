@@ -31659,7 +31659,7 @@ QLineEdit:focus, QComboBox:focus {
                              </font>
                             </property>
                             <property name="text">
-                             <string>Connect Imaging screen to Spikeling</string>
+                             <string>Connect imaging to source</string>
                             </property>
                             <property name="checkable">
                              <bool>true</bool>
@@ -32126,6 +32126,9 @@ QLineEdit:focus, QComboBox:focus {
                             <layout class="QVBoxLayout" name="verticalLayout_109">
                              <item>
                               <widget class="QPushButton" name="Imaging_AutoRange_pushButton">
+                               <property name="toolTip">
+                                <string>Fit the fluorescence and calcium Y axes to their visible traces over the latest 300 ms of model time.</string>
+                               </property>
                                <property name="text">
                                 <string>Auto Range Y axis</string>
                                </property>
@@ -32299,6 +32302,9 @@ QLineEdit:focus, QComboBox:focus {
                                <property name="text">
                                 <string/>
                                </property>
+                               <property name="placeholderText">
+                                <string>Enter a file name</string>
+                               </property>
                               </widget>
                              </item>
                              <item>
@@ -32384,11 +32390,22 @@ QLineEdit:focus, QComboBox:focus {
                                 </font>
                                </property>
                                <property name="styleSheet">
-                                <string notr="true">color: rgb(250, 250, 250);
-background-color: rgb(220, 50, 47);</string>
+                                <string notr="true">QPushButton { color: rgb(250, 250, 250); background-color: rgb(185, 46, 42); }
+QPushButton:checked { color: rgb(255, 255, 255); background-color: rgb(28, 110, 65); }
+QPushButton:disabled { color: rgb(190, 205, 205); background-color: rgb(88, 110, 117); }</string>
                                </property>
                                <property name="text">
                                 <string>Record</string>
+                               </property>
+                               <property name="checkable">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="Imaging_RecordingStatus_label">
+                               <property name="wordWrap">
+                                <bool>true</bool>
                                </property>
                               </widget>
                              </item>
@@ -32641,6 +32658,9 @@ background-color: rgb(220, 50, 47);</string>
                                     </property>
                                     <item>
                                      <widget class="QLabel" name="Imaging_SaturationMode_linear_label">
+                                      <property name="toolTip">
+                                       <string>Linearly scales simulated calcium into fluorescence. It is useful for comparing a proportional response with a saturating indicator.</string>
+                                      </property>
                                       <property name="text">
                                        <string>Linear</string>
                                       </property>
@@ -32729,6 +32749,9 @@ background-color: rgb(220, 50, 47);</string>
                                     </property>
                                     <item>
                                      <widget class="QLabel" name="Imaging_SaturationMode_equilibrium_label">
+                                      <property name="toolTip">
+                                       <string>Maps calcium to a saturating Hill response controlled by the half-saturation concentration and Hill coefficient.</string>
+                                      </property>
                                       <property name="text">
                                        <string>Equilibrum</string>
                                       </property>
@@ -32817,6 +32840,9 @@ background-color: rgb(220, 50, 47);</string>
                                     </property>
                                     <item>
                                      <widget class="QLabel" name="Imaging_SaturationMode_logistic_label">
+                                      <property name="toolTip">
+                                       <string>Uses a saturating sigmoid response with the model's fixed midpoint and slope.</string>
+                                      </property>
                                       <property name="text">
                                        <string>Logistic</string>
                                       </property>
@@ -32927,6 +32953,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QLabel" name="Imaging_GECI_Label">
+                                <property name="toolTip">
+                                 <string>Select a genetically encoded calcium indicator preset. Apply loads its affinity, cooperativity, kinetics and dynamic range as the new defaults.</string>
+                                </property>
                                 <property name="font">
                                  <font>
                                   <pointsize>12</pointsize>
@@ -32969,6 +32998,11 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QComboBox" name="Imaging_GECI_comboBox">
+                                <item>
+                                 <property name="text">
+                                  <string notr="true">Generic</string>
+                                 </property>
+                                </item>
                                 <item>
                                  <property name="text">
                                   <string>GCaMP2</string>
@@ -33025,6 +33059,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                 </item>
                                </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="Imaging_GECI_Active_label"/>
                               </item>
                               <item alignment="Qt::AlignmentFlag::AlignHCenter">
                                <widget class="QFrame" name="Imaging_GECI_pushButton_frame">
@@ -33580,8 +33617,11 @@ background-color: rgb(220, 50, 47);</string>
                                      <pointsize>10</pointsize>
                                     </font>
                                    </property>
+                                   <property name="toolTip">
+                                    <string>Fluorescence sampling rate in kHz of model time. With the override off, every 0.1 ms model step produces one fluorescence sample (10 kHz). Lower rates can miss brief transients.</string>
+                                   </property>
                                    <property name="text">
-                                    <string>Imaging frame rate (kHz)</string>
+                                    <string>Frame rate (kHz)</string>
                                    </property>
                                    <property name="wordWrap">
                                     <bool>true</bool>
@@ -33619,9 +33659,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_FrameRate_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_FrameRate_Readings">
+                                <property name="toolTip">
+                                 <string>Fluorescence sampling rate in kHz of model time. With the override off, every 0.1 ms model step produces one fluorescence sample (10 kHz). Lower rates can miss brief transients. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -33657,6 +33704,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_FrameRate_Slider">
+                                <property name="toolTip">
+                                 <string>Fluorescence sampling rate in kHz of model time. With the override off, every 0.1 ms model step produces one fluorescence sample (10 kHz). Lower rates can miss brief transients. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -33664,16 +33714,16 @@ background-color: rgb(220, 50, 47);</string>
                                  <number>1</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>100</number>
+                                 <number>100000</number>
                                 </property>
                                 <property name="singleStep">
                                  <number>1</number>
                                 </property>
                                 <property name="pageStep">
-                                 <number>10</number>
+                                 <number>10000</number>
                                 </property>
                                 <property name="value">
-                                 <number>100</number>
+                                 <number>100000</number>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Orientation::Horizontal</enum>
@@ -33682,7 +33732,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <enum>QSlider::TickPosition::TicksBelow</enum>
                                 </property>
                                 <property name="tickInterval">
-                                 <number>10</number>
+                                 <number>10000</number>
                                 </property>
                                </widget>
                               </item>
@@ -33716,7 +33766,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_FrameRate_Value_10">
                                 <property name="text">
-                                 <string>0.1</string>
+                                 <string>0.0001</string>
                                 </property>
                                </widget>
                               </item>
@@ -33869,6 +33919,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_PMT_Label">
+                                   <property name="toolTip">
+                                    <string>Simulated detector gain as a percentage of nominal gain. It scales the optical signal. Gain above 100% also raises the detector's excess noise.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -33913,9 +33966,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_PMT_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_PMT_Readings">
+                                <property name="toolTip">
+                                 <string>Simulated detector gain as a percentage of nominal gain. It scales the optical signal. Gain above 100% also raises the detector's excess noise. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -33951,6 +34011,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_PMT_Slider">
+                                <property name="toolTip">
+                                 <string>Simulated detector gain as a percentage of nominal gain. It scales the optical signal. Gain above 100% also raises the detector's excess noise. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -34001,7 +34064,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_PMT_Value_1">
                                 <property name="text">
-                                 <string>1</string>
+                                 <string>0</string>
                                 </property>
                                </widget>
                               </item>
@@ -34154,6 +34217,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_Laser_Label">
+                                   <property name="toolTip">
+                                    <string>Simulated illumination as a percentage of nominal power. Increasing it brightens the optical signal. Above 100% the model also simulates photobleaching over time.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -34198,9 +34264,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_Laser_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_Laser_Readings">
+                                <property name="toolTip">
+                                 <string>Simulated illumination as a percentage of nominal power. Increasing it brightens the optical signal. Above 100% the model also simulates photobleaching over time. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -34236,6 +34309,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_Laser_Slider">
+                                <property name="toolTip">
+                                 <string>Simulated illumination as a percentage of nominal power. Increasing it brightens the optical signal. Above 100% the model also simulates photobleaching over time. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -34286,7 +34362,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_Laser_Value_1">
                                 <property name="text">
-                                 <string>1</string>
+                                 <string>0</string>
                                 </property>
                                </widget>
                               </item>
@@ -34442,6 +34518,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_CalciumDecay_Label">
+                                   <property name="toolTip">
+                                    <string>Decay time constant in ms for calcium returning to baseline after a spike. Increasing it prolongs transients and increases overlap between nearby events.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -34486,9 +34565,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_CalciumDecay_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_CalciumDecay_Readings">
+                                <property name="toolTip">
+                                 <string>Decay time constant in ms for calcium returning to baseline after a spike. Increasing it prolongs transients and increases overlap between nearby events. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(211, 54, 130); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -34524,6 +34610,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_CalciumDecay_Slider">
+                                <property name="toolTip">
+                                 <string>Decay time constant in ms for calcium returning to baseline after a spike. Increasing it prolongs transients and increases overlap between nearby events. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -34534,7 +34623,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <number>250</number>
                                 </property>
                                 <property name="value">
-                                 <number>20</number>
+                                 <number>200</number>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Orientation::Horizontal</enum>
@@ -34712,6 +34801,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_CalciumRise_Label">
+                                   <property name="toolTip">
+                                    <string>Rise time constant in ms for the calcium transient after a spike. A larger value makes the rise slower. The time to peak also depends on the decay constant.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -34756,9 +34848,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_CalciumRise_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_CalciumRise_Readings">
+                                <property name="toolTip">
+                                 <string>Rise time constant in ms for the calcium transient after a spike. A larger value makes the rise slower. The time to peak also depends on the decay constant. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(211, 54, 130); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -34794,6 +34893,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_CalciumRise_Slider">
+                                <property name="toolTip">
+                                 <string>Rise time constant in ms for the calcium transient after a spike. A larger value makes the rise slower. The time to peak also depends on the decay constant. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -34804,7 +34906,7 @@ background-color: rgb(220, 50, 47);</string>
                                  <number>250</number>
                                 </property>
                                 <property name="value">
-                                 <number>200</number>
+                                 <number>20</number>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Orientation::Horizontal</enum>
@@ -34982,6 +35084,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_CalciumJump_Label">
+                                   <property name="toolTip">
+                                    <string>Calcium kernel amplitude per spike in µM. Increasing it makes each spike contribute more calcium. The actual peak also depends on the rise and decay constants.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -35026,9 +35131,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_CalciumJump_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_CalciumJump_Readings">
+                                <property name="toolTip">
+                                 <string>Calcium kernel amplitude per spike in µM. Increasing it makes each spike contribute more calcium. The actual peak also depends on the rise and decay constants. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(211, 54, 130); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -35064,6 +35176,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_CalciumJump_Slider">
+                                <property name="toolTip">
+                                 <string>Calcium kernel amplitude per spike in µM. Increasing it makes each spike contribute more calcium. The actual peak also depends on the rise and decay constants. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -35264,13 +35379,16 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_CalciumNoise_Label">
+                                   <property name="toolTip">
+                                    <string>Gaussian fluctuation scale for the simulated intracellular calcium in µM/√s. Each model step scales the fluctuation by the square root of its duration in seconds.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
                                     </font>
                                    </property>
                                    <property name="text">
-                                    <string>Calcium noise scale</string>
+                                    <string>Calcium noise scale (µM/√s)</string>
                                    </property>
                                   </widget>
                                  </item>
@@ -35305,9 +35423,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_CalciumNoise_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_CalciumNoise_Readings">
+                                <property name="toolTip">
+                                 <string>Gaussian fluctuation scale for the simulated intracellular calcium in µM/√s. Each model step scales the fluctuation by the square root of its duration in seconds. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(211, 54, 130); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -35343,6 +35468,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_CalciumNoise_Slider">
+                                <property name="toolTip">
+                                 <string>Gaussian fluctuation scale for the simulated intracellular calcium in µM/√s. Each model step scales the fluctuation by the square root of its duration in seconds. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -35540,6 +35668,9 @@ background-color: rgb(220, 50, 47);</string>
                                  </property>
                                  <item>
                                   <widget class="QLabel" name="Imaging_CalciumBaseline_Label">
+                                   <property name="toolTip">
+                                    <string>Resting intracellular calcium in µM. It sets the calcium level before spikes and contributes to the baseline used for ΔF/F₀.</string>
+                                   </property>
                                    <property name="font">
                                     <font>
                                      <pointsize>10</pointsize>
@@ -35584,15 +35715,22 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_CalciumBaseline_Readings">
+                               <widget class="QLineEdit" name="Imaging_CalciumBaseline_Readings">
+                                <property name="toolTip">
+                                 <string>Resting intracellular calcium in µM. It sets the calcium level before spikes and contributes to the baseline used for ΔF/F₀. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(211, 54, 130); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
+                                </property>
                                 <property name="autoFillBackground">
                                  <bool>false</bool>
                                 </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
                                 <property name="alignment">
-                                 <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                                 <set>Qt::AlignmentFlag::AlignCenter</set>
                                 </property>
                                </widget>
                               </item>
@@ -35625,6 +35763,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_CalciumBaseline_Slider">
+                                <property name="toolTip">
+                                 <string>Resting intracellular calcium in µM. It sets the calcium level before spikes and contributes to the baseline used for ΔF/F₀. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -35843,7 +35984,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Half-activation calcium concentration (equilibrium). Lower Kd = higher affinity.</string>
+                                    <string>Calcium concentration in µM at half-saturation in Hill mode. A lower value makes the indicator respond at lower calcium concentrations.</string>
                                    </property>
                                    <property name="text">
                                     <string>Indicator Affinity: Kd (μM)</string>
@@ -35884,9 +36025,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_kd_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_kd_Readings">
+                                <property name="toolTip">
+                                 <string>Calcium concentration in µM at half-saturation in Hill mode. A lower value makes the indicator respond at lower calcium concentrations. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -35922,6 +36070,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_kd_Slider">
+                                <property name="toolTip">
+                                 <string>Calcium concentration in µM at half-saturation in Hill mode. A lower value makes the indicator respond at lower calcium concentrations. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -35929,10 +36080,10 @@ background-color: rgb(220, 50, 47);</string>
                                  <number>1</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>100</number>
+                                 <number>5000</number>
                                 </property>
                                 <property name="value">
-                                 <number>15</number>
+                                 <number>200</number>
                                 </property>
                                 <property name="sliderPosition">
                                  <number>15</number>
@@ -35978,14 +36129,14 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_kd_Value_1">
                                 <property name="text">
-                                 <string>1</string>
+                                 <string>0.001</string>
                                 </property>
                                </widget>
                               </item>
                               <item>
                                <widget class="QLabel" name="Imaging_kd_Value_500">
                                 <property name="text">
-                                 <string>500</string>
+                                 <string>2.5</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -35995,7 +36146,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_kd_Value_1000">
                                 <property name="text">
-                                 <string>1000</string>
+                                 <string>5</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -36134,7 +36285,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Steepness of response vs calcium. n=1 is near-linear; higher n is more switch-like</string>
+                                    <string>Dimensionless Hill coefficient. A larger value makes the response steeper near the half-saturation concentration. This control applies in Hill mode.</string>
                                    </property>
                                    <property name="text">
                                     <string>Cooperativity (Hill n)</string>
@@ -36172,9 +36323,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_Hill_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_Hill_Readings">
+                                <property name="toolTip">
+                                 <string>Dimensionless Hill coefficient. A larger value makes the response steeper near the half-saturation concentration. This control applies in Hill mode. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36210,17 +36368,20 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_Hill_Slider">
+                                <property name="toolTip">
+                                 <string>Dimensionless Hill coefficient. A larger value makes the response steeper near the half-saturation concentration. This control applies in Hill mode. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
                                 <property name="minimum">
-                                 <number>50</number>
+                                 <number>10</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>100</number>
+                                 <number>1000</number>
                                 </property>
                                 <property name="value">
-                                 <number>100</number>
+                                 <number>200</number>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Orientation::Horizontal</enum>
@@ -36263,14 +36424,14 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_Hill_Value_05">
                                 <property name="text">
-                                 <string>0.5</string>
+                                 <string>0.1</string>
                                 </property>
                                </widget>
                               </item>
                               <item>
                                <widget class="QLabel" name="Imaging_Hill_Value_075">
                                 <property name="text">
-                                 <string>0.75</string>
+                                 <string>5.05</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36280,7 +36441,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_Hill_Value_1">
                                 <property name="text">
-                                 <string>1.0</string>
+                                 <string>10</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -36421,7 +36582,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Maximum fractional change at saturation (Sat=1)</string>
+                                    <string>Indicator rise time constant in ms. A larger value makes the fluorescence response follow increases in calcium more slowly in the non-linear models.</string>
                                    </property>
                                    <property name="text">
                                     <string>Indicator rise: τ (ms)</string>
@@ -36462,9 +36623,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_IndRise_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_IndRise_Readings">
+                                <property name="toolTip">
+                                 <string>Indicator rise time constant in ms. A larger value makes the fluorescence response follow increases in calcium more slowly in the non-linear models. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36500,14 +36668,17 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_IndRise_Slider">
+                                <property name="toolTip">
+                                 <string>Indicator rise time constant in ms. A larger value makes the fluorescence response follow increases in calcium more slowly in the non-linear models. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
                                 <property name="minimum">
-                                 <number>0</number>
+                                 <number>1</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>500</number>
+                                 <number>1000</number>
                                 </property>
                                 <property name="singleStep">
                                  <number>1</number>
@@ -36559,14 +36730,14 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_IndRise_Value_1">
                                 <property name="text">
-                                 <string>0</string>
+                                 <string>1</string>
                                 </property>
                                </widget>
                               </item>
                               <item>
                                <widget class="QLabel" name="Imaging_IndRise_Value_2">
                                 <property name="text">
-                                 <string>250</string>
+                                 <string>500</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36576,7 +36747,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_IndRise_Value_3">
                                 <property name="text">
-                                 <string>500</string>
+                                 <string>1000</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -36717,7 +36888,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Maximum fractional change at saturation (Sat=1)</string>
+                                    <string>Indicator decay time constant in ms. A larger value prolongs the fluorescence response as calcium falls in the non-linear models.</string>
                                    </property>
                                    <property name="text">
                                     <string>Indicator decay: τ (ms)</string>
@@ -36758,9 +36929,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_IndDecay_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_IndDecay_Readings">
+                                <property name="toolTip">
+                                 <string>Indicator decay time constant in ms. A larger value prolongs the fluorescence response as calcium falls in the non-linear models. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36796,14 +36974,17 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_IndDecay_Slider">
+                                <property name="toolTip">
+                                 <string>Indicator decay time constant in ms. A larger value prolongs the fluorescence response as calcium falls in the non-linear models. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
                                 <property name="minimum">
-                                 <number>0</number>
+                                 <number>1</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>2000</number>
+                                 <number>3000</number>
                                 </property>
                                 <property name="value">
                                  <number>300</number>
@@ -36849,14 +37030,14 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_IndDecay_Value_1">
                                 <property name="text">
-                                 <string>0</string>
+                                 <string>1</string>
                                 </property>
                                </widget>
                               </item>
                               <item>
                                <widget class="QLabel" name="Imaging_IndDecay_Value_2">
                                 <property name="text">
-                                 <string>1000</string>
+                                 <string>1500</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -36866,7 +37047,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_IndDecay_Value_3">
                                 <property name="text">
-                                 <string>2000</string>
+                                 <string>3000</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -37007,7 +37188,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Maximum fractional change at saturation (Sat=1)</string>
+                                    <string>Maximum fractional fluorescence increase at saturation relative to the calcium-free indicator. Enter a ratio: 1 means a 100% increase. The plotted ΔF/F₀ uses the resting baseline.</string>
                                    </property>
                                    <property name="text">
                                     <string>Dynamic range (Max ΔF/F₀)</string>
@@ -37048,9 +37229,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_DFF_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_DFF_Readings">
+                                <property name="toolTip">
+                                 <string>Maximum fractional fluorescence increase at saturation relative to the calcium-free indicator. Enter a ratio: 1 means a 100% increase. The plotted ΔF/F₀ uses the resting baseline. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -37086,6 +37274,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_DFF_Slider">
+                                <property name="toolTip">
+                                 <string>Maximum fractional fluorescence increase at saturation relative to the calcium-free indicator. Enter a ratio: 1 means a 100% increase. The plotted ΔF/F₀ uses the resting baseline. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -37093,10 +37284,10 @@ background-color: rgb(220, 50, 47);</string>
                                  <number>0</number>
                                 </property>
                                 <property name="maximum">
-                                 <number>100</number>
+                                 <number>1000</number>
                                 </property>
                                 <property name="value">
-                                 <number>20</number>
+                                 <number>200</number>
                                 </property>
                                 <property name="orientation">
                                  <enum>Qt::Orientation::Horizontal</enum>
@@ -37146,7 +37337,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_DFF_Value_3">
                                 <property name="text">
-                                 <string>5</string>
+                                 <string>50</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -37156,7 +37347,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_DFF_Value_2">
                                 <property name="text">
-                                 <string>10</string>
+                                 <string>100</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -37292,7 +37483,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Overall fluorescence scaling (laser × PMT × expression). Does not change ΔF/F₀.</string>
+                                    <string>Multiplier for detector brightness. It scales the optical signal before adding the detector offset and noise.</string>
                                    </property>
                                    <property name="text">
                                     <string>Brightness / Gain</string>
@@ -37333,9 +37524,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_FluoScale_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_FluoScale_Readings">
+                                <property name="toolTip">
+                                 <string>Multiplier for detector brightness. It scales the optical signal before adding the detector offset and noise. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -37371,6 +37569,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_FluoScale_Slider">
+                                <property name="toolTip">
+                                 <string>Multiplier for detector brightness. It scales the optical signal before adding the detector offset and noise. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -37577,7 +37778,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Additive baseline (black level / background). Affects raw F but not ΔF/F₀ if offset-corrected.</string>
+                                    <string>Additive detector background in arbitrary fluorescence units. It shifts raw fluorescence and is removed when calculating the displayed ΔF/F₀.</string>
                                    </property>
                                    <property name="text">
                                     <string>Detector baseline (offset)</string>
@@ -37618,9 +37819,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_FluoOffset_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_FluoOffset_Readings">
+                                <property name="toolTip">
+                                 <string>Additive detector background in arbitrary fluorescence units. It shifts raw fluorescence and is removed when calculating the displayed ΔF/F₀. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -37656,6 +37864,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_FluoOffset_Slider">
+                                <property name="toolTip">
+                                 <string>Additive detector background in arbitrary fluorescence units. It shifts raw fluorescence and is removed when calculating the displayed ΔF/F₀. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -37859,10 +38070,10 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Additive Gaussian noise floor per frame (independent of brightness).</string>
+                                    <string>Standard deviation of additive Gaussian detector noise per fluorescence sample, in arbitrary units. This component is independent of brightness.</string>
                                    </property>
                                    <property name="text">
-                                    <string>Detector noise (σ)</string>
+                                    <string>Detector noise SD (a.u.)</string>
                                    </property>
                                   </widget>
                                  </item>
@@ -37897,9 +38108,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_FluoNoise_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_FluoNoise_Readings">
+                                <property name="toolTip">
+                                 <string>Standard deviation of additive Gaussian detector noise per fluorescence sample, in arbitrary units. This component is independent of brightness. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -37935,6 +38153,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_FluoNoise_Slider">
+                                <property name="toolTip">
+                                 <string>Standard deviation of additive Gaussian detector noise per fluorescence sample, in arbitrary units. This component is independent of brightness. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>
@@ -37995,7 +38216,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_FluoNoise_Value_5">
                                 <property name="text">
-                                 <string>5</string>
+                                 <string>0.0100</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -38005,7 +38226,7 @@ background-color: rgb(220, 50, 47);</string>
                               <item>
                                <widget class="QLabel" name="Imaging_FluoNoise_Value_10">
                                 <property name="text">
-                                 <string>10</string>
+                                 <string>0.0200</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -38144,7 +38365,7 @@ background-color: rgb(220, 50, 47);</string>
                                     </font>
                                    </property>
                                    <property name="toolTip">
-                                    <string>Photon-limited noise component scaling with √(signal). Higher = noisier.</string>
+                                    <string>Coefficient for brightness-dependent noise. Its standard deviation is this coefficient times the square root of the mean fluorescence.</string>
                                    </property>
                                    <property name="whatsThis">
                                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Photon shot noise (A.photon&lt;span style=&quot; vertical-align:super;&quot;&gt;-1&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -38188,9 +38409,16 @@ background-color: rgb(220, 50, 47);</string>
                                <number>0</number>
                               </property>
                               <item>
-                               <widget class="QLabel" name="Imaging_PhotoShotNoise_Readings">
-                                <property name="text">
-                                 <string/>
+                               <widget class="QLineEdit" name="Imaging_PhotoShotNoise_Readings">
+                                <property name="toolTip">
+                                 <string>Coefficient for brightness-dependent noise. Its standard deviation is this coefficient times the square root of the mean fluorescence. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
+                                </property>
+                                <property name="enabled">
+                                 <bool>false</bool>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -38226,6 +38454,9 @@ background-color: rgb(220, 50, 47);</string>
                               </property>
                               <item>
                                <widget class="QSlider" name="Imaging_PhotoShotNoise_Slider">
+                                <property name="toolTip">
+                                 <string>Coefficient for brightness-dependent noise. Its standard deviation is this coefficient times the square root of the mean fluorescence. Turn the override on to edit the value, then press Enter to apply it.</string>
+                                </property>
                                 <property name="enabled">
                                  <bool>false</bool>
                                 </property>

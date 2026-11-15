@@ -15,7 +15,6 @@ from spikeling_gui.features.neuron_interface import page as Page_Spikeling_Neuro
 from spikeling_gui.features.emulator import page as Page_Spikeling_NeuronEmulator
 from spikeling_gui.features.imaging import page as Page_Imaging_ImagingSimulation
 from spikeling_gui.features.extracellular.page import Scope as ExtracellularPage
-from spikeling_gui.features.imaging.controls import GECI_SLIDER_SPECS, configure_geci_slider_ranges
 from spikeling_gui.features.imaging.scope import ImagingGraph
 from spikeling_gui.features.extracellular.scope import ExtraCellularGraph
 from spikeling_gui.features.stimulus_generator import page as Page_StimulusGenerator
@@ -282,6 +281,8 @@ def Buttons(self):
     # Create an instance of ImagingGraph
     self.imaging_graph  = ImagingGraph(self)
     self.imaging_page = Page_Imaging_ImagingSimulation.Imaging(self)
+    for index, source in enumerate(("spikeling", "emulator")):
+        self.ui.Imaging_Source_comboBox.setItemData(index, source)
 
     # Connect the button to the instance method
     self.ui.Imaging_ConnectButton.clicked.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.UpdateSource(self))
@@ -295,9 +296,7 @@ def Buttons(self):
         self.ui.Imaging_DataRecording_RecordFolderDir_pushButton,
     )
     self.ui.Imaging_DataRecording_RecordFolder_value.setEnabled(True)
-    self.ui.Imaging_DataRecording_RecordFolder_value.setPlaceholderText("Enter a file name")
-    self.ui.Imaging_DataRecording_Record_pushButton.setCheckable(True)
-    self.ui.Imaging_DataRecording_Record_pushButton.clicked.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.RecordButton(self))
+    self.ui.Imaging_DataRecording_Record_pushButton.clicked.connect(self.imaging_graph.on_record_clicked)
 
     # Imaging Parameters
     self.ui.Imaging_ImagingParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_ImagingParameter_page))
@@ -307,52 +306,13 @@ def Buttons(self):
     self.ui.Imaging_Logistic_toggleButton.toggled.connect(self.imaging_page.Logistic_toggleButton)
     # GECI selector + Apply button are wired by the controller itself
     self.imaging_graph.bind_geci_controls()
-    # Size the fluorescence sliders to the full GECI library, then preview
-    configure_geci_slider_ranges(self.ui)
-    for _slider_name in GECI_SLIDER_SPECS:
-        _label_name = _slider_name.replace("_Slider", "_Readings")
-        Page_Imaging_ImagingSimulation.refresh_indicator_readout(self.ui, _slider_name, _label_name)
-    self.imaging_graph.SelectGECI()
-    self.ui.Imaging_FrameRate_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFrameRate(self))
-    self.ui.Imaging_FrameRate_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFrameRate(self))
-    self.ui.Imaging_PMT_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePMT(self))
-    self.ui.Imaging_PMT_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetPMT(self))
-    self.ui.Imaging_Laser_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateLaser(self))
-    self.ui.Imaging_Laser_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetLaser(self))
+    self.imaging_graph.initialise_controls()
 
     # Calcium parameters
     self.ui.Imaging_CalciumParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_CalciumParameter_page))
-    self.ui.Imaging_CalciumRise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumRise(self))
-    self.ui.Imaging_CalciumRise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumRise(self))
-    self.ui.Imaging_CalciumDecay_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumDecay(self))
-    self.ui.Imaging_CalciumDecay_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumDecay(self))
-    self.ui.Imaging_CalciumJump_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumJump(self))
-    self.ui.Imaging_CalciumJump_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumJump(self))
-    self.ui.Imaging_CalciumNoise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumNoise(self))
-    self.ui.Imaging_CalciumNoise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumNoise(self))
-    self.ui.Imaging_CalciumBaseline_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateCalciumBaseline(self))
-    self.ui.Imaging_CalciumBaseline_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetCalciumBaseline(self))
 
     # Fluorescence Parameters
     self.ui.Imaging_FluoParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_FluoParameter_page))
-    self.ui.Imaging_kd_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.Activatekd(self))
-    self.ui.Imaging_kd_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.Getkd(self))
-    self.ui.Imaging_Hill_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateHill(self))
-    self.ui.Imaging_Hill_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetHill(self))
-    self.ui.Imaging_IndRise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateIndRise(self))
-    self.ui.Imaging_IndRise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetIndRise(self))
-    self.ui.Imaging_IndDecay_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateIndDecay(self))
-    self.ui.Imaging_IndDecay_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetIndDecay(self))
-    self.ui.Imaging_DFF_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateDFF(self))
-    self.ui.Imaging_DFF_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetDFF(self))
-    self.ui.Imaging_PhotoShotNoise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivatePhotoShotNoise(self))
-    self.ui.Imaging_PhotoShotNoise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetPhotoShotNoise(self))
-    self.ui.Imaging_FluoNoise_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFluoNoise(self))
-    self.ui.Imaging_FluoNoise_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFluoNoise(self))
-    self.ui.Imaging_FluoScale_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFluoScale(self))
-    self.ui.Imaging_FluoScale_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFluoScale(self))
-    self.ui.Imaging_FluoOffset_toggleButton.toggled.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ActivateFluoOffset(self))
-    self.ui.Imaging_FluoOffset_Slider.valueChanged.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.GetFluoOffset(self))
 
 
 ########################################################################

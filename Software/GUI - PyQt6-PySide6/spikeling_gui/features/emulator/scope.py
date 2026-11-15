@@ -179,6 +179,10 @@ def EmulatorPlot(self):
         self.Emulator_timer.start(GUI_TICK_MS)
         return
 
+    imaging = getattr(self, "imaging_graph", None)
+    if imaging is not None:
+        imaging.on_emulator_stopped()
+
     self.ui.Emulator_Connect_pushButton.setText("Start Spikeling Emulator")
     self.ui.Emulator_Connect_pushButton.setStyleSheet(
         "color: rgb" + str(tuple(DarkSolarized[14])) + ";\n"
@@ -286,6 +290,7 @@ def UpdatePlot(self):
                              and extracellular_graph.source_mode == "emulator")
 
     forward_batch = [] if (imaging_enabled or extracellular_enabled) else None
+    imaging_events = [] if imaging_enabled else None
 
     # --- Integration loop -------------------------------------------------
     recording_channels = self._emulator_recording_channels if self.recordflag else None
@@ -300,7 +305,7 @@ def UpdatePlot(self):
                     len(self.EmulatorData[1]), recording_settings(controls, ui_state, period, playing),
                 )
                 previous_stimulus = schedule
-        vec8 = GetData(self, ui_state, noise, recording_channels)
+        vec8 = GetData(self, ui_state, noise, recording_channels, imaging_events)
         self.ui.Emulator_Data = vec8
 
         for channel in range(N_EMULATOR_CHANNELS):
@@ -324,12 +329,14 @@ def UpdatePlot(self):
 
     if forward_batch:
         if imaging_enabled:
-            imaging_graph.on_emulator_data(forward_batch, soma_clamped=ui_state.voltage_clamp)
+            imaging_graph.on_emulator_data(
+                forward_batch, soma_clamped=ui_state.voltage_clamp, events=imaging_events
+            )
         if extracellular_enabled:
             extracellular_graph.on_emulator_data(forward_batch, soma_clamped=ui_state.voltage_clamp)
 
 
-def GetData(self, state, noise, recording_channels=None):
+def GetData(self, state, noise, recording_channels=None, imaging_events=None):
     """Advance the two presynaptic cells, their synapses, and the soma by 0.1 ms."""
     dt = EMULATOR_SAMPLE_INTERVAL_MS
     stimulus_sample = self.emulator_controls.next_sample()
@@ -358,6 +365,8 @@ def GetData(self, state, noise, recording_channels=None):
 
     voltage = self.Emulator_v
     presynaptic_vm = []
+    if imaging_events is not None:
+        optical_events = [0, 0, 0]
     presynaptic_events = [0, 0] if recording_channels is not None else None
     currents = []
     conductance = weighted_reversal = 0.0
@@ -385,6 +394,8 @@ def GetData(self, state, noise, recording_channels=None):
         v, u, spike = izhikevich(v, u, current, state.aux_parameters[channel], dt)
         self._emulator_aux_state[channel] = v, u, recovery
         presynaptic_vm.append(30.0 if spike else v)
+        if imaging_events is not None:
+            optical_events[channel + 1] = int(spike)
         if presynaptic_events is not None:
             presynaptic_events[channel] = int(spike and not synapse.high)
 
@@ -424,10 +435,14 @@ def GetData(self, state, noise, recording_channels=None):
                 voltage, self.Emulator_u, measured_current, state.izh, dt,
             )
         displayed_vm = 30.0 if spike else voltage
+        if imaging_events is not None:
+            optical_events[0] = int(spike)
 
     if recording_channels is not None:
         for target, value in zip(recording_channels, (command, *presynaptic_events, *scheduled)):
             target.append(value)
+    if imaging_events is not None:
+        imaging_events.append(optical_events)
     self.Emulator_v = voltage
     self.Emulator_sim_time_ms += dt
     return [

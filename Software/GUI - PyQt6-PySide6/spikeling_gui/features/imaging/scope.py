@@ -31,69 +31,46 @@ import pandas as pd
 import collections
 import datetime
 import json
+import math
+from pathlib import Path
+from shutil import copyfile
+from tempfile import TemporaryDirectory
+from time import monotonic
 
 from spikeling_gui.appearance.palette import DarkSolarized
+from spikeling_gui.appearance.dialogs import themed_message_box
+from spikeling_gui.widgets.recording import prepare_recording
 from spikeling_gui.appearance.theme_manager import theme_manager
-from spikeling_gui.features.imaging.controls import GECI_SLIDER_SPECS, configure_geci_slider_ranges, set_slider_units, slider_units
+from spikeling_gui.features.imaging.controls import (
+    GECI_SLIDERS, IMAGING_SLIDERS, MODEL_FRAME_RATE_HZ, SAMPLE_INTERVAL,
+    apply_geci_defaults, bind_imaging_sliders,
+)
 from spikeling_gui.features.imaging.presets import GECI
 from spikeling_gui.hardware.serial_manager import serial_manager
-from spikeling_gui.plotting.graph_core import RingBuffer, configure_scope, safe_reconnect
+from spikeling_gui.plotting.graph_core import RingBuffer, configure_scope
 from spikeling_gui.hardware.protocol import parse_spikeling_packet
 
 
-SAMPLE_INTERVAL = 0.1
 TIME_WINDOW = 2000
-TIME_WINDOW_DISPLAY = 500
+TIME_WINDOW_DISPLAY = 1000
+AUTO_RANGE_WINDOW_MS = 300.0
 STIM_MIN, STIM_MAX = -100, 100
 N_NEURONS = 3
 MAX_PACKETS_PER_TICK = 5000
 
-# Frame-rate slider encoding: displayed Hz = slider value * FRAME_RATE_SCALE.
-# Defined once so _connect_parameters and _initialize_buffers cannot diverge.
-FRAME_RATE_SCALE = 100.0
-from typing import Optional, Tuple
-
-
-GECI_SLIDER_ENCODING = {
-    "Imaging_kd_Slider":       ("Kd_uM",             10.0,   0.200),
-    "Imaging_Hill_Slider":     ("hill_n",           100.0,   2.000),
-    "Imaging_DFF_Slider":      ("dff_max",           10.0,  20.000),
-    "Imaging_IndRise_Slider":  ("Ind_tau_rise_ms",    1.0,  50.000),
-    "Imaging_IndDecay_Slider": ("Ind_tau_decay_ms",   1.0, 300.000),
-}
-
-
-
-
-def set_slider_silently(slider, value: float) -> float:
-    """
-    Write ``value`` into ``slider`` without emitting ``valueChanged``.
-
-    Blocking the signal avoids re-entering the parameter-cache callback once
-    per slider (five redundant full refreshes per preset application), and the
-    clamp guarantees the returned value is what the widget actually holds.
-
-    Parameters
-    ----------
-    slider : PySide6.QtWidgets.QSlider
-        Target slider, in raw integer counts.
-    value : float
-        Desired slider position in counts, before rounding and clamping.
-
-    Returns
-    -------
-    float
-        The position effectively stored by the widget, in counts.
-    """
-    clamped = max(slider.minimum(), min(slider.maximum(), int(round(value))))
-    was_blocked = slider.blockSignals(True)
-    slider.setValue(clamped)
-    slider.blockSignals(was_blocked)
-    return float(clamped)
-
-# =============================================================================
-# ImagingGraph
-# =============================================================================
+BOARD_PACKET_PERIOD_MS = 2.0
+TRANSPORT_PAUSE_MS = 250.0
+EMULATOR_GAP_MS = 5 * SAMPLE_INTERVAL
+SAMPLE_COLUMNS = [
+    "Time (ms)", "Stim", "Trigger", "Vm1 (mV)", "Vm2 (mV)", "Vm3 (mV)",
+    "Ca1 (uM)", "Ca2 (uM)", "Ca3 (uM)", "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)",
+    "FrameIdx", "FrameTime (ms)", "Calcium event 1", "Calcium event 2", "Calcium event 3",
+]
+FRAME_COLUMNS = [
+    "FrameIdx", "FrameTime (ms)", "NearestSampleIdx", "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)",
+    "SourceSampleTime (ms)", "DF/F0 1 (%)", "DF/F0 2 (%)", "DF/F0 3 (%)",
+]
+SIDECAR_SUFFIXES = ("_frames.csv", "_meta.json")
 
 class ImagingGraph(QObject):
     """
@@ -115,6 +92,12 @@ class ImagingGraph(QObject):
         # -------------------------
         self.source_mode = "spikeling"   # "spikeling", "emulator", "none"
         self._t_last_ms = None
+        self._last_input_ms = None
+        self._last_clock_kind = None
+        self._last_clamped = None
+        self._next_frame_ms = None
+        self._last_arrival = None
+        self._ready = False
         # Previous-sample Vm, kept explicitly instead of peeking into the
         # display buffer, so spike detection is independent of plotting.
         self._vm_prev = np.zeros(N_NEURONS, dtype=float)
@@ -129,11 +112,6 @@ class ImagingGraph(QObject):
         self.SpikeThreshold = -20.0      # mV; threshold for upward crossing
         self.SpikeRefractory_ms = 3.0    # ms; refractory window after detected spike
         self._t_last_spike_ms = np.full(N_NEURONS, -1e12, dtype=float)  # per neuron last spike time
-
-        # Frame sampling state (camera sampling)
-        self._frame_phase_ms = 0.0
-        self.FrameTime_buffer = None
-        self.Fluo_frame_buffers = None
 
         # Indicator / preset selection
         self.indicator_name = "Generic"
@@ -217,443 +195,295 @@ class ImagingGraph(QObject):
 
         # Recording
         self.record_flag = False
-        # Columns (kept simple and explicit):
-        # t, stim, trig, vm1..3, ca1..3, F1..3
-        self._rec = {
-            "t_ms": [],
-            "stim": [],
-            "trig": [],
-            "vm1": [], "vm2": [], "vm3": [],
-            "ca1_uM": [], "ca2_uM": [], "ca3_uM": [],
-            "F1": [], "F2": [], "F3": [],
-        }
+        self._save_pending = False
+        self._recording_path = None
 
-        # Signals
         serial_manager.data_received.connect(self.on_data_received)
+        serial_manager.connection_changed.connect(self.on_hardware_connection_changed)
 
     # -------------------------------------------------------------------------
     # Source Selection
     # -------------------------------------------------------------------------
 
-    def set_source_mode(self, mode: str) -> None:
-        """Select driving data source."""
-        if mode not in ("spikeling", "emulator", "none"):
-            mode = "spikeling"
+    def select_source(self, mode, enabled):
+        if self.parent.ImagingConnectionFlag:
+            if enabled and mode == self.source_mode:
+                return
+            self.disconnect(self.tr("Source changed") if enabled else self.tr("Disconnected"))
         self.source_mode = mode
-
-    # -------------------------------------------------------------------------
-    # Connect / Disconnect
-    # -------------------------------------------------------------------------
+        if enabled:
+            self.connect()
 
     def connect(self):
-        """Activate imaging pipeline."""
+        """Start a display session using the current controls."""
+        self.ui.Imaging_ConnectButton.setChecked(True)
         self._initialize_buffers()
         self._initialize_plot()
-        configure_geci_slider_ranges(self.ui)
-        self._connect_parameters()
-        self.apply_indicator_preset("Generic", update_ui=True)
-        self._update_connect_button(True)
-
-        if not hasattr(self, "_fluo_autorange_connected"):
-            self._fluo_autorange_connected = True
-            self.ui.Imaging_AutoRange_pushButton.clicked.connect(self.autorange_fluorescence_y)
-
+        self._refresh_imaging_params()
+        self._reset_model_state()
         self.parent.ImagingConnectionFlag = True
-        self.bleach_B = 1.0
-
-        # Initialize to steady baseline:
-        # - Calcium kernel internal states start at 0 so Ca(t)=Cb initially.
-        self._ca_xd[:] = 0.0
-        self._ca_xdr[:] = 0.0
-
-        Cb = float(self._imaging_params.get("CalciumBaseline", 0.1))  # µM
-        self.CalciumData[:] = Cb
-
-        # Initialize “indicator saturation/bound fraction” to its baseline equilibrium
-        Sat0 = self._indicator_equilibrium_saturation(Cb, self._imaging_params)
-        self.IndicatorSat[:] = Sat0
-
-        # If kinetic binding is enabled, initialize bound state to equilibrium value.
-        # (This avoids a transient “startup shock” in fluorescence.)
-        if self.binding_enabled:
-            self._S_bound[:] = Sat0 * self._S_tot  # S_b = frac * S_tot
-
-        # Initialize fluorescence to baseline with NO noise so first frame is stable.
-        F0 = self._baseline_fluorescence_from_C(Cb, self._imaging_params)
-        self.FluoData[:] = F0
-
-        # Set F0 reference for ΔF/F plotting (same for all neurons here)
-        self._update_F0_from_baseline()
-
-        self._rx_queue.clear()
+        self._ready = False
+        self._set_source_status(self.tr("Waiting for source"))
+        self._update_record_button()
         self._rx_timer.start()
 
-    def disconnect(self):
-        """Deactivate imaging pipeline."""
-        self.cleanup()
-        self._update_connect_button(False)
+    def disconnect(self, reason=None):
+        """Stop and save the capture before dropping the session buffers."""
         self.parent.ImagingConnectionFlag = False
+        self._ready = False
+        self._rx_timer.stop()
+        self._drain_hardware()
+        self.cleanup()
+        self.ui.Imaging_ConnectButton.setChecked(False)
+        self._set_source_status(self.tr("Connect imaging to source"), reason)
+        self.stop_recording(reason or self.tr("Disconnected"))
+        self._update_record_button()
 
-    # -------------------------------------------------------------------------
-    # Data Entry Points
-    # -------------------------------------------------------------------------
+    def on_hardware_connection_changed(self, connected):
+        if self.source_mode == "spikeling" and self.parent.ImagingConnectionFlag and not connected:
+            self.disconnect(self.tr("Hardware source disconnected"))
 
+    def on_emulator_stopped(self):
+        if self.source_mode == "emulator" and self.parent.ImagingConnectionFlag:
+            self.disconnect(self.tr("Emulator stopped"))
 
-    def on_data_received(self, data: list) -> None:
-        if self.source_mode != "spikeling":
-            return
-        if not self.parent.ImagingConnectionFlag:
-            return
-
-        self._rx_queue.append(data)
-
-
-
-    # -------------------------------------------------------------------------
-    # Main Imaging Pipeline
-    # -------------------------------------------------------------------------
-    def _process_rx_queue(self):
-        """Drain the hardware packet queue at the GUI refresh cadence."""
+    def on_data_received(self, data):
         if self.source_mode != "spikeling" or not self.parent.ImagingConnectionFlag:
+            return
+
+        now = monotonic()
+        gap_ms = 0.0 if self._last_arrival is None else (now - self._last_arrival) * 1000.0
+        self._last_arrival = now
+        transport_pause_ms = gap_ms if gap_ms > TRANSPORT_PAUSE_MS else 0.0
+        discarded = 0
+        if len(self._rx_queue) == self._rx_queue.maxlen:
+            discarded = sum(1 + lost for _, _, lost, _ in self._rx_queue)
             self._rx_queue.clear()
+        neuron_scope = getattr(self.parent, "spikeling_graph", None)
+        clamped = bool(getattr(neuron_scope, "voltage_clamp_display", False))
+        self._rx_queue.append((data, clamped, discarded, transport_pause_ms))
+
+    def _process_rx_queue(self):
+        if self.source_mode == "spikeling" and self.parent.ImagingConnectionFlag:
+            if len(self._rx_queue) > 2 * MAX_PACKETS_PER_TICK:
+                discard_count = len(self._rx_queue) - MAX_PACKETS_PER_TICK
+                discarded = 0
+                for _ in range(discard_count):
+                    _, _, lost, _ = self._rx_queue.popleft()
+                    discarded += 1 + lost
+                packet, clamped, lost, pause = self._rx_queue.popleft()
+                self._rx_queue.appendleft((packet, clamped, lost + discarded, pause))
+            self._drain_hardware(MAX_PACKETS_PER_TICK)
+
+    def _drain_hardware(self, limit=None):
+        count = len(self._rx_queue) if limit is None else min(len(self._rx_queue), limit)
+        for _ in range(count):
+            packet, clamped, discarded, pause = self._rx_queue.popleft()
+            self._consume_vector(packet, soma_clamped=clamped, discarded_packets=discarded,
+                                 transport_pause_ms=pause)
+        if count and self._plots_ready and self.parent.ImagingConnectionFlag:
+            self._update_plots()
+
+    def on_emulator_data(self, data, *, soma_clamped=False, events=None):
+        if self.source_mode != "emulator" or not self.parent.ImagingConnectionFlag:
             return
-
-        n = min(len(self._rx_queue), MAX_PACKETS_PER_TICK)
-        if n == 0:
+        if not len(data):
             return
-
-        packets = [self._rx_queue.popleft() for _ in range(n)]
-        self._consume_packets(packets)
-
-        if len(self._rx_queue) > MAX_PACKETS_PER_TICK:
-            self._rx_queue.clear()
-
-    def on_emulator_data(self, data: list, *, soma_clamped=False) -> None:
-        """Handle one emulator packet or a batch of packets."""
-        if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
-            self._consume_packets(data, soma_clamped=soma_clamped)
-        else:
-            self._consume_packets([data], soma_clamped=soma_clamped)
-
-    def _consume_packets(self, packets, *, soma_clamped=False) -> None:
-        """
-        Run the imaging pipeline over a block of packets and redraw once.
-
-        The record-button state and the plot refresh are evaluated once per
-        block rather than once per sample, removing up to 10^4 redundant Qt
-        widget queries per GUI tick.
-
-        Parameters
-        ----------
-        packets : sequence
-            Raw 8- or 9-field Spikeling packets in chronological order.
-        """
-        if not self.parent.ImagingConnectionFlag:
-            return
-
-        self._handle_recording()
-
-        for packet in packets:
-            self._consume_vector(packet, soma_clamped=soma_clamped)
-
+        packets = data if isinstance(data[0], (list, tuple, np.ndarray)) else [data]
+        source_events = [None] * len(packets) if events is None else events
+        for packet, spikes in zip(packets, source_events):
+            self._consume_vector(packet, soma_clamped=soma_clamped, events=spikes)
         if self._plots_ready:
             self._update_plots()
 
-    def _consume_vector(self, data, *, soma_clamped=False) -> None:
-        """
-        Advance the imaging model by one sample.
-
-        Steps
-        -----
-        1. Parse the packet and resolve ``dt``.
-        2. Update calcium, indicator saturation and frame-sampled fluorescence.
-        3. Append to the rolling buffers.
-        4. Capture the sample if a recording is in progress.
-        """
+    def _consume_vector(self, data, *, soma_clamped=False, events=None,
+                        discarded_packets=0, transport_pause_ms=0.0):
         sample = parse_spikeling_packet(data)
-        if sample is None:
+        if sample is None or not all(math.isfinite(value) for value in sample[1:]):
             return
-
-        if sample.t_ms is None:
-            self._t_fallback_ms = getattr(self, "_t_fallback_ms", 0.0) + SAMPLE_INTERVAL
-            t_ms = self._t_fallback_ms
-        else:
-            t_ms = sample.t_ms
-
-        dt_ms = SAMPLE_INTERVAL if self._t_last_ms is None else (t_ms - self._t_last_ms)
-        if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
-            dt_ms = SAMPLE_INTERVAL
+        hardware = self.source_mode == "spikeling"
+        source_dt = SAMPLE_INTERVAL
+        source_time = None if hardware else sample.t_ms
+        if source_time is not None and not math.isfinite(source_time):
+            return
+        clock_kind = "timestamp" if source_time is not None else "nominal"
+        interval = source_dt
+        interruption = None
+        if self._t_last_ms is not None:
+            if discarded_packets:
+                interval = (discarded_packets + 1) * source_dt
+                interruption = "Hardware receive queue overrun"
+            elif clock_kind != self._last_clock_kind:
+                interruption = "Source clock changed"
+            elif source_time is not None:
+                delta = source_time - self._last_input_ms
+                if delta <= 0:
+                    interruption = "Source clock reset"
+                else:
+                    interval = delta
+                    if delta > EMULATOR_GAP_MS:
+                        interruption = "Missing samples"
+        first = self._t_last_ms is None
+        t_ms = 0.0 if first else self._t_last_ms + interval
         self._t_last_ms = t_ms
+        self._last_clock_kind = clock_kind
+        self._last_input_ms = source_time
 
-        self._update_model(sample.vm0, sample.stim, sample.vm1, sample.vm2,
-                           sample.trigger, t_ms, dt_ms, soma_clamped=soma_clamped)
+        clamp_changed = self._last_clamped is not None and soma_clamped != self._last_clamped
+        self._last_clamped = soma_clamped
+        if clamp_changed and self.record_flag:
+            self.stop_recording(self.tr("Clamp mode changed"), drain=False)
+
+        rate = self._imaging_params["frame_rate"]
+        follows_model = rate == MODEL_FRAME_RATE_HZ
+        period_ms = 1000.0 / rate
+        if not follows_model and (first or self._next_frame_ms is None):
+            self._next_frame_ms = t_ms + period_ms
+        if transport_pause_ms and self.record_flag:
+            # USB delivery pauses need not indicate missing model samples.
+            self._rec_meta["transport_pauses"].append(
+                {"t_ms": t_ms, "host_pause_ms": transport_pause_ms}
+            )
+        if interruption:
+            self._append_fluorescence_frame(t_ms, (np.nan,) * N_NEURONS, (np.nan,) * N_NEURONS)
+            if not follows_model and not first and self._next_frame_ms <= t_ms:
+                skipped = math.floor((t_ms - self._next_frame_ms) / period_ms) + 1
+                self._next_frame_ms += skipped * period_ms
+            self._reset_model_state()
+            self._set_source_status(self.tr("Receiving · timing interrupted"), self.tr(interruption))
+            if self.record_flag:
+                self._rec_meta["timing_interruptions"].append(
+                    {"t_ms": t_ms, "interval_ms": interval, "reason": interruption}
+                )
+
+        if not self._ready and self.parent.ImagingConnectionFlag:
+            self._ready = True
+            if not interruption:
+                self._set_source_status(self.tr("Receiving"))
+            self._update_record_button()
+
+        frame_time = None
+        if follows_model:
+            frame_time = t_ms
+        elif not interruption and t_ms + 1e-8 >= self._next_frame_ms:
+            frame_time = self._next_frame_ms
+            self._next_frame_ms += period_ms
+
+        if first or interruption:
+            self._vm_prev[:] = (sample.vm0, sample.vm1, sample.vm2)
+            if interruption:
+                events = (0, 0, 0) if events is not None else None
+        elif clamp_changed:
+            self._vm_prev[0] = sample.vm0
+        spikes = self._update_model(
+            sample.vm0, sample.stim, sample.vm1, sample.vm2, sample.trigger,
+            t_ms, source_dt if interruption else interval, frame_time,
+            soma_clamped=soma_clamped, events=events,
+        )
         self._append_buffers(t_ms)
-
+        if frame_time is not None:
+            self._append_fluorescence_frame(t_ms, self.FluoData, self._frame_dff)
         if self.record_flag:
-            self._record_sample(t_ms)
+            self._record_sample(t_ms, frame_time, spikes, events is not None)
+
+    def _reset_model_state(self):
+        self._ca_xd.fill(0.0)
+        self._ca_xdr.fill(0.0)
+        self._t_last_spike_ms.fill(-1e12)
+        self.bleach_B = 1.0
+        baseline = self._imaging_params["CalciumBaseline"]
+        self.CalciumData.fill(baseline)
+        saturation = self._indicator_equilibrium_saturation(baseline, self._imaging_params)
+        self.IndicatorSat.fill(saturation)
+        self._S_bound.fill(saturation * self._S_tot)
+        self._update_F0_from_baseline()
+        self.FluoData[:] = self.F0
+        self._has_frame = False
+        self._frame_dff = np.full(N_NEURONS, np.nan)
 
     # -------------------------------------------------------------------------
     # Imaging Model
     # -------------------------------------------------------------------------
 
-    def autorange_fluorescence_y(self) -> None:
-        if not self._plots_ready or self._mainVB is None:
+    def autorange_imaging_y(self) -> None:
+        """Fit each optical axis to its enabled traces in the latest model time."""
+        if not self._plots_ready or self._t_last_ms is None:
             return
 
         ui = self.ui
-
-        fluo_checks = [
+        fluo_checks = (
             ui.Imaging_Fluorescence1_Checkbox,
             ui.Imaging_Fluorescence2_Checkbox,
             ui.Imaging_Fluorescence3_Checkbox,
-        ]
-
-        n_disp = max(10, int(TIME_WINDOW_DISPLAY / SAMPLE_INTERVAL / 2))
-
-
-        ys = []
-        offset = float(self._imaging_params.get("FluoOffset", 0.0)) if self.use_dff else 0.0
-
-        for i, chk in enumerate(fluo_checks):
-            if not chk.isChecked():
-                continue
-
-            # Take last n_disp samples from the rolling buffer
-            y = self.Fluo_buffers[i].data[-n_disp:]
-
-            # Apply the same ΔF/F0 transform as _update_plots()
-            if self.use_dff:
-                y_sig = y - offset
-                f0_sig = max(1e-12, float(self.F0[i]) - offset)
-                y = 100.0 * (y_sig - f0_sig) / f0_sig
-
-            # Ignore NaNs if any
-            y = y[np.isfinite(y)]
-            if y.size:
-                ys.append(y)
-
-        if not ys:
-            return
-
-        y_all = np.concatenate(ys)
-        y_min = float(np.min(y_all))
-        y_max = float(np.max(y_all))
-
-        # Avoid zero-span ranges
-        if not np.isfinite(y_min) or not np.isfinite(y_max):
-            return
-        if (y_max - y_min) < 1e-9:
-            y_min -= 1.0
-            y_max += 1.0
-
-        pad = 0.05 * (y_max - y_min)
-
-        # Set ONLY fluorescence (main VB) y-range
-        self._mainVB.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)  # freeze if it was on
-        self._mainVB.setYRange(y_min - pad, y_max + pad, padding=0.0)
-
-    def apply_indicator_preset(self, name: str, update_ui: bool = True) -> None:
-        """
-        Load a GECI preset from GECI.
-
-        Expected preset keys:
-          - Kd_uM
-          - hill_n
-          - Ind_tau_rise_ms      (indicator on / rise, ms)
-          - Ind_tau_decay_ms     (indicator off / decay, ms)
-          - dff_max          (max ΔF/F0 at saturation)
-
-    Note: cellular calcium kinetics are controlled by the CalciumRise/CalciumDecay sliders
-          and are NOT part of the GECI preset.
-        """
-        geci = GECI
-        preset = geci.get(name) or geci.get("Generic")
-        if preset is None:
-            raise ValueError("GECI preset dictionary has no 'Generic' fallback.")
-
-        self.indicator_name = name if name in geci else "Generic"
-
-        # --- indicator chemistry ---
-        self.Kd_uM = float(preset["Kd_uM"])
-        self.hill_n = float(preset["hill_n"])
-        self.dff_max = float(preset["dff_max"])
-        self.Ind_tau_rise_ms = float(preset.get("Ind_tau_rise_ms", 50.0))
-        self.Ind_tau_decay_ms = float(preset.get("Ind_tau_decay_ms", 300.0))
-
-        # Push into live parameter dictionary so model uses it
-        p = self._imaging_params
-        p["DissociationConstant"] = self.Kd_uM
-        p["HillCoef"] = self.hill_n
-        p["dff_max"] = self.dff_max
-        p["Ind_tau_rise_ms"] = self.Ind_tau_rise_ms
-        p["Ind_tau_decay_ms"] = self.Ind_tau_decay_ms
-
-        # UI update (kept from original; safe-clamped)
-        if update_ui:
-            # Existing UI updates
-            kd_val = int(round(self.Kd_uM * 10.0))
-            hill_val = int(round(self.hill_n * 100.0))
-            self.ui.Imaging_kd_Slider.setValue(
-                max(self.ui.Imaging_kd_Slider.minimum(),
-                    min(self.ui.Imaging_kd_Slider.maximum(), kd_val))
-            )
-            self.ui.Imaging_Hill_Slider.setValue(
-                max(self.ui.Imaging_Hill_Slider.minimum(),
-                    min(self.ui.Imaging_Hill_Slider.maximum(), hill_val))
-            )
-
-            # NEW: if you added these sliders in the UI
-            if hasattr(self.ui, "Imaging_DFF_Slider"):
-                # choose your encoding; example assumes slider directly stores dff_max*10
-                self.ui.Imaging_DFF_Slider.setValue(int(round(self.dff_max * 10.0)))
-
-            if hasattr(self.ui, "Imaging_IndRise_Slider"):
-                self.ui.Imaging_IndRise_Slider.setValue(int(round(self.Ind_tau_rise_ms)))
-
-            if hasattr(self.ui, "Imaging_IndDecay_Slider"):
-                self.ui.Imaging_IndDecay_Slider.setValue(int(round(self.Ind_tau_decay_ms)))
-
-        # If we are currently using ΔF/F, refresh baseline reference because Kd/n may have changed.
-        if self.use_dff:
-            self._update_F0_from_baseline()
-
-
-    # -------------------------------------------------------------------------
-    # GECI preset -> fluorescence sliders
-    # -------------------------------------------------------------------------
-
-    def _resolve_geci_preset(self, name: Optional[str] = None) -> Tuple[str, dict]:
-        """
-        Resolve an indicator name to its entry in ``GECI``.
-
-        Parameters
-        ----------
-        name : str, optional
-            Indicator name; the combo box selection is used when omitted.
-
-        Returns
-        -------
-        (str, dict)
-            Resolved name (``'Generic'`` when unknown) and its preset dictionary.
-        """
-        if name is None:
-            name = self.ui.Imaging_GECI_comboBox.currentText()
-        presets = GECI
-        resolved = name if name in presets else "Generic"
-        return resolved, presets[resolved]
-
-    def _sync_imaging_params_from_ui(self) -> None:
-        """
-        Re-read every slider into ``_imaging_params``.
-
-        Delegates to the closure installed by :meth:`_connect_parameters` so the
-        decoding rules exist in exactly one place; falls back to a direct write
-        of the indicator chemistry when the pipeline is not connected yet.
-        """
-        refresh = getattr(self, "_refresh_imaging_params", None)
-        if callable(refresh):
-            refresh()
-            return
-
-        p = self._imaging_params
-        p["DissociationConstant"] = self.Kd_uM
-        p["HillCoef"] = self.hill_n
-        p["dff_max"] = self.dff_max
-        p["Ind_tau_rise_ms"] = self.Ind_tau_rise_ms
-        p["Ind_tau_decay_ms"] = self.Ind_tau_decay_ms
-        if self.use_dff:
-            self._update_F0_from_baseline()
-
-    def apply_geci_to_fluorescence_sliders(self, name: Optional[str] = None,
-                                           redraw: bool = True) -> dict:
-        """
-        Push the selected GECI preset onto the fluorescence-tab sliders.
-
-        The slider spans are re-derived from the whole preset table first, so
-        high-affinity (Kd = 0.141 µM) and low-affinity (Kd = 1.300 µM)
-        indicators, and ΔF/F0max from 3.9 to 60, are all representable: the
-        widget can no longer silently truncate an indicator's chemistry.
-
-        Parameters
-        ----------
-        name : str, optional
-            Indicator name; the combo box selection is used when omitted.
-        redraw : bool, optional
-            Refresh the oscilloscope so the new kinetics are immediately visible.
-
-        Returns
-        -------
-        dict
-            Values effectively applied, keyed as in ``GECI``.
-
-        Notes
-        -----
-        Cellular calcium kinetics (``Imaging_CalciumRise/Decay_Slider``)
-        describe the cell, not the indicator, and are deliberately untouched.
-        """
-        resolved, preset = self._resolve_geci_preset(name)
-        self.indicator_name = resolved
-
-        configure_geci_slider_ranges(self.ui)
-
-        effective: dict[str, float] = {}
-        for slider_name, spec in GECI_SLIDER_SPECS.items():
-            requested = float(preset.get(spec.preset_key, spec.fallback))
-            slider = getattr(self.ui, slider_name, None)
-            effective[spec.preset_key] = (
-                requested if slider is None
-                else set_slider_units(slider, spec, requested)
-            )
-
-        self.Kd_uM = effective["Kd_uM"]
-        self.hill_n = effective["hill_n"]
-        self.dff_max = effective["dff_max"]
-        self.Ind_tau_rise_ms = effective["Ind_tau_rise_ms"]
-        self.Ind_tau_decay_ms = effective["Ind_tau_decay_ms"]
-
-        self._sync_imaging_params_from_ui()
-        self._refresh_geci_readouts(effective)
-        self._update_F0_from_baseline()
-
-        if redraw and self._plots_ready:
-            self._update_plots()
-
-        return effective
-
-    def _refresh_geci_readouts(self, values: dict) -> None:
-        """
-        Display the indicator chemistry currently in force.
-
-        Parameters
-        ----------
-        values : dict
-            Effective values keyed as in ``GECI``.
-        """
-        readouts = (
-            ("Imaging_GECI_ReadingsKd_Value",       f"{values['Kd_uM']:.3f}"),
-            ("Imaging_GECI_ReadingsAffinity_Value", f"{values['hill_n']:.2f}"),
-            ("Imaging_GECI_ReadingsDFF_Value",      f"{values['dff_max']:.1f}"),
-            ("Imaging_GECI_ReadingsRise_Value",     f"{values['Ind_tau_rise_ms']:.0f}"),
-            ("Imaging_GECI_ReadingsDecay_Value",    f"{values['Ind_tau_decay_ms']:.0f}"),
         )
-        for label_name, text in readouts:
-            label = getattr(self.ui, label_name, None)
-            if label is None:
-                continue
-            label.setText(text)
-            label.setStyleSheet("color: rgb(250, 250, 250);")
+        calcium_checks = (
+            ui.Imaging_Calcium1_Checkbox,
+            ui.Imaging_Calcium2_Checkbox,
+            ui.Imaging_Calcium3_Checkbox,
+        )
+        frame_times, fluorescence = self._fluorescence_plot_data()
+        sample_times = self.Time_buffer.data - self._t_last_ms
+        calcium = (buffer.data for buffer in self.Calcium_buffers)
+        self._fit_recent_y_range(self._mainVB, frame_times, fluorescence.T, fluo_checks)
+        self._fit_recent_y_range(self.calciumVB, sample_times, calcium, calcium_checks)
 
-    def _apply_GECI(self) -> None:
-        """Apply-button slot: load the combo-box indicator into the UI and model."""
-        self.apply_geci_to_fluorescence_sliders()
+    @staticmethod
+    def _fit_recent_y_range(view, times, traces, checkboxes):
+        # Allow round-off at the 300 ms boundary. Unfilled timestamps are NaN.
+        recent = (times >= -AUTO_RANGE_WINDOW_MS - 1e-6) & (times <= 0.0)
+        values = []
+        for trace, checkbox in zip(traces, checkboxes):
+            if checkbox.isChecked():
+                ys = trace[recent]
+                values.extend(ys[np.isfinite(ys)])
+        if not values:
+            return
 
-    def SelectGECI(self) -> None:
-        """Preview the parameters of the highlighted indicator."""
-        _, preset = self._resolve_geci_preset()
-        self._refresh_geci_readouts({
-            spec.preset_key: float(preset.get(spec.preset_key, spec.fallback))
-            for spec in GECI_SLIDER_SPECS.values()
-        })
+        low, high = min(values), max(values)
+        span = high - low
+        pad = 0.05 * span if span > 1e-9 else max(0.05 * abs(low), 1e-3)
+        view.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
+        view.setYRange(low - pad, high + pad, padding=0.0)
+
+    def initialise_controls(self):
+        self._slider_bindings = bind_imaging_sliders(self.ui)
+        self.apply_indicator_preset("Generic")
+        for binding in self._slider_bindings.values():
+            binding.valueChanged.connect(self._refresh_imaging_params)
+        self.SelectGECI()
+        self.ui.Imaging_AutoRange_pushButton.clicked.connect(self.autorange_imaging_y)
+        self._update_record_button()
+
+    def apply_indicator_preset(self, name):
+        if self.record_flag:
+            return
+        self.indicator_name = name if name in GECI else "Generic"
+        apply_geci_defaults(self._slider_bindings, GECI[self.indicator_name])
+        self._refresh_imaging_params()
+
+    def _show_active_indicator(self):
+        preset = GECI[self.indicator_name]
+        modified = any(
+            self._slider_bindings[name].value != round(spec.slider_position(preset[spec.preset_key]))
+            for name, spec in GECI_SLIDERS.items()
+        )
+        status = self.tr("Active: %1 (modified)") if modified else self.tr("Active: %1")
+        self.ui.Imaging_GECI_Active_label.setText(status.replace("%1", self.indicator_name))
+
+    def _on_geci_apply_clicked(self, _checked=False):
+        self.apply_indicator_preset(self.ui.Imaging_GECI_comboBox.currentText())
+
+    def SelectGECI(self):
+        """Preview the highlighted preset without changing the active state."""
+        preset = GECI.get(self.ui.Imaging_GECI_comboBox.currentText(), GECI["Generic"])
+        for name, value in (
+            ("Kd", f"{preset['Kd_uM']:.3f}"),
+            ("Affinity", f"{preset['hill_n']:.2f}"),
+            ("DFF", f"{preset['dff_max']:.1f}"),
+            ("Rise", f"{preset['Ind_tau_rise_ms']:.0f}"),
+            ("Decay", f"{preset['Ind_tau_decay_ms']:.0f}"),
+        ):
+            getattr(self.ui, f"Imaging_GECI_Readings{name}_Value").setText(value)
 
     def _update_photobleach(self, dt_ms: float, p: dict) -> None:
         dt_s = max(0.0, float(dt_ms)) / 1000.0
@@ -680,80 +510,36 @@ class ImagingGraph(QObject):
         self.bleach_B = float(np.clip(self.bleach_B, self.bleach_B_min, 1.0))
 
 
-    def _update_model(self, vm1, stim, vm2, vm3, trigger, t_ms, dt_ms, *, soma_clamped=False):
-        """
-        Update calcium and fluorescence model for all neurons.
-
-          - Calcium is updated at every incoming sample (dt_ms)
-          - Fluorescence is only *observed* on camera frames (frame_rate) and held constant between frames.
-
-        Model steps per neuron i:
-          1) spike_i  = detect_spike(Vm_i, Vm_prev_i, t_ms)
-          2) Ca_i     = update_calcium(i, spike_i, dt_ms)
-          3) Sat_i    = update_indicator_sat(i, Ca_i, dt_ms) equilibrium Hill/sigmoid or kinetic ODE
-          4) If new frame: F_i = sat_to_fluorescence(Ca_i, Sat_i, ...)
-        """
+    def _update_model(self, vm1, stim, vm2, vm3, trigger, t_ms, dt_ms, frame_time,
+                      *, soma_clamped=False, events=None):
+        """Advance the model and return the three events that drove calcium."""
         self.VmData[:] = (vm1, vm2, vm3)
         self.StimData = stim
         self.TriggerData = trigger
-
-        if not self._imaging_params:
-            return
         p = self._imaging_params
-
         self._update_photobleach(dt_ms, p)
 
-        # ------------------------------------------------------------
-        # Frame timing: frame_rate [Hz] -> period [ms]
-        # ------------------------------------------------------------
-        frame_period_ms = 1000.0 / max(1.0, float(p.get("frame_rate", 10)))
-        self._frame_phase_ms += float(dt_ms)
-
-        new_frame = (self._frame_phase_ms >= frame_period_ms)
-        if new_frame:
-            n_frames = int(self._frame_phase_ms // frame_period_ms)
-            self._frame_phase_ms -= n_frames * frame_period_ms
-
-        # Will hold fluorescence computed at this frame (only valid if new_frame=True)
-        frame_fluo = [None] * N_NEURONS
-
-        for i in range(N_NEURONS):
-            # Explicit previous-sample state; no longer coupled to the display buffer
-            spike = 0
-            if i != 0 or not soma_clamped:
-                spike = self._detect_spike(vm_now=self.VmData[i], vm_prev=self._vm_prev[i],
-                                           t_ms=t_ms, neuron_index=i)
-            self._vm_prev[i] = self.VmData[i]
-
-            # 2) Calcium transient (Wei rise/decay kernel; separate τrise and τdecay)
-            self.CalciumData[i] = self._update_calcium(neuron_index=i, spike=spike, p=p, dt_ms=dt_ms)
-
-            # 3) Indicator saturation / bound fraction (equilibrium Hill or sigmoid, OR kinetic binding ODE)
-            self.IndicatorSat[i] = self._update_indicator_sat(
-                neuron_index=i,
-                Ca_uM=self.CalciumData[i],
-                p=p,
-                dt_ms=dt_ms
-            )
-
-            # 4) Fluorescence observation (sampled at frame times)
-            if new_frame:
-                frame_fluo[i] = self._sat_to_fluorescence(
-                    neuron_index=i,
-                    Ca_uM=self.CalciumData[i],
-                    Sat=self.IndicatorSat[i],
-                    p=p
+        spikes = []
+        for i, voltage in enumerate(self.VmData):
+            if i == 0 and soma_clamped:
+                spike = 0
+            elif events is not None:
+                spike = int(bool(events[i]))
+            else:
+                spike = self._detect_spike(voltage, self._vm_prev[i], t_ms, i)
+            spikes.append(spike)
+            self._vm_prev[i] = voltage
+            self.CalciumData[i] = self._update_calcium(i, spike, p, dt_ms)
+            self.IndicatorSat[i] = self._update_indicator_sat(i, self.CalciumData[i], p, dt_ms)
+            if frame_time is not None:
+                self.FluoData[i] = self._sat_to_fluorescence(
+                    i, self.CalciumData[i], self.IndicatorSat[i], p
                 )
 
-        # Commit a new camera sample
-        if new_frame:
-            # Frame time is the boundary time (approx): current time minus remaining phase
-            t_frame_ms = float(t_ms) - float(self._frame_phase_ms)
-            self.FrameTime_buffer.append(t_frame_ms)
-            for i in range(N_NEURONS):
-                self.FluoData[i] = float(frame_fluo[i])
-                self.Fluo_frame_buffers[i].append(float(frame_fluo[i]))
-        # Else: FluoData is held between frames by design (camera sampling effect).
+        if frame_time is not None:
+            self._has_frame = True
+            self._frame_dff = self._normalised_fluorescence()
+        return spikes
 
     def _detect_spike(self, vm_now: float, vm_prev: float, t_ms: float, neuron_index: int) -> int:
         """
@@ -1099,6 +885,24 @@ class ImagingGraph(QObject):
         F0 = self._baseline_fluorescence_from_C(Cb, p)
 
         self.F0[:] = float(F0)
+        self._update_fluorescence_axis()
+
+    def _normalised_fluorescence(self):
+        offset = self._imaging_params["FluoOffset"]
+        baseline = self.F0 - offset
+        return np.divide(
+            100.0 * (self.FluoData - self.F0), baseline,
+            out=np.full(N_NEURONS, np.nan), where=np.isfinite(baseline) & (baseline > 1e-12),
+        )
+
+    def _update_fluorescence_axis(self):
+        axis = self.ui.Imaging_Oscilloscope_widget.getPlotItem().getAxis("left")
+        if self.use_dff and not np.any(self.F0 - self._imaging_params["FluoOffset"] > 1e-12):
+            axis.setLabel(self.tr("ΔF/F₀ unavailable"))
+        elif self.use_dff:
+            axis.setLabel("ΔF/F₀", units="%")
+        else:
+            axis.setLabel(self.tr("Fluorescence"), units="a.u.")
 
     def ActivateDf(self, checked=None) -> None:
         """
@@ -1119,14 +923,10 @@ class ImagingGraph(QObject):
             self._update_F0_from_baseline()
 
         # Update axis label to reflect mode
-        ax_left = self.ui.Imaging_Oscilloscope_widget.getPlotItem().getAxis("left")
-        if self.use_dff:
-            ax_left.setLabel("ΔF/F0", units="%")
-        else:
-            ax_left.setLabel("Fluorescence", units="a.u.")
+        self._update_fluorescence_axis()
 
-        # Force redraw
         if self._plots_ready:
+            self._mainVB.enableAutoRange(axis=pg.ViewBox.YAxis, enable=True)
             self._update_plots()
 
     # -------------------------------------------------------------------------
@@ -1137,25 +937,18 @@ class ImagingGraph(QObject):
         """Create rolling buffers for all plotted variables."""
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
-        self.Time_buffer = RingBuffer(self._bufsize)
+        self.Time_buffer = RingBuffer(self._bufsize, fill=np.nan)
         self.Imagingx = (np.arange(self._bufsize) - (self._bufsize - 1)) * SAMPLE_INTERVAL
 
         self.Stim_buffer = RingBuffer(self._bufsize)
         self.Trigger_buffer = RingBuffer(self._bufsize)
         self.Calcium_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
-        self.Fluo_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
         self.Vm_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
-
-        max_fps = max(1.0, self.ui.Imaging_FrameRate_Slider.maximum() * FRAME_RATE_SCALE)
-        self._frame_bufsize = int(TIME_WINDOW * max_fps / 1000.0) + 10
-        self.FrameTime_buffer = collections.deque(maxlen=self._frame_bufsize)
-        self.Fluo_frame_buffers = [collections.deque(maxlen=self._frame_bufsize)
-                                   for _ in range(N_NEURONS)]
-
-        self._frame_phase_ms = 0.0
-        self._t_last_spike_ms[:] = -1e12
-        self._vm_prev[:] = 0.0
-
+        # At model rate retain the same two-second history as the voltage display.
+        # Store time, raw fluorescence and ΔF/F₀ in one aligned ring.
+        self._plot_frames = RingBuffer(self._bufsize, n_channels=1 + 2 * N_NEURONS)
+        self._plot_frame_count = 0
+        self._vm_prev.fill(0.0)
 
     def _append_buffers(self, t_ms):
         """Append latest model states to rolling buffers."""
@@ -1165,7 +958,6 @@ class ImagingGraph(QObject):
 
         for i in range(N_NEURONS):
             self.Calcium_buffers[i].append(float(self.CalciumData[i]))
-            self.Fluo_buffers[i].append(float(self.FluoData[i]))
             self.Vm_buffers[i].append(float(self.VmData[i]))
 
     # -------------------------------------------------------------------------
@@ -1191,17 +983,15 @@ class ImagingGraph(QObject):
 
         pi.showAxis("right")
 
-        ax_left = pi.getAxis("left")
         ax_right = pi.getAxis("right")
         ax_bottom = pi.getAxis("bottom")
 
         ax_bottom.enableAutoSIPrefix(False)
-        ax_bottom.setLabel("Time", units="ms")
+        clock_label = (self.tr("Model time (nominal)") if self.source_mode == "spikeling"
+                       else self.tr("Simulation time"))
+        ax_bottom.setLabel(clock_label, units="ms")
 
-        if self.use_dff:
-            ax_left.setLabel("ΔF/F0", units="%")   # traces are scaled by 100
-        else:
-            ax_left.setLabel("Fluorescence", units="a.u.")
+        self._update_fluorescence_axis()
 
         ax_right.setLabel("Stimulus / Vm", units="a.u. / mV")
 
@@ -1209,8 +999,7 @@ class ImagingGraph(QObject):
         vb = pi.getViewBox()
         self._mainVB = vb
         vb.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
-        vb.setXRange(-TIME_WINDOW_DISPLAY, 0, padding=0)
-        vb.setLimits(xMin=-TIME_WINDOW, xMax=0)
+        self._set_imaging_time_window()
         vb.enableAutoRange(axis=pg.ViewBox.YAxis, enable=True)
         vb.setMouseEnabled(x=True, y=False)
 
@@ -1255,8 +1044,10 @@ class ImagingGraph(QObject):
         self.calciumVB.enableAutoRange(axis=pg.ViewBox.YAxis, enable=True)
 
         # Keep geometries aligned
-        vb.sigResized.connect(self.update_views)
-        vb.sigRangeChanged.connect(lambda *_: self.update_views())
+        if getattr(self, "_viewbox_with_callbacks", None) is not vb:
+            vb.sigResized.connect(self.update_views)
+            vb.sigRangeChanged.connect(self.update_views)
+            self._viewbox_with_callbacks = vb
         self.update_views()
 
         # Curves
@@ -1300,7 +1091,26 @@ class ImagingGraph(QObject):
 
         self._plots_ready = True
 
-    def update_views(self):
+    def _set_imaging_time_window(self):
+        if self._mainVB is None:
+            return
+        period = 1000.0 / self._imaging_params["frame_rate"]
+        window = max(TIME_WINDOW_DISPLAY, 3 * period)
+        self._mainVB.setLimits(xMin=-max(TIME_WINDOW, window), xMax=0)
+        self._mainVB.setXRange(-window, 0, padding=0)
+
+    def _append_fluorescence_frame(self, t_ms, raw, dff):
+        self._plot_frames.append((t_ms, *raw, *dff))
+        self._plot_frame_count = min(self._plot_frame_count + 1, self._bufsize)
+
+    def _fluorescence_plot_data(self):
+        if not self._plot_frame_count:
+            return np.empty(0), np.empty((0, N_NEURONS))
+        frames = self._plot_frames.data[-self._plot_frame_count:]
+        start = 1 + N_NEURONS if self.use_dff else 1
+        return frames[:, 0] - self._t_last_ms, frames[:, start:start + N_NEURONS]
+
+    def update_views(self, *_):
         """
         Keep extra ViewBoxes aligned to the main ViewBox geometry.
         This is called on resize/range changes.
@@ -1341,23 +1151,12 @@ class ImagingGraph(QObject):
         fluo_checks = [ui.Imaging_Fluorescence1_Checkbox, ui.Imaging_Fluorescence2_Checkbox, ui.Imaging_Fluorescence3_Checkbox]
         fluo_curves = [self.Fluocurve1, self.Fluocurve2, self.Fluocurve3]
 
-        for i in range(N_NEURONS):
+        frame_x, frame_y = self._fluorescence_plot_data()
+        for i, curve in enumerate(fluo_curves):
             visible = fluo_checks[i].isChecked()
-            fluo_curves[i].setVisible(visible)
-            if not visible:
-                continue
-
-            y = self.Fluo_buffers[i].data
-
-            if self.use_dff:
-                # Offset-corrected ΔF/F0 (kept from your original approach)
-                offset = float(self._imaging_params.get("FluoOffset", 0.0))
-                y_sig = y - offset
-                f0_sig = float(self.F0[i]) - offset
-                f0_sig = max(1e-12, f0_sig)
-                y = 100 * (y_sig - f0_sig) / f0_sig
-
-            fluo_curves[i].setData(x, y)
+            curve.setVisible(visible)
+            if visible:
+                curve.setData(frame_x, frame_y[:, i], connect="finite")
 
         # Vm
         vm_checks = [ui.Imaging_Vm1_Checkbox, ui.Imaging_Vm2_Checkbox, ui.Imaging_Vm3_Checkbox]
@@ -1379,404 +1178,195 @@ class ImagingGraph(QObject):
     # Recording
     # -------------------------------------------------------------------------
 
-    def _handle_recording(self):
-        """
-        Manage record toggle and export on stop.
-
-        Updated behavior (keeps original architecture + CSV output):
-          - Still writes the original sample-rate CSV at: <base>.csv
-          - Additionally writes a frame-rate CSV at: <base>_frames.csv
-          - Additionally writes metadata JSON at: <base>_meta.json
-
-        """
-        checked = bool(self.ui.Imaging_DataRecording_Record_pushButton.isChecked())
-
-        # -------------------------
-        # Start edge: OFF -> ON
-        # -------------------------
-        if checked and (not self.record_flag):
-            self.record_flag = True
-
-            # Ensure sample buffers exist + clear (keeps original columns)
-            if not hasattr(self, "_rec") or not isinstance(self._rec, dict):
-                self._rec = {}
-
-            for k in [
-                "t_ms", "stim", "trig",
-                "vm1", "vm2", "vm3",
-                "ca1_uM", "ca2_uM", "ca3_uM",
-                "F1", "F2", "F3",
-                # new (mapping)
-                "frame_idx", "frame_t_ms"
-            ]:
-                self._rec.setdefault(k, [])
-                self._rec[k].clear()
-
-            # Frame-rate recording buffers (new)
-            self._rec_frames = {
-                "frame_idx": [],
-                "t_frame_ms": [],
-                "sample_idx": [],
-                "F1": [], "F2": [], "F3": [],
-            }
-
-            # Recording state for frame mapping
-            self._rec_frame_idx = -1
-            self._rec_last_frame_time = None
-
-            # Snapshot metadata at start (kept lightweight + JSON-safe)
-            try:
-                import datetime
-                start_iso = datetime.datetime.now().isoformat(timespec="seconds")
-            except Exception:
-                start_iso = None
-
-            def _json_safe(v):
-                # Convert numpy scalars etc. to Python types
-                try:
-                    import numpy as _np
-                    if isinstance(v, (_np.generic,)):
-                        return v.item()
-                except Exception:
-                    pass
-                if isinstance(v, (float, int, str, bool)) or v is None:
-                    return v
-                # last resort
-                try:
-                    return float(v)
-                except Exception:
-                    return str(v)
-
-            self._rec_meta = {
-                "recording_start_iso": start_iso,
-                "sample_interval_ms_fallback": float(SAMPLE_INTERVAL),
-                "spike_threshold_mV": float(getattr(self, "SpikeThreshold", -20.0)),
-                "spike_refractory_ms": float(getattr(self, "SpikeRefractory_ms", 3.0)),
-                "indicator_name": str(getattr(self, "indicator_name", "Generic")),
-                "fluorescence_model": str(getattr(self, "fluorescence_model", "linear")),
-                "imaging_params": {k: _json_safe(v) for k, v in getattr(self, "_imaging_params", {}).items()},
-                "columns": {
-                    "samples_csv": [
-                        "Time (ms)", "Stim", "Trigger",
-                        "Vm1 (mV)", "Vm2 (mV)", "Vm3 (mV)",
-                        "Ca1 (uM)", "Ca2 (uM)", "Ca3 (uM)",
-                        "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)",
-                        "FrameIdx", "FrameTime (ms)"
-                    ],
-                    "frames_csv": [
-                        "FrameIdx", "FrameTime (ms)", "NearestSampleIdx",
-                        "F1 (a.u.)", "F2 (a.u.)", "F3 (a.u.)"
-                    ]
-                }
-            }
-
-            return  # done for this call
-
-        # -------------------------
-        # Stop edge: ON -> OFF
-        # -------------------------
-        if (not checked) and self.record_flag:
-            self._export_csv()
-            self.record_flag = False
-
-            # Clear buffers to free memory
-            try:
-                for k in self._rec:
-                    self._rec[k].clear()
-            except Exception:
-                pass
-            try:
-                for k in self._rec_frames:
-                    self._rec_frames[k].clear()
-            except Exception:
-                pass
-
-            self._rec_frame_idx = -1
-            self._rec_last_frame_time = None
+    def on_record_clicked(self):
+        if self.record_flag:
+            self.stop_recording(self.tr("Stopped"))
+            return
+        if not self._ready and not self._save_pending:
+            self._update_record_button()
             return
 
-        # No edge: do nothing
+        filename = self.ui.Imaging_DataRecording_RecordFolder_value.text()
+        source_at_click = self.source_mode
+        if not self._save_pending or filename != self._recording_filename:
+            path = prepare_recording(self.parent, filename, SIDECAR_SUFFIXES)
+            if path is None:
+                self._update_record_button()
+                return
+            self._recording_path = path
+            self._recording_filename = filename
+        if self._save_pending:
+            self.stop_recording()
+            return
 
-    def _record_sample(self, t_ms: float) -> None:
-        """
-        Append the latest sample to recording buffers.
+        self._drain_hardware()
+        self._samples = []
+        self._frames = []
+        self._last_recorded_frame_ms = None
+        self._rec_meta = {
+            "schema_version": 2,
+            "recording_start_iso": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
+            "source": self.source_mode,
+            "clock": "board neuron model time (nominal)" if self.source_mode == "spikeling" else "emulator simulation",
+            "neuron_model_step_ms": SAMPLE_INTERVAL,
+            "sample_interval_ms_fallback": SAMPLE_INTERVAL,
+            "board_packet_period_ms_nominal": (
+                BOARD_PACKET_PERIOD_MS if self.source_mode == "spikeling" else None
+            ),
+            "soma_clamped": self._last_clamped,
+            "spike_threshold_mV": self.SpikeThreshold,
+            "spike_refractory_ms": self.SpikeRefractory_ms,
+            "indicator_name": self.indicator_name,
+            "fluorescence_model": self.fluorescence_model,
+            "imaging_params": dict(self._imaging_params),
+            "normalisation": {"method": "model baseline", "F0_a.u.": self.F0.tolist(),
+                              "offset_a.u.": self._imaging_params["FluoOffset"]},
+            "event_provenance": [],
+            "sample_clock_kinds": [],
+            "timing_interruptions": [],
+            "transport_pauses": [],
+            "columns": {"samples_csv": SAMPLE_COLUMNS, "frames_csv": FRAME_COLUMNS},
+        }
+        self.record_flag = True
+        self.ui.Imaging_RecordingStatus_label.setText(self.tr("Recording"))
+        self._update_record_button()
 
-        New: also records a clean frame-rate table + per-sample mapping to frame index/time,
-        while preserving the original per-sample columns (including held fluorescence).
-        """
-        # -------------------------
-        # 1) Detect if a new frame was committed by _update_model()
-        # -------------------------
-        current_frame_time = None
-        if (self.FrameTime_buffer is not None) and (len(self.FrameTime_buffer) > 0):
-            try:
-                current_frame_time = float(self.FrameTime_buffer[-1])
-            except Exception:
-                current_frame_time = None
+    def _update_record_button(self):
+        button = self.ui.Imaging_DataRecording_Record_pushButton
+        button.setChecked(self.record_flag)
+        button.setEnabled(self._ready or self.record_flag or self._save_pending)
+        label = self.tr("Record")
+        if self.record_flag:
+            label = self.tr("Stop recording")
+        elif self._save_pending:
+            label = self.tr("Retry save")
+        button.setText(label)
+        self.ui.Imaging_DataRecording_RecordFolder_value.setEnabled(not self.record_flag)
+        self.ui.Imaging_parameter_stackedWidget.setEnabled(not self.record_flag)
 
-        # If we see a new frame time, append ONE frame row and advance frame index
-        if (current_frame_time is not None) and (current_frame_time != self._rec_last_frame_time):
-            self._rec_last_frame_time = current_frame_time
-            self._rec_frame_idx += 1
+    def stop_recording(self, reason=None, *, drain=True):
+        if self.record_flag and drain:
+            self._drain_hardware()
+        if not self.record_flag and not self._save_pending:
+            return True
+        if self.record_flag:
+            self._rec_meta["stop_reason"] = reason or self.tr("Stopped")
+            self._rec_meta["recording_stop_iso"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+        self.record_flag = False
+        status = self.ui.Imaging_RecordingStatus_label
+        count = len(self._samples)
+        if not count:
+            status.setText(self.tr("Stopped: no samples received"))
+            self._update_record_button()
+            return True
+        try:
+            self._export_csv()
+        except (OSError, ValueError) as error:
+            self._save_pending = True
+            self._update_record_button()
+            status.setText(self.tr("Save failed: samples retained"))
+            themed_message_box(
+                self.parent, self.tr("Imaging recording could not be saved"),
+                self.tr("Samples are still in memory. Correct the destination or change the name, then click Retry save.")
+                + "\n\n" + str(error),
+            ).exec()
+            return False
+        self._save_pending = False
+        self._samples.clear()
+        self._frames.clear()
+        status.setText(self.tr("Saved %1 samples").replace("%1", f"{count:,}"))
+        status.setToolTip(str(self._recording_path))
+        self._update_record_button()
+        return True
 
-            # "Nearest sample" is the sample row that will be appended now
-            nearest_sample_idx = len(self._rec["t_ms"])
+    def _record_sample(self, t_ms, frame_time, spikes, native_events):
+        clocks = self._rec_meta["sample_clock_kinds"]
+        if self._last_clock_kind not in clocks:
+            clocks.append(self._last_clock_kind)
+        provenance = "source events" if native_events else "Vm threshold crossings"
+        if provenance not in self._rec_meta["event_provenance"]:
+            self._rec_meta["event_provenance"].append(provenance)
 
-            # Frame CSV buffers
-            if not hasattr(self, "_rec_frames"):
-                self._rec_frames = {"frame_idx": [], "t_frame_ms": [], "sample_idx": [], "F1": [], "F2": [], "F3": []}
-
-            self._rec_frames["frame_idx"].append(int(self._rec_frame_idx))
-            self._rec_frames["t_frame_ms"].append(float(current_frame_time))
-            self._rec_frames["sample_idx"].append(int(nearest_sample_idx))
-            self._rec_frames["F1"].append(float(self.FluoData[0]))
-            self._rec_frames["F2"].append(float(self.FluoData[1]))
-            self._rec_frames["F3"].append(float(self.FluoData[2]))
-
-        # For samples, map to the latest known frame (or -1/NaN if none yet)
-        frame_idx_for_sample = int(getattr(self, "_rec_frame_idx", -1))
-        frame_t_for_sample = float(self._rec_last_frame_time) if (self._rec_last_frame_time is not None) else float(
-            "nan")
-
-        # -------------------------
-        # 2) Append sample row (original columns preserved)
-        # -------------------------
-        self._rec["t_ms"].append(float(t_ms))
-        self._rec["stim"].append(float(self.StimData))
-        self._rec["trig"].append(float(self.TriggerData))
-
-        self._rec["vm1"].append(float(self.VmData[0]))
-        self._rec["vm2"].append(float(self.VmData[1]))
-        self._rec["vm3"].append(float(self.VmData[2]))
-
-        self._rec["ca1_uM"].append(float(self.CalciumData[0]))
-        self._rec["ca2_uM"].append(float(self.CalciumData[1]))
-        self._rec["ca3_uM"].append(float(self.CalciumData[2]))
-
-        # Kept for backward compatibility: held between frames by design
-        self._rec["F1"].append(float(self.FluoData[0]))
-        self._rec["F2"].append(float(self.FluoData[1]))
-        self._rec["F3"].append(float(self.FluoData[2]))
-
-        # New mapping columns
-        self._rec["frame_idx"].append(frame_idx_for_sample)
-        self._rec["frame_t_ms"].append(frame_t_for_sample)
+        if not self._has_frame:
+            self._last_recorded_frame_ms = None
+        if frame_time is not None:
+            self._frames.append((
+                len(self._frames), frame_time, len(self._samples), *self.FluoData, t_ms, *self._frame_dff
+            ))
+            self._last_recorded_frame_ms = frame_time
+        has_frame = self._last_recorded_frame_ms is not None
+        held = self.FluoData if has_frame else (np.nan,) * N_NEURONS
+        self._samples.append((
+            t_ms, self.StimData, self.TriggerData, *self.VmData, *self.CalciumData, *held,
+            len(self._frames) - 1 if has_frame else -1, self._last_recorded_frame_ms, *spikes
+        ))
 
     def _export_csv(self):
-        """
-        Write the recorded imaging session to disk.
+        path = self._recording_path
+        frames_path, meta_path = (path.with_name(path.stem + suffix) for suffix in SIDECAR_SUFFIXES)
+        metadata = dict(self._rec_meta, n_samples=len(self._samples), n_frames=len(self._frames))
+        with TemporaryDirectory(dir=path.parent) as staging:
+            temporary = Path(staging)
+            sample_tmp = temporary / path.name
+            frame_tmp = temporary / frames_path.name
+            meta_tmp = temporary / meta_path.name
+            pd.DataFrame(self._samples, columns=SAMPLE_COLUMNS).to_csv(sample_tmp, index=False)
+            pd.DataFrame(self._frames, columns=FRAME_COLUMNS).to_csv(frame_tmp, index=False)
+            meta_tmp.write_text(json.dumps(metadata, indent=2, allow_nan=False), encoding="utf-8")
+            files = ((sample_tmp, path), (frame_tmp, frames_path), (meta_tmp, meta_path))
+            backups = {}
+            for index, (_, destination) in enumerate(files):
+                if destination.exists():
+                    backup = temporary / f".previous-{index}"
+                    copyfile(destination, backup)
+                    backups[destination] = backup
 
-        Three artefacts are produced, as documented in ``_handle_recording``
-        (the frame table and the metadata sidecar were previously accumulated
-        in memory and then discarded):
+            published = []
+            try:
+                # Publish metadata last and roll back any replacements if a later write fails.
+                for staged, destination in files:
+                    staged.replace(destination)
+                    published.append(destination)
+            except OSError:
+                for destination in reversed(published):
+                    if destination in backups:
+                        backups[destination].replace(destination)
+                    else:
+                        destination.unlink()
+                raise
 
-        - ``<base>.csv``         : per-sample stream with frame-index mapping
-        - ``<base>_frames.csv``  : one row per camera frame
-        - ``<base>_meta.json``   : model parameters captured at record start
-        """
-        if (not hasattr(self, "_rec")) or (len(self._rec.get("t_ms", [])) == 0):
-            return
-
-        sample_path = getattr(self.ui, "Imaging_recording_path", None)
-        if sample_path is None:
-            return
-        stem = sample_path.with_suffix("")
-
-        n = len(self._rec["t_ms"])
-        pd.DataFrame({
-            "Time (ms)": self._rec["t_ms"],
-            "Stim": self._rec["stim"],
-            "Trigger": self._rec["trig"],
-            "Vm1 (mV)": self._rec["vm1"],
-            "Vm2 (mV)": self._rec["vm2"],
-            "Vm3 (mV)": self._rec["vm3"],
-            "Ca1 (uM)": self._rec["ca1_uM"],
-            "Ca2 (uM)": self._rec["ca2_uM"],
-            "Ca3 (uM)": self._rec["ca3_uM"],
-            "F1 (a.u.)": self._rec["F1"],
-            "F2 (a.u.)": self._rec["F2"],
-            "F3 (a.u.)": self._rec["F3"],
-            "FrameIdx": self._rec.get("frame_idx", [-1] * n),
-            "FrameTime (ms)": self._rec.get("frame_t_ms", [float("nan")] * n),
-        }).to_csv(sample_path, index=False)
-
-        frames = getattr(self, "_rec_frames", None)
-        if frames and frames["frame_idx"]:
-            pd.DataFrame({
-                "FrameIdx": frames["frame_idx"],
-                "FrameTime (ms)": frames["t_frame_ms"],
-                "NearestSampleIdx": frames["sample_idx"],
-                "F1 (a.u.)": frames["F1"],
-                "F2 (a.u.)": frames["F2"],
-                "F3 (a.u.)": frames["F3"],
-            }).to_csv(str(stem) + "_frames.csv", index=False)
-
-        meta = getattr(self, "_rec_meta", None)
-        if meta:
-            meta["n_samples"] = n
-            meta["n_frames"] = len(frames["frame_idx"]) if frames else 0
-            meta["recording_stop_iso"] = datetime.datetime.now().isoformat(timespec="seconds")
-            with open(str(stem) + "_meta.json", "w", encoding="utf-8") as handle:
-                json.dump(meta, handle, indent=2)
-
-    # -------------------------------------------------------------------------
-    # UI Helpers
-    # -------------------------------------------------------------------------
-
-    def _connect_parameters(self):
-        """
-        Cache imaging parameter values from sliders and keep them updated.
-        """
-        if getattr(self, "_params_connected", False):
-            return
-        self._params_connected = True
-
-        ui = self.ui
+    def _refresh_imaging_params(self):
+        """Cache accepted slider values in the model's units."""
         p = self._imaging_params
+        previous_rate = p.get("frame_rate")
+        for name, spec in IMAGING_SLIDERS.items():
+            p[spec.parameter] = spec.display_value(self._slider_bindings[name].value) * spec.model_scale
+        if previous_rate != p["frame_rate"]:
+            self._next_frame_ms = None
+            self._set_imaging_time_window()
 
-        def update(_=None):
-            # Camera parameters
-            p["frame_rate"] = max(1.0, ui.Imaging_FrameRate_Slider.value() * FRAME_RATE_SCALE)
-            p["PMT"] = ui.Imaging_PMT_Slider.value() / 100.0
-            p["Laser"] = ui.Imaging_Laser_Slider.value() / 100.0
+        p["Sig_k"] = self.sig_k
+        p["Sig_c_half_uM"] = self.sig_c_half_uM
+        p.setdefault("Lin_alpha", 1.0)
+        p.setdefault("Lin_beta", 0.0)
+        p.setdefault("Bind_S_tot", self._S_tot)
+        p.setdefault("Bind_n", self._bind_n)
+        p.setdefault("Bind_k_on", self._k_on)
+        p.setdefault("Bind_k_off", self._k_off)
+        p["PMT_excess_noise_sigma"] = self.pmt_excess_noise_sigma
+        p["PMT_excess_noise_gamma"] = self.pmt_excess_noise_gamma
+        self._update_F0_from_baseline()
+        self._show_active_indicator()
 
-            # Calcium parameters (µM)
-            # Baseline
-            p["CalciumBaseline"] = ui.Imaging_CalciumBaseline_Slider.value() / 100.0
+    def _set_source_status(self, text, detail=None):
+        self.ui.Imaging_ConnectButton.setText(text)
+        clock = (self.tr("Board model time: 0.1 ms per sample. Nominal USB cadence: 2 ms per packet.")
+                 if self.source_mode == "spikeling" else self.tr("Emulator simulation time"))
+        self.ui.Imaging_ConnectButton.setToolTip(f"{detail} · {clock}" if detail else clock)
 
-            # Spike amplitude per event (µM)
-            p["SpikeRise"] = ui.Imaging_CalciumJump_Slider.value() / 100.0
-
-            # Internal calcium noise magnitude (µM * sqrt(s))
-            p["NoiseScale"] = ui.Imaging_CalciumNoise_Slider.value() / 10.0
-
-            # τdecay_ms: default from preset
-            p["Ca_tau_decay_ms"] = float(ui.Imaging_CalciumDecay_Slider.value())
-
-            # τrise_ms: default from preset
-            p["Ca_tau_rise_ms"] = float(ui.Imaging_CalciumRise_Slider.value())
-
-            # Fluorescence / imaging gain parameters
-            p["FluoScale"] = ui.Imaging_FluoScale_Slider.value() / 10.0
-            p["FluoOffset"] = ui.Imaging_FluoOffset_Slider.value()
-
-            # Additive noise floor + shot noise factor
-            p["FluoNoiseSigma"] = ui.Imaging_FluoNoise_Slider.value() / 5000.0
-            p["PhotoShotNoise"] = ui.Imaging_PhotoShotNoise_Slider.value() / 1e6
-
-            # Single decoding source: GECI_SLIDER_SPECS
-            # Indicator saturation parameters (µM)
-            # Indicator kinetics (ms)
-            # Indicator dynamics max ΔF/F0
-            p["DissociationConstant"] = slider_units(ui, "Imaging_kd_Slider")
-            p["HillCoef"] = slider_units(ui, "Imaging_Hill_Slider")
-            p["Ind_tau_rise_ms"] = slider_units(ui, "Imaging_IndRise_Slider")
-            p["Ind_tau_decay_ms"] = slider_units(ui, "Imaging_IndDecay_Slider")
-            p["dff_max"] = slider_units(ui, "Imaging_DFF_Slider")
-
-            # Optional sigmoid params (kept configurable via dict even if no UI exists yet)
-            p["Sig_k"] = float(getattr(self, "sig_k", 10.0))
-            p["Sig_c_half_uM"] = float(getattr(self, "sig_c_half_uM", 0.15))
-
-            # Optional linear params (Vogelstein-like)
-            p["Lin_alpha"] = float(p.get("Lin_alpha", 1.0))
-            p["Lin_beta"] = float(p.get("Lin_beta", 0.0))
-
-            # Optional binding kinetics params (Pham-like), if/when you expose them in UI
-            p["Bind_S_tot"] = float(p.get("Bind_S_tot", self._S_tot))
-            p["Bind_n"] = float(p.get("Bind_n", self._bind_n))
-            p["Bind_k_on"] = float(p.get("Bind_k_on", self._k_on))
-            p["Bind_k_off"] = float(p.get("Bind_k_off", self._k_off))
-
-            # PMT
-            p["PMT_excess_noise_sigma"] = float(getattr(self, "pmt_excess_noise_sigma", 0.02))
-            p["PMT_excess_noise_gamma"] = float(getattr(self, "pmt_excess_noise_gamma", 2.0))
-
-            # If we are plotting ΔF/F, keep F0 synchronized with baseline settings
-            if self.use_dff:
-                self._update_F0_from_baseline()
-
-        # Initial cache fill
-        update()
-
-        # Slider connections (explicit because Ui class is not a QObject)
-        sliders = [
-            ui.Imaging_FrameRate_Slider,
-            ui.Imaging_PMT_Slider,
-            ui.Imaging_Laser_Slider,
-            ui.Imaging_CalciumDecay_Slider,
-            ui.Imaging_CalciumJump_Slider,
-            ui.Imaging_CalciumBaseline_Slider,
-            ui.Imaging_CalciumNoise_Slider,
-            ui.Imaging_IndRise_Slider,
-            ui.Imaging_IndDecay_Slider,
-            ui.Imaging_DFF_Slider,
-            ui.Imaging_FluoScale_Slider,
-            ui.Imaging_FluoOffset_Slider,
-            ui.Imaging_FluoNoise_Slider,
-            ui.Imaging_Hill_Slider,
-            ui.Imaging_PhotoShotNoise_Slider,
-            ui.Imaging_kd_Slider,
-        ]
-        for slider in sliders:
-            slider.valueChanged.connect(update)
-
-    def _update_connect_button(self, connected: bool):
-        """Update connect button appearance."""
-        if connected:
-            self.ui.Imaging_ConnectButton.setText("Connected")
-            self.ui.Imaging_ConnectButton.setStyleSheet(
-                f"color: rgb{tuple(DarkSolarized[3])};\n"
-                f"background-color: rgb{tuple(DarkSolarized[11])};\n"
-                f"border: 1px solid rgb{tuple(DarkSolarized[14])};\n"
-                f"border-radius: 10px;"
-            )
-        else:
-            self.ui.Imaging_ConnectButton.setText("Connect Imaging screen to Spikeling screen")
-            self.ui.Imaging_ConnectButton.setStyleSheet(
-                f"color: rgb{tuple(DarkSolarized[14])};\n"
-                f"background-color: rgb{tuple(DarkSolarized[2])};\n"
-                f"border: 1px solid rgb{tuple(DarkSolarized[14])};\n"           
-                f"border-radius: 10px;"
-            )
-
-    def bind_geci_controls(self) -> None:
-        """
-        Wire the GECI selector and its Apply button to this controller.
-
-        Binding here rather than in ``NavigationButtons``
-        fixes two defects of the previous wiring: the combo box called the
-        *unbound* ``ImagingGraph.SelectGECI`` with the main window as ``self``
-        (so the preview silently operated on the wrong object), and the slots
-        were re-connected on every call, stacking duplicate invocations.
-
-        Notes
-        -----
-        ``currentTextChanged`` is preferred over ``currentIndexChanged`` so the
-        preview stays correct when indicators are inserted into the combo box.
-        """
-        combo = getattr(self.ui, "Imaging_GECI_comboBox", None)
-        if combo is not None:
-            combo.currentTextChanged.connect(self._on_geci_selected)
-
-        for button_name in ("Imaging_GECI_pushButton",
-                            "Imaging_GECI_Apply_pushButton"):
-            button = getattr(self.ui, button_name, None)
-            if button is not None:
-                button.clicked.connect(self._on_geci_apply_clicked)
-                break
-
-    def _on_geci_selected(self, _name: str = "") -> None:
-        """Preview the highlighted indicator without touching the model."""
-        self.SelectGECI()
-
-    def _on_geci_apply_clicked(self, _checked: bool = False) -> None:
-        """Apply the selected indicator to the fluorescence sliders and model."""
-        self.apply_geci_to_fluorescence_sliders()
-
-    # -------------------------------------------------------------------------
-    # Cleanup
-    # -------------------------------------------------------------------------
+    def bind_geci_controls(self):
+        self.ui.Imaging_GECI_comboBox.currentIndexChanged.connect(self.SelectGECI)
+        self.ui.Imaging_GECI_pushButton.clicked.connect(self._on_geci_apply_clicked)
 
     def cleanup(self):
         """Reset imaging state and clear plots."""
@@ -1813,9 +1403,13 @@ class ImagingGraph(QObject):
                 pass
             self.calciumAxis = None
 
-        # Reset timing and model states
+        # Reset the source clock and frame schedule.
         self._t_last_ms = None
-        self._frame_phase_ms = 0.0
+        self._last_input_ms = None
+        self._last_clock_kind = None
+        self._last_clamped = None
+        self._next_frame_ms = None
+        self._last_arrival = None
         self._t_last_spike_ms[:] = -1e12
         self._ca_xd[:] = 0.0
         self._ca_xdr[:] = 0.0
