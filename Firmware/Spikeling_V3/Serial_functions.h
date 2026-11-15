@@ -765,6 +765,7 @@ inline void LED_off(){
 
 inline void Connected(){
   if (SCmd.next() != nullptr) return;                  // No-argument command: reject unexpected data without changing state.
+  stream_voltage_command = false;                    // Begin each desktop handshake in legacy telemetry mode.
   digitalWrite(pins.gpio.led_r,HIGH);delay(5);
   digitalWrite(pins.gpio.led_g,HIGH);digitalWrite(pins.gpio.led_r,LOW);delay(5);
   digitalWrite(pins.gpio.led_b,HIGH);digitalWrite(pins.gpio.led_g,LOW);delay(5);
@@ -778,6 +779,11 @@ inline void Unrecognized(const char *cmd) {
 }
 
 
+
+inline void StreamVoltageCommand(){
+  if (SCmd.next() != nullptr) return;                 // Accept only a no-argument request.
+  stream_voltage_command = true;                     // Include the applied setpoint in normal VC samples.
+}
 
 inline void SerialFunctions(){
   SCmd.addCommand("DT",SetRefreshRate);
@@ -833,6 +839,7 @@ inline void SerialFunctions(){
   SCmd.addCommand("LED1",LED_on);
   SCmd.addCommand("LED0",LED_off);
   SCmd.addCommand("CON",Connected);
+  SCmd.addCommand("VCSTRM",StreamVoltageCommand); // Opt in to the extended voltage-clamp sample frame.
   SCmd.setDefaultHandler(Unrecognized);
 }
 

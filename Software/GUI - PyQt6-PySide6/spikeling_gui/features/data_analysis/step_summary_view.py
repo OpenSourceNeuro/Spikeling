@@ -64,13 +64,16 @@ class StepSummaryView(QObject):
         if self.averages:
             page.sync_plot_x_range((self.form.averageInputPlot, self.form.plot), source, limits)
 
-    def load(self, *, iv=False, averages=False):
+    def load(self, *, averages=False):
         self.averages = averages
         sweeps = self.sweeps
         self.recording = sweeps.recording
         ui = self.form
         neuron, _, self.signal_label, unit, _ = sweeps.response()
         self.neuron = neuron
+        self.is_clamp_current = (
+            self.recording.clamp_mode == "VC" and neuron == 0 and sweeps.form.signalCombo.currentIndex() == 1
+        )
         self.spikes = sweeps.window.analysis_spikes if neuron != 0 or self.recording.clamp_mode == "CC" else None
         ui.contextLabel.setText(self.recording.source.name)
         ui.averageInputPlot.setVisible(averages)
@@ -107,7 +110,7 @@ class StepSummaryView(QObject):
                 metrics = [*SPIKE_METRICS, *metrics]
             for key, label in metrics:
                 ui.metricCombo.addItem(label, key)
-            ui.inputCombo.setCurrentIndex(ui.inputCombo.findData("command_voltage" if iv else sweeps.input_key))
+            ui.inputCombo.setCurrentIndex(ui.inputCombo.findData(sweeps.input_key))
         self.input_changed()
 
     def input_changed(self, *args):
@@ -135,6 +138,7 @@ class StepSummaryView(QObject):
         points, self.skipped = points_for_sweeps(
             self.recording, self.sweeps.sweeps, self.sweeps.metrics, self.sweeps.is_included, command, self.tolerance,
             measure_stimulus_change=bool(self.sweeps.input_key and not key),
+            settled_command=key == "command_voltage",
         )
         self.protocols = protocol_groups(points, self.recording.nominal_step_ms, self.tolerance)
         for points in self.protocols:
@@ -153,6 +157,8 @@ class StepSummaryView(QObject):
             self.draw_averages()
             return
         ui.plot.clear()
+        is_iv_curve = self.is_clamp_current and ui.inputCombo.currentData() == "command_voltage"
+        ui.plot.setTitle("I–V curve" if is_iv_curve else None)
         ui.plot.enableAutoRange(axis="x")
         ui.plot.setLabel("bottom", ui.inputCombo.currentText())
         ui.plot.setLabel("left", ui.metricCombo.currentText())
@@ -215,6 +221,7 @@ class StepSummaryView(QObject):
     def draw_averages(self):
         ui = self.form
         input_plot, response_plot = ui.averageInputPlot, ui.plot
+        response_plot.setTitle(None)
         legend = response_plot.plotItem.legend or response_plot.addLegend()
         legend.clear()
         for plot in (input_plot, response_plot):
@@ -246,7 +253,7 @@ class StepSummaryView(QObject):
             return
         pre = self.sweeps.settings["Requested baseline (ms)"]
         post = self.sweeps.settings["Requested recovery (ms)"]
-        end = max(point.duration_ms for point in points) + post
+        end = max(point.sweep.step.offset_ms - point.sweep.step.onset_ms for point in points) + post
         sample_ms = self.recording.nominal_step_ms
         time_ms = np.arange(-int(np.floor(pre / sample_ms)), int(np.ceil(end / sample_ms))) * sample_ms
         unit = STEP_INPUT_UNITS[STEP_INPUT_KEYS.index(key or "")]

@@ -278,6 +278,8 @@ class Spikeling103:
         Spikeling103.RefreshTheme(self)
         set_actions(self)
         set_recording_plot_visibility(self)
+        index = ui.DataAnalysis_stack.currentIndex()
+        Spikeling103.OpenTab(self, index if self.analysis_tabs.button(index) is not None else 0)
 
     def RefreshTheme(self):
         ui = self.ui
@@ -288,25 +290,28 @@ class Spikeling103:
         ]
         ui.page_Spikeling_DataAnalysis.setStyleSheet(f"""
             QWidget#page_Spikeling_DataAnalysis {{background:{window};color:{text};}}
-            QLabel#DataAnalysis_Compare_tracesHeading,
+            QLabel#DataAnalysis_Compare_tracesHeading, QLabel#DataAnalysis_Compare_expandedHeading,
             QLabel#DataAnalysis_Compare_measurementsHeading,
             QLabel#DataAnalysis_Timing_heading {{font-size:12pt;font-weight:700;}}
             QLabel#DataAnalysis_Timing_plotHeading1, QLabel#DataAnalysis_Timing_plotHeading2,
             QLabel#DataAnalysis_Timing_plotHeading3, QLabel#DataAnalysis_Timing_plotHeading4 {{font-weight:700;}}
             QLabel#DataAnalysis_Timing_contextLabel {{color:{muted};}}
-            QFrame#DataAnalysis_Compare_tracesPane,
+            QFrame#DataAnalysis_Compare_tracesPane, QFrame#DataAnalysis_Compare_expandedPlots,
             QFrame#DataAnalysis_Compare_measurementsPane, QFrame#DataAnalysis_Timing_plotPanel1,
             QFrame#DataAnalysis_Timing_plotPanel2, QFrame#DataAnalysis_Timing_plotPanel3,
             QFrame#DataAnalysis_Timing_plotPanel4 {{
                 background:{panel_bg};border:1px solid {surface};border-radius:8px;
             }}
-            QWidget#DataAnalysis_comparePage QPushButton, QWidget#DataAnalysis_timingPage QPushButton {{
+            QWidget#DataAnalysis_comparePage QPushButton, QWidget#DataAnalysis_Compare_expandedPage QPushButton,
+            QWidget#DataAnalysis_timingPage QPushButton {{
                 background:{surface};color:{text};border:1px solid {muted};
                 border-radius:5px;padding:5px 9px;
             }}
             QWidget#DataAnalysis_comparePage QPushButton:hover,
+            QWidget#DataAnalysis_Compare_expandedPage QPushButton:hover,
             QWidget#DataAnalysis_timingPage QPushButton:hover {{border-color:{accent};}}
             QWidget#DataAnalysis_comparePage QPushButton:focus,
+            QWidget#DataAnalysis_Compare_expandedPage QPushButton:focus,
             QWidget#DataAnalysis_timingPage QPushButton:focus {{border:2px solid {accent};}}
             QWidget#DataAnalysis_comparePage QPushButton:disabled,
             QWidget#DataAnalysis_timingPage QPushButton:disabled {{
@@ -385,7 +390,6 @@ class Spikeling103:
             from .compare_view import CompareView
 
             self.analysis_compare_view = CompareView(self)
-        self.analysis_compare_view.show_current_available()
 
     def SwitchSweepMode(self, index):
         ui = self.ui
@@ -575,6 +579,8 @@ class Spikeling103:
         neuron = ui.DataAnalysis_Cycles_neuronCombo.currentIndex()
         stimulus, raster, voltage, current, synaptic, rate = cycle_plots(ui)
         summary = f"{len(cycles.starts_ms)} cycles · {cycles.duration_ms:g} ms"
+        if cycles.protocol_aligned:
+            summary += " · verified custom stimulus timing"
         if cycles.excluded:
             summary += f" · {cycles.excluded} incomplete or irregular"
         mean_rate = None if cycles.rates_hz is None else mean_trace(cycles.rates_hz[neuron])

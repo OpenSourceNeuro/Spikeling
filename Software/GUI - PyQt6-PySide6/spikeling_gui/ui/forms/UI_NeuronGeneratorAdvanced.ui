@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NeuronGeneratorAdvanced</class>
+ <widget class="QDialog" name="NeuronGeneratorAdvanced">
+  <property name="windowTitle">
+   <string>Advanced neuron parameters</string>
+  </property>
+  <layout class="QVBoxLayout" name="dialogLayout">
+   <item>
+    <widget class="QGroupBox" name="photoGainGroup">
+     <property name="themeBox" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Photoreceptor</string>
+     </property>
+     <layout class="QFormLayout" name="photoGainLayout">
+      <property name="verticalSpacing">
+       <number>6</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>12</number>
+      </property>
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="photoGainLabel">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Gain (%)</string>
+        </property>
+        <property name="buddy">
+         <cstring>photoGain</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="photoGain">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="photoDecayLabel">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Decay (ms⁻¹)</string>
+        </property>
+        <property name="buddy">
+         <cstring>photoDecay</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="photoDecay">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="photoRecoveryLabel">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Recovery (ms⁻¹)</string>
+        </property>
+        <property name="buddy">
+         <cstring>photoRecovery</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="photoRecovery">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="syn1GainGroup">
+     <property name="themeBox" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Synapse 1</string>
+     </property>
+     <layout class="QFormLayout" name="syn1GainLayout">
+      <property name="verticalSpacing">
+       <number>6</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>12</number>
+      </property>
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="syn1GainLabel">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Gain (%)</string>
+        </property>
+        <property name="buddy">
+         <cstring>syn1Gain</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="syn1Gain">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="syn1DecayLabel">
+        <property name="toolTip">
+         <string>Fraction of synaptic current retained after each update.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Current retention (0 to 1)</string>
+        </property>
+        <property name="buddy">
+         <cstring>syn1Decay</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="syn1Decay">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="syn2GainGroup">
+     <property name="themeBox" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Synapse 2</string>
+     </property>
+     <layout class="QFormLayout" name="syn2GainLayout">
+      <property name="verticalSpacing">
+       <number>6</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>12</number>
+      </property>
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="syn2GainLabel">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Gain (%)</string>
+        </property>
+        <property name="buddy">
+         <cstring>syn2Gain</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="syn2Gain">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="syn2DecayLabel">
+        <property name="toolTip">
+         <string>Fraction of synaptic current retained after each update.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Current retention (0 to 1)</string>
+        </property>
+        <property name="buddy">
+         <cstring>syn2Decay</cstring>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>176</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="syn2Decay">
+        <property name="minimumSize">
+         <size>
+          <width>116</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="validationMessage">
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok|QDialogButtonBox::StandardButton::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>

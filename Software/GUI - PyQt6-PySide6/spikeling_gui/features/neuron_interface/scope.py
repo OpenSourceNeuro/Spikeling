@@ -19,6 +19,7 @@ from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.hardware.serial_manager import serial_manager
 from spikeling_gui.plotting.graph_core import RingBuffer, apply_scope_timebase, configure_scope, safe_reconnect
 
+from spikeling_gui.stimulus_schedule import NO_STEP, VOLTAGE_LOOP_COLUMN, save_step_channels
 from spikeling_gui.recording_metadata import RecordingMetadata, drug_setting, write_recording
 from spikeling_gui.hardware.connection_supervisor import ConnectionState, SpikelingConnectionSupervisor
 from spikeling_gui.hardware.spikeling_discovery import discover_spikeling_ports
@@ -60,6 +61,10 @@ class SpikelingGraph(QObject):
         self.record_flag = False
         # Recording storage is independent of the rolling plot buffers.
         self.spikeling_data = [[] for _ in range(9)]
+        self._scheduled_step_channels = [[], [], []]
+        self._command_voltage = []
+        self._voltage_loop_starts = []
+        self._voltage_step_channels = [[], [], []]
         self._recording_save_pending = False
         self._current_save_path = None
         self._recording_error = ""
@@ -89,7 +94,7 @@ class SpikelingGraph(QObject):
         self.timer.timeout.connect(self.update_plot)
 
         # Serial manager signals
-        serial_manager.data_received.connect(self.on_data_received)
+        serial_manager.sample_received.connect(self.on_data_received)
         serial_manager.connection_changed.connect(self.on_connection_changed)
         serial_manager.error_occurred.connect(self.on_error)
         self.setup_auto_connection()
@@ -106,6 +111,10 @@ class SpikelingGraph(QObject):
         # user-initiated disconnect must not trigger auto-reconnect
         if self.record_flag:
             self.stop_recording(reason="Disconnected")
+
+        controller = getattr(self.parent, "custom_stimulus_controller", None)
+        if controller is not None and controller.running and controller.voltage:
+            controller.stop()
 
         self.supervisor.stop()
         self.ui.Spikeling_Speed_slider.setEnabled(False)
@@ -164,7 +173,7 @@ class SpikelingGraph(QObject):
     # -------------------------------------------------------------------------
     # Data Handling
     # -------------------------------------------------------------------------
-    def on_data_received(self, data: list):
+    def on_data_received(self, data: list, command_mv=None):
         """Store each valid packet once for plotting and once for recording."""
         if data is None or len(data) != N_STREAM_CHANNELS:
             return
@@ -183,15 +192,36 @@ class SpikelingGraph(QObject):
         for index, value in enumerate(values):
             self.databuffers[index].append(value)
 
+        controller = getattr(self.parent, "custom_stimulus_controller", None)
+        voltage_protocol = controller is not None and controller.running and controller.voltage
+        ready = not voltage_protocol or controller.voltage_sample_ready(command_mv)
+        scheduled = controller.scheduled_step() if controller is not None and ready else NO_STEP
+        voltage_loop_start = voltage_protocol and ready and controller.voltage_loop_start()
         if self.record_flag:
             # Keep one recording consistent in clamp mode and membrane model.
             if self._recording_mode() != self._recording_mode_at_start:
                 self.stop_recording(reason="Clamp mode/model changed")
+                if controller is not None and ready:
+                    controller.advance_after_packet()
                 return
+
+            if voltage_loop_start and self._recording_metadata is not None:
+                self._recording_metadata.observe(len(self.spikeling_data[1]), self._recording_settings())
 
             # One sample per channel enters the recording storage.
             for index, value in enumerate(values):
                 self.spikeling_data[index + 1].append(value)
+            if self._recording_mode_at_start[0]:
+                self._command_voltage.append(np.nan if command_mv is None else command_mv)
+            self._voltage_loop_starts.append(int(voltage_loop_start))
+            intensity_step, voltage_step = (NO_STEP, scheduled) if voltage_protocol else (scheduled, NO_STEP)
+            for channel, value in zip(self._scheduled_step_channels, intensity_step):
+                channel.append(value)
+            for channel, value in zip(self._voltage_step_channels, voltage_step):
+                channel.append(value)
+
+        if controller is not None and ready:
+            controller.advance_after_packet()
 
 
     def update_plot(self):
@@ -760,6 +790,10 @@ class SpikelingGraph(QObject):
             return
 
         self.spikeling_data = [[] for _ in range(9)]
+        self._scheduled_step_channels = [[], [], []]
+        self._command_voltage = []
+        self._voltage_loop_starts = []
+        self._voltage_step_channels = [[], [], []]
         self._current_save_path = path
 
         self._recording_mode_at_start = self._recording_mode()
@@ -823,6 +857,8 @@ class SpikelingGraph(QObject):
             source = {"kind": "custom", "name": stimulus.filename,
                       "samples_per_loop": len(stimulus.samples), "loops": stimulus.requested_loops,
                       "nominal_step_ms": stimulus.SAMPLE_INTERVAL_MS}
+            if stimulus.voltage:
+                source["units"] = "mV"
         else:
             source = {"kind": "built-in"}
         return {
@@ -926,6 +962,10 @@ class SpikelingGraph(QObject):
 
         self._recording_save_pending = False
         self.spikeling_data = [[] for _ in range(9)]
+        self._scheduled_step_channels = [[], [], []]
+        self._command_voltage = []
+        self._voltage_loop_starts = []
+        self._voltage_step_channels = [[], [], []]
 
         self._set_recording_ui()
 
@@ -978,7 +1018,23 @@ class SpikelingGraph(QObject):
                 for index, name in enumerate(columns)
             })
 
-            write_recording(file_path, frame, self._recording_metadata)
+            channels = {}
+            if vc and np.isfinite(self._command_voltage).any():
+                if len(self._command_voltage) != count:
+                    raise ValueError("Recorded voltage command has a different sample count.")
+                command = "Command voltage (mV)"
+                frame[command] = self._command_voltage
+                channels[command] = {"units": "mV", "clock": "Time (ms)",
+                                     "meaning": "applied board voltage clamp setpoint"}
+            save_step_channels(frame, channels, self._scheduled_step_channels,
+                               "host-scheduled step at next received board packet")
+            save_step_channels(frame, channels, self._voltage_step_channels,
+                               "scheduled step at confirmed board command voltage", voltage=True)
+            if any(self._voltage_loop_starts):
+                frame[VOLTAGE_LOOP_COLUMN] = self._voltage_loop_starts
+                channels[VOLTAGE_LOOP_COLUMN] = {"meaning": "first confirmed sample of a voltage protocol loop",
+                                                 "encoding": "sample_flag"}
+            write_recording(file_path, frame, self._recording_metadata, channels)
             return True
 
         except (OSError, ValueError, TypeError) as error:

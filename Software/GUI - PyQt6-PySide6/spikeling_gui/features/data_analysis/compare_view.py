@@ -1,13 +1,17 @@
 """Desktop view for reference and comparison conditions."""
 
+from contextlib import ExitStack
 from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pyqtgraph as pg
-from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QAbstractItemView, QFileDialog, QTableWidgetItem
+from pyqtgraph.graphicsItems.LegendItem import ItemSample
+from PySide6.QtCore import QObject, QRectF, QSignalBlocker
+from PySide6.QtWidgets import (
+    QAbstractItemView, QDialog, QDialogButtonBox, QFileDialog, QLabel, QTableWidgetItem, QVBoxLayout,
+)
 
 from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.paths import recordings_directory, save_dialog_directory
@@ -15,7 +19,7 @@ from spikeling_gui.paths import recordings_directory, save_dialog_directory
 from . import page
 from .comparison import (
     CC, VC, STP, TRAIN, COMMAND, EVENT_SOURCES, PROXY, STIM, METRICS, Condition, Settings,
-    condition_trials, matched_groups, source_signal, subtraction, trace,
+    condition_trials, difference_peak, matched_groups, source_signal, subtraction, trace,
 )
 from .recording import NEURON_NAMES, load_recording
 from .sweep_view import display, number
@@ -24,23 +28,51 @@ from .sweep_view import display, number
 ROLES = ("neuron_vm", "neuron_current")
 
 
+class VoltageLegendSample(ItemSample):
+    """A smaller swatch for the command-voltage legend."""
+
+    def __init__(self, item):
+        super().__init__(item)
+        self.setFixedWidth(12)
+        self.setFixedHeight(12)
+
+    def boundingRect(self):
+        return QRectF(0, 0, 12, 12)
+
+    def paint(self, painter, *args):
+        painter.save()
+        painter.scale(0.6, 0.6)
+        super().paint(painter, *args)
+        painter.restore()
+
+
 class CompareView(QObject):
     def __init__(self, window):
         super().__init__(window.ui.DataAnalysis_comparePage)
         self.widget = window.ui.DataAnalysis_comparePage
         self.window = window
         self.form = ui = page.bind_controls(window.ui, "Compare", (
-            "ampEdit", "ampFieldLabel", "baselineEdit", "baselineFieldLabel", "cmpCurrent",
+            "advancedButton", "advancedLayout", "advancedPanel", "ampEdit", "ampFieldLabel",
+            "baselineEdit", "baselineFieldLabel",
             "cmpEnd", "cmpFile", "cmpLoad", "cmpName", "cmpStart", "compareSplitter",
             "differenceCheck", "differenceDirectionCombo", "differenceLabel", "differenceOverlayCheck",
-            "exportButton", "floorEdit", "groupCombo",
+            "differenceIvCheck", "differenceStartLabel", "differenceStartEdit",
+            "differenceEndLabel", "differenceEndEdit",
+            "expandButton", "expandedBackButton", "expandedPage", "expandedPlotsLayout",
+            "exportButton", "floorEdit", "floorFieldLabel", "groupCombo",
             "historyCheck", "inputPlot", "intervalEdit", "intervalFieldLabel", "metricCombo",
-            "metricPlot", "minEdit", "neuronCombo", "preEdit", "presetCombo",
-            "probeEdit", "probeLabel", "refCurrent", "refEnd", "refFile", "refLoad", "refName",
+            "metricPlot", "minEdit", "minFieldLabel", "neuronCombo", "preEdit", "presetCombo",
+            "primarySettingsLayout", "settingsBox",
+            "probeEdit", "probeLabel", "refEnd", "refFile", "refLoad", "refName",
             "refStart", "responseFloorEdit", "responseFloorLabel", "responsePlot", "runButton",
             "signalCombo", "sourceCombo", "summaryLabel", "thresholdEdit",
-            "timeEdit", "timingButton", "trialTable", "windowEdit", "windowFieldLabel",
+            "thresholdFieldLabel", "timeEdit", "timingButton", "tracesLayout", "trialTable", "windowEdit", "windowFieldLabel",
+            "traceStartEdit", "traceEndEdit", "windowPanel",
         ))
+        stack = window.ui.DataAnalysis_stack
+        ui.expandButton.clicked.connect(self.expand_traces)
+        ui.expandedBackButton.clicked.connect(lambda: page.select_tab(window, 2))
+        stack.currentChanged.connect(self.restore_traces)
         self.timing_button = ui.timingButton
         self.timing_button.clicked.connect(self.show_timing)
         self.conditions = [None, None]
@@ -54,8 +86,6 @@ class CompareView(QObject):
         ]
         for index, button in enumerate((ui.refLoad, ui.cmpLoad)):
             button.clicked.connect(lambda checked=False, i=index: self.open_csv(i))
-        for index, button in enumerate((ui.refCurrent, ui.cmpCurrent)):
-            button.clicked.connect(lambda checked=False, i=index: self.capture(i))
         ui.responseFloorEdit.setToolTip(
             "Minimum absolute response amplitude in the selected signal units. Unscorable windows are excluded."
         )
@@ -65,12 +95,16 @@ class CompareView(QObject):
         )
         ui.presetCombo.currentTextChanged.connect(self.preset_changed)
         ui.sourceCombo.currentTextChanged.connect(self.source_changed)
+        ui.advancedButton.clicked.connect(self.edit_advanced_settings)
         ui.runButton.clicked.connect(self.run_comparison)
         ui.exportButton.clicked.connect(self.export)
         ui.groupCombo.currentIndexChanged.connect(self.draw_group)
         ui.metricCombo.currentTextChanged.connect(self.draw_metrics)
-        ui.differenceCheck.toggled.connect(self.draw_traces)
-        ui.differenceDirectionCombo.currentIndexChanged.connect(self.draw_traces)
+        ui.differenceCheck.toggled.connect(self.refresh_difference_iv)
+        ui.differenceDirectionCombo.currentIndexChanged.connect(self.refresh_difference_iv)
+        ui.differenceIvCheck.toggled.connect(self.refresh_difference_iv)
+        ui.differenceStartEdit.editingFinished.connect(self.refresh_difference_iv)
+        ui.differenceEndEdit.editingFinished.connect(self.refresh_difference_iv)
         ui.differenceOverlayCheck.toggled.connect(self.draw_traces)
         ui.trialTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         ui.trialTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
@@ -79,7 +113,14 @@ class CompareView(QObject):
         for widget in (ui.inputPlot, ui.responsePlot, ui.metricPlot):
             theme_manager.set_plot_background_role(widget, "panel_background")
             widget.showGrid(x=True, y=True, alpha=.2)
-        ui.inputPlot.setXLink(ui.responsePlot)
+        self.trace_window = None
+        plots = (ui.inputPlot, ui.responsePlot)
+        for plot in plots:
+            view = plot.getViewBox()
+            view.enableAutoRange(axis="x", enable=False)
+            view.sigXRangeChanged.connect(lambda source, limits: page.sync_plot_x_range(plots, source, limits))
+        for field in (ui.traceStartEdit, ui.traceEndEdit):
+            field.editingFinished.connect(self.apply_trace_window)
         ui.compareSplitter.setSizes([480, 480])
         for field in (ui.neuronCombo, ui.signalCombo):
             field.currentIndexChanged.connect(self.invalidate)
@@ -89,11 +130,37 @@ class CompareView(QObject):
                       ui.thresholdEdit, ui.intervalEdit, ui.floorEdit, ui.responseFloorEdit, ui.probeEdit):
             field.textChanged.connect(self.invalidate)
         self.preset_changed()
+        self.apply_trace_window()
 
-    def show_current_available(self):
-        available = getattr(self.window, "analysis_recording", None) is not None
-        self.form.refCurrent.setEnabled(available)
-        self.form.cmpCurrent.setEnabled(available)
+    def apply_trace_window(self):
+        ui = self.form
+        try:
+            start = number(ui.traceStartEdit, "view start")
+            end = number(ui.traceEndEdit, "view end")
+            if end <= start:
+                raise ValueError("View end must be after view start.")
+        except ValueError as error:
+            page.show_error(self.window.ui, "Invalid trace range", error)
+            for field, value in zip((ui.traceStartEdit, ui.traceEndEdit), self.trace_window):
+                field.setText(f"{value:g}")
+            return
+        self.trace_window = (start, end)
+        self.draw_traces()
+        ui.responsePlot.setXRange(start, end, padding=0)
+        ui.inputPlot.setXRange(start, end, padding=0)
+
+    def expand_traces(self):
+        ui = self.form
+        ui.expandedPlotsLayout.addWidget(ui.inputPlot, 1)
+        ui.expandedPlotsLayout.addWidget(ui.responsePlot, 2)
+        self.window.ui.DataAnalysis_stack.setCurrentWidget(ui.expandedPage)
+
+    def restore_traces(self, _index):
+        ui = self.form
+        if (self.window.ui.DataAnalysis_stack.currentWidget() is not ui.expandedPage
+                and ui.expandedPlotsLayout.count()):
+            ui.tracesLayout.addWidget(ui.inputPlot, 1)
+            ui.tracesLayout.addWidget(ui.responsePlot, 2)
 
     def preset_changed(self):
         ui = self.form
@@ -105,17 +172,20 @@ class CompareView(QObject):
             ui.sourceCombo.setCurrentText(COMMAND)
         ui.sourceCombo.blockSignals(False)
         ui.signalCombo.setEnabled(preset in (STP, TRAIN))
-        ui.windowEdit.setEnabled(preset != CC)
+        ui.windowPanel.setVisible(preset == VC)
         ui.neuronCombo.setEnabled(preset != VC)
         ui.windowFieldLabel.setText("Late window (ms)" if preset == VC else "Response window (ms)")
-        ui.historyCheck.setEnabled(preset not in (STP, TRAIN))
-        ui.thresholdEdit.setEnabled(preset == CC)
-        ui.intervalEdit.setEnabled(preset in (STP, TRAIN))
+        ui.historyCheck.setVisible(preset in (CC, VC))
+        for widget in (ui.thresholdEdit, ui.thresholdFieldLabel):
+            widget.setVisible(preset == CC)
+        for widget in (ui.intervalEdit, ui.intervalFieldLabel):
+            widget.setVisible(preset in (STP, TRAIN))
         ui.intervalFieldLabel.setText("Max within-train gap (ms)" if preset == TRAIN else "Max pair interval (ms)")
         ui.responseFloorLabel.setText("Response threshold (signal units)")
         for widget in (ui.responseFloorEdit, ui.responseFloorLabel, ui.probeEdit, ui.probeLabel):
             widget.setVisible(preset == TRAIN)
-        ui.floorEdit.setEnabled(preset == STP)
+        for widget in (ui.floorEdit, ui.floorFieldLabel):
+            widget.setVisible(preset == STP)
         ui.differenceCheck.setChecked(False)
         ui.differenceCheck.setVisible(preset == VC)
         ui.metricCombo.blockSignals(True)
@@ -135,9 +205,69 @@ class CompareView(QObject):
             unit = "%"
         ui.baselineFieldLabel.setText(f"Input baseline ({unit})")
         ui.ampFieldLabel.setText(f"Amplitude tolerance ({unit})")
-        for field in (ui.baselineEdit, ui.ampEdit, ui.minEdit):
-            field.setEnabled(source not in EVENT_SOURCES)
+        for field in (ui.baselineEdit, ui.baselineFieldLabel, ui.ampEdit, ui.ampFieldLabel,
+                      ui.minEdit, ui.minFieldLabel):
+            field.setVisible(source not in EVENT_SOURCES)
         self.invalidate()
+
+    def edit_advanced_settings(self):
+        ui = self.form
+        pulse_analysis = ui.presetCombo.currentText() in (STP, TRAIN)
+        fields = [ui.ampEdit, ui.timeEdit, ui.minEdit, ui.preEdit, ui.floorEdit,
+                  ui.responseFloorEdit, ui.probeEdit]
+        if pulse_analysis:
+            fields.append(ui.windowEdit)
+        previous_text = [field.text() for field in fields]
+        previous_history = ui.historyCheck.isChecked()
+
+        dialog = QDialog(self.widget)
+        dialog.setWindowTitle(ui.advancedButton.text().rstrip("…"))
+        dialog.setStyleSheet(theme_manager.stylesheet())
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(ui.advancedPanel)
+        ui.advancedPanel.show()
+        if pulse_analysis:
+            ui.advancedLayout.addWidget(ui.windowPanel, 4, 0, 1, 2)
+            ui.windowPanel.show()
+        status = QLabel(dialog)
+        status.setWordWrap(True)
+        status.hide()
+        layout.addWidget(status)
+        standard = QDialogButtonBox.StandardButton
+        buttons = QDialogButtonBox(standard.Ok | standard.Cancel, dialog)
+        layout.addWidget(buttons)
+
+        def accept_settings():
+            try:
+                self.collect_settings()
+            except ValueError as error:
+                status.setText(str(error))
+                status.show()
+                return
+            dialog.accept()
+
+        buttons.accepted.connect(accept_settings)
+        buttons.rejected.connect(dialog.reject)
+        with ExitStack() as blockers:
+            for widget in (*fields, ui.historyCheck):
+                blockers.enter_context(QSignalBlocker(widget))
+            accepted = dialog.exec() == QDialog.DialogCode.Accepted
+            changed = previous_text != [field.text() for field in fields] or (
+                previous_history != ui.historyCheck.isChecked()
+            )
+            if not accepted:
+                for field, text in zip(fields, previous_text):
+                    field.setText(text)
+                ui.historyCheck.setChecked(previous_history)
+
+        if pulse_analysis:
+            ui.primarySettingsLayout.insertWidget(1, ui.windowPanel)
+            ui.windowPanel.hide()
+        ui.advancedPanel.hide()
+        ui.settingsBox.layout().addWidget(ui.advancedPanel)
+        dialog.deleteLater()
+        if accepted and changed:
+            self.invalidate()
 
     def invalidate(self, *args):
         self.groups = []
@@ -177,21 +307,6 @@ class CompareView(QObject):
             page.show_error(self.window.ui, "Cannot load recording", error)
             return
         self.assign(index, recording)
-
-    def capture(self, index):
-        recording = getattr(self.window, "analysis_recording", None)
-        if recording is None:
-            return
-        sweeps = getattr(self.window, "analysis_sweep_view", None)
-        if sweeps is not None and sweeps.recording is recording and sweeps.sweeps:
-            reviewed = tuple(s for s in sweeps.sweeps if sweeps.is_included(s))
-            source = COMMAND if sweeps.input_key else STIM
-            self.assign(index, recording, reviewed, sweeps.settings["Input baseline"], source)
-        else:
-            self.assign(index, recording)
-        condition = self.window.ui.DataAnalysis_conditionEdit.text().strip()
-        if condition:
-            self.fields[index][0].setText(condition)
 
     def assign(self, index, recording, reviewed=None, baseline=0, source=STIM):
         time = recording.time_ms
@@ -357,10 +472,14 @@ class CompareView(QObject):
         self.draw_traces()
         if self.settings is not None and self.settings.preset == TRAIN:
             self.draw_metrics()
+        elif self.difference_iv_active():
+            self.update_difference_iv_label()
         else:
             self.show_difference()
 
     def show_difference(self):
+        if self.difference_iv_active():
+            return
         ui = self.form
         index = ui.groupCombo.currentIndex()
         if not 0 <= index < len(self.groups):
@@ -396,10 +515,15 @@ class CompareView(QObject):
         overlay = can_overlay and ui.differenceOverlayCheck.isChecked()
         ui.differenceDirectionCombo.setVisible(subtract)
         ui.differenceOverlayCheck.setVisible(can_overlay)
+        for widget in (ui.differenceIvCheck, ui.differenceStartLabel, ui.differenceStartEdit,
+                       ui.differenceEndLabel, ui.differenceEndEdit):
+            widget.setVisible(can_overlay)
         if ui.responsePlot.plotItem.legend is not None:
             ui.responsePlot.plotItem.legend.setVisible(overlay)
         index = ui.groupCombo.currentIndex()
-        if not 0 <= index < len(self.groups):
+        has_match = 0 <= index < len(self.groups)
+        ui.expandButton.setEnabled(has_match)
+        if not has_match:
             return
         left, right = self.groups[index]
         legend = ui.inputPlot.addLegend(offset=(8, 6)) if ui.inputPlot.plotItem.legend is None else ui.inputPlot.plotItem.legend
@@ -408,14 +532,16 @@ class CompareView(QObject):
         ui.responsePlot.setLabel("bottom", "Time from onset (ms)")
         if overlay:
             self.draw_voltage_differences()
+            self.shade_difference_window()
             return
         for trials, role in zip((left, right), ROLES):
             self.overlay(ui.inputPlot, trials, "stimulus", role, trials[0].condition.label)
         if subtract:
             first, second = self.subtraction_order(left, right)
-            x, y = subtraction(second, first)
+            x, y = subtraction(second, first, self.trace_window)
             ui.responsePlot.setLabel("left", self.subtraction_label(first, second))
             theme_manager.themed_plot(ui.responsePlot, x, y, ROLES[0], connect="finite")
+            self.shade_difference_window()
         else:
             unit = left[0].response_unit
             ui.responsePlot.setLabel("left", f"Response ({unit})")
@@ -423,12 +549,13 @@ class CompareView(QObject):
                 self.overlay(ui.responsePlot, trials, "signal", role)
             row = ui.trialTable.currentRow()
             if 0 <= row < len(self.table_trials):
-                x, y = trace(self.table_trials[row], self.table_trials[row].signal)
+                x, y = trace(self.table_trials[row], self.table_trials[row].signal, self.trace_window)
                 theme_manager.themed_plot(ui.responsePlot, x, y, "neuron_stimulus", width_scale=2.5, connect="finite")
         theme_manager.style_traces()
 
     def subtraction_order(self, left, right):
-        return (left, right) if self.form.differenceDirectionCombo.currentIndex() == 1 else (right, left)
+        # Designer lists Reference minus Comparison first.
+        return (left, right) if self.form.differenceDirectionCombo.currentIndex() == 0 else (right, left)
 
     @staticmethod
     def subtraction_label(first, second):
@@ -437,13 +564,16 @@ class CompareView(QObject):
     def draw_voltage_differences(self):
         ui = self.form
         if ui.responsePlot.plotItem.legend is None:
-            ui.responsePlot.addLegend(offset=(8, 6), colCount=3)
+            ui.responsePlot.addLegend(
+                offset=(-6, 6), colCount=3, labelTextSize="8pt", horSpacing=2,
+                sampleType=VoltageLegendSample,
+            )
         ui.responsePlot.plotItem.legend.show()
         first, second = self.subtraction_order(*self.groups[0])
         ui.responsePlot.setLabel("left", self.subtraction_label(first, second))
         for i, (left, right) in enumerate(self.groups):
             first, second = self.subtraction_order(left, right)
-            x, y = subtraction(second, first)
+            x, y = subtraction(second, first, self.trace_window)
             if not np.isfinite(y).any():
                 continue
             pen = pg.mkPen(pg.intColor(i, hues=max(6, len(self.groups))), width=2)
@@ -454,13 +584,13 @@ class CompareView(QObject):
                    for other, _ in self.groups) > 1:
                 label += f" · {duration:g} ms · hold {holding:g} mV"
             ui.responsePlot.plot(x, y, pen=pen, name=label, connect="finite")
-            time, command = trace(trial, trial.stimulus)
+            time, command = trace(trial, trial.stimulus, self.trace_window)
             ui.inputPlot.plot(time, command, pen=pen, connect="finite")
 
     def overlay(self, plot, trials, channel, role, name=None):
         x, y = [], []
         for trial in trials:
-            t, values = trace(trial, getattr(trial, channel))
+            t, values = trace(trial, getattr(trial, channel), self.trace_window)
             x.extend((t, [np.nan]))
             y.extend((values, [np.nan]))
         theme_manager.themed_plot(plot, np.concatenate(x), np.concatenate(y), role, name=name, connect="finite")
@@ -470,16 +600,127 @@ class CompareView(QObject):
             return f"{metric} ({self.groups[0][0][0].response_unit})"
         return metric
 
+    def difference_iv_active(self):
+        ui = self.form
+        return (ui.presetCombo.currentText() == VC and ui.sourceCombo.currentText() == COMMAND
+                and ui.differenceCheck.isChecked() and ui.differenceIvCheck.isChecked())
+
+    def refresh_difference_iv(self, *args):
+        self.form.metricCombo.setEnabled(not self.difference_iv_active())
+        self.draw_traces()
+        self.draw_metrics()
+
+    def difference_window(self):
+        ui = self.form
+        start = number(ui.differenceStartEdit, "measurement window start", 0)
+        end = number(ui.differenceEndEdit, "measurement window end", 0)
+        if end <= start:
+            raise ValueError("Measurement window end must be after its start.")
+        return start, end
+
+    def shade_difference_window(self):
+        if not self.difference_iv_active():
+            return
+        try:
+            bounds = self.difference_window()
+        except ValueError:
+            return
+        region = pg.LinearRegionItem(bounds, movable=False, brush=(80, 170, 200, 45))
+        self.form.responsePlot.addItem(region, ignoreBounds=True)
+
+    def difference_iv_rows(self):
+        start, end = self.difference_window()
+        rows = []
+        for index, (left, right) in enumerate(self.groups, 1):
+            first, second = self.subtraction_order(left, right)
+            time, current = subtraction(second, first)
+            sample_ms = max(trial.condition.recording.nominal_step_ms for trial in left + right)
+            peak = difference_peak(time, current, start, end, sample_ms)
+            trials = left + right
+            voltage = float(np.mean([trial.key[0] + trial.key[2] for trial in trials]))
+            rows.append({
+                "Group": index,
+                "Command voltage (mV)": voltage,
+                "Holding voltage (mV)": float(np.mean([trial.key[2] for trial in trials])),
+                "Step duration (ms)": float(np.mean([trial.key[1] for trial in trials])),
+                "Minuend": first[0].condition.label,
+                "Subtrahend": second[0].condition.label,
+                "Reference sweeps": len(left),
+                "Comparison sweeps": len(right),
+                "Window start (ms)": start,
+                "Window end (ms)": end,
+                "Minimum difference current (nA)": peak[0] if peak else None,
+                "Time of minimum (ms)": peak[1] if peak else None,
+            })
+        return rows
+
+    def update_difference_iv_label(self):
+        ui = self.form
+        index = ui.groupCombo.currentIndex()
+        if not 0 <= index < len(self.groups):
+            return
+        left, right = self.groups[index]
+        first, second = self.subtraction_order(left, right)
+        ui.differenceLabel.setText(
+            f"{self.subtraction_label(first, second)} · {len(left)} {left[0].condition.label} sweeps"
+            f" · {len(right)} {right[0].condition.label} sweeps"
+        )
+
+    def draw_difference_iv(self, plot):
+        plot.getAxis("bottom").setTicks(None)
+        plot.setLabel("bottom", "Command voltage (mV)")
+        plot.setLabel("left", "Minimum difference current", units="nA")
+        plot.getAxis("left").enableAutoSIPrefix(False)
+        plot.enableAutoRange(axis="y")
+        try:
+            rows = self.difference_iv_rows()
+        except ValueError as error:
+            self.form.differenceLabel.setText(str(error))
+            return
+        points = [row for row in rows if row["Minimum difference current (nA)"] is not None]
+        if not points:
+            if rows:
+                self.form.differenceLabel.setText("No difference traces cover the measurement window.")
+            return
+        self.update_difference_iv_label()
+        if len(points) < len(rows):
+            label = self.form.differenceLabel
+            label.setText(label.text() + f" · {len(rows) - len(points)} groups lack full window coverage")
+        voltages = [row["Command voltage (mV)"] for row in points]
+        currents = [row["Minimum difference current (nA)"] for row in points]
+        holds = [row["Holding voltage (mV)"] for row in points]
+        durations = [row["Step duration (ms)"] for row in points]
+        same_protocol = (np.ptp(holds) <= self.settings.amplitude_tolerance
+                         and np.ptp(durations) <= self.settings.time_tolerance)
+        if same_protocol and len(set(voltages)) == len(voltages) and len(points) == len(rows):
+            xs, ys = zip(*sorted(zip(voltages, currents)))
+            theme_manager.themed_plot(plot, xs, ys, "neuron_current")
+        scatter = pg.ScatterPlotItem(
+            voltages, currents, data=[row["Group"] - 1 for row in points],
+            size=8, brush=theme_manager.active_colour("neuron_current"), pen=None,
+        )
+        scatter.sigClicked.connect(self.select_difference_voltage)
+        plot.addItem(scatter)
+        theme_manager.style_traces()
+
+    def select_difference_voltage(self, item, points, event):
+        if points:
+            self.form.groupCombo.setCurrentIndex(points[0].data())
+
     def draw_metrics(self, *args):
         self.show_difference()
         plot = self.form.metricPlot
         plot.clear()
+        if self.difference_iv_active():
+            self.draw_difference_iv(plot)
+            return
         if not self.groups:
             return
         metric = self.form.metricCombo.currentText()
         if not metric:
             return
-        plot.setLabel("left", self.metric_label(metric))
+        plot.setLabel("left", self.metric_label(metric), units="")
+        plot.getAxis("left").enableAutoSIPrefix(True)
         plot.enableAutoRange(axis="y")
         preset = self.settings.preset
         if preset == TRAIN:
@@ -577,6 +818,11 @@ class CompareView(QObject):
     def export(self):
         if self.settings is None:
             return
+        try:
+            difference = self.difference_iv_rows() if self.difference_iv_active() else []
+        except ValueError as error:
+            page.show_error(self.window.ui, "Cannot export comparison", error)
+            return
         folder = page.choose_export_folder("Data", "Export comparison")
         if folder is None:
             return
@@ -622,6 +868,8 @@ class CompareView(QObject):
             pd.DataFrame(summaries, columns=columns).to_csv(
                 Path(folder) / "Spikeling_comparison_summary.csv", index=False
             )
+            if difference:
+                pd.DataFrame(difference).to_csv(Path(folder) / "Spikeling_difference_iv.csv", index=False)
         except (OSError, ValueError) as error:
             page.show_error(self.window.ui, "Cannot export comparison", error)
 

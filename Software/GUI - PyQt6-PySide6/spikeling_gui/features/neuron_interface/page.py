@@ -4,7 +4,7 @@
 
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QIntValidator
-from PySide6.QtCore import Qt, QSize, QObject, QFileInfo, QSignalBlocker
+from PySide6.QtCore import Qt, QSize, QObject, QFileInfo, QSignalBlocker, QTimer
 from spikeling_gui.widgets.toggle_buttons import PyToggle
 from spikeling_gui.widgets.sliders import SliderBinding, configure_styled_slider
 
@@ -20,8 +20,10 @@ from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.widgets import menu_animation
 from spikeling_gui.neuron_presets import IzhikevichNeurons
+from spikeling_gui.neuron_csv import read_neuron_csv
 from spikeling_gui.hardware.connection_supervisor import ConnectionState
 from spikeling_gui.paths import data_directory
+from spikeling_gui.stimulus_schedule import NO_STEP, VOLTAGE_COLUMN, VOLTAGE_RANGE, read_step_schedule
 
 
 # Use the global serial_manager instance
@@ -39,6 +41,11 @@ class CustomStimulusController(QObject):
         self.ui = host.ui
 
         self.samples = None
+        self.voltage = False
+        self.command_timer = QTimer(self)
+        self.command_timer.setSingleShot(True)
+        self.command_timer.timeout.connect(self.voltage_command_timeout)
+        self.step_schedule = {}
         self.filename = ""
         self.running = False
 
@@ -67,7 +74,6 @@ class CustomStimulusController(QObject):
             self._on_apply_toggled
         )
 
-        serial_port.data_received.connect(self._on_packet)
         serial_port.connection_changed.connect(
             self._on_connection_changed
         )
@@ -139,42 +145,23 @@ class CustomStimulusController(QObject):
         try:
             frame = pd.read_csv(path)
 
-            if "Stim" not in frame.columns:
-                raise ValueError(
-                    "The CSV must contain a column named 'Stim'."
-                )
-
-            values = pd.to_numeric(
-                frame["Stim"],
-                errors="raise",
-            ).to_numpy(dtype=float)
-
-            if values.size == 0:
-                raise ValueError("The stimulus contains no samples.")
-
-            if not np.isfinite(values).all():
-                raise ValueError(
-                    "Stimulus values must all be finite numbers."
-                )
-
-            if ((values < -100) | (values > 100)).any():
-                raise ValueError(
-                    "Stimulus values must be between -100 and 100."
-                )
-
-            # SC1 currently accepts integer stimulus commands.
-            if not np.allclose(
-                values,
-                np.rint(values),
-                rtol=0,
-                atol=1e-9,
-            ):
-                raise ValueError(
-                    "Stimulus values must be integers "
-                    "because SC1 uses integer commands."
-                )
-
-            samples = np.rint(values).astype(np.int16)
+            voltage = VOLTAGE_COLUMN in frame
+            column = VOLTAGE_COLUMN if voltage else "Stim"
+            if column not in frame or (voltage and "Stim" in frame):
+                raise ValueError("Use either the Stim column for percentages or Command voltage (mV).")
+            values = pd.to_numeric(frame[column], errors="raise").to_numpy(dtype=float)
+            if not values.size or not np.isfinite(values).all():
+                raise ValueError("The stimulus must contain finite samples.")
+            low, high = VOLTAGE_RANGE if voltage else (-100, 100)
+            if ((values < low) | (values > high)).any():
+                raise ValueError(f"Stimulus values must be between {low} and {high}.")
+            rounded = np.round(values, 2 if voltage else 0)
+            if not np.allclose(values, rounded, rtol=0, atol=1e-9):
+                raise ValueError("Use 0.01 mV increments for voltage commands or whole percentages for intensity.")
+            samples = rounded if voltage else rounded.astype(np.int16)
+            step_schedule = read_step_schedule(frame, samples)
+            if voltage and not step_schedule:
+                raise ValueError("A voltage protocol needs step markers. Save it from Stimulus Generator.")
 
         except (
             OSError,
@@ -190,6 +177,8 @@ class CustomStimulusController(QObject):
 
         # Commit only after the entire file has passed validation.
         self.samples = samples.copy()
+        self.voltage = voltage
+        self.step_schedule = step_schedule
         self.filename = os.path.splitext(
             os.path.basename(path)
         )[0]
@@ -207,7 +196,7 @@ class CustomStimulusController(QObject):
         preview.clear()
         preview.showGrid(x=False, y=False)
         preview.setLabel("bottom", "Model time", units="ms")
-        preview.setLabel("left", "Stimulus", units="%")
+        preview.setLabel("left", "Command voltage" if voltage else "Stimulus", units="mV" if voltage else "%")
         preview.plot(
             x=x,
             y=samples,
@@ -233,6 +222,8 @@ class CustomStimulusController(QObject):
             error = "Load a stimulus first."
         elif not self._connection_ready():
             error = "Connect the board before applying a stimulus."
+        elif self.voltage and not self.ui.PatchClampMode_toggleButton.isChecked():
+            error = "Switch to Voltage Clamp before applying a voltage protocol."
         elif not editor.hasAcceptableInput():
             error = "Enter a loop count between 1 and 1000000."
 
@@ -251,20 +242,30 @@ class CustomStimulusController(QObject):
         self.index = 0
         self.last_sent_value = None
         self.running = True
+        if self.voltage:
+            self.host.patch_clamp_binding.cancel_pending()
+            self._lock_normal_controls()
 
         # Enter custom mode before releasing the normal GUI overrides.
         if not self._send_next_sample():
             return
 
-        if not self._write("TR\n"):
-            return
-
-        self._lock_normal_controls()
+        if not self.voltage:
+            if not self._write("TR\n"):
+                return
+            self._lock_normal_controls()
         self._set_apply_checked(True)
         self._update_progress()
         self._refresh_controls()
 
     def _lock_normal_controls(self):
+        if self.voltage:
+            for widget in (self.ui.PatchClamp_toggleButton, self.ui.Spikeling_PatchClamp_slider,
+                           self.host.patch_clamp_binding.editor, self.ui.PatchClampMode_toggleButton,
+                           self.ui.Spikeling_PatchClamp_MembraneModel_comboBox):
+                self._locked_widgets.append((widget, widget.isEnabled()))
+                widget.setEnabled(False)
+            return
         for toggle, binding in (
             (
                 self.ui.StimFre_toggleButton,
@@ -304,6 +305,9 @@ class CustomStimulusController(QObject):
 
         self._locked_widgets.clear()
 
+        if self.voltage:
+            return
+
         # Refresh normal readings through their public binding API.
         for binding in (
             self.host.stimulus_frequency_binding,
@@ -315,26 +319,51 @@ class CustomStimulusController(QObject):
         if serial_port.is_open and serial_port.write(command):
             return True
 
-        self.stop(send=False)
+        self.stop(send=self.voltage)
         self.ui.Spikeling_CustomStimulus_StimLabel.setText(
             "Stopped: serial write failed"
         )
         return False
 
     def _send_next_sample(self):
-        value = int(self.samples[self.index])
+        value = self.samples[self.index]
 
         # The firmware holds the last command between changes.
         if value != self.last_sent_value:
-            if not self._write(f"SC1 {value}\n"):
+            command = f"VCMD {value:.2f}\n" if self.voltage else f"SC1 {int(value)}\n"
+            if not self._write(command):
                 return False
 
             self.last_sent_value = value
+            if self.voltage:
+                self.command_timer.start(1000)
 
         self.index += 1
         return True
 
-    def _on_packet(self, data):
+    def voltage_sample_ready(self, command_mv):
+        if command_mv is not None and abs(command_mv - self.last_sent_value) < 0.005:
+            self.command_timer.stop()
+            return True
+        if not self.command_timer.isActive():
+            self.command_timer.start(1000)
+        return False
+
+    def voltage_command_timeout(self):
+        self.stop()
+        self.ui.Spikeling_CustomStimulus_StimLabel.setText(
+            "Stopped: board did not confirm command voltage"
+        )
+
+    def voltage_loop_start(self):
+        return self.index == 1
+
+    def scheduled_step(self):
+        if self.running:
+            return self.step_schedule.get(self.index - 1, NO_STEP)
+        return NO_STEP
+
+    def advance_after_packet(self):
         if not self.running:
             return
 
@@ -349,7 +378,7 @@ class CustomStimulusController(QObject):
 
             self.index = 0
 
-            if not self._write("TR\n"):
+            if not self.voltage and not self._write("TR\n"):
                 return
 
             self._update_progress()
@@ -366,6 +395,7 @@ class CustomStimulusController(QObject):
     def stop(self, *, send=True, completed=False):
         was_running = self.running
         self.running = False
+        self.command_timer.stop()
 
         self._set_apply_checked(False)
 
@@ -374,7 +404,13 @@ class CustomStimulusController(QObject):
 
             if send and serial_port.is_open:
                 # Resume the standard generator with knob control.
-                serial_port.write("SC0\n")
+                if self.voltage:
+                    if self.ui.PatchClamp_toggleButton.isChecked():
+                        serial_port.write(f"PC1 {self.host.patch_clamp_binding.value}\n")
+                    else:
+                        serial_port.write("PC0\n")
+                else:
+                    serial_port.write("SC0\n")
 
         self.last_sent_value = None
 
@@ -441,6 +477,7 @@ class Spikeling():
             return
         if serial_port.configure_port(self.COM) and serial_port.open():
             serial_port.write('CON' + '\n')
+            serial_port.write('VCSTRM' + '\n')
         self.ui.Spikeling_ConnectButton.setChecked(False)
 
     # Modifu microcontroller loop time
@@ -1723,12 +1760,13 @@ class Spikeling():
             self.Syn1Gain = self.ui.ImportNeuron[import_idx][7]
             serial_port.write('SG11 ' + str(self.Syn1Gain) + '\n')
             self.Syn1Decay = self.ui.ImportNeuron[import_idx][8]
-            serial_port.write('SD11 ' + str(self.Syn1Decay) + '\n')
+            # CSV stores the retention coefficient; firmware expects thousandths.
+            serial_port.write('SD11 ' + str(self.Syn1Decay * 1000) + '\n')
 
             self.Syn2Gain = self.ui.ImportNeuron[import_idx][9]
             serial_port.write('SG21 ' + str(self.Syn2Gain) + '\n')
             self.Syn2Decay = self.ui.ImportNeuron[import_idx][10]
-            serial_port.write('SD21 ' + str(self.Syn2Decay) + '\n')
+            serial_port.write('SD21 ' + str(self.Syn2Decay * 1000) + '\n')
 
 
 
@@ -1738,34 +1776,14 @@ class Spikeling():
                                                  dir=str(data_directory("Neurons")),
                                                  filter='csv files (*.csv)')
 
-        Df = pd.read_csv(FileName)
-        self.df_Neuron_a = Df["a"]
-        self.df_Neuron_b = Df["b"]
-        self.df_Neuron_c = Df["c"]
-        self.df_Neuron_d = Df["d"]
-
-        self.df_Neuron_PGain = Df["PhotoGain (%)"]
-        self.df_Neuron_PDecay = Df["PhotoDecay (1/ms)"]
-        self.df_Neuron_PRecovery = Df["PhotoRecovery (1/ms)"]
-
-        self.df_Neuron_Syn1Gain = Df["Syn1 Gain (%)"]
-        self.df_Neuron_Syn1Decay = Df["Syn1 Decay (1/ms)"]
-
-        self.df_Neuron_Syn2Gain = Df["Syn2 Gain (%)"]
-        self.df_Neuron_Syn2Decay = Df["Syn2 Decay (1/ms)"]
-
-        self.ParametersNeuron = [self.df_Neuron_a[0],
-                                 self.df_Neuron_b[0],
-                                 self.df_Neuron_c[0],
-                                 self.df_Neuron_d[0],
-                                 self.df_Neuron_PGain[0],
-                                 self.df_Neuron_PDecay[0],
-                                 self.df_Neuron_PRecovery[0],
-                                 self.df_Neuron_Syn1Gain[0],
-                                 self.df_Neuron_Syn1Decay[0],
-                                 self.df_Neuron_Syn2Gain[0],
-                                 self.df_Neuron_Syn2Decay[0]
-                                 ]
+        if not FileName:
+            return
+        try:
+            parameters = read_neuron_csv(FileName)
+        except (OSError, ValueError) as error:
+            show_popup(self, "Cannot load neuron", str(error))
+            return
+        self.ParametersNeuron = list(parameters)
         self.ui.ImportNeuron.append(self.ParametersNeuron)
 
 

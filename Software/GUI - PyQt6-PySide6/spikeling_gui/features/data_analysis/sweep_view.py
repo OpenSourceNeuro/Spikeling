@@ -12,9 +12,10 @@ from PySide6.QtWidgets import QTableWidgetItem
 from spikeling_gui.appearance.theme_manager import theme_manager
 
 from . import page
-from .recording import NEURON_NAMES, VOLTAGE_COLUMNS, trigger_onsets
+from .recording import NEURON_NAMES, VOLTAGE_COLUMNS, custom_step_cycles, trigger_onsets
 from .sweep_analysis import (
-    detect_steps, manual_steps, matching_sweeps, measure_sweep, review_windows, sample_bounds,
+    Step, command_windows, detect_steps, manual_steps, matching_sweeps, measure_sweep, review_windows, sample_bounds,
+    scheduled_steps, with_preceding_intervals,
 )
 
 
@@ -45,7 +46,7 @@ class SweepView(QObject):
         self.widget = window.ui.DataAnalysis_stepPage
         self.window = window
         self.form = ui = page.bind_controls(window.ui, "Sweeps", (
-            "inputCombo", "stimulusBaselineFieldLabel", "toleranceFieldLabel", "ivButton", "averageButton",
+            "inputCombo", "stimulusBaselineFieldLabel", "toleranceFieldLabel", "averageButton",
             "anchorEdit", "baselineEdit", "conditionEdit", "countEdit", "expectedEdit",
             "exportButton", "lateEdit", "methodCombo", "minimumEdit", "neuronCombo",
             "offEdit", "offsetEdit", "onEdit", "overviewPlot", "pauseEdit", "postEdit",
@@ -57,7 +58,6 @@ class SweepView(QObject):
         self.timing_button.clicked.connect(self.show_timing)
         self.summary_button = ui.stepSummaryButton
         self.summary_button.clicked.connect(self.show_step_summary)
-        ui.ivButton.clicked.connect(lambda: self.show_step_summary(iv=True))
         ui.averageButton.clicked.connect(lambda: self.show_step_summary(averages=True))
         ui.inputCombo.currentIndexChanged.connect(self.input_changed)
         self.recording = None
@@ -111,6 +111,8 @@ class SweepView(QObject):
                 combo.model().item(index).setEnabled(values is not None and bool(np.isfinite(values).any()))
             has_voltage = combo.model().item(voltage_index).isEnabled()
             combo.setCurrentIndex(voltage_index if recording.clamp_mode == "VC" and has_voltage else 0)
+        with QSignalBlocker(self.form.signalCombo):
+            self.form.signalCombo.setCurrentIndex(1 if recording.clamp_mode == "VC" else 0)
         self.input_changed()
         self.form.conditionEdit.clear()
         self.form.anchorEdit.setPlaceholderText(f"{recording.time_ms[0]:g}")
@@ -143,11 +145,23 @@ class SweepView(QObject):
         self.form.exportButton.setEnabled(False)
         self.timing_button.setEnabled(False)
         self.summary_button.setEnabled(False)
-        self.form.ivButton.setEnabled(False)
         self.form.averageButton.setEnabled(False)
         self.form.summaryLabel.setText("Preview steps to apply these settings.")
         self.draw_overview()
         self.draw_aligned()
+
+    def with_recorded_voltage(self, steps, pre_ms):
+        sweeps = review_windows(self.recording, steps, pre_ms, 0)
+        reviewed = []
+        for sweep in sweeps:
+            step = sweep.step
+            samples = command_windows(self.recording, sweep, self.input_signal, settled=True)
+            if samples is None:
+                reviewed.append(replace(step, amplitude=None, issue=step.issue or "Missing command voltage"))
+            else:
+                before, active = samples
+                reviewed.append(replace(step, amplitude=float(np.median(active) - np.median(before))))
+        return reviewed
 
     def preview(self):
         if self.recording is None:
@@ -163,9 +177,38 @@ class SweepView(QObject):
                 tolerance = number(ui.toleranceEdit, "edge tolerance", 0.001)
                 minimum = number(ui.minimumEdit, "minimum on-time", 0.001)
                 expected = number(ui.expectedEdit, "expected on-time", minimum, optional=True)
-                steps = detect_steps(input_recording, baseline, tolerance, minimum, expected)
+                steps = None
+                protocol = None
+                if self.input_key == "command_voltage":
+                    steps = scheduled_steps(self.recording, 0, 0.5, minimum, expected, voltage=True)
+                    if steps is not None:
+                        steps = self.with_recorded_voltage(steps, pre)
+                elif not self.input_key:
+                    steps = scheduled_steps(self.recording, baseline, tolerance, minimum, expected)
+                    if steps is None and baseline == 0:
+                        protocol = custom_step_cycles(self.recording)
+                if steps is not None:
+                    alignment = "Recorded step schedule"
+                elif protocol is None:
+                    steps = detect_steps(input_recording, baseline, tolerance, minimum, expected)
+                    alignment = "Detected step onset"
+                else:
+                    _, durations, matches = protocol
+                    time = self.recording.time_ms
+                    steps = []
+                    for series, (_, starts, stops) in enumerate(matches, 1):
+                        for position, (start, stop, duration) in enumerate(zip(starts, stops, durations), 1):
+                            if duration < minimum or (expected is not None and
+                                    abs(duration - expected) > self.recording.nominal_step_ms):
+                                continue
+                            amplitude = float(np.median(self.input_signal[start:stop]))
+                            if abs(amplitude) > tolerance:
+                                steps.append(Step(len(steps) + 1, time[start], time[stop], amplitude,
+                                                  series, position, nominal_duration_ms=float(duration)))
+                    steps = with_preceding_intervals(steps)
+                    alignment = "Verified custom stimulus timing"
                 self.settings = {
-                    "Alignment": "Detected step onset", "Edge tolerance": tolerance,
+                    "Alignment": alignment, "Edge tolerance": tolerance,
                     "Minimum on-time (ms)": minimum, "Expected on-time (ms)": expected,
                 }
             else:
@@ -200,17 +243,17 @@ class SweepView(QObject):
         self.excluded.intersection_update((s.step.onset_ms, s.step.offset_ms) for s in self.sweeps)
         self.refresh()
 
-    def show_step_summary(self, *, iv=False, averages=False):
+    def show_step_summary(self, *, averages=False):
         from .step_summary_view import StepSummaryView
 
         if not any(self.is_included(sweep) for sweep in self.sweeps):
             return
         if not hasattr(self, "summary_view"):
             self.summary_view = StepSummaryView(self)
-        if iv:
+        if not averages and self.recording.clamp_mode == "VC" and self.input_key == "command_voltage":
             self.form.neuronCombo.setCurrentIndex(0)
             self.form.signalCombo.setCurrentIndex(1)
-        self.summary_view.load(iv=iv, averages=averages)
+        self.summary_view.load(averages=averages)
         ui = self.window.ui
         ui.DataAnalysis_sweepStack.setCurrentWidget(ui.DataAnalysis_stepSummaryPage)
 
@@ -315,11 +358,11 @@ class SweepView(QObject):
         self.timing_button.setEnabled(bool(count) and self.window.analysis_spikes is not None)
         self.summary_button.setEnabled(bool(count))
         self.form.averageButton.setEnabled(bool(count))
-        self.form.ivButton.setEnabled(bool(count) and self.recording.clamp_mode == "VC"
-                                      and self.input_key == "command_voltage")
         if self.sweeps:
             self.form.summaryLabel.setText(
-                f"{len(self.sweeps)} candidates · {count} included. Select a row to inspect its amplitude and duration group."
+                f"{len(self.sweeps)} candidates · {count} included. "
+                + (self.settings["Alignment"] + ". " if self.sweeps[0].step.nominal_duration_ms is not None else "")
+                + "Select a row to inspect its amplitude and duration group."
             )
         else:
             self.form.summaryLabel.setText("No step candidates. Check the baseline and tolerance, or enter step timing.")

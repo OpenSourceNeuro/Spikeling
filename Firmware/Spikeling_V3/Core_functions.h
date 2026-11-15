@@ -30,9 +30,7 @@ inline void pharmUpdateVerifiedSpikeOutput() {
     digitalWrite(axon.pin_digital, LOW);                                             // Suppress false AP TTL.
     digitalWrite(pins.gpio.spike, LOW);                                              // Suppress false buzzer pulse.
     if (spike.LED_enable) {
-      spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;             // Original Vm brightness calculation.
-      spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));
-      setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                        // Preserve the selected non-spike RGB colour.
+      setVmRgbLed(vmLedDuty(neuron.v_out));  // Shared perceptual mapping; preserve spike gating.
     }
   }
   axon.norm = (neuron.v_out - neuron.Vm_min) * axon.Vm_range;                       // Original analogue Vm calibration.
@@ -801,13 +799,10 @@ inline void update_Spike() {
     digitalWrite(pins.gpio.spike, LOW);                                                           // Force the spike-indicator GPIO LOW (typically drives a LED / buzzer logic). Avoid “false spike” signals during voltage clamp.
 
     if (spike.LED_enable) {                                                                             // If GUI LED bool is enabled
-      spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                              // Convert Vm into a PWM command
-      spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));              // Constrain to the configured LED PWM maximum
-
-      setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                                        // Display Vm using the selected RGB colour
+      setVmRgbLed(vmLedDuty(neuron.v_out));  // Shared perceptual mapping; preserve spike gating.
     }
   }
-  else{                                                                                         // If we are in Voltage Clamp mode. 
+  else{                                                                                         // Ordinary current clamp after transition rearming. 
     if ( neuron.v>= neuron.Vm_spike ) {                                                           // Whenever neuron is considered to be spiking 
       neuron.v_out = neuron.Vm_peak;                                                                // Forces the displayed Vm value to Vm_peak
       digitalWrite(axon.pin_digital, HIGH);                                                         // Sends digital output through the Axon digital pin
@@ -825,10 +820,7 @@ inline void update_Spike() {
       digitalWrite(pins.gpio.spike, LOW);                                                           // Keep the buzzer silent
                                                                                         
       if (spike.LED_enable) {                                                                       // If GUI LED bool is enabled
-        spike.led_Vm_pwmf = (neuron.v_out - neuron.Vm_min) * spike.led_Vm;                            // Convert Vm into a PWM command
-        spike.led_Vm_pwm = int(constrain(spike.led_Vm_pwmf, 0.0f, float(spike.ledc_Max)));             // Constrain to the configured LED PWM maximum
-
-        setVmRgbLed((uint16_t)spike.led_Vm_pwm);                                                      // Display Vm using the selected RGB colour
+        setVmRgbLed(vmLedDuty(neuron.v_out));  // Shared perceptual mapping; preserve spike gating.
       }                                                  
     } 
   }
@@ -1013,21 +1005,26 @@ inline void send_SamplePacket() {
                     : (pharmacology.enabled ? pharmacology.syn[1].effective_current : syn2.current)) * I_SCALE);
   pkt.trigger_q   = (int16_t)stim.trigger;                                                      // Trigger
 
-  // Normal telemetry uses one complete 18-byte USB record, even without a GUI.                // Prevent a blocked host from stopping the model.
-#if VC_GUARDED_HWCDC                                                                          // Use the validated Hardware CDC transport on ESP32-S3 core 3.3.12.
-  uint8_t frame[2 + sizeof(SamplePacket)];                                                    // Header + unchanged 16-byte sample payload.
-  frame[0] = 0xAA;                                                                            // Preserve legacy first synchronisation byte.
-  frame[1] = 0x55;                                                                            // Preserve legacy second synchronisation byte.
-  memcpy(frame + 2, &pkt, sizeof(pkt));                                                       // Copy packed sample without changing field layout or endianness.
-  if (Serial.availableForWrite() >= int(sizeof(frame))) {                                    // Never wait for a reader that may have closed the GUI.
-    const size_t accepted = Serial.write(frame, sizeof(frame));                               // Enqueue the whole 18-byte record with a zero-timeout USB policy.
-    if (accepted != sizeof(frame)) vc::usb_tx_fault = true;                                   // Record an unexpected short write without retrying partial frames.
-  }                                                                                           // Drop a complete sample if insufficient USB capacity; never drop a partial packet.
-#else                                                                                         // Retain original Arduino Serial behaviour on non-validated USB configurations.
-  const uint8_t header[2] = { 0xAA, 0x55 };                                                   // Original legacy frame marker.
-  Serial.write(header, 2);                                                                    // Original header transmission.
-  Serial.write(reinterpret_cast<uint8_t*>(&pkt), sizeof(pkt));                               // Original 16-byte sample payload.
-#endif                                                                                        // End ESP32-S3 Hardware CDC protection.
+  // CC and legacy clients retain the original frame. The extended VC frame appends the applied setpoint.
+  const bool extended = stream_voltage_command && clampMode == ClampMode::VoltageClamp;
+  uint8_t frame[2 + sizeof(SamplePacket) + sizeof(int16_t)];                                   // Room for the optional command field.
+  frame[0] = 0xAA;                                                                            // Start of the sample header.
+  frame[1] = extended ? 0x56 : 0x55;                                                         // Distinguish extended VC from legacy samples.
+  memcpy(frame + 2, &pkt, sizeof(pkt));                                                       // Preserve all eight existing channels.
+  size_t frame_size = 2 + sizeof(pkt);                                                       // Legacy sample length in bytes.
+  if (extended) {
+    const int16_t command_q = q_round(patch.v_cmd * V_SCALE);                                 // Applied clamp setpoint in hundredths of a millivolt.
+    memcpy(frame + frame_size, &command_q, sizeof(command_q));                                // Append in the same byte order as the sample.
+    frame_size += sizeof(command_q);                                                         // Send the command with the same sample.
+  }
+#if VC_GUARDED_HWCDC
+  if (Serial.availableForWrite() >= int(frame_size)) {                                        // Keep USB backpressure out of the model loop.
+    const size_t accepted = Serial.write(frame, frame_size);                                  // Queue one complete frame.
+    if (accepted != frame_size) vc::usb_tx_fault = true;                                      // Record a short write without retrying fragments.
+  }
+#else
+  Serial.write(frame, frame_size);                                                            // Send a complete frame on other transports.
+#endif
   // wifiSendSamplePacket(pkt);
 }
 

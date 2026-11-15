@@ -1,6 +1,7 @@
 #pragma once  
 
 #include <cstdint>
+#include <cmath>                                    // Finite checks for perceptual Vm LED mapping
 #include <Arduino.h>                                  // Required by the native USB transport layer
 #include "VoltageClamp_functions.h"                   // Passive / active VC solvers and guarded diagnostics
 #include "Pharmacology_functions.h"                   // Intrinsic and synaptic pharmacology, including release
@@ -84,6 +85,7 @@ constexpr uint16_t current_in_arm_samples   = 50;  // 50 loops × 2 ms = ~100 ms
 inline MCP3208 ADC1;                                        // First MCP3208 12-bit SPI ADC
 inline MCP3208 ADC2;                                        // Second MCP3208 12-bit SPI ADC
 inline MCP4922 DAC;                                         // MCP4922 12-bit SPI DAC
+inline bool stream_voltage_command = false;               // Extended VC telemetry is enabled by the desktop client.
 inline SamplePacket pkt;                                    // Reusable 16-byte sample packet buffer for streaming data over serial
 
 
@@ -864,10 +866,6 @@ inline Axon axon{
  
  
 struct Spike {
-  // --- Gain mapping from Vm range to PWM range
-  float    led_Vm;                                          // [PWM counts per mV] scaling factor for red LED Vm encoding
-  float    led_Vm_pwmf;                                     // Floating-point PWM duty computed from Vm before clamp/quantization
-  int      led_Vm_pwm;                                      // Quantized PWM duty in integer counts (0..ledc_Max)
   // --- LEDC PWM configuration
   int      ledc_Resolution;                                 // PWM resolution in bits: duty cycle range 0 - 1023   
   int      ledc_Max;                                        // Maximum duty count for current resolution (=(1<<res)-1)
@@ -881,9 +879,6 @@ struct Spike {
   bool     LED_enable;                                      // Enables RGB LED Vm/spike visualization
 }; 
 inline Spike spike{
-  .led_Vm          = bits10 / (neuron.Vm_peak - neuron.Vm_min),
-  .led_Vm_pwmf     = 0.0f,
-  .led_Vm_pwm      = 0,
   .ledc_Resolution = 10,
   .ledc_Max        = (1 << 10) - 1,
   .ledc_Freq       = 20000,
@@ -947,6 +942,32 @@ inline void setLedc(uint8_t pin, uint16_t value, uint16_t &last) {
     last = value;
     ledcWrite(pin, value);
   }
+}
+
+// Map Vm to approximately uniform perceived lightness, then to linear PWM.
+// Read live endpoints so parameter changes cannot leave a stale mapping gain.
+// Colour scaling follows this transfer function; white spikes bypass it.
+inline uint16_t vmLedDuty(float vm) {
+  const float minimum = neuron.Vm_min;
+  const float threshold = neuron.Vm_spike;
+  const float span = threshold - minimum;
+  const int maximum = spike.ledc_Max;
+  if (!std::isfinite(vm) || !std::isfinite(minimum) ||
+      !std::isfinite(threshold) || !std::isfinite(span) || span <= 0.0f ||
+      maximum <= 0 || maximum > 65535) return 0;
+  if (vm <= minimum) return 0;
+  if (vm >= threshold) return static_cast<uint16_t>(maximum);
+
+  const float x = (vm - minimum) / span;  // Desired L* / 100, in [0, 1].
+  float light;
+  if (x <= 0.08f) {
+    light = x * (2700.0f / 24389.0f);
+  } else {
+    const float t = (100.0f * x + 16.0f) / 116.0f;
+    light = t * t * t;  // Inverse CIE L*: no general power function needed.
+  }
+  const float duty = light * static_cast<float>(maximum);
+  return static_cast<uint16_t>(duty + 0.5f);
 }
 
 inline uint16_t scaleLedChannel(uint16_t vmDuty, uint8_t channel255) {

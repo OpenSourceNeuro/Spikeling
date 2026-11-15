@@ -4,6 +4,8 @@ from dataclasses import dataclass, replace
 
 import numpy as np
 
+from spikeling_gui.stimulus_schedule import VOLTAGE_RANGE
+
 from .recording import trigger_onsets
 
 
@@ -17,6 +19,13 @@ class Step:
     position: int | None
     preceding_off_ms: float | None = None
     issue: str = ""
+    nominal_duration_ms: float | None = None
+
+    @property
+    def grouping_duration_ms(self):
+        if self.nominal_duration_ms is not None:
+            return self.nominal_duration_ms
+        return self.offset_ms - self.onset_ms
 
 
 @dataclass(frozen=True)
@@ -70,6 +79,78 @@ def detect_steps(recording, baseline, tolerance, minimum_ms, expected_ms=None):
             positions[series_index] if series_index else None, issue=issue,
         ))
     return with_preceding_intervals(candidates)
+
+
+def scheduled_steps(recording, baseline, tolerance, minimum_ms, expected_ms, *, voltage=False):
+    """Measure recorded steps using the saved schedule and nearby stimulus edges."""
+    channels = recording.extra_channels
+    direct = voltage and "voltage_step_onset" in channels
+    prefix = "voltage_" if direct else ""
+    onset_key, level_key, duration_key = (prefix + key for key in ("step_onset", "step_level", "step_duration"))
+    if not all(key in channels for key in (onset_key, level_key, duration_key)):
+        return None
+    starts = np.flatnonzero(channels[onset_key] == 1)
+    if not len(starts):
+        return None
+
+    time = recording.time_ms
+    period = recording.nominal_step_ms
+    signal = channels["command_voltage"] if direct else recording.stimulus
+    active = np.isfinite(signal) & (np.abs(signal - baseline) > tolerance)
+    changes = np.diff(np.r_[False, active, False].astype(np.int8))
+    rises = np.flatnonzero(changes == 1)
+    falls = np.flatnonzero(changes == -1)
+    rise_times = time[rises]
+    triggers = (np.flatnonzero(channels["voltage_loop_start"] == 1)
+                if direct and "voltage_loop_start" in channels else trigger_onsets(recording))
+    steps = []
+    positions = {}
+    for scheduled, limit in zip(starts, np.r_[starts[1:], len(time)]):
+        level = channels[level_key][scheduled]
+        count = channels[duration_key][scheduled]
+        low, high = VOLTAGE_RANGE if direct else (-100, 100)
+        if (not low <= level <= high or not np.isfinite(count)
+                or count < 1 or count != int(count)):
+            continue
+        duration = float(count * period)
+        if duration + period * 1e-6 < minimum_ms:
+            continue
+        if expected_ms is not None and abs(duration - expected_ms) > period + period * 1e-6:
+            continue
+
+        # A transition from baseline can refine the host/emulator timestamp.
+        # Baseline-level steps and steps without a distinct edge use the schedule.
+        start = scheduled
+        delta = float(level - baseline)
+        if not direct and abs(delta) > tolerance:
+            nearby = np.searchsorted(rise_times, [time[scheduled] - 2, time[scheduled] + 2],
+                                     side="left")
+            for rise, fall in zip(rises[nearby[0]:nearby[1]], falls[nearby[0]:nearby[1]]):
+                if rise >= limit:
+                    continue
+                if abs((fall - rise) * period - duration) > 3:
+                    continue
+                observed = np.median(signal[rise:fall]) - baseline
+                if abs(observed - delta) <= max(tolerance, 0.5):
+                    start = rise
+                    break
+
+        onset = float(time[start])
+        offset = onset + duration
+        planned_end = time[scheduled] + duration
+        left, right = sample_bounds(recording, onset, offset)
+        issue = ""
+        if (planned_end > time[limit - 1] + period * 1.000001
+                or offset > time[limit - 1] + period * 1.000001
+                or not window_available(recording, left, right, signal)):
+            issue = "Incomplete scheduled step or missing data"
+        elif direct and not np.allclose(signal[left:right], level, atol=0.005, rtol=0):
+            issue = "Recorded command differs from scheduled voltage"
+        series = int(np.searchsorted(triggers, scheduled, side="right"))
+        positions[series] = positions.get(series, 0) + 1
+        steps.append(Step(len(steps) + 1, onset, offset, delta, series or None,
+                          positions[series], issue=issue, nominal_duration_ms=duration))
+    return with_preceding_intervals(steps)
 
 
 def manual_steps(recording, baseline, first_offset, on_ms, off_ms, count, anchor, pause):
@@ -149,6 +230,25 @@ def sample_bounds(recording, start, end):
     return tuple(np.searchsorted(recording.time_ms, [start - eps, end - eps]))
 
 
+def command_windows(recording, sweep, command, *, baseline_start=None, settled=False):
+    """Get measured holding and active command samples for a reviewed sweep."""
+    step = sweep.step
+    start = sweep.baseline_start_ms if baseline_start is None else baseline_start
+    left, on = sample_bounds(recording, start, step.onset_ms)
+    _, stop = sample_bounds(recording, step.onset_ms, step.offset_ms)
+    if not (window_available(recording, left, on, command)
+            and window_available(recording, on, stop, command)):
+        return None
+    before, active = command[left:on], command[on:stop]
+    if settled and step.nominal_duration_ms is not None and (recording.acquisition or {}).get("source") == "board":
+        # The board filters edges and the preceding step can extend into the baseline.
+        baseline_trim = len(before) // 4
+        active_trim = len(active) // 4
+        before = before[baseline_trim:len(before) - baseline_trim]
+        active = active[active_trim:len(active) - active_trim]
+    return before, active
+
+
 def window_available(recording, left, right, signal):
     return (
         right > left and np.isfinite(signal[left:right]).all()
@@ -196,7 +296,6 @@ def matching_sweeps(sweeps, selected, amplitude_tolerance, time_tolerance):
         if step.amplitude is not None and candidate.step.amplitude is not None
         and abs(candidate.step.amplitude - step.amplitude) <= amplitude_tolerance
         and abs(
-            (candidate.step.offset_ms - candidate.step.onset_ms)
-            - (step.offset_ms - step.onset_ms)
+            candidate.step.grouping_duration_ms - step.grouping_duration_ms
         ) <= time_tolerance
     ]

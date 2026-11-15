@@ -421,7 +421,6 @@ def Buttons(self):
     ########################################################################
 # Neuron Generator Page - page401
     # Display Page_NeuronGenerator when neuron button is clicked
-    self.ui.NeuronGeneratorMenu_pushButton.clicked.connect(lambda: Page_NeuronGenerator.ShowPage(self))
 
     # Draw Neuron model based on parameters a, b, c & d
     self.ui.DisplayNeuron_pushButton.clicked.connect(lambda: Page_NeuronGenerator.NeuronGenerator.DrawNeuron(self))
@@ -432,6 +431,9 @@ def Buttons(self):
 
     # Load Pre-selected neurons
     self.ui.LoadNeuron_comboBox.currentIndexChanged.connect(lambda: Page_NeuronGenerator.NeuronGenerator.LoadNeuron(self))
+    self.ui.NeuronGenerator_open_button.clicked.connect(
+        lambda: Page_NeuronGenerator.NeuronGenerator.OpenNeuron(self)
+    )
     # Save current neuron
     self.ui.SaveNeuronPushButton.clicked.connect(lambda: Page_NeuronGenerator.NeuronGenerator.SaveNeuron(self))
 

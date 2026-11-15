@@ -243,11 +243,11 @@ THEME_ROLES: Tuple[ThemeRole, ...] = (
     # One role drives both scopes: they plot the same eight-channel stream,
     # so divergent colours would defeat side-by-side comparison.
     ThemeRole("neuron_vm", "Membrane potential", SECTION_NEURON,
-              palette_index=3, targets=_neuron_targets(0)),
+              palette_index=3, targets=_neuron_targets(0) + (CurveTarget("window", "NeuronCurve"),)),
     ThemeRole("neuron_stimulus", "Stimulus", SECTION_NEURON,
               palette_index=5, targets=_neuron_targets(1)),
     ThemeRole("neuron_current", "Total input current", SECTION_NEURON,
-              palette_index=4, targets=_neuron_targets(2)),
+              palette_index=4, targets=_neuron_targets(2) + (CurveTarget("window", "StimCurve"),)),
     ThemeRole("neuron_syn1_vm", "Synapse 1 Vm", SECTION_NEURON,
               palette_index=6, targets=_neuron_targets(3)),
     ThemeRole("neuron_syn1_input", "Synapse 1 input", SECTION_NEURON,

@@ -25,6 +25,7 @@ DEFAULT_BAUD_RATE = 500_000
 
 # Binary sample packet from Spikeling firmware
 SPIKELING_HEADER = b'\xAA\x55'
+VC_SAMPLE_HEADER = b'\xAA\x56'
 SPIKELING_HEADER_LEN = len(SPIKELING_HEADER)
 SPIKELING_PACKET_SIZE = 16  # 8 * int16 = 16 bytes
 SPIKELING_FRAME_SIZE = SPIKELING_HEADER_LEN + SPIKELING_PACKET_SIZE
@@ -44,7 +45,8 @@ class SerialPortManager(QObject):
     # Signals
     error_occurred = Signal(str)
     connection_changed = Signal(bool)
-    data_received = Signal(list)  # Signal emitted when valid data is received
+    data_received = Signal(list)  # Eight channels for the live views.
+    sample_received = Signal(list, object)  # Same channels and optional command voltage for recording.
     device_lost = Signal(str)   # emitted once when the link dies unexpectedly
     manual_action_required = Signal(str)
 
@@ -263,6 +265,7 @@ class SerialPortManager(QObject):
 
         Frame format on the wire:
           [0xAA][0x55][16-byte SamplePacket payload]
+          [0xAA][0x56][same payload][command voltage int16, 0.01 mV]
 
         SamplePacket payload (little-endian int16_t):
           v_q, stim_state, Itot_q, syn1_vm_q, Isyn1_q, syn2_vm_q, Isyn2_q, trigger_q
@@ -280,35 +283,25 @@ class SerialPortManager(QObject):
                 if buf_len < SPIKELING_FRAME_SIZE:
                     break
 
-                # Find header
-                idx = self._buffer.find(SPIKELING_HEADER)
-                if idx == -1:
-                    # No header at all: drop everything except maybe last byte
-                    # (in case it's the first byte of header)
-                    if buf_len > SPIKELING_HEADER_LEN:
-                        del self._buffer[:buf_len - SPIKELING_HEADER_LEN]
+                legacy = self._buffer.find(SPIKELING_HEADER)
+                extended = self._buffer.find(VC_SAMPLE_HEADER)
+                headers = [index for index in (legacy, extended) if index >= 0]
+                if not headers:
+                    del self._buffer[:-1]
                     break
 
-                # We found a potential header at idx, but do we have the full frame?
-                if buf_len < idx + SPIKELING_FRAME_SIZE:
-                    # Wait for more bytes
-                    # Optionally drop junk before header
-                    if idx > 0:
-                        del self._buffer[:idx]
-                    break
-
-                # We have a full frame: drop any junk before header
-                if idx > 0:
+                idx = min(headers)
+                if idx:
                     del self._buffer[:idx]
-                    buf_len = len(self._buffer)
+                has_command = idx == extended
+                frame_size = SPIKELING_FRAME_SIZE + (2 if has_command else 0)
+                if len(self._buffer) < frame_size:
+                    break
 
-                # Now buffer starts with header; extract payload
-                # [0:2] = header, [2:18] = payload
-                payload = bytes(self._buffer[SPIKELING_HEADER_LEN:
-                                             SPIKELING_HEADER_LEN + SPIKELING_PACKET_SIZE])
-
-                # Remove the whole frame from the buffer
-                del self._buffer[:SPIKELING_FRAME_SIZE]
+                payload = bytes(self._buffer[SPIKELING_HEADER_LEN:SPIKELING_FRAME_SIZE])
+                command_mv = (struct.unpack_from("<h", self._buffer, SPIKELING_FRAME_SIZE)[0] / V_SCALE
+                              if has_command else None)
+                del self._buffer[:frame_size]
 
                 # Unpack payload:
                 v_q, stim_state_q, Itot_q, syn1_vm_q, Isyn1_q, syn2_vm_q, Isyn2_q, trigger_q = \
@@ -330,6 +323,7 @@ class SerialPortManager(QObject):
                     self._data_buffer.append(floats)
                     self._last_valid_data = floats
 
+                self.sample_received.emit(floats, command_mv)
                 self.data_received.emit(floats)
                 last_packet = floats
 

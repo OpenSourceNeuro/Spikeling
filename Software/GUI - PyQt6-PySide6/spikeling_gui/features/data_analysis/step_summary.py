@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .sweep_analysis import Sweep, sample_bounds, window_available
+from .sweep_analysis import Sweep, command_windows, sample_bounds, window_available
 
 
 @dataclass
@@ -17,7 +17,7 @@ class SummaryPoint:
     metrics: dict
 
 
-def points_for_sweeps(recording, sweeps, measurements, include, command=None, tolerance=.05, *, measure_stimulus_change=False):
+def points_for_sweeps(recording, sweeps, measurements, include, command=None, tolerance=.05, *, measure_stimulus_change=False, settled_command=False):
     points, skipped = [], 0
     for row, (sweep, metrics) in enumerate(zip(sweeps, measurements)):
         if not include(sweep):
@@ -35,13 +35,11 @@ def points_for_sweeps(recording, sweeps, measurements, include, command=None, to
                 continue
             level = float(np.median(signal[on:stop]) - np.median(signal[left:on]))
         if command is not None:
-            left, on = sample_bounds(recording, sweep.baseline_start_ms, step.onset_ms)
-            _, stop = sample_bounds(recording, step.onset_ms, step.offset_ms)
-            if not (window_available(recording, left, on, command)
-                    and window_available(recording, on, stop, command)):
+            samples = command_windows(recording, sweep, command, settled=settled_command)
+            if samples is None:
                 skipped += 1
                 continue
-            before, active = command[left:on], command[on:stop]
+            before, active = samples
             if np.ptp(before) > tolerance or np.ptp(active) > tolerance:
                 skipped += 1
                 continue
@@ -55,7 +53,7 @@ def points_for_sweeps(recording, sweeps, measurements, include, command=None, to
             data["probability"] = 100.0 if data["count"] else 0.0
         if "late" in data and "baseline" in data:
             data["late_change"] = data["late"] - data["baseline"]
-        points.append(SummaryPoint(row, sweep, level, holding, step.offset_ms - step.onset_ms, data))
+        points.append(SummaryPoint(row, sweep, level, holding, step.grouping_duration_ms, data))
     return points, skipped
 
 

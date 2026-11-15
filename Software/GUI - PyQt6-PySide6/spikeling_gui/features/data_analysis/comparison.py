@@ -6,7 +6,8 @@ import numpy as np
 
 from .recording import detect_spikes, presynaptic_event_indices
 from .sweep_analysis import (
-    Step, detect_steps, measure_sweep, review_windows, sample_bounds, window_available,
+    Step, command_windows, detect_steps, measure_sweep, review_windows, sample_bounds, scheduled_steps,
+    window_available,
 )
 
 
@@ -117,12 +118,20 @@ def condition_trials(condition, settings):
 
         return train_trials(condition, settings, stimulus, signal, unit)
     reviewed = condition.reviewed is not None and settings.source == condition.reviewed_source
+    use_voltage = settings.preset == VC and settings.source == COMMAND
     if reviewed:
         sweeps = condition.reviewed
     else:
         command = replace(rec, stimulus=stimulus)
-        steps = detect_steps(command, settings.baseline, settings.amplitude_tolerance,
-                             settings.minimum_step)
+        steps = None
+        if use_voltage:
+            steps = scheduled_steps(rec, 0, 0.5, settings.minimum_step, None, voltage=True)
+        elif settings.source == STIM:
+            steps = scheduled_steps(rec, settings.baseline, settings.amplitude_tolerance,
+                                    settings.minimum_step, None)
+        if steps is None:
+            steps = detect_steps(command, settings.baseline, settings.amplitude_tolerance,
+                                 settings.minimum_step)
         sweeps = review_windows(rec, steps, settings.pre, 0)
     spikes = detect_spikes(rec, settings.threshold) if settings.preset == CC else None
     result, excluded = [], 0
@@ -133,7 +142,19 @@ def condition_trials(condition, settings):
             excluded += 1
             continue
         holding = settings.baseline
-        if settings.source == COMMAND:
+        scheduled_voltage = use_voltage and step.nominal_duration_ms is not None
+        if scheduled_voltage:
+            samples = command_windows(rec, sweep, stimulus, baseline_start=start, settled=True)
+            if samples is None:
+                excluded += 1
+                continue
+            before, active = samples
+            if max(np.ptp(before), np.ptp(active)) > settings.amplitude_tolerance:
+                excluded += 1
+                continue
+            holding = float(np.median(before))
+            amplitude = float(np.median(active)) - holding
+        elif settings.source == COMMAND:
             lo, hi = sample_bounds(rec, start, step.onset_ms)
             if not window_available(rec, lo, hi, stimulus):
                 excluded += 1
@@ -142,12 +163,15 @@ def condition_trials(condition, settings):
         elif reviewed:
             # Keep the baseline used for amplitude detection when taking a reviewed snapshot.
             holding = condition.reviewed_baseline
-        lo, hi = sample_bounds(rec, step.onset_ms, step.offset_ms)
-        if not window_available(rec, lo, hi, stimulus):
-            excluded += 1
-            continue
-        amplitude = float(np.median(stimulus[lo:hi])) - holding
-        duration = step.offset_ms - step.onset_ms
+        if not scheduled_voltage:
+            lo, hi = sample_bounds(rec, step.onset_ms, step.offset_ms)
+            if not window_available(rec, lo, hi, stimulus):
+                excluded += 1
+                continue
+            amplitude = float(np.median(stimulus[lo:hi])) - holding
+            if settings.source == STIM and step.nominal_duration_ms is not None and not reviewed:
+                amplitude = step.amplitude
+        duration = step.grouping_duration_ms
         key = (amplitude, duration, holding)
         if settings.match_history:
             if step.position is None or step.preceding_off_ms is None:
@@ -294,18 +318,23 @@ def matched_groups(reference, comparison, settings):
     return accepted, [g for g in left if id(g) not in left_used], [g for g in right if id(g) not in right_used]
 
 
-def trace(trial, values):
+def trace(trial, values, display_window=None):
     rec = trial.condition.recording
-    lo, hi = sample_bounds(rec, trial.start, trial.end)
+    start, end = trial.start, trial.end
+    if display_window is not None:
+        left, right = display_window
+        start = max(trial.condition.start, trial.onset + left)
+        end = min(trial.condition.end, trial.onset + right + rec.nominal_step_ms)
+    lo, hi = sample_bounds(rec, start, end)
     x = rec.time_ms[lo:hi] - trial.onset
     y = values[lo:hi]
     gaps = np.flatnonzero(rec.gap_before[lo:hi])
     return np.insert(x, gaps, np.nan), np.insert(y, gaps, np.nan)
 
 
-def subtraction(reference, comparison):
+def subtraction(reference, comparison, display_window=None):
     """Mean comparison minus mean reference on time supported by every trace."""
-    traces = [trace(t, t.signal) for t in reference + comparison]
+    traces = [trace(t, t.signal, display_window) for t in reference + comparison]
     if any(not np.isfinite(x).any() for x, _ in traces):
         return np.array([]), np.array([])
     start = max(np.nanmin(x) for x, _ in traces)
@@ -327,3 +356,14 @@ def subtraction(reference, comparison):
         samples.append(values)
     data = np.asarray(samples)
     return grid, np.mean(data[len(reference):], axis=0) - np.mean(data[:len(reference)], axis=0)
+
+def difference_peak(time, current, start, end, sample_ms):
+    """Find the signed minimum over a fully supported measurement window."""
+    epsilon = sample_ms * 1e-6
+    if not len(time) or time[0] > start + epsilon or time[-1] < end - sample_ms - epsilon:
+        return None
+    inside = np.flatnonzero((time >= start - epsilon) & (time <= end + epsilon))
+    if not len(inside) or not np.isfinite(current[inside]).all():
+        return None
+    index = inside[np.argmin(current[inside])]
+    return float(current[index]), float(time[index])

@@ -176,4 +176,7 @@ class MainWindow(QMainWindow):
                 event.ignore()
                 return
 
+        controller = getattr(self, "custom_stimulus_controller", None)
+        if controller is not None and controller.running and controller.voltage:
+            controller.stop()
         super().closeEvent(event)

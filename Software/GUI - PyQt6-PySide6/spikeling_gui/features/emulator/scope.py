@@ -13,6 +13,7 @@ from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.plotting.graph_core import RingBuffer, apply_scope_timebase, configure_scope
 from spikeling_gui import speed_model as speed
+from spikeling_gui.stimulus_schedule import NO_STEP, save_step_channels
 from spikeling_gui.recording_metadata import RecordingMetadata, stp_parameters, write_recording
 
 from .models import CURRENT_TO_NA, IntrinsicPharmacology, Synapse, VoltageClamp, izhikevich
@@ -332,6 +333,7 @@ def GetData(self, state, noise, recording_channels=None):
     """Advance the two presynaptic cells, their synapses, and the soma by 0.1 ms."""
     dt = EMULATOR_SAMPLE_INTERVAL_MS
     stimulus_sample = self.emulator_controls.next_sample()
+    scheduled = NO_STEP
     if stimulus_sample is None:
         period = self.Emulator_StimSteps
         counter = self.Emulator_StimCounter
@@ -341,7 +343,7 @@ def GetData(self, state, noise, recording_channels=None):
         if self.Emulator_StimCounter == 0:
             self.Emulator_StimSteps = state.stim_period
     else:
-        stimulus, trigger = stimulus_sample
+        stimulus, trigger, scheduled = stimulus_sample
 
     stimulus = float(stimulus) if abs(stimulus) >= 5 else 0.0
     # The virtual current cable uses the same DAC span and ADC deadband.
@@ -424,7 +426,7 @@ def GetData(self, state, noise, recording_channels=None):
         displayed_vm = 30.0 if spike else voltage
 
     if recording_channels is not None:
-        for target, value in zip(recording_channels, (command, *presynaptic_events)):
+        for target, value in zip(recording_channels, (command, *presynaptic_events, *scheduled)):
             target.append(value)
     self.Emulator_v = voltage
     self.Emulator_sim_time_ms += dt
@@ -483,7 +485,7 @@ def UpdateRecordingState(self):
     if self.ui.Emulator_DataRecording_Record_pushButton.isChecked() and not self.recordflag:
         self.Emulator_RecordingPath = self.ui.Emulator_recording_path
         self._emulator_recording_vc = self.emulator_controls.voltage_clamp
-        self._emulator_recording_channels = [[], [], []]
+        self._emulator_recording_channels = [[] for _ in range(6)]
         self._emulator_recording_metadata = RecordingMetadata(
             "emulator", "VC" if self._emulator_recording_vc else "CC", EMULATOR_SAMPLE_INTERVAL_MS,
             "emulator_integration_step", "settings applied at the recorded sample boundary",
@@ -528,6 +530,8 @@ def FinishRecording(self):
             event1: {"encoding": "rising_edge_flag", "clock": "Time (ms)", "synapse": 1},
             event2: {"encoding": "rising_edge_flag", "clock": "Time (ms)", "synapse": 2},
         }
+        save_step_channels(frame, channels, self._emulator_recording_channels[3:],
+                           "scheduled step at emulator integration sample")
         write_recording(path, frame, self._emulator_recording_metadata, channels)
     except (OSError, ValueError, TypeError) as error:
         self.ui.Emulator_DataRecording_Record_label.setText("Recording could not be saved")

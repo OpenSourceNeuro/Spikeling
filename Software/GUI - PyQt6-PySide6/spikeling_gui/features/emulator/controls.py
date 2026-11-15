@@ -14,7 +14,9 @@ from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.features.neuron_interface.probabilistic_release import edit_release_settings
 from spikeling_gui.features.neuron_interface.short_term_plasticity import PRESETS, edit_stp_settings
 from spikeling_gui.neuron_presets import IzhikevichNeurons
+from spikeling_gui.neuron_csv import NEURON_COLUMNS, read_neuron_csv
 from spikeling_gui.paths import data_directory
+from spikeling_gui.stimulus_schedule import NO_STEP, read_step_schedule
 from spikeling_gui.recording_metadata import drug_setting
 from spikeling_gui.widgets.sliders import SliderBinding
 
@@ -34,10 +36,6 @@ DRUGS = (
 )
 
 
-NEURON_COLUMNS = (
-    "a", "b", "c", "d", "PhotoGain (%)", "PhotoDecay (1/ms)", "PhotoRecovery (1/ms)",
-    "Syn1 Gain (%)", "Syn1 Decay (1/ms)", "Syn2 Gain (%)", "Syn2 Decay (1/ms)",
-)
 NEURON_DEFAULTS = (0, 100, 25, 0, 995, 0, 990)
 PRESET_SLIDERS = ("PR_PhotoGain", "PR_Decay", "PR_Recovery", "Synapse1",
                   "Synapse1_Decay", "Synapse2", "Synapse2_Decay")
@@ -56,6 +54,7 @@ class EmulatorControls:
         self.stp_revision = [0, 0]
         self.samples = None
         self.playback_index = None
+        self.step_schedule = {}
         self.playback_loops = 1
         self.stimulus_hold = 0
         self.stimulus_filtered = 0.0
@@ -247,12 +246,7 @@ class EmulatorControls:
         if not path:
             return
         try:
-            frame = pd.read_csv(path, usecols=NEURON_COLUMNS)
-            if frame.empty:
-                raise ValueError("The neuron CSV contains no parameter row.")
-            parameters = frame.loc[:, list(NEURON_COLUMNS)].iloc[0].to_numpy(dtype=float)
-            if not np.isfinite(parameters).all():
-                raise ValueError("Neuron parameters must be finite numbers.")
+            parameters = read_neuron_csv(path)
         except (OSError, ValueError) as error:
             show_popup(self.host, "Cannot load neuron", str(error))
             return
@@ -375,10 +369,13 @@ class EmulatorControls:
                 raise ValueError("The stimulus must contain finite samples.")
             if (np.abs(samples) > 100).any() or not np.allclose(samples, np.rint(samples), rtol=0, atol=1e-9):
                 raise ValueError("Enter integer stimulus values between -100 and 100.")
+            samples = np.rint(samples).astype(np.int16)
+            step_schedule = read_step_schedule(frame, samples)
         except (OSError, ValueError) as error:
             show_popup(self.host, "Cannot load stimulus", str(error))
             return
-        self.samples = np.rint(samples).astype(np.int16)
+        self.samples = samples
+        self.step_schedule = step_schedule
         self.ui.Emulator_CustomStimulus_StimLabel.setText(Path(path).stem)
         preview = self.ui.Emulator_CustomStimulus_display
         preview.clear()
@@ -420,17 +417,18 @@ class EmulatorControls:
         index = self.playback_index
         if index is None:
             return None
-        sample = int(self.samples[index % len(self.samples)])
+        cycle_index = index % len(self.samples)
+        sample = int(self.samples[cycle_index])
         if abs(sample - self.stimulus_hold) > 2:
             self.stimulus_hold = sample
         self.stimulus_filtered += 0.25 * (self.stimulus_hold - self.stimulus_filtered)
         stimulus = round(self.stimulus_filtered)
-        trigger = index % len(self.samples) == 0
+        trigger = cycle_index == 0
         self.playback_index += 1
         if self.playback_index == len(self.samples) * self.playback_loops:
             self.playback_index = None
             self.playback_finished = True
-        return stimulus, trigger
+        return stimulus, trigger, self.step_schedule.get(cycle_index, NO_STEP)
 
     def stop_playback(self):
         self.playback_index = None

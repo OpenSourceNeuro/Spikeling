@@ -308,6 +308,9 @@ class SpikelingConnectionSupervisor(QObject):
             except Exception as error:  # a broken restorer must not kill the link
                 print(f"State restore failed: {error}")
 
+        # State restoration can send CON, which resets optional telemetry on the board.
+        self._manager.write("VCSTRM\n")  # Older boards ignore this request.
+
         was_recovering = self._recovering
         self._recovering = False
         self._set_state(ConnectionState.CONNECTED)
