@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>735</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -13947,8 +13947,8 @@ background-color: rgb(220, 50, 47);</string>
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>183</width>
-                             <height>559</height>
+                             <width>190</width>
+                             <height>583</height>
                             </rect>
                            </property>
                            <layout class="QVBoxLayout" name="Emulator_verticalLayout_58">
@@ -22562,8 +22562,8 @@ background-color: rgb(220, 50, 47);</string>
                             <rect>
                              <x>0</x>
                              <y>0</y>
-                             <width>213</width>
-                             <height>657</height>
+                             <width>200</width>
+                             <height>647</height>
                             </rect>
                            </property>
                            <layout class="QVBoxLayout" name="Emulator_AuxiliaryNeuron1_verticalLayout_208">
@@ -39099,26 +39099,50 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                 </layout>
                </widget>
                <widget class="QWidget" name="page_Imaging_DataAnalysis">
+                <property name="styleSheet">
+                 <string notr="true">QPushButton[analysisTab=&quot;true&quot;] {
+    background: transparent;
+    color: palette(placeholder-text);
+    border: 0px;
+    border-bottom: 2px solid transparent;
+    border-radius: 0px;
+    padding: 7px 12px;
+}
+QPushButton[analysisTab=&quot;true&quot;]:checked {
+    background: transparent;
+    color: palette(highlight);
+    border-bottom: 2px solid palette(highlight);
+}
+QPushButton[analysisTab=&quot;true&quot;]:hover {
+    color: palette(highlight);
+}
+QPushButton[analysisTab=&quot;true&quot;]:focus {
+    background: palette(button);
+}</string>
+                </property>
                 <layout class="QVBoxLayout" name="ImagingAnalysis_rootLayout">
                  <property name="spacing">
-                  <number>6</number>
+                  <number>5</number>
                  </property>
                  <property name="leftMargin">
-                  <number>7</number>
+                  <number>5</number>
                  </property>
                  <property name="topMargin">
-                  <number>7</number>
+                  <number>5</number>
                  </property>
                  <property name="rightMargin">
-                  <number>7</number>
+                  <number>5</number>
                  </property>
                  <property name="bottomMargin">
-                  <number>7</number>
+                  <number>5</number>
                  </property>
                  <item>
                   <widget class="QLabel" name="ImagingAnalysis_headerLabel">
-                   <property name="styleSheet">
-                    <string>font-size: 13pt; font-weight: 700;</string>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                     <bold>true</bold>
+                    </font>
                    </property>
                    <property name="text">
                     <string>Imaging Data Analysis</string>
@@ -39128,7 +39152,7 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                  <item>
                   <layout class="QHBoxLayout" name="ImagingAnalysis_navLayout">
                    <property name="spacing">
-                    <number>3</number>
+                    <number>6</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -39146,9 +39170,15 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                     <widget class="QPushButton" name="ImagingAnalysis_navRecording">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Recording</string>
@@ -39159,20 +39189,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      <property name="checked">
                       <bool>true</bool>
                      </property>
+                     <property name="analysisTab" stdset="0">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item>
                     <widget class="QPushButton" name="ImagingAnalysis_navProcessing">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Processing</string>
                      </property>
                      <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="analysisTab" stdset="0">
                       <bool>true</bool>
                      </property>
                     </widget>
@@ -39181,14 +39223,23 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                     <widget class="QPushButton" name="ImagingAnalysis_navAlign">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Align &amp; Average</string>
                      </property>
                      <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="analysisTab" stdset="0">
                       <bool>true</bool>
                      </property>
                     </widget>
@@ -39197,14 +39248,23 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                     <widget class="QPushButton" name="ImagingAnalysis_navTransients">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Transients</string>
                      </property>
                      <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="analysisTab" stdset="0">
                       <bool>true</bool>
                      </property>
                     </widget>
@@ -39213,14 +39273,23 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                     <widget class="QPushButton" name="ImagingAnalysis_navInference">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Inference</string>
                      </property>
                      <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="analysisTab" stdset="0">
                       <bool>true</bool>
                      </property>
                     </widget>
@@ -39229,14 +39298,23 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                     <widget class="QPushButton" name="ImagingAnalysis_navCompare">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>100</width>
                        <height>34</height>
                       </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <bold>true</bold>
+                      </font>
                      </property>
                      <property name="text">
                       <string>Compare</string>
                      </property>
                      <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="analysisTab" stdset="0">
                       <bool>true</bool>
                      </property>
                     </widget>
@@ -39270,16 +39348,16 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                       <number>5</number>
                      </property>
                      <property name="leftMargin">
-                      <number>1</number>
+                      <number>3</number>
                      </property>
                      <property name="topMargin">
-                      <number>1</number>
+                      <number>3</number>
                      </property>
                      <property name="rightMargin">
-                      <number>1</number>
+                      <number>3</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>1</number>
+                      <number>3</number>
                      </property>
                      <item>
                       <layout class="QHBoxLayout" name="ImagingAnalysis_recordingToolsLayout">
@@ -39300,6 +39378,18 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_recording_loadButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>32</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Load imaging recording</string>
                          </property>
@@ -39307,6 +39397,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_recording_fileLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>No recording loaded</string>
                          </property>
@@ -39330,6 +39426,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_recording_neuronLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Neuron:</string>
                          </property>
@@ -39337,6 +39438,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_recording_neuronCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Neuron 1</string>
@@ -39356,6 +39468,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_recording_metadataButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Metadata</string>
                          </property>
@@ -39363,6 +39486,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_recording_exportButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export plots</string>
                          </property>
@@ -39372,6 +39506,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_recording_summaryLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Load a recording to inspect the camera-sampled fluorescence.</string>
                        </property>
@@ -39418,6 +39557,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </property>
                            <item>
                             <widget class="QCheckBox" name="ImagingAnalysis_recording_referenceCheck">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="toolTip">
                               <string>These channels are not part of a camera fluorescence measurement.</string>
                              </property>
@@ -39444,6 +39588,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_recording_clockLabel">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Fluorescence uses saved camera frames; stimulus uses model samples.</string>
                              </property>
@@ -39522,6 +39671,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </property>
                          <item>
                           <widget class="QPushButton" name="ImagingAnalysis_recording_backButton">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>30</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                            </font>
+                           </property>
                            <property name="text">
                             <string>Back to traces</string>
                            </property>
@@ -39529,6 +39689,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </item>
                          <item>
                           <widget class="QPlainTextEdit" name="ImagingAnalysis_recording_metadataText">
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                            </font>
+                           </property>
                            <property name="readOnly">
                             <bool>true</bool>
                            </property>
@@ -39546,19 +39711,24 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                       <number>5</number>
                      </property>
                      <property name="leftMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="topMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="rightMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_processing_helpLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Process saved camera-frame fluorescence, independently for each one-pixel neuron. Raw recordings stay unchanged. Empirical ΔF/F₀ may differ from the simulator normalisation.</string>
                        </property>
@@ -39586,8 +39756,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_processing_baselineGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Empirical baseline F₀</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_processing_baselineGroupGrid">
                           <property name="leftMargin">
@@ -39607,6 +39786,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_baselineMethodLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Method</string>
                             </property>
@@ -39614,6 +39798,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_processing_baselineMethodCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <item>
                              <property name="text">
                               <string>Global percentile</string>
@@ -39633,6 +39828,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_percentileLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Percentile</string>
                             </property>
@@ -39640,13 +39840,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_percentileEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>20</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_baselineWindowLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Rolling window (ms)</string>
                             </property>
@@ -39654,13 +39873,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineWindowEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>1000</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_baselineStartLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Fixed start (ms)</string>
                             </property>
@@ -39668,13 +39906,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="3" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineStartEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>0</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="4" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_baselineEndLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Fixed end (ms)</string>
                             </property>
@@ -39682,8 +39939,22 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="4" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineEndEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>1000</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -39692,8 +39963,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_processing_backgroundGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Optical background</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_processing_backgroundGroupGrid">
                           <property name="leftMargin">
@@ -39713,6 +39993,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_backgroundMethodLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Background</string>
                             </property>
@@ -39720,6 +40005,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_processing_backgroundMethodCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <item>
                              <property name="text">
                               <string>No subtraction</string>
@@ -39739,6 +40035,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_backgroundValueLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Manual (a.u.)</string>
                             </property>
@@ -39746,13 +40047,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_backgroundValueEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>0</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_backgroundNote">
+                            <property name="font">
+                             <font>
+                              <pointsize>9</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Metadata offset is a simulated optical parameter, not a measured neuropil ROI.</string>
                             </property>
@@ -39766,8 +40086,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_processing_correctionGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Optional corrections</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_processing_correctionGroupGrid">
                           <property name="leftMargin">
@@ -39787,6 +40116,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QCheckBox" name="ImagingAnalysis_processing_bleachCheck">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Correct slow optical drift</string>
                             </property>
@@ -39794,16 +40128,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_bleachWindowEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="toolTip">
                              <string>Long rolling low-percentile window (ms) for a simple didactic bleach trend estimate.</string>
                             </property>
                             <property name="text">
                              <string>3000</string>
                             </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
+                            </property>
                            </widget>
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_filterMethodLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Noise filter</string>
                             </property>
@@ -39811,6 +40164,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_processing_filterMethodCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <item>
                              <property name="text">
                               <string>None</string>
@@ -39830,6 +40194,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_processing_filterWindowLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Filter window (ms)</string>
                             </property>
@@ -39837,13 +40206,39 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_processing_filterWindowEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>50</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="1">
                            <widget class="QPushButton" name="ImagingAnalysis_processing_calculateButton">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>32</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                              <bold>true</bold>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Apply processing</string>
                             </property>
@@ -39873,6 +40268,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_processing_neuronLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Preview neuron</string>
                          </property>
@@ -39880,6 +40280,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_processing_neuronCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Neuron 1</string>
@@ -39899,6 +40310,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_processing_rawCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show raw F</string>
                          </property>
@@ -39909,6 +40325,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_processing_baselineCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show empirical F₀</string>
                          </property>
@@ -39919,6 +40340,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_processing_storedCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Compare recorded ΔF/F₀</string>
                          </property>
@@ -39929,6 +40355,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_processing_exportButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export processed CSV</string>
                          </property>
@@ -39936,6 +40373,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_processing_imageButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export graphs</string>
                          </property>
@@ -39945,6 +40393,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_processing_statusLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Load a recording, select parameters, then apply processing.</string>
                        </property>
@@ -39955,6 +40408,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_processing_qualityLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Quality metrics will appear after processing.</string>
                        </property>
@@ -39985,6 +40443,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_processing_noteLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>ΔF/F₀ = 100 × (processed F − empirical F₀) / empirical F₀. All filtering and baseline estimates respect camera gaps; no model Vm/Ca is used. Rolling bleaching correction is an approximation and can bias slow neural responses.</string>
                        </property>
@@ -39998,22 +40461,27 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                    <widget class="QWidget" name="ImagingAnalysis_alignPage">
                     <layout class="QVBoxLayout" name="ImagingAnalysis_alignLayout" stretch="0,0,0,0,0,1,1">
                      <property name="spacing">
-                      <number>6</number>
+                      <number>5</number>
                      </property>
                      <property name="leftMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="topMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="rightMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_align_helpLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Align repeated stimulus cycles to their recorded onset. Grey: individual loops; colour: mean. Fluorescence uses camera-frame timestamps, not model sample rate.</string>
                        </property>
@@ -40041,6 +40509,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_sourceLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Align to</string>
                          </property>
@@ -40048,6 +40521,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_align_sourceCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Trigger onsets</string>
@@ -40062,6 +40546,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_thresholdLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Stim threshold</string>
                          </property>
@@ -40069,16 +40558,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLineEdit" name="ImagingAnalysis_align_thresholdEdit">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>26</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="toolTip">
                           <string>Only used for stimulus rising edges; stimulus must rise above this level.</string>
                          </property>
                          <property name="text">
                           <string>0</string>
                          </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
                         </widget>
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_periodLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Period (ms)</string>
                          </property>
@@ -40086,11 +40594,25 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLineEdit" name="ImagingAnalysis_align_periodEdit">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>26</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="toolTip">
                           <string>Leave blank to infer a repeated interval from observed onsets.</string>
                          </property>
                          <property name="text">
                           <string/>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                          <property name="placeholderText">
                           <string>Auto</string>
@@ -40099,6 +40621,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_preLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Pre-trigger (ms)</string>
                          </property>
@@ -40106,8 +40633,22 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLineEdit" name="ImagingAnalysis_align_preEdit">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>26</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>0</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                         </widget>
                        </item>
@@ -40132,8 +40673,14 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
-                           <height>34</height>
+                           <height>32</height>
                           </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
                          </property>
                          <property name="text">
                           <string>Align &amp; average</string>
@@ -40161,6 +40708,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_neuronLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Neuron</string>
                          </property>
@@ -40168,6 +40720,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_align_neuronCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Neuron 1</string>
@@ -40187,6 +40750,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_align_signalLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Signal</string>
                          </property>
@@ -40194,6 +40762,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_align_signalCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Recorded ΔF/F₀ (%)</string>
@@ -40218,6 +40797,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_align_repetitionsCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show individual repetitions</string>
                          </property>
@@ -40244,6 +40828,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_align_exportButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export aligned CSV</string>
                          </property>
@@ -40251,6 +40846,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_align_imageButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export graphs</string>
                          </property>
@@ -40260,6 +40866,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_align_summaryLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Load a recording and align repeated cycles.</string>
                        </property>
@@ -40270,6 +40881,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_align_methodLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Each repetition is interpolated only within continuous recorded camera-frame segments. Missing frames are not reconstructed. Recorded ΔF/F₀ uses the simulator baseline. Export includes mean, SD, SEM and per-bin sample count.</string>
                        </property>
@@ -40306,19 +40922,24 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                       <number>5</number>
                      </property>
                      <property name="leftMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="topMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="rightMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_transients_helpLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Detect camera-measured calcium fluorescence transients. Measured events are not individual spikes; kinetics depend on indicator response, frame rate and processing choices.</string>
                        </property>
@@ -40346,8 +40967,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_transients_detectionGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Transient detection</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_transients_detectionGroupGrid">
                           <property name="leftMargin">
@@ -40367,6 +40997,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_prominenceLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Min. prominence (%)</string>
                             </property>
@@ -40374,16 +41009,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_prominenceEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="toolTip">
                              <string>Minimum peak prominence in percentage points of ΔF/F₀.</string>
                             </property>
                             <property name="text">
                              <string>5</string>
                             </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
+                            </property>
                            </widget>
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_amplitudeLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Min. amplitude (%)</string>
                             </property>
@@ -40391,16 +41045,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_amplitudeEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="toolTip">
                              <string>Peak minus 20th-percentile local baseline, in ΔF/F₀ percentage points.</string>
                             </property>
                             <property name="text">
                              <string>5</string>
                             </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
+                            </property>
                            </widget>
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_widthLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Min. peak width (ms)</string>
                             </property>
@@ -40408,13 +41081,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_widthEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>20</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_separationLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Min. separation (ms)</string>
                             </property>
@@ -40422,13 +41114,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="3" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_separationEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>150</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="4" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_baselineWindowLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Local baseline (ms)</string>
                             </property>
@@ -40436,8 +41147,22 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="4" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_baselineWindowEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>200</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -40446,8 +41171,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_transients_associationGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Stimulus-response association</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_transients_associationGroupGrid">
                           <property name="leftMargin">
@@ -40467,6 +41201,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_responseSourceLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Onset source</string>
                             </property>
@@ -40474,6 +41213,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_transients_responseSourceCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="currentIndex">
                              <number>1</number>
                             </property>
@@ -40496,6 +41246,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_thresholdLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Stimulus threshold</string>
                             </property>
@@ -40503,13 +41258,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_thresholdEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>0</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_responseWindowLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Response window (ms)</string>
                             </property>
@@ -40517,13 +41291,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_transients_responseWindowEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>500</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_transients_associationNote">
+                            <property name="font">
+                             <font>
+                              <pointsize>9</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Only complete, gap-free camera response windows count as trials. Temporal association does not establish causation.</string>
                             </property>
@@ -40556,6 +41349,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_transients_neuronLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Neuron</string>
                          </property>
@@ -40563,6 +41361,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_transients_neuronCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Neuron 1</string>
@@ -40582,6 +41391,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_transients_signalLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Signal</string>
                          </property>
@@ -40589,6 +41403,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_transients_signalCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Recorded ΔF/F₀ (%)</string>
@@ -40603,6 +41428,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_transients_markersCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show event markers</string>
                          </property>
@@ -40613,6 +41443,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_transients_stimulusMarkersCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show stimulus onsets</string>
                          </property>
@@ -40642,8 +41477,14 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
-                           <height>33</height>
+                           <height>32</height>
                           </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
                          </property>
                          <property name="text">
                           <string>Detect transients</string>
@@ -40652,6 +41493,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_transients_exportButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export event CSV</string>
                          </property>
@@ -40659,6 +41511,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_transients_imageButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export graphs</string>
                          </property>
@@ -40668,6 +41531,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_transients_summaryLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Load a recording, select settings, then detect fluorescence transients.</string>
                        </property>
@@ -40678,6 +41546,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_transients_qualityLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Peak amplitude, half-prominence width, rise/decay and stimulus association will appear here.</string>
                        </property>
@@ -40713,6 +41586,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          <width>0</width>
                          <height>115</height>
                         </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
                        </property>
                        <property name="editTriggers">
                         <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
@@ -40780,6 +41658,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_transients_noteLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Peak width is measured at half prominence; rise is 10–90% of the local amplitude; decay is the observed time to 1/e of amplitude; AUC is baseline-subtracted. Unobserved recovery is shown as unavailable, never extrapolated.</string>
                        </property>
@@ -40796,19 +41679,24 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                       <number>5</number>
                      </property>
                      <property name="leftMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="topMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="rightMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_inference_helpLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Infer candidate neural events from single-point camera fluorescence only. Reference events are hidden until you choose to validate. Sparse optical innovations are not verified spikes or calibrated spike counts.</string>
                        </property>
@@ -40836,8 +41724,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_inference_modelGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Fluorescence forward model</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_inference_modelGroupGrid">
                           <property name="leftMargin">
@@ -40857,6 +41754,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_signalLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Optical signal</string>
                             </property>
@@ -40864,6 +41766,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_inference_signalCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <item>
                              <property name="text">
                               <string>Recorded ΔF/F₀ (%)</string>
@@ -40878,6 +41791,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_modelLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Kernel</string>
                             </property>
@@ -40885,6 +41803,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QComboBox" name="ImagingAnalysis_inference_modelCombo">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>27</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <item>
                              <property name="text">
                               <string>AR(1) · exponential decay</string>
@@ -40899,6 +41828,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_decayLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Decay τ (ms)</string>
                             </property>
@@ -40906,13 +41840,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_decayEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>300</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_riseLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Rise τ (ms)</string>
                             </property>
@@ -40920,13 +41873,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="3" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_riseEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>50</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="4" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_baselineLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Baseline percentile</string>
                             </property>
@@ -40934,8 +41906,22 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="4" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_baselineEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>20</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -40944,8 +41930,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QGroupBox" name="ImagingAnalysis_inference_estimationGroup">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="title">
                           <string>Sparse inference</string>
+                         </property>
+                         <property name="themeBox" stdset="0">
+                          <bool>true</bool>
                          </property>
                          <layout class="QGridLayout" name="ImagingAnalysis_inference_estimationGroupGrid">
                           <property name="leftMargin">
@@ -40965,6 +41960,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </property>
                           <item row="0" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_penaltyLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Sparsity penalty (ΔF/F₀ %)</string>
                             </property>
@@ -40972,13 +41972,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="0" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_penaltyEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>0.5</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="1" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_thresholdLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Event threshold (ΔF/F₀ %)</string>
                             </property>
@@ -40986,13 +42005,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="1" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_thresholdEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>0.8</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="2" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_separationLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Min. separation (ms)</string>
                             </property>
@@ -41000,13 +42038,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="2" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_separationEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>70</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
                           <item row="3" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_intervalLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Inference interval (ms)</string>
                             </property>
@@ -41014,16 +42071,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="3" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_intervalEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="toolTip">
                              <string>Fits on observed camera frames separated by approximately this interval; display/reconstruction retain the complete recorded time axis. This is a transparent temporal-resolution trade-off.</string>
                             </property>
                             <property name="text">
                              <string>20</string>
                             </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
+                            </property>
                            </widget>
                           </item>
                           <item row="4" column="0">
                            <widget class="QLabel" name="ImagingAnalysis_inference_iterationsLabel">
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>Max. solver iterations</string>
                             </property>
@@ -41031,8 +42107,22 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                           </item>
                           <item row="4" column="1">
                            <widget class="QLineEdit" name="ImagingAnalysis_inference_iterationsEdit">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>26</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
                             <property name="text">
                              <string>180</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -41060,6 +42150,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_inference_neuronLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Preview neuron</string>
                          </property>
@@ -41067,6 +42162,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QComboBox" name="ImagingAnalysis_inference_neuronCombo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>27</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <item>
                           <property name="text">
                            <string>Neuron 1</string>
@@ -41086,6 +42192,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_inference_reconstructionCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show fitted fluorescence</string>
                          </property>
@@ -41096,6 +42207,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QCheckBox" name="ImagingAnalysis_inference_markersCheck">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Show inferred events</string>
                          </property>
@@ -41128,6 +42244,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            <height>32</height>
                           </size>
                          </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Run inference</string>
                          </property>
@@ -41135,6 +42257,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_inference_exportButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export CSV + metadata</string>
                          </property>
@@ -41142,6 +42275,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_inference_imageButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Export graphs</string>
                          </property>
@@ -41168,6 +42312,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </property>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_inference_toleranceLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Match tolerance (ms)</string>
                          </property>
@@ -41175,16 +42324,35 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLineEdit" name="ImagingAnalysis_inference_toleranceEdit">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>26</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="toolTip">
                           <string>Maximum absolute timing difference for a one-to-one reference match.</string>
                          </property>
                          <property name="text">
                           <string>100</string>
                          </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
                         </widget>
                        </item>
                        <item>
                         <widget class="QLabel" name="ImagingAnalysis_inference_binLabel">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="text">
                           <string>Rate bin (ms)</string>
                          </property>
@@ -41192,16 +42360,42 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                        </item>
                        <item>
                         <widget class="QLineEdit" name="ImagingAnalysis_inference_binEdit">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>26</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
                          <property name="toolTip">
                           <string>Full optical observation windows used for binned event-rate correlation.</string>
                          </property>
                          <property name="text">
                           <string>1000</string>
                          </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
                         </widget>
                        </item>
                        <item>
                         <widget class="QPushButton" name="ImagingAnalysis_inference_validateButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>32</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                           <bold>true</bold>
+                          </font>
+                         </property>
                          <property name="toolTip">
                           <string>Reveals emulator/native event flags or board Vm-threshold event estimates only after inference.</string>
                          </property>
@@ -41230,6 +42424,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_inference_summaryLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Load fluorescence and run inference before revealing the reference.</string>
                        </property>
@@ -41240,6 +42439,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_inference_qualityLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Fluorescence reconstruction fit and candidate-event metrics appear here.</string>
                        </property>
@@ -41285,6 +42489,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          <width>0</width>
                          <height>105</height>
                         </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
                        </property>
                        <property name="editTriggers">
                         <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
@@ -41332,6 +42541,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                      </item>
                      <item>
                       <widget class="QLabel" name="ImagingAnalysis_inference_validationLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Reference withheld until explicit validation. Vm-threshold crossings on hardware recordings are reference estimates, not independently measured spikes.</string>
                        </property>
@@ -41369,8 +42583,8 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>1043</width>
-                          <height>1062</height>
+                          <width>1104</width>
+                          <height>1118</height>
                          </rect>
                         </property>
                         <layout class="QVBoxLayout" name="ImagingAnalysis_compare_contentLayout">
@@ -41391,6 +42605,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </property>
                          <item>
                           <widget class="QLabel" name="ImagingAnalysis_compare_helpLabel">
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
                            <property name="text">
                             <string>Compare two separately acquired one-pixel imaging experiments. Optical signals use actual camera frames; cycle averages are calculated independently in each recording. Different indicators, sampling rates or F₀ definitions can confound causal interpretation.</string>
                            </property>
@@ -41418,6 +42637,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </property>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_compare_refTitle">
+                             <property name="font">
+                              <font>
+                               <pointsize>11</pointsize>
+                               <bold>true</bold>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Reference:</string>
                              </property>
@@ -41425,6 +42650,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_compare_referenceLabel">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                               <bold>true</bold>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>No reference loaded</string>
                              </property>
@@ -41432,6 +42663,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_compare_otherTitle">
+                             <property name="font">
+                              <font>
+                               <pointsize>11</pointsize>
+                               <bold>true</bold>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Comparison:</string>
                              </property>
@@ -41439,6 +42676,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_compare_comparisonLabel">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                               <bold>true</bold>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>No comparison recording loaded</string>
                              </property>
@@ -41446,6 +42689,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QPushButton" name="ImagingAnalysis_compare_loadButton">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>30</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Load comparison…</string>
                              </property>
@@ -41453,6 +42707,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QPushButton" name="ImagingAnalysis_compare_clearButton">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>30</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Clear comparison</string>
                              </property>
@@ -41462,8 +42727,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </item>
                          <item>
                           <widget class="QGroupBox" name="ImagingAnalysis_compare_settingsGroup">
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                             <bold>true</bold>
+                            </font>
+                           </property>
                            <property name="title">
                             <string>Independent acquisition comparison settings</string>
+                           </property>
+                           <property name="themeBox" stdset="0">
+                            <bool>true</bool>
                            </property>
                            <layout class="QGridLayout" name="ImagingAnalysis_compare_settingsGrid">
                             <property name="leftMargin">
@@ -41483,6 +42757,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </property>
                             <item row="0" column="0">
                              <widget class="QLabel" name="ImagingAnalysis_compare_sourceLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Optical signal</string>
                               </property>
@@ -41490,6 +42769,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="0" column="1">
                              <widget class="QComboBox" name="ImagingAnalysis_compare_sourceCombo">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>27</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <item>
                                <property name="text">
                                 <string>Recorded ΔF/F₀ (model baseline)</string>
@@ -41514,6 +42804,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="0" column="2">
                              <widget class="QLabel" name="ImagingAnalysis_compare_modeLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Time alignment</string>
                               </property>
@@ -41521,6 +42816,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="0" column="3">
                              <widget class="QComboBox" name="ImagingAnalysis_compare_modeCombo">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>27</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <item>
                                <property name="text">
                                 <string>Independent stimulus-cycle averages</string>
@@ -41540,6 +42846,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="1" column="0">
                              <widget class="QLabel" name="ImagingAnalysis_compare_anchorLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Cycle/onset marker</string>
                               </property>
@@ -41547,6 +42858,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="1" column="1">
                              <widget class="QComboBox" name="ImagingAnalysis_compare_anchorCombo">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>27</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <item>
                                <property name="text">
                                 <string>Recorded trigger markers</string>
@@ -41561,6 +42883,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="1" column="2">
                              <widget class="QLabel" name="ImagingAnalysis_compare_thresholdLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Stimulus threshold</string>
                               </property>
@@ -41568,13 +42895,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="1" column="3">
                              <widget class="QLineEdit" name="ImagingAnalysis_compare_thresholdEdit">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>26</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>0</string>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignmentFlag::AlignCenter</set>
                               </property>
                              </widget>
                             </item>
                             <item row="2" column="0">
                              <widget class="QLabel" name="ImagingAnalysis_compare_periodLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Cycle period (ms; blank = auto)</string>
                               </property>
@@ -41582,13 +42928,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="2" column="1">
                              <widget class="QLineEdit" name="ImagingAnalysis_compare_periodEdit">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>26</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string/>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignmentFlag::AlignCenter</set>
                               </property>
                              </widget>
                             </item>
                             <item row="2" column="2">
                              <widget class="QLabel" name="ImagingAnalysis_compare_preLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Pre-onset window (ms)</string>
                               </property>
@@ -41596,13 +42961,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="2" column="3">
                              <widget class="QLineEdit" name="ImagingAnalysis_compare_preEdit">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>26</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>0</string>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignmentFlag::AlignCenter</set>
                               </property>
                              </widget>
                             </item>
                             <item row="3" column="0">
                              <widget class="QLabel" name="ImagingAnalysis_compare_percentileLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Empirical baseline percentile</string>
                               </property>
@@ -41610,13 +42994,32 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="3" column="1">
                              <widget class="QLineEdit" name="ImagingAnalysis_compare_percentileEdit">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>26</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>20</string>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignmentFlag::AlignCenter</set>
                               </property>
                              </widget>
                             </item>
                             <item row="3" column="2">
                              <widget class="QLabel" name="ImagingAnalysis_compare_directionLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Difference direction</string>
                               </property>
@@ -41624,6 +43027,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="3" column="3">
                              <widget class="QComboBox" name="ImagingAnalysis_compare_differenceDirectionCombo">
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>27</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
                               <item>
                                <property name="text">
                                 <string>Reference − Comparison</string>
@@ -41638,6 +43052,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                             </item>
                             <item row="4" column="0">
                              <widget class="QLabel" name="ImagingAnalysis_compare_recipeLabel">
+                              <property name="font">
+                               <font>
+                                <pointsize>9</pointsize>
+                               </font>
+                              </property>
                               <property name="text">
                                <string>Processed: same Phase 3 settings applied independently to each recording</string>
                               </property>
@@ -41665,6 +43084,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </property>
                            <item>
                             <widget class="QLabel" name="ImagingAnalysis_compare_neuronLabel">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Neuron</string>
                              </property>
@@ -41672,6 +43096,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QComboBox" name="ImagingAnalysis_compare_neuronCombo">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>27</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <item>
                               <property name="text">
                                <string>Neuron 1</string>
@@ -41691,6 +43126,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QCheckBox" name="ImagingAnalysis_compare_stimulusCheck">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Show stimulus</string>
                              </property>
@@ -41701,6 +43141,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QCheckBox" name="ImagingAnalysis_compare_differenceCheck">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Show difference</string>
                              </property>
@@ -41711,6 +43156,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QCheckBox" name="ImagingAnalysis_compare_semCheck">
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Show ±SEM (cycles)</string>
                              </property>
@@ -41721,8 +43171,14 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                              <property name="minimumSize">
                               <size>
                                <width>0</width>
-                               <height>31</height>
+                               <height>32</height>
                               </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                               <bold>true</bold>
+                              </font>
                              </property>
                              <property name="text">
                               <string>Compare</string>
@@ -41731,6 +43187,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QPushButton" name="ImagingAnalysis_compare_exportButton">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>30</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Export data + provenance</string>
                              </property>
@@ -41738,6 +43205,17 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                            </item>
                            <item>
                             <widget class="QPushButton" name="ImagingAnalysis_compare_imageButton">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>30</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                              </font>
+                             </property>
                              <property name="text">
                               <string>Export graphs</string>
                              </property>
@@ -41747,6 +43225,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </item>
                          <item>
                           <widget class="QLabel" name="ImagingAnalysis_compare_summaryLabel">
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                            </font>
+                           </property>
                            <property name="text">
                             <string>Select two recordings to compare independent optical acquisitions.</string>
                            </property>
@@ -41787,6 +43270,12 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                          </item>
                          <item>
                           <widget class="QLabel" name="ImagingAnalysis_compare_metricsLabel">
+                           <property name="font">
+                            <font>
+                             <pointsize>11</pointsize>
+                             <bold>true</bold>
+                            </font>
+                           </property>
                            <property name="text">
                             <string>Metrics compare the measured optical response (not underlying spike counts).</string>
                            </property>
@@ -41800,10 +43289,20 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                              <height>145</height>
                             </size>
                            </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
                           </widget>
                          </item>
                          <item>
                           <widget class="QLabel" name="ImagingAnalysis_compare_notesLabel">
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                            </font>
+                           </property>
                            <property name="text">
                             <string>Acquisition differences, provenance and interpretation notices</string>
                            </property>
@@ -41816,6 +43315,11 @@ QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400;
                              <width>0</width>
                              <height>100</height>
                             </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>10</pointsize>
+                            </font>
                            </property>
                            <property name="readOnly">
                             <bool>true</bool>
@@ -57746,8 +59250,8 @@ QPushButton:disabled {
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>1010</width>
-                          <height>532</height>
+                          <width>468</width>
+                          <height>1282</height>
                          </rect>
                         </property>
                         <layout class="QVBoxLayout" name="About_projectContentsLayout">
@@ -59066,7 +60570,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>998</width>
+                      <width>575</width>
                       <height>713</height>
                      </rect>
                     </property>
