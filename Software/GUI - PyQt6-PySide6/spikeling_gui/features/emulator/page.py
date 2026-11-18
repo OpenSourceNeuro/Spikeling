@@ -4,7 +4,7 @@
 
 from PySide6.QtCore import QSize
 
-from spikeling_gui.widgets.recording import prepare_recording
+from spikeling_gui.widgets.recording import prepare_recording, style_recording_button
 
 from spikeling_gui.appearance.dialogs import show_popup
 from spikeling_gui.appearance.palette import DarkSolarized
@@ -30,7 +30,16 @@ class Emulator():
     # Data Recording Functions
     def RecordButton(self):
         button = self.ui.Emulator_DataRecording_Record_pushButton
-        if not button.isChecked() or button.text() == "Retry save":
+        if button.text() == "Retry save":
+            path = prepare_recording(self, self.ui.Emulator_DataRecording_File_lineEdit.text())
+            if path is None:
+                button.setChecked(False)
+                style_recording_button(button, False)
+                return
+            self.Emulator_RecordingPath = path
+            scope.FinishRecording(self)
+            return
+        if not button.isChecked():
             scope.FinishRecording(self)
             return
         if not getattr(self.ui, "EmulatorConnectedFlag", False):
@@ -43,7 +52,8 @@ class Emulator():
             button.setChecked(False)
             return
         self.ui.Emulator_recording_path = path
-        button.setText("Stop Recording")
+        button.setText("Stop recording")
+        style_recording_button(button, True)
         filename.setEnabled(False)
         self.ui.Emulator_DataRecording_Folder_pushButton.setEnabled(False)
         scope.UpdateRecordingState(self)

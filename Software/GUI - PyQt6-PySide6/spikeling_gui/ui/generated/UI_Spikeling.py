@@ -5978,62 +5978,62 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_box.setFont(font3)
         self.Emulator_DataRecording_box.setStyleSheet(u"")
         self.Emulator_DataRecording_box.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
-        self.Emulator_horizontalLayout_52 = QHBoxLayout(self.Emulator_DataRecording_box)
-        self.Emulator_horizontalLayout_52.setSpacing(0)
-        self.Emulator_horizontalLayout_52.setObjectName(u"Emulator_horizontalLayout_52")
-        self.Emulator_horizontalLayout_52.setContentsMargins(10, 10, 10, 5)
+        self.Emulator_DataRecording_horizontalLayout_52 = QHBoxLayout(self.Emulator_DataRecording_box)
+        self.Emulator_DataRecording_horizontalLayout_52.setSpacing(0)
+        self.Emulator_DataRecording_horizontalLayout_52.setObjectName(u"Emulator_DataRecording_horizontalLayout_52")
+        self.Emulator_DataRecording_horizontalLayout_52.setContentsMargins(10, 10, 10, 5)
         self.Emulator_DataRecording_frame = QFrame(self.Emulator_DataRecording_box)
         self.Emulator_DataRecording_frame.setObjectName(u"Emulator_DataRecording_frame")
         self.Emulator_DataRecording_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_28 = QVBoxLayout(self.Emulator_DataRecording_frame)
-        self.Emulator_verticalLayout_28.setSpacing(5)
-        self.Emulator_verticalLayout_28.setObjectName(u"Emulator_verticalLayout_28")
-        self.Emulator_verticalLayout_28.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_28 = QVBoxLayout(self.Emulator_DataRecording_frame)
+        self.Emulator_DataRecording_verticalLayout_28.setSpacing(5)
+        self.Emulator_DataRecording_verticalLayout_28.setObjectName(u"Emulator_DataRecording_verticalLayout_28")
+        self.Emulator_DataRecording_verticalLayout_28.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_Folder_frame = QFrame(self.Emulator_DataRecording_frame)
         self.Emulator_DataRecording_Folder_frame.setObjectName(u"Emulator_DataRecording_Folder_frame")
         self.Emulator_DataRecording_Folder_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Folder_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_horizontalLayout_56 = QHBoxLayout(self.Emulator_DataRecording_Folder_frame)
-        self.Emulator_horizontalLayout_56.setSpacing(10)
-        self.Emulator_horizontalLayout_56.setObjectName(u"Emulator_horizontalLayout_56")
-        self.Emulator_horizontalLayout_56.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_horizontalLayout_56 = QHBoxLayout(self.Emulator_DataRecording_Folder_frame)
+        self.Emulator_DataRecording_horizontalLayout_56.setSpacing(10)
+        self.Emulator_DataRecording_horizontalLayout_56.setObjectName(u"Emulator_DataRecording_horizontalLayout_56")
+        self.Emulator_DataRecording_horizontalLayout_56.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_Folder_label_frame = QFrame(self.Emulator_DataRecording_Folder_frame)
         self.Emulator_DataRecording_Folder_label_frame.setObjectName(u"Emulator_DataRecording_Folder_label_frame")
         self.Emulator_DataRecording_Folder_label_frame.setMinimumSize(QSize(100, 0))
         self.Emulator_DataRecording_Folder_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Folder_label_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_27 = QVBoxLayout(self.Emulator_DataRecording_Folder_label_frame)
-        self.Emulator_verticalLayout_27.setSpacing(0)
-        self.Emulator_verticalLayout_27.setObjectName(u"Emulator_verticalLayout_27")
-        self.Emulator_verticalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_27 = QVBoxLayout(self.Emulator_DataRecording_Folder_label_frame)
+        self.Emulator_DataRecording_verticalLayout_27.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_27.setObjectName(u"Emulator_DataRecording_verticalLayout_27")
+        self.Emulator_DataRecording_verticalLayout_27.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_Folder_label = QLabel(self.Emulator_DataRecording_Folder_label_frame)
         self.Emulator_DataRecording_Folder_label.setObjectName(u"Emulator_DataRecording_Folder_label")
         self.Emulator_DataRecording_Folder_label.setMinimumSize(QSize(100, 0))
         self.Emulator_DataRecording_Folder_label.setMaximumSize(QSize(100, 16777215))
         self.Emulator_DataRecording_Folder_label.setFont(font4)
 
-        self.Emulator_verticalLayout_27.addWidget(self.Emulator_DataRecording_Folder_label)
+        self.Emulator_DataRecording_verticalLayout_27.addWidget(self.Emulator_DataRecording_Folder_label)
 
 
-        self.Emulator_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_label_frame)
+        self.Emulator_DataRecording_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_label_frame)
 
         self.Emulator_DataRecording_Folder_lineEdit_frame = QFrame(self.Emulator_DataRecording_Folder_frame)
         self.Emulator_DataRecording_Folder_lineEdit_frame.setObjectName(u"Emulator_DataRecording_Folder_lineEdit_frame")
         self.Emulator_DataRecording_Folder_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Folder_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_335 = QVBoxLayout(self.Emulator_DataRecording_Folder_lineEdit_frame)
-        self.Emulator_verticalLayout_335.setSpacing(0)
-        self.Emulator_verticalLayout_335.setObjectName(u"Emulator_verticalLayout_335")
-        self.Emulator_verticalLayout_335.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_335 = QVBoxLayout(self.Emulator_DataRecording_Folder_lineEdit_frame)
+        self.Emulator_DataRecording_verticalLayout_335.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_335.setObjectName(u"Emulator_DataRecording_verticalLayout_335")
+        self.Emulator_DataRecording_verticalLayout_335.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_Folder_lineEdit = QLineEdit(self.Emulator_DataRecording_Folder_lineEdit_frame)
         self.Emulator_DataRecording_Folder_lineEdit.setObjectName(u"Emulator_DataRecording_Folder_lineEdit")
         self.Emulator_DataRecording_Folder_lineEdit.setEnabled(False)
 
-        self.Emulator_verticalLayout_335.addWidget(self.Emulator_DataRecording_Folder_lineEdit)
+        self.Emulator_DataRecording_verticalLayout_335.addWidget(self.Emulator_DataRecording_Folder_lineEdit)
 
 
-        self.Emulator_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_lineEdit_frame)
+        self.Emulator_DataRecording_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_lineEdit_frame)
 
         self.Emulator_DataRecording_Folder_pushButton_frame = QFrame(self.Emulator_DataRecording_Folder_frame)
         self.Emulator_DataRecording_Folder_pushButton_frame.setObjectName(u"Emulator_DataRecording_Folder_pushButton_frame")
@@ -6041,10 +6041,10 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_Folder_pushButton_frame.setMaximumSize(QSize(150, 16777215))
         self.Emulator_DataRecording_Folder_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Folder_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_339 = QVBoxLayout(self.Emulator_DataRecording_Folder_pushButton_frame)
-        self.Emulator_verticalLayout_339.setSpacing(0)
-        self.Emulator_verticalLayout_339.setObjectName(u"Emulator_verticalLayout_339")
-        self.Emulator_verticalLayout_339.setContentsMargins(10, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_339 = QVBoxLayout(self.Emulator_DataRecording_Folder_pushButton_frame)
+        self.Emulator_DataRecording_verticalLayout_339.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_339.setObjectName(u"Emulator_DataRecording_verticalLayout_339")
+        self.Emulator_DataRecording_verticalLayout_339.setContentsMargins(10, 0, 0, 0)
         self.Emulator_DataRecording_Folder_pushButton = QPushButton(self.Emulator_DataRecording_Folder_pushButton_frame)
         self.Emulator_DataRecording_Folder_pushButton.setObjectName(u"Emulator_DataRecording_Folder_pushButton")
         sizePolicy2.setHeightForWidth(self.Emulator_DataRecording_Folder_pushButton.sizePolicy().hasHeightForWidth())
@@ -6053,74 +6053,74 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_Folder_pushButton.setMaximumSize(QSize(16777215, 16777215))
         self.Emulator_DataRecording_Folder_pushButton.setFont(font5)
 
-        self.Emulator_verticalLayout_339.addWidget(self.Emulator_DataRecording_Folder_pushButton)
+        self.Emulator_DataRecording_verticalLayout_339.addWidget(self.Emulator_DataRecording_Folder_pushButton)
 
 
-        self.Emulator_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_pushButton_frame)
+        self.Emulator_DataRecording_horizontalLayout_56.addWidget(self.Emulator_DataRecording_Folder_pushButton_frame)
 
 
-        self.Emulator_verticalLayout_28.addWidget(self.Emulator_DataRecording_Folder_frame)
+        self.Emulator_DataRecording_verticalLayout_28.addWidget(self.Emulator_DataRecording_Folder_frame)
 
         self.Emulator_DataRecording_File_frame = QFrame(self.Emulator_DataRecording_frame)
         self.Emulator_DataRecording_File_frame.setObjectName(u"Emulator_DataRecording_File_frame")
         self.Emulator_DataRecording_File_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_File_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_horizontalLayout_199 = QHBoxLayout(self.Emulator_DataRecording_File_frame)
-        self.Emulator_horizontalLayout_199.setSpacing(10)
-        self.Emulator_horizontalLayout_199.setObjectName(u"Emulator_horizontalLayout_199")
-        self.Emulator_horizontalLayout_199.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_horizontalLayout_199 = QHBoxLayout(self.Emulator_DataRecording_File_frame)
+        self.Emulator_DataRecording_horizontalLayout_199.setSpacing(10)
+        self.Emulator_DataRecording_horizontalLayout_199.setObjectName(u"Emulator_DataRecording_horizontalLayout_199")
+        self.Emulator_DataRecording_horizontalLayout_199.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_File_label_frame = QFrame(self.Emulator_DataRecording_File_frame)
         self.Emulator_DataRecording_File_label_frame.setObjectName(u"Emulator_DataRecording_File_label_frame")
         self.Emulator_DataRecording_File_label_frame.setMinimumSize(QSize(100, 0))
         self.Emulator_DataRecording_File_label_frame.setMaximumSize(QSize(100, 16777215))
         self.Emulator_DataRecording_File_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_File_label_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_315 = QVBoxLayout(self.Emulator_DataRecording_File_label_frame)
-        self.Emulator_verticalLayout_315.setSpacing(0)
-        self.Emulator_verticalLayout_315.setObjectName(u"Emulator_verticalLayout_315")
-        self.Emulator_verticalLayout_315.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_315 = QVBoxLayout(self.Emulator_DataRecording_File_label_frame)
+        self.Emulator_DataRecording_verticalLayout_315.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_315.setObjectName(u"Emulator_DataRecording_verticalLayout_315")
+        self.Emulator_DataRecording_verticalLayout_315.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_File_label = QLabel(self.Emulator_DataRecording_File_label_frame)
         self.Emulator_DataRecording_File_label.setObjectName(u"Emulator_DataRecording_File_label")
         self.Emulator_DataRecording_File_label.setMinimumSize(QSize(100, 0))
         self.Emulator_DataRecording_File_label.setFont(font6)
 
-        self.Emulator_verticalLayout_315.addWidget(self.Emulator_DataRecording_File_label)
+        self.Emulator_DataRecording_verticalLayout_315.addWidget(self.Emulator_DataRecording_File_label)
 
 
-        self.Emulator_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.Emulator_DataRecording_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.Emulator_DataRecording_File_lineEdit_frame = QFrame(self.Emulator_DataRecording_File_frame)
         self.Emulator_DataRecording_File_lineEdit_frame.setObjectName(u"Emulator_DataRecording_File_lineEdit_frame")
         self.Emulator_DataRecording_File_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_File_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_320 = QVBoxLayout(self.Emulator_DataRecording_File_lineEdit_frame)
-        self.Emulator_verticalLayout_320.setSpacing(0)
-        self.Emulator_verticalLayout_320.setObjectName(u"Emulator_verticalLayout_320")
-        self.Emulator_verticalLayout_320.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_320 = QVBoxLayout(self.Emulator_DataRecording_File_lineEdit_frame)
+        self.Emulator_DataRecording_verticalLayout_320.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_320.setObjectName(u"Emulator_DataRecording_verticalLayout_320")
+        self.Emulator_DataRecording_verticalLayout_320.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_File_lineEdit = QLineEdit(self.Emulator_DataRecording_File_lineEdit_frame)
         self.Emulator_DataRecording_File_lineEdit.setObjectName(u"Emulator_DataRecording_File_lineEdit")
 
-        self.Emulator_verticalLayout_320.addWidget(self.Emulator_DataRecording_File_lineEdit)
+        self.Emulator_DataRecording_verticalLayout_320.addWidget(self.Emulator_DataRecording_File_lineEdit)
 
 
-        self.Emulator_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_lineEdit_frame)
+        self.Emulator_DataRecording_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_lineEdit_frame)
 
         self.Emulator_DataRecording_File_csvlabel_frame = QFrame(self.Emulator_DataRecording_File_frame)
         self.Emulator_DataRecording_File_csvlabel_frame.setObjectName(u"Emulator_DataRecording_File_csvlabel_frame")
         self.Emulator_DataRecording_File_csvlabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_File_csvlabel_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_330 = QVBoxLayout(self.Emulator_DataRecording_File_csvlabel_frame)
-        self.Emulator_verticalLayout_330.setSpacing(0)
-        self.Emulator_verticalLayout_330.setObjectName(u"Emulator_verticalLayout_330")
-        self.Emulator_verticalLayout_330.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_330 = QVBoxLayout(self.Emulator_DataRecording_File_csvlabel_frame)
+        self.Emulator_DataRecording_verticalLayout_330.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_330.setObjectName(u"Emulator_DataRecording_verticalLayout_330")
+        self.Emulator_DataRecording_verticalLayout_330.setContentsMargins(0, 0, 0, 0)
         self.Emulator_DataRecording_File_csvlabel = QLabel(self.Emulator_DataRecording_File_csvlabel_frame)
         self.Emulator_DataRecording_File_csvlabel.setObjectName(u"Emulator_DataRecording_File_csvlabel")
         self.Emulator_DataRecording_File_csvlabel.setFont(font6)
 
-        self.Emulator_verticalLayout_330.addWidget(self.Emulator_DataRecording_File_csvlabel)
+        self.Emulator_DataRecording_verticalLayout_330.addWidget(self.Emulator_DataRecording_File_csvlabel)
 
 
-        self.Emulator_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_csvlabel_frame)
+        self.Emulator_DataRecording_horizontalLayout_199.addWidget(self.Emulator_DataRecording_File_csvlabel_frame)
 
         self.Emulator_DataRecording_Record_pushButton_frame = QFrame(self.Emulator_DataRecording_File_frame)
         self.Emulator_DataRecording_Record_pushButton_frame.setObjectName(u"Emulator_DataRecording_Record_pushButton_frame")
@@ -6128,10 +6128,10 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_Record_pushButton_frame.setMaximumSize(QSize(150, 16777215))
         self.Emulator_DataRecording_Record_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Record_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_15 = QVBoxLayout(self.Emulator_DataRecording_Record_pushButton_frame)
-        self.Emulator_verticalLayout_15.setSpacing(0)
-        self.Emulator_verticalLayout_15.setObjectName(u"Emulator_verticalLayout_15")
-        self.Emulator_verticalLayout_15.setContentsMargins(10, 0, 0, 0)
+        self.Emulator_DataRecording_verticalLayout_15 = QVBoxLayout(self.Emulator_DataRecording_Record_pushButton_frame)
+        self.Emulator_DataRecording_verticalLayout_15.setSpacing(0)
+        self.Emulator_DataRecording_verticalLayout_15.setObjectName(u"Emulator_DataRecording_verticalLayout_15")
+        self.Emulator_DataRecording_verticalLayout_15.setContentsMargins(10, 0, 0, 0)
         self.Emulator_DataRecording_Record_pushButton = QPushButton(self.Emulator_DataRecording_Record_pushButton_frame)
         self.Emulator_DataRecording_Record_pushButton.setObjectName(u"Emulator_DataRecording_Record_pushButton")
         sizePolicy2.setHeightForWidth(self.Emulator_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
@@ -6143,29 +6143,36 @@ class Ui_Spikeling(object):
 "background-color: rgb(220, 50, 47);")
         self.Emulator_DataRecording_Record_pushButton.setCheckable(True)
 
-        self.Emulator_verticalLayout_15.addWidget(self.Emulator_DataRecording_Record_pushButton)
+        self.Emulator_DataRecording_verticalLayout_15.addWidget(self.Emulator_DataRecording_Record_pushButton)
 
 
-        self.Emulator_horizontalLayout_199.addWidget(self.Emulator_DataRecording_Record_pushButton_frame)
+        self.Emulator_DataRecording_horizontalLayout_199.addWidget(self.Emulator_DataRecording_Record_pushButton_frame)
 
 
-        self.Emulator_verticalLayout_28.addWidget(self.Emulator_DataRecording_File_frame)
+        self.Emulator_DataRecording_verticalLayout_28.addWidget(self.Emulator_DataRecording_File_frame)
 
         self.Emulator_DataRecording_record_frame = QFrame(self.Emulator_DataRecording_frame)
         self.Emulator_DataRecording_record_frame.setObjectName(u"Emulator_DataRecording_record_frame")
         self.Emulator_DataRecording_record_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_record_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_horizontalLayout_57 = QHBoxLayout(self.Emulator_DataRecording_record_frame)
-        self.Emulator_horizontalLayout_57.setSpacing(0)
-        self.Emulator_horizontalLayout_57.setObjectName(u"Emulator_horizontalLayout_57")
-        self.Emulator_horizontalLayout_57.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_horizontalLayout_57 = QHBoxLayout(self.Emulator_DataRecording_record_frame)
+        self.Emulator_DataRecording_horizontalLayout_57.setSpacing(0)
+        self.Emulator_DataRecording_horizontalLayout_57.setObjectName(u"Emulator_DataRecording_horizontalLayout_57")
+        self.Emulator_DataRecording_horizontalLayout_57.setContentsMargins(0, 0, 0, 0)
+        self.Emulator_DataRecording_Record_label_2 = QLabel(self.Emulator_DataRecording_record_frame)
+        self.Emulator_DataRecording_Record_label_2.setObjectName(u"Emulator_DataRecording_Record_label_2")
+        sizePolicy4.setHeightForWidth(self.Emulator_DataRecording_Record_label_2.sizePolicy().hasHeightForWidth())
+        self.Emulator_DataRecording_Record_label_2.setSizePolicy(sizePolicy4)
+
+        self.Emulator_DataRecording_horizontalLayout_57.addWidget(self.Emulator_DataRecording_Record_label_2, 0, Qt.AlignmentFlag.AlignLeft)
+
         self.Emulator_DataRecording_Record_label = QLabel(self.Emulator_DataRecording_record_frame)
         self.Emulator_DataRecording_Record_label.setObjectName(u"Emulator_DataRecording_Record_label")
-        sizePolicy4.setHeightForWidth(self.Emulator_DataRecording_Record_label.sizePolicy().hasHeightForWidth())
-        self.Emulator_DataRecording_Record_label.setSizePolicy(sizePolicy4)
+        sizePolicy7.setHeightForWidth(self.Emulator_DataRecording_Record_label.sizePolicy().hasHeightForWidth())
+        self.Emulator_DataRecording_Record_label.setSizePolicy(sizePolicy7)
         self.Emulator_DataRecording_Record_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.Emulator_horizontalLayout_57.addWidget(self.Emulator_DataRecording_Record_label, 0, Qt.AlignmentFlag.AlignRight)
+        self.Emulator_DataRecording_horizontalLayout_57.addWidget(self.Emulator_DataRecording_Record_label, 0, Qt.AlignmentFlag.AlignRight)
 
         self.Emulator_DataRecording_Record_lempty_frame = QFrame(self.Emulator_DataRecording_record_frame)
         self.Emulator_DataRecording_Record_lempty_frame.setObjectName(u"Emulator_DataRecording_Record_lempty_frame")
@@ -6173,16 +6180,16 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_Record_lempty_frame.setMaximumSize(QSize(150, 16777215))
         self.Emulator_DataRecording_Record_lempty_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Emulator_DataRecording_Record_lempty_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.Emulator_verticalLayout_16 = QVBoxLayout(self.Emulator_DataRecording_Record_lempty_frame)
-        self.Emulator_verticalLayout_16.setObjectName(u"Emulator_verticalLayout_16")
+        self.Emulator_DataRecording_verticalLayout_16 = QVBoxLayout(self.Emulator_DataRecording_Record_lempty_frame)
+        self.Emulator_DataRecording_verticalLayout_16.setObjectName(u"Emulator_DataRecording_verticalLayout_16")
 
-        self.Emulator_horizontalLayout_57.addWidget(self.Emulator_DataRecording_Record_lempty_frame)
-
-
-        self.Emulator_verticalLayout_28.addWidget(self.Emulator_DataRecording_record_frame)
+        self.Emulator_DataRecording_horizontalLayout_57.addWidget(self.Emulator_DataRecording_Record_lempty_frame)
 
 
-        self.Emulator_horizontalLayout_52.addWidget(self.Emulator_DataRecording_frame)
+        self.Emulator_DataRecording_verticalLayout_28.addWidget(self.Emulator_DataRecording_record_frame)
+
+
+        self.Emulator_DataRecording_horizontalLayout_52.addWidget(self.Emulator_DataRecording_frame)
 
 
         self.Emulator_horizontalLayout_51.addWidget(self.Emulator_DataRecording_box)
@@ -14633,110 +14640,221 @@ class Ui_Spikeling(object):
         self.Imaging_DataRecording_box.setSizePolicy(sizePolicy5)
         self.Imaging_DataRecording_box.setMinimumSize(QSize(0, 100))
         self.Imaging_DataRecording_box.setMaximumSize(QSize(16777215, 100))
+        self.Imaging_DataRecording_box.setFont(font3)
         self.Imaging_DataRecording_box.setStyleSheet(u"")
-        self.horizontalLayout_415 = QHBoxLayout(self.Imaging_DataRecording_box)
-        self.horizontalLayout_415.setSpacing(0)
-        self.horizontalLayout_415.setObjectName(u"horizontalLayout_415")
-        self.horizontalLayout_415.setContentsMargins(5, 5, 5, 5)
-        self.Imaging_DataRecording_left_frame = QFrame(self.Imaging_DataRecording_box)
-        self.Imaging_DataRecording_left_frame.setObjectName(u"Imaging_DataRecording_left_frame")
-        self.Imaging_DataRecording_left_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Imaging_DataRecording_left_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_107 = QVBoxLayout(self.Imaging_DataRecording_left_frame)
-        self.verticalLayout_107.setSpacing(0)
-        self.verticalLayout_107.setObjectName(u"verticalLayout_107")
-        self.verticalLayout_107.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_DataRecording_recordingMode_frame = QFrame(self.Imaging_DataRecording_left_frame)
-        self.Imaging_DataRecording_recordingMode_frame.setObjectName(u"Imaging_DataRecording_recordingMode_frame")
-        self.Imaging_DataRecording_recordingMode_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Imaging_DataRecording_recordingMode_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_425 = QHBoxLayout(self.Imaging_DataRecording_recordingMode_frame)
-        self.horizontalLayout_425.setSpacing(0)
-        self.horizontalLayout_425.setObjectName(u"horizontalLayout_425")
-        self.horizontalLayout_425.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_box.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
+        self.Imaging_DataRecording_horizontalLayout_52 = QHBoxLayout(self.Imaging_DataRecording_box)
+        self.Imaging_DataRecording_horizontalLayout_52.setSpacing(0)
+        self.Imaging_DataRecording_horizontalLayout_52.setObjectName(u"Imaging_DataRecording_horizontalLayout_52")
+        self.Imaging_DataRecording_horizontalLayout_52.setContentsMargins(10, 10, 10, 5)
+        self.Imaging_DataRecording_frame = QFrame(self.Imaging_DataRecording_box)
+        self.Imaging_DataRecording_frame.setObjectName(u"Imaging_DataRecording_frame")
+        self.Imaging_DataRecording_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_28 = QVBoxLayout(self.Imaging_DataRecording_frame)
+        self.Imaging_DataRecording_verticalLayout_28.setSpacing(5)
+        self.Imaging_DataRecording_verticalLayout_28.setObjectName(u"Imaging_DataRecording_verticalLayout_28")
+        self.Imaging_DataRecording_verticalLayout_28.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_Folder_frame = QFrame(self.Imaging_DataRecording_frame)
+        self.Imaging_DataRecording_Folder_frame.setObjectName(u"Imaging_DataRecording_Folder_frame")
+        self.Imaging_DataRecording_Folder_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Folder_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_horizontalLayout_56 = QHBoxLayout(self.Imaging_DataRecording_Folder_frame)
+        self.Imaging_DataRecording_horizontalLayout_56.setSpacing(10)
+        self.Imaging_DataRecording_horizontalLayout_56.setObjectName(u"Imaging_DataRecording_horizontalLayout_56")
+        self.Imaging_DataRecording_horizontalLayout_56.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_Folder_label_frame = QFrame(self.Imaging_DataRecording_Folder_frame)
+        self.Imaging_DataRecording_Folder_label_frame.setObjectName(u"Imaging_DataRecording_Folder_label_frame")
+        self.Imaging_DataRecording_Folder_label_frame.setMinimumSize(QSize(100, 0))
+        self.Imaging_DataRecording_Folder_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Folder_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_27 = QVBoxLayout(self.Imaging_DataRecording_Folder_label_frame)
+        self.Imaging_DataRecording_verticalLayout_27.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_27.setObjectName(u"Imaging_DataRecording_verticalLayout_27")
+        self.Imaging_DataRecording_verticalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_Folder_label = QLabel(self.Imaging_DataRecording_Folder_label_frame)
+        self.Imaging_DataRecording_Folder_label.setObjectName(u"Imaging_DataRecording_Folder_label")
+        self.Imaging_DataRecording_Folder_label.setMinimumSize(QSize(100, 0))
+        self.Imaging_DataRecording_Folder_label.setMaximumSize(QSize(100, 16777215))
+        self.Imaging_DataRecording_Folder_label.setFont(font4)
 
-        self.verticalLayout_107.addWidget(self.Imaging_DataRecording_recordingMode_frame)
-
-
-        self.horizontalLayout_415.addWidget(self.Imaging_DataRecording_left_frame)
-
-        self.Imaging_DataRecording_right_frame = QFrame(self.Imaging_DataRecording_box)
-        self.Imaging_DataRecording_right_frame.setObjectName(u"Imaging_DataRecording_right_frame")
-        self.Imaging_DataRecording_right_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Imaging_DataRecording_right_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_108 = QVBoxLayout(self.Imaging_DataRecording_right_frame)
-        self.verticalLayout_108.setSpacing(0)
-        self.verticalLayout_108.setObjectName(u"verticalLayout_108")
-        self.verticalLayout_108.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_DataRecording_directory_frame = QFrame(self.Imaging_DataRecording_right_frame)
-        self.Imaging_DataRecording_directory_frame.setObjectName(u"Imaging_DataRecording_directory_frame")
-        self.Imaging_DataRecording_directory_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Imaging_DataRecording_directory_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_426 = QHBoxLayout(self.Imaging_DataRecording_directory_frame)
-        self.horizontalLayout_426.setSpacing(10)
-        self.horizontalLayout_426.setObjectName(u"horizontalLayout_426")
-        self.horizontalLayout_426.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_DataRecording_SelectRecordFolder_label = QLabel(self.Imaging_DataRecording_directory_frame)
-        self.Imaging_DataRecording_SelectRecordFolder_label.setObjectName(u"Imaging_DataRecording_SelectRecordFolder_label")
-
-        self.horizontalLayout_426.addWidget(self.Imaging_DataRecording_SelectRecordFolder_label)
-
-        self.Imaging_DataRecording_RecordFolder_value = QLineEdit(self.Imaging_DataRecording_directory_frame)
-        self.Imaging_DataRecording_RecordFolder_value.setObjectName(u"Imaging_DataRecording_RecordFolder_value")
-        self.Imaging_DataRecording_RecordFolder_value.setEnabled(False)
-
-        self.horizontalLayout_426.addWidget(self.Imaging_DataRecording_RecordFolder_value)
-
-        self.Imaging_DataRecording_RecordFolderDir_pushButton = QPushButton(self.Imaging_DataRecording_directory_frame)
-        self.Imaging_DataRecording_RecordFolderDir_pushButton.setObjectName(u"Imaging_DataRecording_RecordFolderDir_pushButton")
-        self.Imaging_DataRecording_RecordFolderDir_pushButton.setMinimumSize(QSize(150, 0))
-        self.Imaging_DataRecording_RecordFolderDir_pushButton.setFont(font3)
-
-        self.horizontalLayout_426.addWidget(self.Imaging_DataRecording_RecordFolderDir_pushButton)
+        self.Imaging_DataRecording_verticalLayout_27.addWidget(self.Imaging_DataRecording_Folder_label)
 
 
-        self.verticalLayout_108.addWidget(self.Imaging_DataRecording_directory_frame)
+        self.Imaging_DataRecording_horizontalLayout_56.addWidget(self.Imaging_DataRecording_Folder_label_frame)
 
-        self.Imaging_DataRecording_record_frame = QFrame(self.Imaging_DataRecording_right_frame)
+        self.Imaging_DataRecording_Folder_lineEdit_frame = QFrame(self.Imaging_DataRecording_Folder_frame)
+        self.Imaging_DataRecording_Folder_lineEdit_frame.setObjectName(u"Imaging_DataRecording_Folder_lineEdit_frame")
+        self.Imaging_DataRecording_Folder_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Folder_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_335 = QVBoxLayout(self.Imaging_DataRecording_Folder_lineEdit_frame)
+        self.Imaging_DataRecording_verticalLayout_335.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_335.setObjectName(u"Imaging_DataRecording_verticalLayout_335")
+        self.Imaging_DataRecording_verticalLayout_335.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_Folder_lineEdit = QLineEdit(self.Imaging_DataRecording_Folder_lineEdit_frame)
+        self.Imaging_DataRecording_Folder_lineEdit.setObjectName(u"Imaging_DataRecording_Folder_lineEdit")
+        self.Imaging_DataRecording_Folder_lineEdit.setEnabled(False)
+
+        self.Imaging_DataRecording_verticalLayout_335.addWidget(self.Imaging_DataRecording_Folder_lineEdit)
+
+
+        self.Imaging_DataRecording_horizontalLayout_56.addWidget(self.Imaging_DataRecording_Folder_lineEdit_frame)
+
+        self.Imaging_DataRecording_Folder_pushButton_frame = QFrame(self.Imaging_DataRecording_Folder_frame)
+        self.Imaging_DataRecording_Folder_pushButton_frame.setObjectName(u"Imaging_DataRecording_Folder_pushButton_frame")
+        self.Imaging_DataRecording_Folder_pushButton_frame.setMinimumSize(QSize(150, 0))
+        self.Imaging_DataRecording_Folder_pushButton_frame.setMaximumSize(QSize(150, 16777215))
+        self.Imaging_DataRecording_Folder_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Folder_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_339 = QVBoxLayout(self.Imaging_DataRecording_Folder_pushButton_frame)
+        self.Imaging_DataRecording_verticalLayout_339.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_339.setObjectName(u"Imaging_DataRecording_verticalLayout_339")
+        self.Imaging_DataRecording_verticalLayout_339.setContentsMargins(10, 0, 0, 0)
+        self.Imaging_DataRecording_Folder_pushButton = QPushButton(self.Imaging_DataRecording_Folder_pushButton_frame)
+        self.Imaging_DataRecording_Folder_pushButton.setObjectName(u"Imaging_DataRecording_Folder_pushButton")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataRecording_Folder_pushButton.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataRecording_Folder_pushButton.setSizePolicy(sizePolicy2)
+        self.Imaging_DataRecording_Folder_pushButton.setMinimumSize(QSize(0, 0))
+        self.Imaging_DataRecording_Folder_pushButton.setMaximumSize(QSize(16777215, 16777215))
+        self.Imaging_DataRecording_Folder_pushButton.setFont(font5)
+
+        self.Imaging_DataRecording_verticalLayout_339.addWidget(self.Imaging_DataRecording_Folder_pushButton)
+
+
+        self.Imaging_DataRecording_horizontalLayout_56.addWidget(self.Imaging_DataRecording_Folder_pushButton_frame)
+
+
+        self.Imaging_DataRecording_verticalLayout_28.addWidget(self.Imaging_DataRecording_Folder_frame)
+
+        self.Imaging_DataRecording_File_frame = QFrame(self.Imaging_DataRecording_frame)
+        self.Imaging_DataRecording_File_frame.setObjectName(u"Imaging_DataRecording_File_frame")
+        self.Imaging_DataRecording_File_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_File_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_horizontalLayout_199 = QHBoxLayout(self.Imaging_DataRecording_File_frame)
+        self.Imaging_DataRecording_horizontalLayout_199.setSpacing(10)
+        self.Imaging_DataRecording_horizontalLayout_199.setObjectName(u"Imaging_DataRecording_horizontalLayout_199")
+        self.Imaging_DataRecording_horizontalLayout_199.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_File_label_frame = QFrame(self.Imaging_DataRecording_File_frame)
+        self.Imaging_DataRecording_File_label_frame.setObjectName(u"Imaging_DataRecording_File_label_frame")
+        self.Imaging_DataRecording_File_label_frame.setMinimumSize(QSize(100, 0))
+        self.Imaging_DataRecording_File_label_frame.setMaximumSize(QSize(100, 16777215))
+        self.Imaging_DataRecording_File_label_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_File_label_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_315 = QVBoxLayout(self.Imaging_DataRecording_File_label_frame)
+        self.Imaging_DataRecording_verticalLayout_315.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_315.setObjectName(u"Imaging_DataRecording_verticalLayout_315")
+        self.Imaging_DataRecording_verticalLayout_315.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_File_label = QLabel(self.Imaging_DataRecording_File_label_frame)
+        self.Imaging_DataRecording_File_label.setObjectName(u"Imaging_DataRecording_File_label")
+        self.Imaging_DataRecording_File_label.setMinimumSize(QSize(100, 0))
+        self.Imaging_DataRecording_File_label.setFont(font6)
+
+        self.Imaging_DataRecording_verticalLayout_315.addWidget(self.Imaging_DataRecording_File_label)
+
+
+        self.Imaging_DataRecording_horizontalLayout_199.addWidget(self.Imaging_DataRecording_File_label_frame, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.Imaging_DataRecording_File_lineEdit_frame = QFrame(self.Imaging_DataRecording_File_frame)
+        self.Imaging_DataRecording_File_lineEdit_frame.setObjectName(u"Imaging_DataRecording_File_lineEdit_frame")
+        self.Imaging_DataRecording_File_lineEdit_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_File_lineEdit_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_320 = QVBoxLayout(self.Imaging_DataRecording_File_lineEdit_frame)
+        self.Imaging_DataRecording_verticalLayout_320.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_320.setObjectName(u"Imaging_DataRecording_verticalLayout_320")
+        self.Imaging_DataRecording_verticalLayout_320.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_File_lineEdit = QLineEdit(self.Imaging_DataRecording_File_lineEdit_frame)
+        self.Imaging_DataRecording_File_lineEdit.setObjectName(u"Imaging_DataRecording_File_lineEdit")
+
+        self.Imaging_DataRecording_verticalLayout_320.addWidget(self.Imaging_DataRecording_File_lineEdit)
+
+
+        self.Imaging_DataRecording_horizontalLayout_199.addWidget(self.Imaging_DataRecording_File_lineEdit_frame)
+
+        self.Imaging_DataRecording_File_csvlabel_frame = QFrame(self.Imaging_DataRecording_File_frame)
+        self.Imaging_DataRecording_File_csvlabel_frame.setObjectName(u"Imaging_DataRecording_File_csvlabel_frame")
+        self.Imaging_DataRecording_File_csvlabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_File_csvlabel_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_330 = QVBoxLayout(self.Imaging_DataRecording_File_csvlabel_frame)
+        self.Imaging_DataRecording_verticalLayout_330.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_330.setObjectName(u"Imaging_DataRecording_verticalLayout_330")
+        self.Imaging_DataRecording_verticalLayout_330.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_File_csvlabel = QLabel(self.Imaging_DataRecording_File_csvlabel_frame)
+        self.Imaging_DataRecording_File_csvlabel.setObjectName(u"Imaging_DataRecording_File_csvlabel")
+        self.Imaging_DataRecording_File_csvlabel.setFont(font6)
+
+        self.Imaging_DataRecording_verticalLayout_330.addWidget(self.Imaging_DataRecording_File_csvlabel)
+
+
+        self.Imaging_DataRecording_horizontalLayout_199.addWidget(self.Imaging_DataRecording_File_csvlabel_frame)
+
+        self.Imaging_DataRecording_Record_pushButton_frame = QFrame(self.Imaging_DataRecording_File_frame)
+        self.Imaging_DataRecording_Record_pushButton_frame.setObjectName(u"Imaging_DataRecording_Record_pushButton_frame")
+        self.Imaging_DataRecording_Record_pushButton_frame.setMinimumSize(QSize(150, 0))
+        self.Imaging_DataRecording_Record_pushButton_frame.setMaximumSize(QSize(150, 16777215))
+        self.Imaging_DataRecording_Record_pushButton_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Record_pushButton_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_15 = QVBoxLayout(self.Imaging_DataRecording_Record_pushButton_frame)
+        self.Imaging_DataRecording_verticalLayout_15.setSpacing(0)
+        self.Imaging_DataRecording_verticalLayout_15.setObjectName(u"Imaging_DataRecording_verticalLayout_15")
+        self.Imaging_DataRecording_verticalLayout_15.setContentsMargins(10, 0, 0, 0)
+        self.Imaging_DataRecording_Record_pushButton = QPushButton(self.Imaging_DataRecording_Record_pushButton_frame)
+        self.Imaging_DataRecording_Record_pushButton.setObjectName(u"Imaging_DataRecording_Record_pushButton")
+        sizePolicy2.setHeightForWidth(self.Imaging_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataRecording_Record_pushButton.setSizePolicy(sizePolicy2)
+        self.Imaging_DataRecording_Record_pushButton.setMinimumSize(QSize(0, 0))
+        self.Imaging_DataRecording_Record_pushButton.setMaximumSize(QSize(16777215, 16777215))
+        self.Imaging_DataRecording_Record_pushButton.setFont(font5)
+        self.Imaging_DataRecording_Record_pushButton.setStyleSheet(u"color: rgb(250, 250, 250);\n"
+"background-color: rgb(220, 50, 47);")
+        self.Imaging_DataRecording_Record_pushButton.setCheckable(True)
+
+        self.Imaging_DataRecording_verticalLayout_15.addWidget(self.Imaging_DataRecording_Record_pushButton)
+
+
+        self.Imaging_DataRecording_horizontalLayout_199.addWidget(self.Imaging_DataRecording_Record_pushButton_frame)
+
+
+        self.Imaging_DataRecording_verticalLayout_28.addWidget(self.Imaging_DataRecording_File_frame)
+
+        self.Imaging_DataRecording_record_frame = QFrame(self.Imaging_DataRecording_frame)
         self.Imaging_DataRecording_record_frame.setObjectName(u"Imaging_DataRecording_record_frame")
         self.Imaging_DataRecording_record_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.Imaging_DataRecording_record_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_427 = QHBoxLayout(self.Imaging_DataRecording_record_frame)
-        self.horizontalLayout_427.setSpacing(0)
-        self.horizontalLayout_427.setObjectName(u"horizontalLayout_427")
-        self.horizontalLayout_427.setContentsMargins(0, 0, 0, 0)
-        self.Imaging_SelectedFolderLabel = QLabel(self.Imaging_DataRecording_record_frame)
-        self.Imaging_SelectedFolderLabel.setObjectName(u"Imaging_SelectedFolderLabel")
-        sizePolicy4.setHeightForWidth(self.Imaging_SelectedFolderLabel.sizePolicy().hasHeightForWidth())
-        self.Imaging_SelectedFolderLabel.setSizePolicy(sizePolicy4)
-        self.Imaging_SelectedFolderLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.Imaging_DataRecording_horizontalLayout_57 = QHBoxLayout(self.Imaging_DataRecording_record_frame)
+        self.Imaging_DataRecording_horizontalLayout_57.setSpacing(0)
+        self.Imaging_DataRecording_horizontalLayout_57.setObjectName(u"Imaging_DataRecording_horizontalLayout_57")
+        self.Imaging_DataRecording_horizontalLayout_57.setContentsMargins(0, 0, 0, 0)
+        self.Imaging_DataRecording_Record_label_2 = QLabel(self.Imaging_DataRecording_record_frame)
+        self.Imaging_DataRecording_Record_label_2.setObjectName(u"Imaging_DataRecording_Record_label_2")
+        sizePolicy4.setHeightForWidth(self.Imaging_DataRecording_Record_label_2.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataRecording_Record_label_2.setSizePolicy(sizePolicy4)
 
-        self.horizontalLayout_427.addWidget(self.Imaging_SelectedFolderLabel)
+        self.Imaging_DataRecording_horizontalLayout_57.addWidget(self.Imaging_DataRecording_Record_label_2, 0, Qt.AlignmentFlag.AlignLeft)
 
-        self.Imaging_DataRecording_Record_pushButton = QPushButton(self.Imaging_DataRecording_record_frame)
-        self.Imaging_DataRecording_Record_pushButton.setObjectName(u"Imaging_DataRecording_Record_pushButton")
-        sizePolicy6.setHeightForWidth(self.Imaging_DataRecording_Record_pushButton.sizePolicy().hasHeightForWidth())
-        self.Imaging_DataRecording_Record_pushButton.setSizePolicy(sizePolicy6)
-        self.Imaging_DataRecording_Record_pushButton.setMinimumSize(QSize(150, 0))
-        self.Imaging_DataRecording_Record_pushButton.setFont(font15)
-        self.Imaging_DataRecording_Record_pushButton.setStyleSheet(u"QPushButton { color: rgb(250, 250, 250); background-color: rgb(185, 46, 42); }\n"
-"QPushButton:checked { color: rgb(255, 255, 255); background-color: rgb(28, 110, 65); }\n"
-"QPushButton:disabled { color: rgb(190, 205, 205); background-color: rgb(88, 110, 117); }")
-        self.Imaging_DataRecording_Record_pushButton.setCheckable(True)
+        self.Imaging_DataRecording_Record_label = QLabel(self.Imaging_DataRecording_record_frame)
+        self.Imaging_DataRecording_Record_label.setObjectName(u"Imaging_DataRecording_Record_label")
+        sizePolicy7.setHeightForWidth(self.Imaging_DataRecording_Record_label.sizePolicy().hasHeightForWidth())
+        self.Imaging_DataRecording_Record_label.setSizePolicy(sizePolicy7)
+        self.Imaging_DataRecording_Record_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.horizontalLayout_427.addWidget(self.Imaging_DataRecording_Record_pushButton)
+        self.Imaging_DataRecording_horizontalLayout_57.addWidget(self.Imaging_DataRecording_Record_label, 0, Qt.AlignmentFlag.AlignRight)
 
-        self.Imaging_RecordingStatus_label = QLabel(self.Imaging_DataRecording_record_frame)
-        self.Imaging_RecordingStatus_label.setObjectName(u"Imaging_RecordingStatus_label")
-        self.Imaging_RecordingStatus_label.setWordWrap(True)
+        self.Imaging_DataRecording_Record_lempty_frame = QFrame(self.Imaging_DataRecording_record_frame)
+        self.Imaging_DataRecording_Record_lempty_frame.setObjectName(u"Imaging_DataRecording_Record_lempty_frame")
+        self.Imaging_DataRecording_Record_lempty_frame.setMinimumSize(QSize(150, 0))
+        self.Imaging_DataRecording_Record_lempty_frame.setMaximumSize(QSize(150, 16777215))
+        self.Imaging_DataRecording_Record_lempty_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Imaging_DataRecording_Record_lempty_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.Imaging_DataRecording_verticalLayout_16 = QVBoxLayout(self.Imaging_DataRecording_Record_lempty_frame)
+        self.Imaging_DataRecording_verticalLayout_16.setObjectName(u"Imaging_DataRecording_verticalLayout_16")
 
-        self.horizontalLayout_427.addWidget(self.Imaging_RecordingStatus_label)
-
-
-        self.verticalLayout_108.addWidget(self.Imaging_DataRecording_record_frame)
+        self.Imaging_DataRecording_horizontalLayout_57.addWidget(self.Imaging_DataRecording_Record_lempty_frame)
 
 
-        self.horizontalLayout_415.addWidget(self.Imaging_DataRecording_right_frame)
+        self.Imaging_DataRecording_verticalLayout_28.addWidget(self.Imaging_DataRecording_record_frame)
+
+
+        self.Imaging_DataRecording_horizontalLayout_52.addWidget(self.Imaging_DataRecording_frame)
 
 
         self.verticalLayout_84.addWidget(self.Imaging_DataRecording_box)
@@ -24922,6 +25040,1430 @@ class Ui_Spikeling(object):
         self.GitHub_Page_layout.addWidget(self.GitHub_scrollArea)
 
         self.mainbody_stackedWidget.addWidget(self.page_GitHub)
+        self.page_Imaging_DataAnalysis = QWidget()
+        self.page_Imaging_DataAnalysis.setObjectName(u"page_Imaging_DataAnalysis")
+        self.ImagingAnalysis_rootLayout = QVBoxLayout(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_rootLayout.setSpacing(6)
+        self.ImagingAnalysis_rootLayout.setObjectName(u"ImagingAnalysis_rootLayout")
+        self.ImagingAnalysis_rootLayout.setContentsMargins(7, 7, 7, 7)
+        self.ImagingAnalysis_headerLabel = QLabel(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_headerLabel.setObjectName(u"ImagingAnalysis_headerLabel")
+
+        self.ImagingAnalysis_rootLayout.addWidget(self.ImagingAnalysis_headerLabel)
+
+        self.ImagingAnalysis_navLayout = QHBoxLayout()
+        self.ImagingAnalysis_navLayout.setSpacing(3)
+        self.ImagingAnalysis_navLayout.setObjectName(u"ImagingAnalysis_navLayout")
+        self.ImagingAnalysis_navLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_navRecording = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navRecording.setObjectName(u"ImagingAnalysis_navRecording")
+        self.ImagingAnalysis_navRecording.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navRecording.setCheckable(True)
+        self.ImagingAnalysis_navRecording.setChecked(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navRecording)
+
+        self.ImagingAnalysis_navProcessing = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navProcessing.setObjectName(u"ImagingAnalysis_navProcessing")
+        self.ImagingAnalysis_navProcessing.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navProcessing.setCheckable(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navProcessing)
+
+        self.ImagingAnalysis_navAlign = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navAlign.setObjectName(u"ImagingAnalysis_navAlign")
+        self.ImagingAnalysis_navAlign.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navAlign.setCheckable(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navAlign)
+
+        self.ImagingAnalysis_navTransients = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navTransients.setObjectName(u"ImagingAnalysis_navTransients")
+        self.ImagingAnalysis_navTransients.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navTransients.setCheckable(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navTransients)
+
+        self.ImagingAnalysis_navInference = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navInference.setObjectName(u"ImagingAnalysis_navInference")
+        self.ImagingAnalysis_navInference.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navInference.setCheckable(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navInference)
+
+        self.ImagingAnalysis_navCompare = QPushButton(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_navCompare.setObjectName(u"ImagingAnalysis_navCompare")
+        self.ImagingAnalysis_navCompare.setMinimumSize(QSize(0, 34))
+        self.ImagingAnalysis_navCompare.setCheckable(True)
+
+        self.ImagingAnalysis_navLayout.addWidget(self.ImagingAnalysis_navCompare)
+
+        self.ImagingAnalysis_navSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_navLayout.addItem(self.ImagingAnalysis_navSpacer)
+
+
+        self.ImagingAnalysis_rootLayout.addLayout(self.ImagingAnalysis_navLayout)
+
+        self.ImagingAnalysis_stack = QStackedWidget(self.page_Imaging_DataAnalysis)
+        self.ImagingAnalysis_stack.setObjectName(u"ImagingAnalysis_stack")
+        self.ImagingAnalysis_recordingPage = QWidget()
+        self.ImagingAnalysis_recordingPage.setObjectName(u"ImagingAnalysis_recordingPage")
+        self.ImagingAnalysis_recordingLayout = QVBoxLayout(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recordingLayout.setSpacing(5)
+        self.ImagingAnalysis_recordingLayout.setObjectName(u"ImagingAnalysis_recordingLayout")
+        self.ImagingAnalysis_recordingLayout.setContentsMargins(1, 1, 1, 1)
+        self.ImagingAnalysis_recordingToolsLayout = QHBoxLayout()
+        self.ImagingAnalysis_recordingToolsLayout.setSpacing(5)
+        self.ImagingAnalysis_recordingToolsLayout.setObjectName(u"ImagingAnalysis_recordingToolsLayout")
+        self.ImagingAnalysis_recordingToolsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_recording_loadButton = QPushButton(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_loadButton.setObjectName(u"ImagingAnalysis_recording_loadButton")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_loadButton)
+
+        self.ImagingAnalysis_recording_fileLabel = QLabel(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_fileLabel.setObjectName(u"ImagingAnalysis_recording_fileLabel")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_fileLabel)
+
+        self.ImagingAnalysis_recordingToolsSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_recordingToolsLayout.addItem(self.ImagingAnalysis_recordingToolsSpacer)
+
+        self.ImagingAnalysis_recording_neuronLabel = QLabel(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_neuronLabel.setObjectName(u"ImagingAnalysis_recording_neuronLabel")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_neuronLabel)
+
+        self.ImagingAnalysis_recording_neuronCombo = QComboBox(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_neuronCombo.addItem("")
+        self.ImagingAnalysis_recording_neuronCombo.addItem("")
+        self.ImagingAnalysis_recording_neuronCombo.addItem("")
+        self.ImagingAnalysis_recording_neuronCombo.setObjectName(u"ImagingAnalysis_recording_neuronCombo")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_neuronCombo)
+
+        self.ImagingAnalysis_recording_metadataButton = QPushButton(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_metadataButton.setObjectName(u"ImagingAnalysis_recording_metadataButton")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_metadataButton)
+
+        self.ImagingAnalysis_recording_exportButton = QPushButton(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_exportButton.setObjectName(u"ImagingAnalysis_recording_exportButton")
+
+        self.ImagingAnalysis_recordingToolsLayout.addWidget(self.ImagingAnalysis_recording_exportButton)
+
+
+        self.ImagingAnalysis_recordingLayout.addLayout(self.ImagingAnalysis_recordingToolsLayout)
+
+        self.ImagingAnalysis_recording_summaryLabel = QLabel(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recording_summaryLabel.setObjectName(u"ImagingAnalysis_recording_summaryLabel")
+
+        self.ImagingAnalysis_recordingLayout.addWidget(self.ImagingAnalysis_recording_summaryLabel)
+
+        self.ImagingAnalysis_recordingStack = QStackedWidget(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_recordingStack.setObjectName(u"ImagingAnalysis_recordingStack")
+        self.ImagingAnalysis_recordingOverviewPage = QWidget()
+        self.ImagingAnalysis_recordingOverviewPage.setObjectName(u"ImagingAnalysis_recordingOverviewPage")
+        self.ImagingAnalysis_recordingOverviewLayout = QVBoxLayout(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recordingOverviewLayout.setSpacing(4)
+        self.ImagingAnalysis_recordingOverviewLayout.setObjectName(u"ImagingAnalysis_recordingOverviewLayout")
+        self.ImagingAnalysis_recordingOverviewLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_recordingReferenceLayout = QHBoxLayout()
+        self.ImagingAnalysis_recordingReferenceLayout.setSpacing(5)
+        self.ImagingAnalysis_recordingReferenceLayout.setObjectName(u"ImagingAnalysis_recordingReferenceLayout")
+        self.ImagingAnalysis_recordingReferenceLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_recording_referenceCheck = QCheckBox(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_referenceCheck.setObjectName(u"ImagingAnalysis_recording_referenceCheck")
+
+        self.ImagingAnalysis_recordingReferenceLayout.addWidget(self.ImagingAnalysis_recording_referenceCheck)
+
+        self.ImagingAnalysis_recordingReferenceSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_recordingReferenceLayout.addItem(self.ImagingAnalysis_recordingReferenceSpacer)
+
+        self.ImagingAnalysis_recording_clockLabel = QLabel(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_clockLabel.setObjectName(u"ImagingAnalysis_recording_clockLabel")
+
+        self.ImagingAnalysis_recordingReferenceLayout.addWidget(self.ImagingAnalysis_recording_clockLabel)
+
+
+        self.ImagingAnalysis_recordingOverviewLayout.addLayout(self.ImagingAnalysis_recordingReferenceLayout)
+
+        self.ImagingAnalysis_recording_stimulusPlot = PlotWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_stimulusPlot.setObjectName(u"ImagingAnalysis_recording_stimulusPlot")
+        self.ImagingAnalysis_recording_stimulusPlot.setMinimumSize(QSize(0, 77))
+
+        self.ImagingAnalysis_recordingOverviewLayout.addWidget(self.ImagingAnalysis_recording_stimulusPlot)
+
+        self.ImagingAnalysis_recording_fluorescencePlot = PlotWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_fluorescencePlot.setObjectName(u"ImagingAnalysis_recording_fluorescencePlot")
+        self.ImagingAnalysis_recording_fluorescencePlot.setMinimumSize(QSize(0, 77))
+
+        self.ImagingAnalysis_recordingOverviewLayout.addWidget(self.ImagingAnalysis_recording_fluorescencePlot)
+
+        self.ImagingAnalysis_recording_dffPlot = PlotWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_dffPlot.setObjectName(u"ImagingAnalysis_recording_dffPlot")
+        self.ImagingAnalysis_recording_dffPlot.setMinimumSize(QSize(0, 77))
+
+        self.ImagingAnalysis_recordingOverviewLayout.addWidget(self.ImagingAnalysis_recording_dffPlot)
+
+        self.ImagingAnalysis_recording_calciumPlot = PlotWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_calciumPlot.setObjectName(u"ImagingAnalysis_recording_calciumPlot")
+        self.ImagingAnalysis_recording_calciumPlot.setMinimumSize(QSize(0, 77))
+
+        self.ImagingAnalysis_recordingOverviewLayout.addWidget(self.ImagingAnalysis_recording_calciumPlot)
+
+        self.ImagingAnalysis_recording_voltagePlot = PlotWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recording_voltagePlot.setObjectName(u"ImagingAnalysis_recording_voltagePlot")
+        self.ImagingAnalysis_recording_voltagePlot.setMinimumSize(QSize(0, 77))
+
+        self.ImagingAnalysis_recordingOverviewLayout.addWidget(self.ImagingAnalysis_recording_voltagePlot)
+
+        self.ImagingAnalysis_recordingStack.addWidget(self.ImagingAnalysis_recordingOverviewPage)
+        self.ImagingAnalysis_recordingMetadataPage = QWidget()
+        self.ImagingAnalysis_recordingMetadataPage.setObjectName(u"ImagingAnalysis_recordingMetadataPage")
+        self.ImagingAnalysis_recordingMetadataLayout = QVBoxLayout(self.ImagingAnalysis_recordingMetadataPage)
+        self.ImagingAnalysis_recordingMetadataLayout.setSpacing(6)
+        self.ImagingAnalysis_recordingMetadataLayout.setObjectName(u"ImagingAnalysis_recordingMetadataLayout")
+        self.ImagingAnalysis_recordingMetadataLayout.setContentsMargins(3, 3, 3, 3)
+        self.ImagingAnalysis_recording_backButton = QPushButton(self.ImagingAnalysis_recordingMetadataPage)
+        self.ImagingAnalysis_recording_backButton.setObjectName(u"ImagingAnalysis_recording_backButton")
+
+        self.ImagingAnalysis_recordingMetadataLayout.addWidget(self.ImagingAnalysis_recording_backButton)
+
+        self.ImagingAnalysis_recording_metadataText = QPlainTextEdit(self.ImagingAnalysis_recordingMetadataPage)
+        self.ImagingAnalysis_recording_metadataText.setObjectName(u"ImagingAnalysis_recording_metadataText")
+        self.ImagingAnalysis_recording_metadataText.setReadOnly(True)
+
+        self.ImagingAnalysis_recordingMetadataLayout.addWidget(self.ImagingAnalysis_recording_metadataText)
+
+        self.ImagingAnalysis_recordingStack.addWidget(self.ImagingAnalysis_recordingMetadataPage)
+
+        self.ImagingAnalysis_recordingLayout.addWidget(self.ImagingAnalysis_recordingStack)
+
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_recordingPage)
+        self.ImagingAnalysis_processingPage = QWidget()
+        self.ImagingAnalysis_processingPage.setObjectName(u"ImagingAnalysis_processingPage")
+        self.ImagingAnalysis_processingLayout = QVBoxLayout(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processingLayout.setSpacing(5)
+        self.ImagingAnalysis_processingLayout.setObjectName(u"ImagingAnalysis_processingLayout")
+        self.ImagingAnalysis_processingLayout.setContentsMargins(4, 4, 4, 4)
+        self.ImagingAnalysis_processing_helpLabel = QLabel(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_helpLabel.setObjectName(u"ImagingAnalysis_processing_helpLabel")
+        self.ImagingAnalysis_processing_helpLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_helpLabel)
+
+        self.ImagingAnalysis_processing_settingsLayout = QHBoxLayout()
+        self.ImagingAnalysis_processing_settingsLayout.setSpacing(6)
+        self.ImagingAnalysis_processing_settingsLayout.setObjectName(u"ImagingAnalysis_processing_settingsLayout")
+        self.ImagingAnalysis_processing_settingsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_processing_baselineGroup = QGroupBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_baselineGroup.setObjectName(u"ImagingAnalysis_processing_baselineGroup")
+        self.ImagingAnalysis_processing_baselineGroupGrid = QGridLayout(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_processing_baselineGroupGrid.setObjectName(u"ImagingAnalysis_processing_baselineGroupGrid")
+        self.ImagingAnalysis_processing_baselineGroupGrid.setContentsMargins(7, 8, 7, 6)
+        self.ImagingAnalysis_processing_baselineMethodLabel = QLabel(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineMethodLabel.setObjectName(u"ImagingAnalysis_processing_baselineMethodLabel")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineMethodLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineMethodCombo = QComboBox(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_baselineMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_baselineMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_baselineMethodCombo.setObjectName(u"ImagingAnalysis_processing_baselineMethodCombo")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineMethodCombo, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_percentileLabel = QLabel(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_percentileLabel.setObjectName(u"ImagingAnalysis_processing_percentileLabel")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_percentileLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_percentileEdit = QLineEdit(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_percentileEdit.setObjectName(u"ImagingAnalysis_processing_percentileEdit")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_percentileEdit, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineWindowLabel = QLabel(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineWindowLabel.setObjectName(u"ImagingAnalysis_processing_baselineWindowLabel")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineWindowLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineWindowEdit = QLineEdit(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineWindowEdit.setObjectName(u"ImagingAnalysis_processing_baselineWindowEdit")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineWindowEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineStartLabel = QLabel(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineStartLabel.setObjectName(u"ImagingAnalysis_processing_baselineStartLabel")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineStartLabel, 3, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineStartEdit = QLineEdit(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineStartEdit.setObjectName(u"ImagingAnalysis_processing_baselineStartEdit")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineStartEdit, 3, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineEndLabel = QLabel(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineEndLabel.setObjectName(u"ImagingAnalysis_processing_baselineEndLabel")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineEndLabel, 4, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_baselineEndEdit = QLineEdit(self.ImagingAnalysis_processing_baselineGroup)
+        self.ImagingAnalysis_processing_baselineEndEdit.setObjectName(u"ImagingAnalysis_processing_baselineEndEdit")
+
+        self.ImagingAnalysis_processing_baselineGroupGrid.addWidget(self.ImagingAnalysis_processing_baselineEndEdit, 4, 1, 1, 1)
+
+
+        self.ImagingAnalysis_processing_settingsLayout.addWidget(self.ImagingAnalysis_processing_baselineGroup)
+
+        self.ImagingAnalysis_processing_backgroundGroup = QGroupBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_backgroundGroup.setObjectName(u"ImagingAnalysis_processing_backgroundGroup")
+        self.ImagingAnalysis_processing_backgroundGroupGrid = QGridLayout(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_processing_backgroundGroupGrid.setObjectName(u"ImagingAnalysis_processing_backgroundGroupGrid")
+        self.ImagingAnalysis_processing_backgroundGroupGrid.setContentsMargins(7, 8, 7, 6)
+        self.ImagingAnalysis_processing_backgroundMethodLabel = QLabel(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundMethodLabel.setObjectName(u"ImagingAnalysis_processing_backgroundMethodLabel")
+
+        self.ImagingAnalysis_processing_backgroundGroupGrid.addWidget(self.ImagingAnalysis_processing_backgroundMethodLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_backgroundMethodCombo = QComboBox(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_backgroundMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_backgroundMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_backgroundMethodCombo.setObjectName(u"ImagingAnalysis_processing_backgroundMethodCombo")
+
+        self.ImagingAnalysis_processing_backgroundGroupGrid.addWidget(self.ImagingAnalysis_processing_backgroundMethodCombo, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_backgroundValueLabel = QLabel(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundValueLabel.setObjectName(u"ImagingAnalysis_processing_backgroundValueLabel")
+
+        self.ImagingAnalysis_processing_backgroundGroupGrid.addWidget(self.ImagingAnalysis_processing_backgroundValueLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_backgroundValueEdit = QLineEdit(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundValueEdit.setObjectName(u"ImagingAnalysis_processing_backgroundValueEdit")
+
+        self.ImagingAnalysis_processing_backgroundGroupGrid.addWidget(self.ImagingAnalysis_processing_backgroundValueEdit, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_backgroundNote = QLabel(self.ImagingAnalysis_processing_backgroundGroup)
+        self.ImagingAnalysis_processing_backgroundNote.setObjectName(u"ImagingAnalysis_processing_backgroundNote")
+        self.ImagingAnalysis_processing_backgroundNote.setWordWrap(True)
+
+        self.ImagingAnalysis_processing_backgroundGroupGrid.addWidget(self.ImagingAnalysis_processing_backgroundNote, 2, 0, 1, 1)
+
+
+        self.ImagingAnalysis_processing_settingsLayout.addWidget(self.ImagingAnalysis_processing_backgroundGroup)
+
+        self.ImagingAnalysis_processing_correctionGroup = QGroupBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_correctionGroup.setObjectName(u"ImagingAnalysis_processing_correctionGroup")
+        self.ImagingAnalysis_processing_correctionGroupGrid = QGridLayout(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_correctionGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_processing_correctionGroupGrid.setObjectName(u"ImagingAnalysis_processing_correctionGroupGrid")
+        self.ImagingAnalysis_processing_correctionGroupGrid.setContentsMargins(7, 8, 7, 6)
+        self.ImagingAnalysis_processing_bleachCheck = QCheckBox(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_bleachCheck.setObjectName(u"ImagingAnalysis_processing_bleachCheck")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_bleachCheck, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_bleachWindowEdit = QLineEdit(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_bleachWindowEdit.setObjectName(u"ImagingAnalysis_processing_bleachWindowEdit")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_bleachWindowEdit, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_filterMethodLabel = QLabel(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_filterMethodLabel.setObjectName(u"ImagingAnalysis_processing_filterMethodLabel")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_filterMethodLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_filterMethodCombo = QComboBox(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_filterMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_filterMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_filterMethodCombo.addItem("")
+        self.ImagingAnalysis_processing_filterMethodCombo.setObjectName(u"ImagingAnalysis_processing_filterMethodCombo")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_filterMethodCombo, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_filterWindowLabel = QLabel(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_filterWindowLabel.setObjectName(u"ImagingAnalysis_processing_filterWindowLabel")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_filterWindowLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_processing_filterWindowEdit = QLineEdit(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_filterWindowEdit.setObjectName(u"ImagingAnalysis_processing_filterWindowEdit")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_filterWindowEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_processing_calculateButton = QPushButton(self.ImagingAnalysis_processing_correctionGroup)
+        self.ImagingAnalysis_processing_calculateButton.setObjectName(u"ImagingAnalysis_processing_calculateButton")
+
+        self.ImagingAnalysis_processing_correctionGroupGrid.addWidget(self.ImagingAnalysis_processing_calculateButton, 3, 1, 1, 1)
+
+
+        self.ImagingAnalysis_processing_settingsLayout.addWidget(self.ImagingAnalysis_processing_correctionGroup)
+
+
+        self.ImagingAnalysis_processingLayout.addLayout(self.ImagingAnalysis_processing_settingsLayout)
+
+        self.ImagingAnalysis_processing_actionLayout = QHBoxLayout()
+        self.ImagingAnalysis_processing_actionLayout.setSpacing(6)
+        self.ImagingAnalysis_processing_actionLayout.setObjectName(u"ImagingAnalysis_processing_actionLayout")
+        self.ImagingAnalysis_processing_actionLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_processing_neuronLabel = QLabel(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_neuronLabel.setObjectName(u"ImagingAnalysis_processing_neuronLabel")
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_neuronLabel)
+
+        self.ImagingAnalysis_processing_neuronCombo = QComboBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_neuronCombo.addItem("")
+        self.ImagingAnalysis_processing_neuronCombo.addItem("")
+        self.ImagingAnalysis_processing_neuronCombo.addItem("")
+        self.ImagingAnalysis_processing_neuronCombo.setObjectName(u"ImagingAnalysis_processing_neuronCombo")
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_neuronCombo)
+
+        self.ImagingAnalysis_processing_rawCheck = QCheckBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_rawCheck.setObjectName(u"ImagingAnalysis_processing_rawCheck")
+        self.ImagingAnalysis_processing_rawCheck.setChecked(True)
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_rawCheck)
+
+        self.ImagingAnalysis_processing_baselineCheck = QCheckBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_baselineCheck.setObjectName(u"ImagingAnalysis_processing_baselineCheck")
+        self.ImagingAnalysis_processing_baselineCheck.setChecked(True)
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_baselineCheck)
+
+        self.ImagingAnalysis_processing_storedCheck = QCheckBox(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_storedCheck.setObjectName(u"ImagingAnalysis_processing_storedCheck")
+        self.ImagingAnalysis_processing_storedCheck.setChecked(True)
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_storedCheck)
+
+        self.ImagingAnalysis_processing_exportButton = QPushButton(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_exportButton.setObjectName(u"ImagingAnalysis_processing_exportButton")
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_exportButton)
+
+        self.ImagingAnalysis_processing_imageButton = QPushButton(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_imageButton.setObjectName(u"ImagingAnalysis_processing_imageButton")
+
+        self.ImagingAnalysis_processing_actionLayout.addWidget(self.ImagingAnalysis_processing_imageButton)
+
+
+        self.ImagingAnalysis_processingLayout.addLayout(self.ImagingAnalysis_processing_actionLayout)
+
+        self.ImagingAnalysis_processing_statusLabel = QLabel(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_statusLabel.setObjectName(u"ImagingAnalysis_processing_statusLabel")
+        self.ImagingAnalysis_processing_statusLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_statusLabel)
+
+        self.ImagingAnalysis_processing_qualityLabel = QLabel(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_qualityLabel.setObjectName(u"ImagingAnalysis_processing_qualityLabel")
+        self.ImagingAnalysis_processing_qualityLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_qualityLabel)
+
+        self.ImagingAnalysis_processing_fluorescencePlot = PlotWidget(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_fluorescencePlot.setObjectName(u"ImagingAnalysis_processing_fluorescencePlot")
+        self.ImagingAnalysis_processing_fluorescencePlot.setMinimumSize(QSize(0, 135))
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_fluorescencePlot)
+
+        self.ImagingAnalysis_processing_dffPlot = PlotWidget(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_dffPlot.setObjectName(u"ImagingAnalysis_processing_dffPlot")
+        self.ImagingAnalysis_processing_dffPlot.setMinimumSize(QSize(0, 145))
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_dffPlot)
+
+        self.ImagingAnalysis_processing_noteLabel = QLabel(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_processing_noteLabel.setObjectName(u"ImagingAnalysis_processing_noteLabel")
+        self.ImagingAnalysis_processing_noteLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_processingLayout.addWidget(self.ImagingAnalysis_processing_noteLabel)
+
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_processingPage)
+        self.ImagingAnalysis_alignPage = QWidget()
+        self.ImagingAnalysis_alignPage.setObjectName(u"ImagingAnalysis_alignPage")
+        self.ImagingAnalysis_alignLayout = QVBoxLayout(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_alignLayout.setSpacing(6)
+        self.ImagingAnalysis_alignLayout.setObjectName(u"ImagingAnalysis_alignLayout")
+        self.ImagingAnalysis_alignLayout.setContentsMargins(4, 4, 4, 4)
+        self.ImagingAnalysis_align_helpLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_helpLabel.setObjectName(u"ImagingAnalysis_align_helpLabel")
+        self.ImagingAnalysis_align_helpLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_alignLayout.addWidget(self.ImagingAnalysis_align_helpLabel)
+
+        self.ImagingAnalysis_align_parametersLayout = QHBoxLayout()
+        self.ImagingAnalysis_align_parametersLayout.setSpacing(7)
+        self.ImagingAnalysis_align_parametersLayout.setObjectName(u"ImagingAnalysis_align_parametersLayout")
+        self.ImagingAnalysis_align_parametersLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_align_sourceLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_sourceLabel.setObjectName(u"ImagingAnalysis_align_sourceLabel")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_sourceLabel)
+
+        self.ImagingAnalysis_align_sourceCombo = QComboBox(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_sourceCombo.addItem("")
+        self.ImagingAnalysis_align_sourceCombo.addItem("")
+        self.ImagingAnalysis_align_sourceCombo.setObjectName(u"ImagingAnalysis_align_sourceCombo")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_sourceCombo)
+
+        self.ImagingAnalysis_align_thresholdLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_thresholdLabel.setObjectName(u"ImagingAnalysis_align_thresholdLabel")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_thresholdLabel)
+
+        self.ImagingAnalysis_align_thresholdEdit = QLineEdit(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_thresholdEdit.setObjectName(u"ImagingAnalysis_align_thresholdEdit")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_thresholdEdit)
+
+        self.ImagingAnalysis_align_periodLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_periodLabel.setObjectName(u"ImagingAnalysis_align_periodLabel")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_periodLabel)
+
+        self.ImagingAnalysis_align_periodEdit = QLineEdit(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_periodEdit.setObjectName(u"ImagingAnalysis_align_periodEdit")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_periodEdit)
+
+        self.ImagingAnalysis_align_preLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_preLabel.setObjectName(u"ImagingAnalysis_align_preLabel")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_preLabel)
+
+        self.ImagingAnalysis_align_preEdit = QLineEdit(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_preEdit.setObjectName(u"ImagingAnalysis_align_preEdit")
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_preEdit)
+
+        self.ImagingAnalysis_align_parameterSpacer = QSpacerItem(20, 15, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_align_parametersLayout.addItem(self.ImagingAnalysis_align_parameterSpacer)
+
+        self.ImagingAnalysis_align_calculateButton = QPushButton(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_calculateButton.setObjectName(u"ImagingAnalysis_align_calculateButton")
+        self.ImagingAnalysis_align_calculateButton.setMinimumSize(QSize(0, 34))
+
+        self.ImagingAnalysis_align_parametersLayout.addWidget(self.ImagingAnalysis_align_calculateButton)
+
+
+        self.ImagingAnalysis_alignLayout.addLayout(self.ImagingAnalysis_align_parametersLayout)
+
+        self.ImagingAnalysis_align_displayLayout = QHBoxLayout()
+        self.ImagingAnalysis_align_displayLayout.setSpacing(7)
+        self.ImagingAnalysis_align_displayLayout.setObjectName(u"ImagingAnalysis_align_displayLayout")
+        self.ImagingAnalysis_align_displayLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_align_neuronLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_neuronLabel.setObjectName(u"ImagingAnalysis_align_neuronLabel")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_neuronLabel)
+
+        self.ImagingAnalysis_align_neuronCombo = QComboBox(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_neuronCombo.addItem("")
+        self.ImagingAnalysis_align_neuronCombo.addItem("")
+        self.ImagingAnalysis_align_neuronCombo.addItem("")
+        self.ImagingAnalysis_align_neuronCombo.setObjectName(u"ImagingAnalysis_align_neuronCombo")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_neuronCombo)
+
+        self.ImagingAnalysis_align_signalLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_signalLabel.setObjectName(u"ImagingAnalysis_align_signalLabel")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_signalLabel)
+
+        self.ImagingAnalysis_align_signalCombo = QComboBox(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_signalCombo.addItem("")
+        self.ImagingAnalysis_align_signalCombo.addItem("")
+        self.ImagingAnalysis_align_signalCombo.addItem("")
+        self.ImagingAnalysis_align_signalCombo.addItem("")
+        self.ImagingAnalysis_align_signalCombo.setObjectName(u"ImagingAnalysis_align_signalCombo")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_signalCombo)
+
+        self.ImagingAnalysis_align_repetitionsCheck = QCheckBox(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_repetitionsCheck.setObjectName(u"ImagingAnalysis_align_repetitionsCheck")
+        self.ImagingAnalysis_align_repetitionsCheck.setChecked(True)
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_repetitionsCheck)
+
+        self.ImagingAnalysis_align_displaySpacer = QSpacerItem(20, 15, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_align_displayLayout.addItem(self.ImagingAnalysis_align_displaySpacer)
+
+        self.ImagingAnalysis_align_exportButton = QPushButton(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_exportButton.setObjectName(u"ImagingAnalysis_align_exportButton")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_exportButton)
+
+        self.ImagingAnalysis_align_imageButton = QPushButton(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_imageButton.setObjectName(u"ImagingAnalysis_align_imageButton")
+
+        self.ImagingAnalysis_align_displayLayout.addWidget(self.ImagingAnalysis_align_imageButton)
+
+
+        self.ImagingAnalysis_alignLayout.addLayout(self.ImagingAnalysis_align_displayLayout)
+
+        self.ImagingAnalysis_align_summaryLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_summaryLabel.setObjectName(u"ImagingAnalysis_align_summaryLabel")
+        self.ImagingAnalysis_align_summaryLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_alignLayout.addWidget(self.ImagingAnalysis_align_summaryLabel)
+
+        self.ImagingAnalysis_align_methodLabel = QLabel(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_methodLabel.setObjectName(u"ImagingAnalysis_align_methodLabel")
+        self.ImagingAnalysis_align_methodLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_alignLayout.addWidget(self.ImagingAnalysis_align_methodLabel)
+
+        self.ImagingAnalysis_align_stimulusPlot = PlotWidget(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_stimulusPlot.setObjectName(u"ImagingAnalysis_align_stimulusPlot")
+        self.ImagingAnalysis_align_stimulusPlot.setMinimumSize(QSize(0, 150))
+
+        self.ImagingAnalysis_alignLayout.addWidget(self.ImagingAnalysis_align_stimulusPlot)
+
+        self.ImagingAnalysis_align_responsePlot = PlotWidget(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_align_responsePlot.setObjectName(u"ImagingAnalysis_align_responsePlot")
+        self.ImagingAnalysis_align_responsePlot.setMinimumSize(QSize(0, 170))
+
+        self.ImagingAnalysis_alignLayout.addWidget(self.ImagingAnalysis_align_responsePlot)
+
+        self.ImagingAnalysis_alignLayout.setStretch(5, 1)
+        self.ImagingAnalysis_alignLayout.setStretch(6, 1)
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_alignPage)
+        self.ImagingAnalysis_transientsPage = QWidget()
+        self.ImagingAnalysis_transientsPage.setObjectName(u"ImagingAnalysis_transientsPage")
+        self.ImagingAnalysis_transientsLayout = QVBoxLayout(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transientsLayout.setSpacing(5)
+        self.ImagingAnalysis_transientsLayout.setObjectName(u"ImagingAnalysis_transientsLayout")
+        self.ImagingAnalysis_transientsLayout.setContentsMargins(4, 4, 4, 4)
+        self.ImagingAnalysis_transients_helpLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_helpLabel.setObjectName(u"ImagingAnalysis_transients_helpLabel")
+        self.ImagingAnalysis_transients_helpLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_helpLabel)
+
+        self.ImagingAnalysis_transients_settingsLayout = QHBoxLayout()
+        self.ImagingAnalysis_transients_settingsLayout.setSpacing(6)
+        self.ImagingAnalysis_transients_settingsLayout.setObjectName(u"ImagingAnalysis_transients_settingsLayout")
+        self.ImagingAnalysis_transients_settingsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_transients_detectionGroup = QGroupBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_detectionGroup.setObjectName(u"ImagingAnalysis_transients_detectionGroup")
+        self.ImagingAnalysis_transients_detectionGroupGrid = QGridLayout(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_detectionGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_transients_detectionGroupGrid.setObjectName(u"ImagingAnalysis_transients_detectionGroupGrid")
+        self.ImagingAnalysis_transients_detectionGroupGrid.setContentsMargins(7, 7, 7, 6)
+        self.ImagingAnalysis_transients_prominenceLabel = QLabel(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_prominenceLabel.setObjectName(u"ImagingAnalysis_transients_prominenceLabel")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_prominenceLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_prominenceEdit = QLineEdit(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_prominenceEdit.setObjectName(u"ImagingAnalysis_transients_prominenceEdit")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_prominenceEdit, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_amplitudeLabel = QLabel(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_amplitudeLabel.setObjectName(u"ImagingAnalysis_transients_amplitudeLabel")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_amplitudeLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_amplitudeEdit = QLineEdit(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_amplitudeEdit.setObjectName(u"ImagingAnalysis_transients_amplitudeEdit")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_amplitudeEdit, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_widthLabel = QLabel(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_widthLabel.setObjectName(u"ImagingAnalysis_transients_widthLabel")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_widthLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_widthEdit = QLineEdit(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_widthEdit.setObjectName(u"ImagingAnalysis_transients_widthEdit")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_widthEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_separationLabel = QLabel(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_separationLabel.setObjectName(u"ImagingAnalysis_transients_separationLabel")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_separationLabel, 3, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_separationEdit = QLineEdit(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_separationEdit.setObjectName(u"ImagingAnalysis_transients_separationEdit")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_separationEdit, 3, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_baselineWindowLabel = QLabel(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_baselineWindowLabel.setObjectName(u"ImagingAnalysis_transients_baselineWindowLabel")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_baselineWindowLabel, 4, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_baselineWindowEdit = QLineEdit(self.ImagingAnalysis_transients_detectionGroup)
+        self.ImagingAnalysis_transients_baselineWindowEdit.setObjectName(u"ImagingAnalysis_transients_baselineWindowEdit")
+
+        self.ImagingAnalysis_transients_detectionGroupGrid.addWidget(self.ImagingAnalysis_transients_baselineWindowEdit, 4, 1, 1, 1)
+
+
+        self.ImagingAnalysis_transients_settingsLayout.addWidget(self.ImagingAnalysis_transients_detectionGroup)
+
+        self.ImagingAnalysis_transients_associationGroup = QGroupBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_associationGroup.setObjectName(u"ImagingAnalysis_transients_associationGroup")
+        self.ImagingAnalysis_transients_associationGroupGrid = QGridLayout(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_associationGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_transients_associationGroupGrid.setObjectName(u"ImagingAnalysis_transients_associationGroupGrid")
+        self.ImagingAnalysis_transients_associationGroupGrid.setContentsMargins(7, 7, 7, 6)
+        self.ImagingAnalysis_transients_responseSourceLabel = QLabel(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_responseSourceLabel.setObjectName(u"ImagingAnalysis_transients_responseSourceLabel")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_responseSourceLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_responseSourceCombo = QComboBox(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_responseSourceCombo.addItem("")
+        self.ImagingAnalysis_transients_responseSourceCombo.addItem("")
+        self.ImagingAnalysis_transients_responseSourceCombo.addItem("")
+        self.ImagingAnalysis_transients_responseSourceCombo.setObjectName(u"ImagingAnalysis_transients_responseSourceCombo")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_responseSourceCombo, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_thresholdLabel = QLabel(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_thresholdLabel.setObjectName(u"ImagingAnalysis_transients_thresholdLabel")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_thresholdLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_thresholdEdit = QLineEdit(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_thresholdEdit.setObjectName(u"ImagingAnalysis_transients_thresholdEdit")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_thresholdEdit, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_responseWindowLabel = QLabel(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_responseWindowLabel.setObjectName(u"ImagingAnalysis_transients_responseWindowLabel")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_responseWindowLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_transients_responseWindowEdit = QLineEdit(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_responseWindowEdit.setObjectName(u"ImagingAnalysis_transients_responseWindowEdit")
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_responseWindowEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_transients_associationNote = QLabel(self.ImagingAnalysis_transients_associationGroup)
+        self.ImagingAnalysis_transients_associationNote.setObjectName(u"ImagingAnalysis_transients_associationNote")
+        self.ImagingAnalysis_transients_associationNote.setWordWrap(True)
+
+        self.ImagingAnalysis_transients_associationGroupGrid.addWidget(self.ImagingAnalysis_transients_associationNote, 3, 0, 1, 1)
+
+
+        self.ImagingAnalysis_transients_settingsLayout.addWidget(self.ImagingAnalysis_transients_associationGroup)
+
+
+        self.ImagingAnalysis_transientsLayout.addLayout(self.ImagingAnalysis_transients_settingsLayout)
+
+        self.ImagingAnalysis_transients_actionsLayout = QHBoxLayout()
+        self.ImagingAnalysis_transients_actionsLayout.setSpacing(6)
+        self.ImagingAnalysis_transients_actionsLayout.setObjectName(u"ImagingAnalysis_transients_actionsLayout")
+        self.ImagingAnalysis_transients_actionsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_transients_neuronLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_neuronLabel.setObjectName(u"ImagingAnalysis_transients_neuronLabel")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_neuronLabel)
+
+        self.ImagingAnalysis_transients_neuronCombo = QComboBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_neuronCombo.addItem("")
+        self.ImagingAnalysis_transients_neuronCombo.addItem("")
+        self.ImagingAnalysis_transients_neuronCombo.addItem("")
+        self.ImagingAnalysis_transients_neuronCombo.setObjectName(u"ImagingAnalysis_transients_neuronCombo")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_neuronCombo)
+
+        self.ImagingAnalysis_transients_signalLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_signalLabel.setObjectName(u"ImagingAnalysis_transients_signalLabel")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_signalLabel)
+
+        self.ImagingAnalysis_transients_signalCombo = QComboBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_signalCombo.addItem("")
+        self.ImagingAnalysis_transients_signalCombo.addItem("")
+        self.ImagingAnalysis_transients_signalCombo.setObjectName(u"ImagingAnalysis_transients_signalCombo")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_signalCombo)
+
+        self.ImagingAnalysis_transients_markersCheck = QCheckBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_markersCheck.setObjectName(u"ImagingAnalysis_transients_markersCheck")
+        self.ImagingAnalysis_transients_markersCheck.setChecked(True)
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_markersCheck)
+
+        self.ImagingAnalysis_transients_stimulusMarkersCheck = QCheckBox(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_stimulusMarkersCheck.setObjectName(u"ImagingAnalysis_transients_stimulusMarkersCheck")
+        self.ImagingAnalysis_transients_stimulusMarkersCheck.setChecked(True)
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_stimulusMarkersCheck)
+
+        self.ImagingAnalysis_transients_actionSpacer = QSpacerItem(20, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_transients_actionsLayout.addItem(self.ImagingAnalysis_transients_actionSpacer)
+
+        self.ImagingAnalysis_transients_calculateButton = QPushButton(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_calculateButton.setObjectName(u"ImagingAnalysis_transients_calculateButton")
+        self.ImagingAnalysis_transients_calculateButton.setMinimumSize(QSize(0, 33))
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_calculateButton)
+
+        self.ImagingAnalysis_transients_exportButton = QPushButton(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_exportButton.setObjectName(u"ImagingAnalysis_transients_exportButton")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_exportButton)
+
+        self.ImagingAnalysis_transients_imageButton = QPushButton(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_imageButton.setObjectName(u"ImagingAnalysis_transients_imageButton")
+
+        self.ImagingAnalysis_transients_actionsLayout.addWidget(self.ImagingAnalysis_transients_imageButton)
+
+
+        self.ImagingAnalysis_transientsLayout.addLayout(self.ImagingAnalysis_transients_actionsLayout)
+
+        self.ImagingAnalysis_transients_summaryLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_summaryLabel.setObjectName(u"ImagingAnalysis_transients_summaryLabel")
+        self.ImagingAnalysis_transients_summaryLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_summaryLabel)
+
+        self.ImagingAnalysis_transients_qualityLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_qualityLabel.setObjectName(u"ImagingAnalysis_transients_qualityLabel")
+        self.ImagingAnalysis_transients_qualityLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_qualityLabel)
+
+        self.ImagingAnalysis_transients_stimulusPlot = PlotWidget(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_stimulusPlot.setObjectName(u"ImagingAnalysis_transients_stimulusPlot")
+        self.ImagingAnalysis_transients_stimulusPlot.setMinimumSize(QSize(0, 100))
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_stimulusPlot)
+
+        self.ImagingAnalysis_transients_signalPlot = PlotWidget(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_signalPlot.setObjectName(u"ImagingAnalysis_transients_signalPlot")
+        self.ImagingAnalysis_transients_signalPlot.setMinimumSize(QSize(0, 120))
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_signalPlot)
+
+        self.ImagingAnalysis_transients_eventTable = QTableWidget(self.ImagingAnalysis_transientsPage)
+        if (self.ImagingAnalysis_transients_eventTable.columnCount() < 10):
+            self.ImagingAnalysis_transients_eventTable.setColumnCount(10)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(0, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(1, __qtablewidgetitem6)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(2, __qtablewidgetitem7)
+        __qtablewidgetitem8 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(3, __qtablewidgetitem8)
+        __qtablewidgetitem9 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(4, __qtablewidgetitem9)
+        __qtablewidgetitem10 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(5, __qtablewidgetitem10)
+        __qtablewidgetitem11 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(6, __qtablewidgetitem11)
+        __qtablewidgetitem12 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(7, __qtablewidgetitem12)
+        __qtablewidgetitem13 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(8, __qtablewidgetitem13)
+        __qtablewidgetitem14 = QTableWidgetItem()
+        self.ImagingAnalysis_transients_eventTable.setHorizontalHeaderItem(9, __qtablewidgetitem14)
+        self.ImagingAnalysis_transients_eventTable.setObjectName(u"ImagingAnalysis_transients_eventTable")
+        self.ImagingAnalysis_transients_eventTable.setMinimumSize(QSize(0, 115))
+        self.ImagingAnalysis_transients_eventTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.ImagingAnalysis_transients_eventTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.ImagingAnalysis_transients_eventTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.ImagingAnalysis_transients_eventTable.setAlternatingRowColors(True)
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_eventTable)
+
+        self.ImagingAnalysis_transients_noteLabel = QLabel(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_transients_noteLabel.setObjectName(u"ImagingAnalysis_transients_noteLabel")
+        self.ImagingAnalysis_transients_noteLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_transientsLayout.addWidget(self.ImagingAnalysis_transients_noteLabel)
+
+        self.ImagingAnalysis_transientsLayout.setStretch(5, 1)
+        self.ImagingAnalysis_transientsLayout.setStretch(6, 2)
+        self.ImagingAnalysis_transientsLayout.setStretch(7, 1)
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_transientsPage)
+        self.ImagingAnalysis_inferencePage = QWidget()
+        self.ImagingAnalysis_inferencePage.setObjectName(u"ImagingAnalysis_inferencePage")
+        self.ImagingAnalysis_inferenceLayout = QVBoxLayout(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inferenceLayout.setSpacing(5)
+        self.ImagingAnalysis_inferenceLayout.setObjectName(u"ImagingAnalysis_inferenceLayout")
+        self.ImagingAnalysis_inferenceLayout.setContentsMargins(4, 4, 4, 4)
+        self.ImagingAnalysis_inference_helpLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_helpLabel.setObjectName(u"ImagingAnalysis_inference_helpLabel")
+        self.ImagingAnalysis_inference_helpLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_helpLabel)
+
+        self.ImagingAnalysis_inference_settingsLayout = QHBoxLayout()
+        self.ImagingAnalysis_inference_settingsLayout.setSpacing(6)
+        self.ImagingAnalysis_inference_settingsLayout.setObjectName(u"ImagingAnalysis_inference_settingsLayout")
+        self.ImagingAnalysis_inference_settingsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_inference_modelGroup = QGroupBox(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_modelGroup.setObjectName(u"ImagingAnalysis_inference_modelGroup")
+        self.ImagingAnalysis_inference_modelGroupGrid = QGridLayout(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_modelGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_inference_modelGroupGrid.setObjectName(u"ImagingAnalysis_inference_modelGroupGrid")
+        self.ImagingAnalysis_inference_modelGroupGrid.setContentsMargins(7, 7, 7, 6)
+        self.ImagingAnalysis_inference_signalLabel = QLabel(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_signalLabel.setObjectName(u"ImagingAnalysis_inference_signalLabel")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_signalLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_signalCombo = QComboBox(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_signalCombo.addItem("")
+        self.ImagingAnalysis_inference_signalCombo.addItem("")
+        self.ImagingAnalysis_inference_signalCombo.setObjectName(u"ImagingAnalysis_inference_signalCombo")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_signalCombo, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_modelLabel = QLabel(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_modelLabel.setObjectName(u"ImagingAnalysis_inference_modelLabel")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_modelLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_modelCombo = QComboBox(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_modelCombo.addItem("")
+        self.ImagingAnalysis_inference_modelCombo.addItem("")
+        self.ImagingAnalysis_inference_modelCombo.setObjectName(u"ImagingAnalysis_inference_modelCombo")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_modelCombo, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_decayLabel = QLabel(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_decayLabel.setObjectName(u"ImagingAnalysis_inference_decayLabel")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_decayLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_decayEdit = QLineEdit(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_decayEdit.setObjectName(u"ImagingAnalysis_inference_decayEdit")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_decayEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_riseLabel = QLabel(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_riseLabel.setObjectName(u"ImagingAnalysis_inference_riseLabel")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_riseLabel, 3, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_riseEdit = QLineEdit(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_riseEdit.setObjectName(u"ImagingAnalysis_inference_riseEdit")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_riseEdit, 3, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_baselineLabel = QLabel(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_baselineLabel.setObjectName(u"ImagingAnalysis_inference_baselineLabel")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_baselineLabel, 4, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_baselineEdit = QLineEdit(self.ImagingAnalysis_inference_modelGroup)
+        self.ImagingAnalysis_inference_baselineEdit.setObjectName(u"ImagingAnalysis_inference_baselineEdit")
+
+        self.ImagingAnalysis_inference_modelGroupGrid.addWidget(self.ImagingAnalysis_inference_baselineEdit, 4, 1, 1, 1)
+
+
+        self.ImagingAnalysis_inference_settingsLayout.addWidget(self.ImagingAnalysis_inference_modelGroup)
+
+        self.ImagingAnalysis_inference_estimationGroup = QGroupBox(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_estimationGroup.setObjectName(u"ImagingAnalysis_inference_estimationGroup")
+        self.ImagingAnalysis_inference_estimationGroupGrid = QGridLayout(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_estimationGroupGrid.setSpacing(4)
+        self.ImagingAnalysis_inference_estimationGroupGrid.setObjectName(u"ImagingAnalysis_inference_estimationGroupGrid")
+        self.ImagingAnalysis_inference_estimationGroupGrid.setContentsMargins(7, 7, 7, 6)
+        self.ImagingAnalysis_inference_penaltyLabel = QLabel(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_penaltyLabel.setObjectName(u"ImagingAnalysis_inference_penaltyLabel")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_penaltyLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_penaltyEdit = QLineEdit(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_penaltyEdit.setObjectName(u"ImagingAnalysis_inference_penaltyEdit")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_penaltyEdit, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_thresholdLabel = QLabel(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_thresholdLabel.setObjectName(u"ImagingAnalysis_inference_thresholdLabel")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_thresholdLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_thresholdEdit = QLineEdit(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_thresholdEdit.setObjectName(u"ImagingAnalysis_inference_thresholdEdit")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_thresholdEdit, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_separationLabel = QLabel(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_separationLabel.setObjectName(u"ImagingAnalysis_inference_separationLabel")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_separationLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_separationEdit = QLineEdit(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_separationEdit.setObjectName(u"ImagingAnalysis_inference_separationEdit")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_separationEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_intervalLabel = QLabel(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_intervalLabel.setObjectName(u"ImagingAnalysis_inference_intervalLabel")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_intervalLabel, 3, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_intervalEdit = QLineEdit(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_intervalEdit.setObjectName(u"ImagingAnalysis_inference_intervalEdit")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_intervalEdit, 3, 1, 1, 1)
+
+        self.ImagingAnalysis_inference_iterationsLabel = QLabel(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_iterationsLabel.setObjectName(u"ImagingAnalysis_inference_iterationsLabel")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_iterationsLabel, 4, 0, 1, 1)
+
+        self.ImagingAnalysis_inference_iterationsEdit = QLineEdit(self.ImagingAnalysis_inference_estimationGroup)
+        self.ImagingAnalysis_inference_iterationsEdit.setObjectName(u"ImagingAnalysis_inference_iterationsEdit")
+
+        self.ImagingAnalysis_inference_estimationGroupGrid.addWidget(self.ImagingAnalysis_inference_iterationsEdit, 4, 1, 1, 1)
+
+
+        self.ImagingAnalysis_inference_settingsLayout.addWidget(self.ImagingAnalysis_inference_estimationGroup)
+
+
+        self.ImagingAnalysis_inferenceLayout.addLayout(self.ImagingAnalysis_inference_settingsLayout)
+
+        self.ImagingAnalysis_inference_actionsLayout = QHBoxLayout()
+        self.ImagingAnalysis_inference_actionsLayout.setSpacing(5)
+        self.ImagingAnalysis_inference_actionsLayout.setObjectName(u"ImagingAnalysis_inference_actionsLayout")
+        self.ImagingAnalysis_inference_actionsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_inference_neuronLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_neuronLabel.setObjectName(u"ImagingAnalysis_inference_neuronLabel")
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_neuronLabel)
+
+        self.ImagingAnalysis_inference_neuronCombo = QComboBox(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_neuronCombo.addItem("")
+        self.ImagingAnalysis_inference_neuronCombo.addItem("")
+        self.ImagingAnalysis_inference_neuronCombo.addItem("")
+        self.ImagingAnalysis_inference_neuronCombo.setObjectName(u"ImagingAnalysis_inference_neuronCombo")
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_neuronCombo)
+
+        self.ImagingAnalysis_inference_reconstructionCheck = QCheckBox(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_reconstructionCheck.setObjectName(u"ImagingAnalysis_inference_reconstructionCheck")
+        self.ImagingAnalysis_inference_reconstructionCheck.setChecked(True)
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_reconstructionCheck)
+
+        self.ImagingAnalysis_inference_markersCheck = QCheckBox(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_markersCheck.setObjectName(u"ImagingAnalysis_inference_markersCheck")
+        self.ImagingAnalysis_inference_markersCheck.setChecked(True)
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_markersCheck)
+
+        self.ImagingAnalysis_inference_actionSpacer = QSpacerItem(20, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_inference_actionsLayout.addItem(self.ImagingAnalysis_inference_actionSpacer)
+
+        self.ImagingAnalysis_inference_calculateButton = QPushButton(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_calculateButton.setObjectName(u"ImagingAnalysis_inference_calculateButton")
+        self.ImagingAnalysis_inference_calculateButton.setMinimumSize(QSize(0, 32))
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_calculateButton)
+
+        self.ImagingAnalysis_inference_exportButton = QPushButton(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_exportButton.setObjectName(u"ImagingAnalysis_inference_exportButton")
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_exportButton)
+
+        self.ImagingAnalysis_inference_imageButton = QPushButton(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_imageButton.setObjectName(u"ImagingAnalysis_inference_imageButton")
+
+        self.ImagingAnalysis_inference_actionsLayout.addWidget(self.ImagingAnalysis_inference_imageButton)
+
+
+        self.ImagingAnalysis_inferenceLayout.addLayout(self.ImagingAnalysis_inference_actionsLayout)
+
+        self.ImagingAnalysis_inference_validationControlsLayout = QHBoxLayout()
+        self.ImagingAnalysis_inference_validationControlsLayout.setSpacing(5)
+        self.ImagingAnalysis_inference_validationControlsLayout.setObjectName(u"ImagingAnalysis_inference_validationControlsLayout")
+        self.ImagingAnalysis_inference_validationControlsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_inference_toleranceLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_toleranceLabel.setObjectName(u"ImagingAnalysis_inference_toleranceLabel")
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addWidget(self.ImagingAnalysis_inference_toleranceLabel)
+
+        self.ImagingAnalysis_inference_toleranceEdit = QLineEdit(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_toleranceEdit.setObjectName(u"ImagingAnalysis_inference_toleranceEdit")
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addWidget(self.ImagingAnalysis_inference_toleranceEdit)
+
+        self.ImagingAnalysis_inference_binLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_binLabel.setObjectName(u"ImagingAnalysis_inference_binLabel")
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addWidget(self.ImagingAnalysis_inference_binLabel)
+
+        self.ImagingAnalysis_inference_binEdit = QLineEdit(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_binEdit.setObjectName(u"ImagingAnalysis_inference_binEdit")
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addWidget(self.ImagingAnalysis_inference_binEdit)
+
+        self.ImagingAnalysis_inference_validateButton = QPushButton(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_validateButton.setObjectName(u"ImagingAnalysis_inference_validateButton")
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addWidget(self.ImagingAnalysis_inference_validateButton)
+
+        self.ImagingAnalysis_inference_validationSpacer = QSpacerItem(20, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.ImagingAnalysis_inference_validationControlsLayout.addItem(self.ImagingAnalysis_inference_validationSpacer)
+
+
+        self.ImagingAnalysis_inferenceLayout.addLayout(self.ImagingAnalysis_inference_validationControlsLayout)
+
+        self.ImagingAnalysis_inference_summaryLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_summaryLabel.setObjectName(u"ImagingAnalysis_inference_summaryLabel")
+        self.ImagingAnalysis_inference_summaryLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_summaryLabel)
+
+        self.ImagingAnalysis_inference_qualityLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_qualityLabel.setObjectName(u"ImagingAnalysis_inference_qualityLabel")
+        self.ImagingAnalysis_inference_qualityLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_qualityLabel)
+
+        self.ImagingAnalysis_inference_signalPlot = PlotWidget(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_signalPlot.setObjectName(u"ImagingAnalysis_inference_signalPlot")
+        self.ImagingAnalysis_inference_signalPlot.setMinimumSize(QSize(0, 105))
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_signalPlot)
+
+        self.ImagingAnalysis_inference_innovationPlot = PlotWidget(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_innovationPlot.setObjectName(u"ImagingAnalysis_inference_innovationPlot")
+        self.ImagingAnalysis_inference_innovationPlot.setMinimumSize(QSize(0, 90))
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_innovationPlot)
+
+        self.ImagingAnalysis_inference_validationPlot = PlotWidget(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_validationPlot.setObjectName(u"ImagingAnalysis_inference_validationPlot")
+        self.ImagingAnalysis_inference_validationPlot.setMinimumSize(QSize(0, 66))
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_validationPlot)
+
+        self.ImagingAnalysis_inference_eventTable = QTableWidget(self.ImagingAnalysis_inferencePage)
+        if (self.ImagingAnalysis_inference_eventTable.columnCount() < 6):
+            self.ImagingAnalysis_inference_eventTable.setColumnCount(6)
+        __qtablewidgetitem15 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(0, __qtablewidgetitem15)
+        __qtablewidgetitem16 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(1, __qtablewidgetitem16)
+        __qtablewidgetitem17 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(2, __qtablewidgetitem17)
+        __qtablewidgetitem18 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(3, __qtablewidgetitem18)
+        __qtablewidgetitem19 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(4, __qtablewidgetitem19)
+        __qtablewidgetitem20 = QTableWidgetItem()
+        self.ImagingAnalysis_inference_eventTable.setHorizontalHeaderItem(5, __qtablewidgetitem20)
+        self.ImagingAnalysis_inference_eventTable.setObjectName(u"ImagingAnalysis_inference_eventTable")
+        self.ImagingAnalysis_inference_eventTable.setMinimumSize(QSize(0, 105))
+        self.ImagingAnalysis_inference_eventTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.ImagingAnalysis_inference_eventTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.ImagingAnalysis_inference_eventTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.ImagingAnalysis_inference_eventTable.setAlternatingRowColors(True)
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_eventTable)
+
+        self.ImagingAnalysis_inference_validationLabel = QLabel(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_inference_validationLabel.setObjectName(u"ImagingAnalysis_inference_validationLabel")
+        self.ImagingAnalysis_inference_validationLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_inferenceLayout.addWidget(self.ImagingAnalysis_inference_validationLabel)
+
+        self.ImagingAnalysis_inferenceLayout.setStretch(5, 2)
+        self.ImagingAnalysis_inferenceLayout.setStretch(6, 1)
+        self.ImagingAnalysis_inferenceLayout.setStretch(7, 1)
+        self.ImagingAnalysis_inferenceLayout.setStretch(8, 1)
+        self.ImagingAnalysis_inferenceLayout.setStretch(9, 1)
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_inferencePage)
+        self.ImagingAnalysis_comparePage = QWidget()
+        self.ImagingAnalysis_comparePage.setObjectName(u"ImagingAnalysis_comparePage")
+        self.ImagingAnalysis_compare_rootLayout = QVBoxLayout(self.ImagingAnalysis_comparePage)
+        self.ImagingAnalysis_compare_rootLayout.setSpacing(0)
+        self.ImagingAnalysis_compare_rootLayout.setObjectName(u"ImagingAnalysis_compare_rootLayout")
+        self.ImagingAnalysis_compare_rootLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_compare_scrollArea = QScrollArea(self.ImagingAnalysis_comparePage)
+        self.ImagingAnalysis_compare_scrollArea.setObjectName(u"ImagingAnalysis_compare_scrollArea")
+        self.ImagingAnalysis_compare_scrollArea.setWidgetResizable(True)
+        self.ImagingAnalysis_compare_scrollContents = QWidget()
+        self.ImagingAnalysis_compare_scrollContents.setObjectName(u"ImagingAnalysis_compare_scrollContents")
+        self.ImagingAnalysis_compare_contentLayout = QVBoxLayout(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_contentLayout.setSpacing(5)
+        self.ImagingAnalysis_compare_contentLayout.setObjectName(u"ImagingAnalysis_compare_contentLayout")
+        self.ImagingAnalysis_compare_contentLayout.setContentsMargins(5, 5, 5, 5)
+        self.ImagingAnalysis_compare_helpLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_helpLabel.setObjectName(u"ImagingAnalysis_compare_helpLabel")
+        self.ImagingAnalysis_compare_helpLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_helpLabel)
+
+        self.ImagingAnalysis_compare_filesLayout = QHBoxLayout()
+        self.ImagingAnalysis_compare_filesLayout.setSpacing(6)
+        self.ImagingAnalysis_compare_filesLayout.setObjectName(u"ImagingAnalysis_compare_filesLayout")
+        self.ImagingAnalysis_compare_filesLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_compare_refTitle = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_refTitle.setObjectName(u"ImagingAnalysis_compare_refTitle")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_refTitle)
+
+        self.ImagingAnalysis_compare_referenceLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_referenceLabel.setObjectName(u"ImagingAnalysis_compare_referenceLabel")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_referenceLabel)
+
+        self.ImagingAnalysis_compare_otherTitle = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_otherTitle.setObjectName(u"ImagingAnalysis_compare_otherTitle")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_otherTitle)
+
+        self.ImagingAnalysis_compare_comparisonLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_comparisonLabel.setObjectName(u"ImagingAnalysis_compare_comparisonLabel")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_comparisonLabel)
+
+        self.ImagingAnalysis_compare_loadButton = QPushButton(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_loadButton.setObjectName(u"ImagingAnalysis_compare_loadButton")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_loadButton)
+
+        self.ImagingAnalysis_compare_clearButton = QPushButton(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_clearButton.setObjectName(u"ImagingAnalysis_compare_clearButton")
+
+        self.ImagingAnalysis_compare_filesLayout.addWidget(self.ImagingAnalysis_compare_clearButton)
+
+
+        self.ImagingAnalysis_compare_contentLayout.addLayout(self.ImagingAnalysis_compare_filesLayout)
+
+        self.ImagingAnalysis_compare_settingsGroup = QGroupBox(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_settingsGroup.setObjectName(u"ImagingAnalysis_compare_settingsGroup")
+        self.ImagingAnalysis_compare_settingsGrid = QGridLayout(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_settingsGrid.setSpacing(5)
+        self.ImagingAnalysis_compare_settingsGrid.setObjectName(u"ImagingAnalysis_compare_settingsGrid")
+        self.ImagingAnalysis_compare_settingsGrid.setContentsMargins(7, 7, 7, 7)
+        self.ImagingAnalysis_compare_sourceLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_sourceLabel.setObjectName(u"ImagingAnalysis_compare_sourceLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_sourceLabel, 0, 0, 1, 1)
+
+        self.ImagingAnalysis_compare_sourceCombo = QComboBox(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_sourceCombo.addItem("")
+        self.ImagingAnalysis_compare_sourceCombo.addItem("")
+        self.ImagingAnalysis_compare_sourceCombo.addItem("")
+        self.ImagingAnalysis_compare_sourceCombo.addItem("")
+        self.ImagingAnalysis_compare_sourceCombo.setObjectName(u"ImagingAnalysis_compare_sourceCombo")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_sourceCombo, 0, 1, 1, 1)
+
+        self.ImagingAnalysis_compare_modeLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_modeLabel.setObjectName(u"ImagingAnalysis_compare_modeLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_modeLabel, 0, 2, 1, 1)
+
+        self.ImagingAnalysis_compare_modeCombo = QComboBox(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_modeCombo.addItem("")
+        self.ImagingAnalysis_compare_modeCombo.addItem("")
+        self.ImagingAnalysis_compare_modeCombo.addItem("")
+        self.ImagingAnalysis_compare_modeCombo.setObjectName(u"ImagingAnalysis_compare_modeCombo")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_modeCombo, 0, 3, 1, 1)
+
+        self.ImagingAnalysis_compare_anchorLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_anchorLabel.setObjectName(u"ImagingAnalysis_compare_anchorLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_anchorLabel, 1, 0, 1, 1)
+
+        self.ImagingAnalysis_compare_anchorCombo = QComboBox(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_anchorCombo.addItem("")
+        self.ImagingAnalysis_compare_anchorCombo.addItem("")
+        self.ImagingAnalysis_compare_anchorCombo.setObjectName(u"ImagingAnalysis_compare_anchorCombo")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_anchorCombo, 1, 1, 1, 1)
+
+        self.ImagingAnalysis_compare_thresholdLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_thresholdLabel.setObjectName(u"ImagingAnalysis_compare_thresholdLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_thresholdLabel, 1, 2, 1, 1)
+
+        self.ImagingAnalysis_compare_thresholdEdit = QLineEdit(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_thresholdEdit.setObjectName(u"ImagingAnalysis_compare_thresholdEdit")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_thresholdEdit, 1, 3, 1, 1)
+
+        self.ImagingAnalysis_compare_periodLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_periodLabel.setObjectName(u"ImagingAnalysis_compare_periodLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_periodLabel, 2, 0, 1, 1)
+
+        self.ImagingAnalysis_compare_periodEdit = QLineEdit(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_periodEdit.setObjectName(u"ImagingAnalysis_compare_periodEdit")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_periodEdit, 2, 1, 1, 1)
+
+        self.ImagingAnalysis_compare_preLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_preLabel.setObjectName(u"ImagingAnalysis_compare_preLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_preLabel, 2, 2, 1, 1)
+
+        self.ImagingAnalysis_compare_preEdit = QLineEdit(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_preEdit.setObjectName(u"ImagingAnalysis_compare_preEdit")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_preEdit, 2, 3, 1, 1)
+
+        self.ImagingAnalysis_compare_percentileLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_percentileLabel.setObjectName(u"ImagingAnalysis_compare_percentileLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_percentileLabel, 3, 0, 1, 1)
+
+        self.ImagingAnalysis_compare_percentileEdit = QLineEdit(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_percentileEdit.setObjectName(u"ImagingAnalysis_compare_percentileEdit")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_percentileEdit, 3, 1, 1, 1)
+
+        self.ImagingAnalysis_compare_directionLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_directionLabel.setObjectName(u"ImagingAnalysis_compare_directionLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_directionLabel, 3, 2, 1, 1)
+
+        self.ImagingAnalysis_compare_differenceDirectionCombo = QComboBox(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_differenceDirectionCombo.addItem("")
+        self.ImagingAnalysis_compare_differenceDirectionCombo.addItem("")
+        self.ImagingAnalysis_compare_differenceDirectionCombo.setObjectName(u"ImagingAnalysis_compare_differenceDirectionCombo")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_differenceDirectionCombo, 3, 3, 1, 1)
+
+        self.ImagingAnalysis_compare_recipeLabel = QLabel(self.ImagingAnalysis_compare_settingsGroup)
+        self.ImagingAnalysis_compare_recipeLabel.setObjectName(u"ImagingAnalysis_compare_recipeLabel")
+
+        self.ImagingAnalysis_compare_settingsGrid.addWidget(self.ImagingAnalysis_compare_recipeLabel, 4, 0, 1, 1)
+
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_settingsGroup)
+
+        self.ImagingAnalysis_compare_actionsLayout = QHBoxLayout()
+        self.ImagingAnalysis_compare_actionsLayout.setSpacing(6)
+        self.ImagingAnalysis_compare_actionsLayout.setObjectName(u"ImagingAnalysis_compare_actionsLayout")
+        self.ImagingAnalysis_compare_actionsLayout.setContentsMargins(0, 0, 0, 0)
+        self.ImagingAnalysis_compare_neuronLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_neuronLabel.setObjectName(u"ImagingAnalysis_compare_neuronLabel")
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_neuronLabel)
+
+        self.ImagingAnalysis_compare_neuronCombo = QComboBox(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_neuronCombo.addItem("")
+        self.ImagingAnalysis_compare_neuronCombo.addItem("")
+        self.ImagingAnalysis_compare_neuronCombo.addItem("")
+        self.ImagingAnalysis_compare_neuronCombo.setObjectName(u"ImagingAnalysis_compare_neuronCombo")
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_neuronCombo)
+
+        self.ImagingAnalysis_compare_stimulusCheck = QCheckBox(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_stimulusCheck.setObjectName(u"ImagingAnalysis_compare_stimulusCheck")
+        self.ImagingAnalysis_compare_stimulusCheck.setChecked(True)
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_stimulusCheck)
+
+        self.ImagingAnalysis_compare_differenceCheck = QCheckBox(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_differenceCheck.setObjectName(u"ImagingAnalysis_compare_differenceCheck")
+        self.ImagingAnalysis_compare_differenceCheck.setChecked(True)
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_differenceCheck)
+
+        self.ImagingAnalysis_compare_semCheck = QCheckBox(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_semCheck.setObjectName(u"ImagingAnalysis_compare_semCheck")
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_semCheck)
+
+        self.ImagingAnalysis_compare_calculateButton = QPushButton(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_calculateButton.setObjectName(u"ImagingAnalysis_compare_calculateButton")
+        self.ImagingAnalysis_compare_calculateButton.setMinimumSize(QSize(0, 31))
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_calculateButton)
+
+        self.ImagingAnalysis_compare_exportButton = QPushButton(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_exportButton.setObjectName(u"ImagingAnalysis_compare_exportButton")
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_exportButton)
+
+        self.ImagingAnalysis_compare_imageButton = QPushButton(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_imageButton.setObjectName(u"ImagingAnalysis_compare_imageButton")
+
+        self.ImagingAnalysis_compare_actionsLayout.addWidget(self.ImagingAnalysis_compare_imageButton)
+
+
+        self.ImagingAnalysis_compare_contentLayout.addLayout(self.ImagingAnalysis_compare_actionsLayout)
+
+        self.ImagingAnalysis_compare_summaryLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_summaryLabel.setObjectName(u"ImagingAnalysis_compare_summaryLabel")
+        self.ImagingAnalysis_compare_summaryLabel.setWordWrap(True)
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_summaryLabel)
+
+        self.ImagingAnalysis_compare_stimulusPlot = PlotWidget(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_stimulusPlot.setObjectName(u"ImagingAnalysis_compare_stimulusPlot")
+        self.ImagingAnalysis_compare_stimulusPlot.setMinimumSize(QSize(0, 110))
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_stimulusPlot)
+
+        self.ImagingAnalysis_compare_signalPlot = PlotWidget(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_signalPlot.setObjectName(u"ImagingAnalysis_compare_signalPlot")
+        self.ImagingAnalysis_compare_signalPlot.setMinimumSize(QSize(0, 140))
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_signalPlot)
+
+        self.ImagingAnalysis_compare_differencePlot = PlotWidget(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_differencePlot.setObjectName(u"ImagingAnalysis_compare_differencePlot")
+        self.ImagingAnalysis_compare_differencePlot.setMinimumSize(QSize(0, 110))
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_differencePlot)
+
+        self.ImagingAnalysis_compare_metricsLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_metricsLabel.setObjectName(u"ImagingAnalysis_compare_metricsLabel")
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_metricsLabel)
+
+        self.ImagingAnalysis_compare_metricsTable = QTableWidget(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_metricsTable.setObjectName(u"ImagingAnalysis_compare_metricsTable")
+        self.ImagingAnalysis_compare_metricsTable.setMinimumSize(QSize(0, 145))
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_metricsTable)
+
+        self.ImagingAnalysis_compare_notesLabel = QLabel(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_notesLabel.setObjectName(u"ImagingAnalysis_compare_notesLabel")
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_notesLabel)
+
+        self.ImagingAnalysis_compare_detailsText = QPlainTextEdit(self.ImagingAnalysis_compare_scrollContents)
+        self.ImagingAnalysis_compare_detailsText.setObjectName(u"ImagingAnalysis_compare_detailsText")
+        self.ImagingAnalysis_compare_detailsText.setReadOnly(True)
+        self.ImagingAnalysis_compare_detailsText.setMinimumSize(QSize(0, 100))
+
+        self.ImagingAnalysis_compare_contentLayout.addWidget(self.ImagingAnalysis_compare_detailsText)
+
+        self.ImagingAnalysis_compare_scrollArea.setWidget(self.ImagingAnalysis_compare_scrollContents)
+
+        self.ImagingAnalysis_compare_rootLayout.addWidget(self.ImagingAnalysis_compare_scrollArea)
+
+        self.ImagingAnalysis_stack.addWidget(self.ImagingAnalysis_comparePage)
+
+        self.ImagingAnalysis_rootLayout.addWidget(self.ImagingAnalysis_stack)
+
+        self.mainbody_stackedWidget.addWidget(self.page_Imaging_DataAnalysis)
 
         self.horizontalLayout_7.addWidget(self.mainbody_stackedWidget)
 
@@ -25071,6 +26613,9 @@ class Ui_Spikeling(object):
         self.About_stack.setCurrentIndex(0)
         self.About_articleTabs.setCurrentIndex(0)
         self.GitHub_tabWidget.setCurrentIndex(0)
+        self.ImagingAnalysis_stack.setCurrentIndex(0)
+        self.ImagingAnalysis_recordingStack.setCurrentIndex(0)
+        self.ImagingAnalysis_transients_responseSourceCombo.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Spikeling)
@@ -25331,9 +26876,9 @@ class Ui_Spikeling(object):
         self.Emulator_DataRecording_Folder_lineEdit.setText("")
         self.Emulator_DataRecording_Folder_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse", None))
         self.Emulator_DataRecording_File_label.setText(QCoreApplication.translate("Spikeling", u"File Name", None))
-        self.Emulator_DataRecording_File_lineEdit.setPlaceholderText(QCoreApplication.translate("Spikeling", u"Enter a file name", None))
         self.Emulator_DataRecording_File_csvlabel.setText(QCoreApplication.translate("Spikeling", u".csv", None))
         self.Emulator_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Record", None))
+        self.Emulator_DataRecording_Record_label_2.setText("")
         self.Emulator_DataRecording_Record_label.setText("")
         self.Emulator_parameter_exit_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Hide Parameters", None))
         self.Emulator_StimulusLabel.setText(QCoreApplication.translate("Spikeling", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; font-weight:700;\">Stimulus</span></p></body></html>", None))
@@ -25990,12 +27535,14 @@ class Ui_Spikeling(object):
 #endif // QT_CONFIG(tooltip)
         self.Imaging_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range Y axis", None))
         self.Imaging_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
-        self.Imaging_DataRecording_SelectRecordFolder_label.setText(QCoreApplication.translate("Spikeling", u"Data Logging: Filename", None))
-        self.Imaging_DataRecording_RecordFolder_value.setText("")
-        self.Imaging_DataRecording_RecordFolder_value.setPlaceholderText(QCoreApplication.translate("Spikeling", u"Enter a file name", None))
-        self.Imaging_DataRecording_RecordFolderDir_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse directory", None))
-        self.Imaging_SelectedFolderLabel.setText("")
+        self.Imaging_DataRecording_Folder_label.setText(QCoreApplication.translate("Spikeling", u"Save to", None))
+        self.Imaging_DataRecording_Folder_lineEdit.setText("")
+        self.Imaging_DataRecording_Folder_pushButton.setText(QCoreApplication.translate("Spikeling", u"Browse", None))
+        self.Imaging_DataRecording_File_label.setText(QCoreApplication.translate("Spikeling", u"File Name", None))
+        self.Imaging_DataRecording_File_csvlabel.setText(QCoreApplication.translate("Spikeling", u".csv", None))
         self.Imaging_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Record", None))
+        self.Imaging_DataRecording_Record_label_2.setText("")
+        self.Imaging_DataRecording_Record_label.setText("")
         self.Imaging_parameter_exit_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Hide Parameters", None))
         self.Imaging_SaturationMode_label.setText(QCoreApplication.translate("Spikeling", u"Saturation Mode", None))
 #if QT_CONFIG(tooltip)
@@ -27021,6 +28568,301 @@ class Ui_Spikeling(object):
         self.GitHub_Reuse_label.setText(QCoreApplication.translate("Spikeling", u"Software and firmware use the GNU GPL v3.0.\n"
 "Hardware design files use CERN-OHL-S-2.0.", None))
         self.GitHub_tabWidget.setTabText(self.GitHub_tabWidget.indexOf(self.GitHub_Project_tab), QCoreApplication.translate("Spikeling", u"Open-source project", None))
+        self.ImagingAnalysis_headerLabel.setText(QCoreApplication.translate("Spikeling", u"Imaging Data Analysis", None))
+        self.ImagingAnalysis_headerLabel.setStyleSheet(QCoreApplication.translate("Spikeling", u"font-size: 13pt; font-weight: 700;", None))
+        self.ImagingAnalysis_navRecording.setText(QCoreApplication.translate("Spikeling", u"Recording", None))
+        self.ImagingAnalysis_navProcessing.setText(QCoreApplication.translate("Spikeling", u"Processing", None))
+        self.ImagingAnalysis_navAlign.setText(QCoreApplication.translate("Spikeling", u"Align & Average", None))
+        self.ImagingAnalysis_navTransients.setText(QCoreApplication.translate("Spikeling", u"Transients", None))
+        self.ImagingAnalysis_navInference.setText(QCoreApplication.translate("Spikeling", u"Inference", None))
+        self.ImagingAnalysis_navCompare.setText(QCoreApplication.translate("Spikeling", u"Compare", None))
+        self.ImagingAnalysis_recording_loadButton.setText(QCoreApplication.translate("Spikeling", u"Load imaging recording", None))
+        self.ImagingAnalysis_recording_fileLabel.setText(QCoreApplication.translate("Spikeling", u"No recording loaded", None))
+        self.ImagingAnalysis_recording_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Neuron:", None))
+        self.ImagingAnalysis_recording_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_recording_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_recording_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_recording_metadataButton.setText(QCoreApplication.translate("Spikeling", u"Metadata", None))
+        self.ImagingAnalysis_recording_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export plots", None))
+        self.ImagingAnalysis_recording_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Load a recording to inspect the camera-sampled fluorescence.", None))
+        self.ImagingAnalysis_recording_referenceCheck.setText(QCoreApplication.translate("Spikeling", u"Show simulator reference (Vm, Ca and recorded event flags)", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_recording_referenceCheck.setToolTip(QCoreApplication.translate("Spikeling", u"These channels are not part of a camera fluorescence measurement.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_recording_clockLabel.setText(QCoreApplication.translate("Spikeling", u"Fluorescence uses saved camera frames; stimulus uses model samples.", None))
+        self.ImagingAnalysis_recording_backButton.setText(QCoreApplication.translate("Spikeling", u"Back to traces", None))
+        self.ImagingAnalysis_processing_helpLabel.setText(QCoreApplication.translate("Spikeling", u"Process saved camera-frame fluorescence, independently for each one-pixel neuron. Raw recordings stay unchanged. Empirical \u0394F/F\u2080 may differ from the simulator normalisation.", None))
+        self.ImagingAnalysis_processing_baselineGroup.setTitle(QCoreApplication.translate("Spikeling", u"Empirical baseline F\u2080", None))
+        self.ImagingAnalysis_processing_baselineMethodLabel.setText(QCoreApplication.translate("Spikeling", u"Method", None))
+        self.ImagingAnalysis_processing_baselineMethodCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Global percentile", None))
+        self.ImagingAnalysis_processing_baselineMethodCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Rolling percentile", None))
+        self.ImagingAnalysis_processing_baselineMethodCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Fixed time window", None))
+
+        self.ImagingAnalysis_processing_percentileLabel.setText(QCoreApplication.translate("Spikeling", u"Percentile", None))
+        self.ImagingAnalysis_processing_percentileEdit.setText(QCoreApplication.translate("Spikeling", u"20", None))
+        self.ImagingAnalysis_processing_baselineWindowLabel.setText(QCoreApplication.translate("Spikeling", u"Rolling window (ms)", None))
+        self.ImagingAnalysis_processing_baselineWindowEdit.setText(QCoreApplication.translate("Spikeling", u"1000", None))
+        self.ImagingAnalysis_processing_baselineStartLabel.setText(QCoreApplication.translate("Spikeling", u"Fixed start (ms)", None))
+        self.ImagingAnalysis_processing_baselineStartEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_processing_baselineEndLabel.setText(QCoreApplication.translate("Spikeling", u"Fixed end (ms)", None))
+        self.ImagingAnalysis_processing_baselineEndEdit.setText(QCoreApplication.translate("Spikeling", u"1000", None))
+        self.ImagingAnalysis_processing_backgroundGroup.setTitle(QCoreApplication.translate("Spikeling", u"Optical background", None))
+        self.ImagingAnalysis_processing_backgroundMethodLabel.setText(QCoreApplication.translate("Spikeling", u"Background", None))
+        self.ImagingAnalysis_processing_backgroundMethodCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"No subtraction", None))
+        self.ImagingAnalysis_processing_backgroundMethodCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Recorded optical offset", None))
+        self.ImagingAnalysis_processing_backgroundMethodCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Manual value", None))
+
+        self.ImagingAnalysis_processing_backgroundValueLabel.setText(QCoreApplication.translate("Spikeling", u"Manual (a.u.)", None))
+        self.ImagingAnalysis_processing_backgroundValueEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_processing_backgroundNote.setText(QCoreApplication.translate("Spikeling", u"Metadata offset is a simulated optical parameter, not a measured neuropil ROI.", None))
+        self.ImagingAnalysis_processing_correctionGroup.setTitle(QCoreApplication.translate("Spikeling", u"Optional corrections", None))
+        self.ImagingAnalysis_processing_bleachCheck.setText(QCoreApplication.translate("Spikeling", u"Correct slow optical drift", None))
+        self.ImagingAnalysis_processing_bleachWindowEdit.setText(QCoreApplication.translate("Spikeling", u"3000", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_processing_bleachWindowEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Long rolling low-percentile window (ms) for a simple didactic bleach trend estimate.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_processing_filterMethodLabel.setText(QCoreApplication.translate("Spikeling", u"Noise filter", None))
+        self.ImagingAnalysis_processing_filterMethodCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"None", None))
+        self.ImagingAnalysis_processing_filterMethodCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Moving average", None))
+        self.ImagingAnalysis_processing_filterMethodCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Savitzky\u2013Golay", None))
+
+        self.ImagingAnalysis_processing_filterWindowLabel.setText(QCoreApplication.translate("Spikeling", u"Filter window (ms)", None))
+        self.ImagingAnalysis_processing_filterWindowEdit.setText(QCoreApplication.translate("Spikeling", u"50", None))
+        self.ImagingAnalysis_processing_calculateButton.setText(QCoreApplication.translate("Spikeling", u"Apply processing", None))
+        self.ImagingAnalysis_processing_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Preview neuron", None))
+        self.ImagingAnalysis_processing_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_processing_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_processing_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_processing_rawCheck.setText(QCoreApplication.translate("Spikeling", u"Show raw F", None))
+        self.ImagingAnalysis_processing_baselineCheck.setText(QCoreApplication.translate("Spikeling", u"Show empirical F\u2080", None))
+        self.ImagingAnalysis_processing_storedCheck.setText(QCoreApplication.translate("Spikeling", u"Compare recorded \u0394F/F\u2080", None))
+        self.ImagingAnalysis_processing_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export processed CSV", None))
+        self.ImagingAnalysis_processing_imageButton.setText(QCoreApplication.translate("Spikeling", u"Export graphs", None))
+        self.ImagingAnalysis_processing_statusLabel.setText(QCoreApplication.translate("Spikeling", u"Load a recording, select parameters, then apply processing.", None))
+        self.ImagingAnalysis_processing_qualityLabel.setText(QCoreApplication.translate("Spikeling", u"Quality metrics will appear after processing.", None))
+        self.ImagingAnalysis_processing_noteLabel.setText(QCoreApplication.translate("Spikeling", u"\u0394F/F\u2080 = 100 \u00d7 (processed F \u2212 empirical F\u2080) / empirical F\u2080. All filtering and baseline estimates respect camera gaps; no model Vm/Ca is used. Rolling bleaching correction is an approximation and can bias slow neural responses.", None))
+        self.ImagingAnalysis_align_helpLabel.setText(QCoreApplication.translate("Spikeling", u"Align repeated stimulus cycles to their recorded onset. Grey: individual loops; colour: mean. Fluorescence uses camera-frame timestamps, not model sample rate.", None))
+        self.ImagingAnalysis_align_sourceLabel.setText(QCoreApplication.translate("Spikeling", u"Align to", None))
+        self.ImagingAnalysis_align_sourceCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Trigger onsets", None))
+        self.ImagingAnalysis_align_sourceCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Stimulus rising edges", None))
+
+        self.ImagingAnalysis_align_thresholdLabel.setText(QCoreApplication.translate("Spikeling", u"Stim threshold", None))
+        self.ImagingAnalysis_align_thresholdEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_align_thresholdEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Only used for stimulus rising edges; stimulus must rise above this level.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_align_periodLabel.setText(QCoreApplication.translate("Spikeling", u"Period (ms)", None))
+        self.ImagingAnalysis_align_periodEdit.setText("")
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_align_periodEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Leave blank to infer a repeated interval from observed onsets.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_align_periodEdit.setPlaceholderText(QCoreApplication.translate("Spikeling", u"Auto", None))
+        self.ImagingAnalysis_align_preLabel.setText(QCoreApplication.translate("Spikeling", u"Pre-trigger (ms)", None))
+        self.ImagingAnalysis_align_preEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_align_calculateButton.setText(QCoreApplication.translate("Spikeling", u"Align & average", None))
+        self.ImagingAnalysis_align_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Neuron", None))
+        self.ImagingAnalysis_align_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_align_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_align_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_align_signalLabel.setText(QCoreApplication.translate("Spikeling", u"Signal", None))
+        self.ImagingAnalysis_align_signalCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Recorded \u0394F/F\u2080 (%)", None))
+        self.ImagingAnalysis_align_signalCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Raw fluorescence (a.u.)", None))
+        self.ImagingAnalysis_align_signalCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Processed \u0394F/F\u2080 (%)", None))
+        self.ImagingAnalysis_align_signalCombo.setItemText(3, QCoreApplication.translate("Spikeling", u"Processed fluorescence (a.u.)", None))
+
+        self.ImagingAnalysis_align_repetitionsCheck.setText(QCoreApplication.translate("Spikeling", u"Show individual repetitions", None))
+        self.ImagingAnalysis_align_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export aligned CSV", None))
+        self.ImagingAnalysis_align_imageButton.setText(QCoreApplication.translate("Spikeling", u"Export graphs", None))
+        self.ImagingAnalysis_align_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Load a recording and align repeated cycles.", None))
+        self.ImagingAnalysis_align_methodLabel.setText(QCoreApplication.translate("Spikeling", u"Each repetition is interpolated only within continuous recorded camera-frame segments. Missing frames are not reconstructed. Recorded \u0394F/F\u2080 uses the simulator baseline. Export includes mean, SD, SEM and per-bin sample count.", None))
+        self.ImagingAnalysis_transients_helpLabel.setText(QCoreApplication.translate("Spikeling", u"Detect camera-measured calcium fluorescence transients. Measured events are not individual spikes; kinetics depend on indicator response, frame rate and processing choices.", None))
+        self.ImagingAnalysis_transients_detectionGroup.setTitle(QCoreApplication.translate("Spikeling", u"Transient detection", None))
+        self.ImagingAnalysis_transients_prominenceLabel.setText(QCoreApplication.translate("Spikeling", u"Min. prominence (%)", None))
+        self.ImagingAnalysis_transients_prominenceEdit.setText(QCoreApplication.translate("Spikeling", u"5", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_transients_prominenceEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Minimum peak prominence in percentage points of \u0394F/F\u2080.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_transients_amplitudeLabel.setText(QCoreApplication.translate("Spikeling", u"Min. amplitude (%)", None))
+        self.ImagingAnalysis_transients_amplitudeEdit.setText(QCoreApplication.translate("Spikeling", u"5", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_transients_amplitudeEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Peak minus 20th-percentile local baseline, in \u0394F/F\u2080 percentage points.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_transients_widthLabel.setText(QCoreApplication.translate("Spikeling", u"Min. peak width (ms)", None))
+        self.ImagingAnalysis_transients_widthEdit.setText(QCoreApplication.translate("Spikeling", u"20", None))
+        self.ImagingAnalysis_transients_separationLabel.setText(QCoreApplication.translate("Spikeling", u"Min. separation (ms)", None))
+        self.ImagingAnalysis_transients_separationEdit.setText(QCoreApplication.translate("Spikeling", u"150", None))
+        self.ImagingAnalysis_transients_baselineWindowLabel.setText(QCoreApplication.translate("Spikeling", u"Local baseline (ms)", None))
+        self.ImagingAnalysis_transients_baselineWindowEdit.setText(QCoreApplication.translate("Spikeling", u"200", None))
+        self.ImagingAnalysis_transients_associationGroup.setTitle(QCoreApplication.translate("Spikeling", u"Stimulus-response association", None))
+        self.ImagingAnalysis_transients_responseSourceLabel.setText(QCoreApplication.translate("Spikeling", u"Onset source", None))
+        self.ImagingAnalysis_transients_responseSourceCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"No association", None))
+        self.ImagingAnalysis_transients_responseSourceCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Recorded trigger", None))
+        self.ImagingAnalysis_transients_responseSourceCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Stimulus rising edge", None))
+
+        self.ImagingAnalysis_transients_thresholdLabel.setText(QCoreApplication.translate("Spikeling", u"Stimulus threshold", None))
+        self.ImagingAnalysis_transients_thresholdEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_transients_responseWindowLabel.setText(QCoreApplication.translate("Spikeling", u"Response window (ms)", None))
+        self.ImagingAnalysis_transients_responseWindowEdit.setText(QCoreApplication.translate("Spikeling", u"500", None))
+        self.ImagingAnalysis_transients_associationNote.setText(QCoreApplication.translate("Spikeling", u"Only complete, gap-free camera response windows count as trials. Temporal association does not establish causation.", None))
+        self.ImagingAnalysis_transients_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Neuron", None))
+        self.ImagingAnalysis_transients_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_transients_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_transients_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_transients_signalLabel.setText(QCoreApplication.translate("Spikeling", u"Signal", None))
+        self.ImagingAnalysis_transients_signalCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Recorded \u0394F/F\u2080 (%)", None))
+        self.ImagingAnalysis_transients_signalCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Processed \u0394F/F\u2080 (%)", None))
+
+        self.ImagingAnalysis_transients_markersCheck.setText(QCoreApplication.translate("Spikeling", u"Show event markers", None))
+        self.ImagingAnalysis_transients_stimulusMarkersCheck.setText(QCoreApplication.translate("Spikeling", u"Show stimulus onsets", None))
+        self.ImagingAnalysis_transients_calculateButton.setText(QCoreApplication.translate("Spikeling", u"Detect transients", None))
+        self.ImagingAnalysis_transients_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export event CSV", None))
+        self.ImagingAnalysis_transients_imageButton.setText(QCoreApplication.translate("Spikeling", u"Export graphs", None))
+        self.ImagingAnalysis_transients_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Load a recording, select settings, then detect fluorescence transients.", None))
+        self.ImagingAnalysis_transients_qualityLabel.setText(QCoreApplication.translate("Spikeling", u"Peak amplitude, half-prominence width, rise/decay and stimulus association will appear here.", None))
+        ___qtablewidgetitem5 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(0)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Spikeling", u"Event", None))
+        ___qtablewidgetitem6 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Spikeling", u"Onset (ms)", None))
+        ___qtablewidgetitem7 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(2)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("Spikeling", u"Peak (ms)", None))
+        ___qtablewidgetitem8 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(3)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("Spikeling", u"Amplitude (%)", None))
+        ___qtablewidgetitem9 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(4)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("Spikeling", u"Width \u00bd prom. (ms)", None))
+        ___qtablewidgetitem10 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(5)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("Spikeling", u"Rise 10\u201390 (ms)", None))
+        ___qtablewidgetitem11 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(6)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("Spikeling", u"Decay 1/e (ms)", None))
+        ___qtablewidgetitem12 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(7)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("Spikeling", u"AUC (%\u00b7ms)", None))
+        ___qtablewidgetitem13 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(8)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("Spikeling", u"Stimulus latency (ms)", None))
+        ___qtablewidgetitem14 = self.ImagingAnalysis_transients_eventTable.horizontalHeaderItem(9)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("Spikeling", u"Notes", None))
+        self.ImagingAnalysis_transients_noteLabel.setText(QCoreApplication.translate("Spikeling", u"Peak width is measured at half prominence; rise is 10\u201390% of the local amplitude; decay is the observed time to 1/e of amplitude; AUC is baseline-subtracted. Unobserved recovery is shown as unavailable, never extrapolated.", None))
+        self.ImagingAnalysis_inference_helpLabel.setText(QCoreApplication.translate("Spikeling", u"Infer candidate neural events from single-point camera fluorescence only. Reference events are hidden until you choose to validate. Sparse optical innovations are not verified spikes or calibrated spike counts.", None))
+        self.ImagingAnalysis_inference_modelGroup.setTitle(QCoreApplication.translate("Spikeling", u"Fluorescence forward model", None))
+        self.ImagingAnalysis_inference_signalLabel.setText(QCoreApplication.translate("Spikeling", u"Optical signal", None))
+        self.ImagingAnalysis_inference_signalCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Recorded \u0394F/F\u2080 (%)", None))
+        self.ImagingAnalysis_inference_signalCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Processed \u0394F/F\u2080 (%)", None))
+
+        self.ImagingAnalysis_inference_modelLabel.setText(QCoreApplication.translate("Spikeling", u"Kernel", None))
+        self.ImagingAnalysis_inference_modelCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"AR(1) \u00b7 exponential decay", None))
+        self.ImagingAnalysis_inference_modelCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"AR(2)-like \u00b7 rise and decay", None))
+
+        self.ImagingAnalysis_inference_decayLabel.setText(QCoreApplication.translate("Spikeling", u"Decay \u03c4 (ms)", None))
+        self.ImagingAnalysis_inference_decayEdit.setText(QCoreApplication.translate("Spikeling", u"300", None))
+        self.ImagingAnalysis_inference_riseLabel.setText(QCoreApplication.translate("Spikeling", u"Rise \u03c4 (ms)", None))
+        self.ImagingAnalysis_inference_riseEdit.setText(QCoreApplication.translate("Spikeling", u"50", None))
+        self.ImagingAnalysis_inference_baselineLabel.setText(QCoreApplication.translate("Spikeling", u"Baseline percentile", None))
+        self.ImagingAnalysis_inference_baselineEdit.setText(QCoreApplication.translate("Spikeling", u"20", None))
+        self.ImagingAnalysis_inference_estimationGroup.setTitle(QCoreApplication.translate("Spikeling", u"Sparse inference", None))
+        self.ImagingAnalysis_inference_penaltyLabel.setText(QCoreApplication.translate("Spikeling", u"Sparsity penalty (\u0394F/F\u2080 %)", None))
+        self.ImagingAnalysis_inference_penaltyEdit.setText(QCoreApplication.translate("Spikeling", u"0.5", None))
+        self.ImagingAnalysis_inference_thresholdLabel.setText(QCoreApplication.translate("Spikeling", u"Event threshold (\u0394F/F\u2080 %)", None))
+        self.ImagingAnalysis_inference_thresholdEdit.setText(QCoreApplication.translate("Spikeling", u"0.8", None))
+        self.ImagingAnalysis_inference_separationLabel.setText(QCoreApplication.translate("Spikeling", u"Min. separation (ms)", None))
+        self.ImagingAnalysis_inference_separationEdit.setText(QCoreApplication.translate("Spikeling", u"70", None))
+        self.ImagingAnalysis_inference_intervalLabel.setText(QCoreApplication.translate("Spikeling", u"Inference interval (ms)", None))
+        self.ImagingAnalysis_inference_intervalEdit.setText(QCoreApplication.translate("Spikeling", u"20", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_intervalEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Fits on observed camera frames separated by approximately this interval; display/reconstruction retain the complete recorded time axis. This is a transparent temporal-resolution trade-off.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_iterationsLabel.setText(QCoreApplication.translate("Spikeling", u"Max. solver iterations", None))
+        self.ImagingAnalysis_inference_iterationsEdit.setText(QCoreApplication.translate("Spikeling", u"180", None))
+        self.ImagingAnalysis_inference_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Preview neuron", None))
+        self.ImagingAnalysis_inference_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_inference_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_inference_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_inference_reconstructionCheck.setText(QCoreApplication.translate("Spikeling", u"Show fitted fluorescence", None))
+        self.ImagingAnalysis_inference_markersCheck.setText(QCoreApplication.translate("Spikeling", u"Show inferred events", None))
+        self.ImagingAnalysis_inference_calculateButton.setText(QCoreApplication.translate("Spikeling", u"Run inference", None))
+        self.ImagingAnalysis_inference_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export CSV + metadata", None))
+        self.ImagingAnalysis_inference_imageButton.setText(QCoreApplication.translate("Spikeling", u"Export graphs", None))
+        self.ImagingAnalysis_inference_toleranceLabel.setText(QCoreApplication.translate("Spikeling", u"Match tolerance (ms)", None))
+        self.ImagingAnalysis_inference_toleranceEdit.setText(QCoreApplication.translate("Spikeling", u"100", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_toleranceEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Maximum absolute timing difference for a one-to-one reference match.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_binLabel.setText(QCoreApplication.translate("Spikeling", u"Rate bin (ms)", None))
+        self.ImagingAnalysis_inference_binEdit.setText(QCoreApplication.translate("Spikeling", u"1000", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_binEdit.setToolTip(QCoreApplication.translate("Spikeling", u"Full optical observation windows used for binned event-rate correlation.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_validateButton.setText(QCoreApplication.translate("Spikeling", u"Reveal reference & validate", None))
+#if QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_validateButton.setToolTip(QCoreApplication.translate("Spikeling", u"Reveals emulator/native event flags or board Vm-threshold event estimates only after inference.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ImagingAnalysis_inference_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Load fluorescence and run inference before revealing the reference.", None))
+        self.ImagingAnalysis_inference_qualityLabel.setText(QCoreApplication.translate("Spikeling", u"Fluorescence reconstruction fit and candidate-event metrics appear here.", None))
+        ___qtablewidgetitem15 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(0)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("Spikeling", u"No.", None))
+        ___qtablewidgetitem16 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("Spikeling", u"Inferred time (ms)", None))
+        ___qtablewidgetitem17 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(2)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("Spikeling", u"Innovation (\u0394F/F\u2080 %)", None))
+        ___qtablewidgetitem18 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(3)
+        ___qtablewidgetitem18.setText(QCoreApplication.translate("Spikeling", u"Reference status", None))
+        ___qtablewidgetitem19 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(4)
+        ___qtablewidgetitem19.setText(QCoreApplication.translate("Spikeling", u"Reference time (ms)", None))
+        ___qtablewidgetitem20 = self.ImagingAnalysis_inference_eventTable.horizontalHeaderItem(5)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("Spikeling", u"Time error (ms)", None))
+        self.ImagingAnalysis_inference_validationLabel.setText(QCoreApplication.translate("Spikeling", u"Reference withheld until explicit validation. Vm-threshold crossings on hardware recordings are reference estimates, not independently measured spikes.", None))
+        self.ImagingAnalysis_compare_helpLabel.setText(QCoreApplication.translate("Spikeling", u"Compare two separately acquired one-pixel imaging experiments. Optical signals use actual camera frames; cycle averages are calculated independently in each recording. Different indicators, sampling rates or F\u2080 definitions can confound causal interpretation.", None))
+        self.ImagingAnalysis_compare_refTitle.setText(QCoreApplication.translate("Spikeling", u"Reference:", None))
+        self.ImagingAnalysis_compare_referenceLabel.setText(QCoreApplication.translate("Spikeling", u"No reference loaded", None))
+        self.ImagingAnalysis_compare_otherTitle.setText(QCoreApplication.translate("Spikeling", u"Comparison:", None))
+        self.ImagingAnalysis_compare_comparisonLabel.setText(QCoreApplication.translate("Spikeling", u"No comparison recording loaded", None))
+        self.ImagingAnalysis_compare_loadButton.setText(QCoreApplication.translate("Spikeling", u"Load comparison\u2026", None))
+        self.ImagingAnalysis_compare_clearButton.setText(QCoreApplication.translate("Spikeling", u"Clear comparison", None))
+        self.ImagingAnalysis_compare_settingsGroup.setTitle(QCoreApplication.translate("Spikeling", u"Independent acquisition comparison settings", None))
+        self.ImagingAnalysis_compare_sourceLabel.setText(QCoreApplication.translate("Spikeling", u"Optical signal", None))
+        self.ImagingAnalysis_compare_sourceCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Recorded \u0394F/F\u2080 (model baseline)", None))
+        self.ImagingAnalysis_compare_sourceCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Empirical \u0394F/F\u2080 (same percentile recipe)", None))
+        self.ImagingAnalysis_compare_sourceCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Processed \u0394F/F\u2080 (same Processing tab recipe)", None))
+        self.ImagingAnalysis_compare_sourceCombo.setItemText(3, QCoreApplication.translate("Spikeling", u"Raw fluorescence F (a.u.; overlay only)", None))
+
+        self.ImagingAnalysis_compare_modeLabel.setText(QCoreApplication.translate("Spikeling", u"Time alignment", None))
+        self.ImagingAnalysis_compare_modeCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Independent stimulus-cycle averages", None))
+        self.ImagingAnalysis_compare_modeCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Time from each recording start", None))
+        self.ImagingAnalysis_compare_modeCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Time from first observed trigger/stimulus", None))
+
+        self.ImagingAnalysis_compare_anchorLabel.setText(QCoreApplication.translate("Spikeling", u"Cycle/onset marker", None))
+        self.ImagingAnalysis_compare_anchorCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Recorded trigger markers", None))
+        self.ImagingAnalysis_compare_anchorCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Stimulus rising edges", None))
+
+        self.ImagingAnalysis_compare_thresholdLabel.setText(QCoreApplication.translate("Spikeling", u"Stimulus threshold", None))
+        self.ImagingAnalysis_compare_thresholdEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_compare_periodLabel.setText(QCoreApplication.translate("Spikeling", u"Cycle period (ms; blank = auto)", None))
+        self.ImagingAnalysis_compare_periodEdit.setText("")
+        self.ImagingAnalysis_compare_preLabel.setText(QCoreApplication.translate("Spikeling", u"Pre-onset window (ms)", None))
+        self.ImagingAnalysis_compare_preEdit.setText(QCoreApplication.translate("Spikeling", u"0", None))
+        self.ImagingAnalysis_compare_percentileLabel.setText(QCoreApplication.translate("Spikeling", u"Empirical baseline percentile", None))
+        self.ImagingAnalysis_compare_percentileEdit.setText(QCoreApplication.translate("Spikeling", u"20", None))
+        self.ImagingAnalysis_compare_directionLabel.setText(QCoreApplication.translate("Spikeling", u"Difference direction", None))
+        self.ImagingAnalysis_compare_differenceDirectionCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Reference \u2212 Comparison", None))
+        self.ImagingAnalysis_compare_differenceDirectionCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Comparison \u2212 Reference", None))
+
+        self.ImagingAnalysis_compare_recipeLabel.setText(QCoreApplication.translate("Spikeling", u"Processed: same Phase 3 settings applied independently to each recording", None))
+        self.ImagingAnalysis_compare_neuronLabel.setText(QCoreApplication.translate("Spikeling", u"Neuron", None))
+        self.ImagingAnalysis_compare_neuronCombo.setItemText(0, QCoreApplication.translate("Spikeling", u"Neuron 1", None))
+        self.ImagingAnalysis_compare_neuronCombo.setItemText(1, QCoreApplication.translate("Spikeling", u"Neuron 2", None))
+        self.ImagingAnalysis_compare_neuronCombo.setItemText(2, QCoreApplication.translate("Spikeling", u"Neuron 3", None))
+
+        self.ImagingAnalysis_compare_stimulusCheck.setText(QCoreApplication.translate("Spikeling", u"Show stimulus", None))
+        self.ImagingAnalysis_compare_differenceCheck.setText(QCoreApplication.translate("Spikeling", u"Show difference", None))
+        self.ImagingAnalysis_compare_semCheck.setText(QCoreApplication.translate("Spikeling", u"Show \u00b1SEM (cycles)", None))
+        self.ImagingAnalysis_compare_calculateButton.setText(QCoreApplication.translate("Spikeling", u"Compare", None))
+        self.ImagingAnalysis_compare_exportButton.setText(QCoreApplication.translate("Spikeling", u"Export data + provenance", None))
+        self.ImagingAnalysis_compare_imageButton.setText(QCoreApplication.translate("Spikeling", u"Export graphs", None))
+        self.ImagingAnalysis_compare_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Select two recordings to compare independent optical acquisitions.", None))
+        self.ImagingAnalysis_compare_metricsLabel.setText(QCoreApplication.translate("Spikeling", u"Metrics compare the measured optical response (not underlying spike counts).", None))
+        self.ImagingAnalysis_compare_notesLabel.setText(QCoreApplication.translate("Spikeling", u"Acquisition differences, provenance and interpretation notices", None))
         self.license_label.setText(QCoreApplication.translate("Spikeling", u"This project is licensed under the GNU General Public License v3.0", None))
         self.sussex_logo.setText("")
         self.trend_logo.setText("")

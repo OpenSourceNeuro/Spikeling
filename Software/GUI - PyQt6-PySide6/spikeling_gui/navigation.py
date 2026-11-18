@@ -9,17 +9,19 @@ from PySide6.QtWidgets import QSlider
 
 from spikeling_gui.features.extracellular.tetrode_window import TetrodeGeometryWindow
 
-from spikeling_gui.widgets.recording import configure_recording_folder
+from spikeling_gui.widgets.recording import configure_recording_folder, style_recording_button
+from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.widgets.sliders import SliderBinding
 from spikeling_gui.features.neuron_interface import page as Page_Spikeling_NeuronInterface
 from spikeling_gui.features.emulator import page as Page_Spikeling_NeuronEmulator
 from spikeling_gui.features.imaging import page as Page_Imaging_ImagingSimulation
 from spikeling_gui.features.extracellular.page import Scope as ExtracellularPage
 from spikeling_gui.features.imaging.scope import ImagingGraph
+from spikeling_gui.features.imaging_data_analysis.page import ImagingDataAnalysisPage
 from spikeling_gui.features.extracellular.scope import ExtraCellularGraph
 from spikeling_gui.features.stimulus_generator import page as Page_StimulusGenerator
 from spikeling_gui.features.neuron_generator import page as Page_NeuronGenerator
-from spikeling_gui.features.data_analysis import page as Page_Spikeling_DataAnalysis
+from spikeling_gui.features.electrophysiology_data_analysis import page as Page_Spikeling_DataAnalysis
 from spikeling_gui.widgets.menu_animation import (animation_speed, centerMenu_max, centerMenu_min, collapseMenu, expandMenu, leftMenu_max, leftMenu_min, spikecenterMenu_max, spikecenterMenu_min, spikerightMenu_max, spikerightMenu_min, toggleMenu)
 from spikeling_gui.features.emulator import scope as emulator_scope
 from spikeling_gui.features.emulator.controls import EmulatorControls
@@ -276,6 +278,8 @@ def Buttons(self):
 # Imaging Page - page201
     # Display page201 when imaging button is clicked
     self.ui.ImagingStimulation_pushButton.clicked.connect(lambda: Page_Imaging_ImagingSimulation.Imaging.ShowPage(self))
+    self.imaging_analysis_page = ImagingDataAnalysisPage(self)
+    self.ui.ImagingDataAnalysis_pushButton.clicked.connect(self.imaging_analysis_page.show_page)
 
 
     # Create an instance of ImagingGraph
@@ -292,11 +296,27 @@ def Buttons(self):
 
     # Data Recording
     configure_recording_folder(
-        self, self.ui.Imaging_DataRecording_SelectRecordFolder_label,
-        self.ui.Imaging_DataRecording_RecordFolderDir_pushButton,
+        self, self.ui.Imaging_DataRecording_Folder_lineEdit,
+        self.ui.Imaging_DataRecording_Folder_pushButton,
     )
-    self.ui.Imaging_DataRecording_RecordFolder_value.setEnabled(True)
+    self.ui.Imaging_DataRecording_File_lineEdit.setEnabled(True)
+    self.ui.Imaging_DataRecording_Record_pushButton.setCheckable(True)
     self.ui.Imaging_DataRecording_Record_pushButton.clicked.connect(self.imaging_graph.on_record_clicked)
+    self.ui.Imaging_DataRecording_File_lineEdit.setPlaceholderText("Enter a file name")
+    self.ui.Emulator_DataRecording_File_lineEdit.setPlaceholderText("Enter a file name")
+    self.ui.Emulator_DataRecording_Record_label.setText("Ready to record")
+    self.ui.Emulator_DataRecording_Record_label_2.clear()
+    self.ui.Imaging_DataRecording_Record_label.setText("Ready to record")
+    self.ui.Imaging_DataRecording_Record_label_2.clear()
+    for prefix in ("Emulator", "Imaging"):
+        button = getattr(self.ui, f"{prefix}_DataRecording_Record_pushButton")
+        label = getattr(self.ui, f"{prefix}_DataRecording_Record_label")
+        label.setStyleSheet("color: rgb(220, 50, 47);")
+        style_recording_button(button, False)
+    theme_manager.themeChanged.connect(lambda *_: style_recording_button(
+        self.ui.Emulator_DataRecording_Record_pushButton, bool(getattr(self, "recordflag", False))))
+    theme_manager.themeChanged.connect(lambda *_: style_recording_button(
+        self.ui.Imaging_DataRecording_Record_pushButton, self.imaging_graph.record_flag))
 
     # Imaging Parameters
     self.ui.Imaging_ImagingParameter_pushButton.clicked.connect(lambda: self.ui.Imaging_parameter_stackedWidget.setCurrentWidget(self.ui.Imaging_ImagingParameter_page))

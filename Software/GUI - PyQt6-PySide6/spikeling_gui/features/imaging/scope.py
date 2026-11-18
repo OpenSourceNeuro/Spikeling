@@ -39,7 +39,8 @@ from time import monotonic
 
 from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.appearance.dialogs import themed_message_box
-from spikeling_gui.widgets.recording import prepare_recording
+from spikeling_gui.widgets.recording import prepare_recording, style_recording_button
+from spikeling_gui.recording_metadata import stream_digest
 from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.features.imaging.controls import (
     GECI_SLIDERS, IMAGING_SLIDERS, MODEL_FRAME_RATE_HZ, SAMPLE_INTERVAL,
@@ -1186,7 +1187,7 @@ class ImagingGraph(QObject):
             self._update_record_button()
             return
 
-        filename = self.ui.Imaging_DataRecording_RecordFolder_value.text()
+        filename = self.ui.Imaging_DataRecording_File_lineEdit.text()
         source_at_click = self.source_mode
         if not self._save_pending or filename != self._recording_filename:
             path = prepare_recording(self.parent, filename, SIDECAR_SUFFIXES)
@@ -1228,7 +1229,10 @@ class ImagingGraph(QObject):
             "columns": {"samples_csv": SAMPLE_COLUMNS, "frames_csv": FRAME_COLUMNS},
         }
         self.record_flag = True
-        self.ui.Imaging_RecordingStatus_label.setText(self.tr("Recording"))
+        self.ui.Imaging_DataRecording_Record_label.setText(self.tr("Recording"))
+        self.ui.Imaging_DataRecording_Record_label_2.setText(
+            f"{self._recording_path.name} · {self.indicator_name} · {self.source_mode}"
+        )
         self._update_record_button()
 
     def _update_record_button(self):
@@ -1241,8 +1245,10 @@ class ImagingGraph(QObject):
         elif self._save_pending:
             label = self.tr("Retry save")
         button.setText(label)
-        self.ui.Imaging_DataRecording_RecordFolder_value.setEnabled(not self.record_flag)
+        self.ui.Imaging_DataRecording_File_lineEdit.setEnabled(not self.record_flag)
+        self.ui.Imaging_DataRecording_Folder_pushButton.setEnabled(not self.record_flag)
         self.ui.Imaging_parameter_stackedWidget.setEnabled(not self.record_flag)
+        style_recording_button(button, self.record_flag)
 
     def stop_recording(self, reason=None, *, drain=True):
         if self.record_flag and drain:
@@ -1253,7 +1259,7 @@ class ImagingGraph(QObject):
             self._rec_meta["stop_reason"] = reason or self.tr("Stopped")
             self._rec_meta["recording_stop_iso"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
         self.record_flag = False
-        status = self.ui.Imaging_RecordingStatus_label
+        status = self.ui.Imaging_DataRecording_Record_label
         count = len(self._samples)
         if not count:
             status.setText(self.tr("Stopped: no samples received"))
@@ -1274,6 +1280,7 @@ class ImagingGraph(QObject):
         self._save_pending = False
         self._samples.clear()
         self._frames.clear()
+        self.ui.Imaging_DataRecording_Record_label_2.setText(self._recording_path.name)
         status.setText(self.tr("Saved %1 samples").replace("%1", f"{count:,}"))
         status.setToolTip(str(self._recording_path))
         self._update_record_button()
@@ -1312,6 +1319,13 @@ class ImagingGraph(QObject):
             meta_tmp = temporary / meta_path.name
             pd.DataFrame(self._samples, columns=SAMPLE_COLUMNS).to_csv(sample_tmp, index=False)
             pd.DataFrame(self._frames, columns=FRAME_COLUMNS).to_csv(frame_tmp, index=False)
+            with sample_tmp.open("rb") as handle:
+                samples_hash = stream_digest(handle)
+            with frame_tmp.open("rb") as handle:
+                frames_hash = stream_digest(handle)
+            metadata["file_sha256"] = {
+                "samples_csv": samples_hash, "frames_csv": frames_hash,
+            }
             meta_tmp.write_text(json.dumps(metadata, indent=2, allow_nan=False), encoding="utf-8")
             files = ((sample_tmp, path), (frame_tmp, frames_path), (meta_tmp, meta_path))
             backups = {}

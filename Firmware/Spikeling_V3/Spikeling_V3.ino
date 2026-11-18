@@ -52,6 +52,12 @@
   #include "Core_functions.h"
   #include "Serial_functions.h"
 
+  #if !ARDUINO_USB_CDC_ON_BOOT
+  #error "Enable USB CDC On Boot"
+  #endif
+  #if CONFIG_FREERTOS_UNICORE || ARDUINO_RUNNING_CORE != 1
+  #error "Big Spiky requires dual-core ESP32-S3 with Arduino running on core 1"
+  #endif
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 /*                                             Setup                                                     */ 

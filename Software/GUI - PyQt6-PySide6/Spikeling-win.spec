@@ -87,7 +87,7 @@ a = Analysis(
 # A missing module here produces an application that launches normally and
 # then does nothing on the Settings page, which is far more expensive to
 # diagnose than a red CI job.
-_required_modules = {'spikeling_gui.appearance.theme_manager', 'spikeling_gui.features.settings.page', 'spikeling_gui.features.data_analysis.page',
+_required_modules = {'spikeling_gui.appearance.theme_manager', 'spikeling_gui.features.settings.page', 'spikeling_gui.features.electrophysiology_data_analysis.page',
                      'spikeling_gui.updates.page', 'spikeling_gui.updates.service', 'spikeling_gui.updates.installer', 'spikeling_gui.version'}
 
 _bundled_modules = {entry[0] for entry in a.pure}

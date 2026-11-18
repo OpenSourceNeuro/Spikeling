@@ -7,6 +7,7 @@ from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QLineEdit, QMessageBox
 
 from spikeling_gui.appearance.dialogs import themed_message_box
+from spikeling_gui.appearance.theme_manager import theme_manager
 from spikeling_gui.paths import recordings_directory
 
 
@@ -82,3 +83,14 @@ def prepare_recording(parent, filename, sidecar_suffixes=()):
         if box.exec() != QMessageBox.StandardButton.Yes:
             return None
     return path
+
+
+def style_recording_button(button, active):
+    """Mirror the physical Spikeling recorder's red/green theme-aware button."""
+    palette = theme_manager.palette()
+    background = palette[4] if active else palette[3]
+    button.setStyleSheet(
+        f"QPushButton {{color: white; background-color: rgb{tuple(background)};}}"
+        "QPushButton:hover { border: 2px solid white; }"
+        "QPushButton:pressed { border: 2px solid #586e75; }"
+    )

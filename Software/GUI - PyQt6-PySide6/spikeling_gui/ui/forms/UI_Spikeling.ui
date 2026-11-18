@@ -13233,7 +13233,7 @@ border-radius:10px;</string>
                             <property name="alignment">
                              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
                             </property>
-                            <layout class="QHBoxLayout" name="Emulator_horizontalLayout_52">
+                            <layout class="QHBoxLayout" name="Emulator_DataRecording_horizontalLayout_52">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -13257,7 +13257,7 @@ border-radius:10px;</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Shadow::Raised</enum>
                                </property>
-                               <layout class="QVBoxLayout" name="Emulator_verticalLayout_28">
+                               <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_28">
                                 <property name="spacing">
                                  <number>5</number>
                                 </property>
@@ -13281,7 +13281,7 @@ border-radius:10px;</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Shadow::Raised</enum>
                                   </property>
-                                  <layout class="QHBoxLayout" name="Emulator_horizontalLayout_56">
+                                  <layout class="QHBoxLayout" name="Emulator_DataRecording_horizontalLayout_56">
                                    <property name="spacing">
                                     <number>10</number>
                                    </property>
@@ -13311,7 +13311,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_27">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_27">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13363,7 +13363,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_335">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_335">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13412,7 +13412,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_339">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_339">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13473,7 +13473,7 @@ border-radius:10px;</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Shadow::Raised</enum>
                                   </property>
-                                  <layout class="QHBoxLayout" name="Emulator_horizontalLayout_199">
+                                  <layout class="QHBoxLayout" name="Emulator_DataRecording_horizontalLayout_199">
                                    <property name="spacing">
                                     <number>10</number>
                                    </property>
@@ -13509,7 +13509,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_315">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_315">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13554,7 +13554,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_320">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_320">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13571,11 +13571,7 @@ border-radius:10px;</string>
                                        <number>0</number>
                                       </property>
                                       <item>
-                                       <widget class="QLineEdit" name="Emulator_DataRecording_File_lineEdit">
-                                        <property name="placeholderText">
-                                         <string>Enter a file name</string>
-                                        </property>
-                                       </widget>
+                                       <widget class="QLineEdit" name="Emulator_DataRecording_File_lineEdit"/>
                                       </item>
                                      </layout>
                                     </widget>
@@ -13588,7 +13584,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_330">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_330">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13639,7 +13635,7 @@ border-radius:10px;</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_15">
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_15">
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
@@ -13707,7 +13703,7 @@ background-color: rgb(220, 50, 47);</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Shadow::Raised</enum>
                                   </property>
-                                  <layout class="QHBoxLayout" name="Emulator_horizontalLayout_57" stretch="0,0">
+                                  <layout class="QHBoxLayout" name="Emulator_DataRecording_horizontalLayout_57" stretch="0,0,0">
                                    <property name="spacing">
                                     <number>0</number>
                                    </property>
@@ -13723,10 +13719,23 @@ background-color: rgb(220, 50, 47);</string>
                                    <property name="bottomMargin">
                                     <number>0</number>
                                    </property>
+                                   <item alignment="Qt::AlignmentFlag::AlignLeft">
+                                    <widget class="QLabel" name="Emulator_DataRecording_Record_label_2">
+                                     <property name="sizePolicy">
+                                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                       <horstretch>0</horstretch>
+                                       <verstretch>0</verstretch>
+                                      </sizepolicy>
+                                     </property>
+                                     <property name="text">
+                                      <string/>
+                                     </property>
+                                    </widget>
+                                   </item>
                                    <item alignment="Qt::AlignmentFlag::AlignRight">
                                     <widget class="QLabel" name="Emulator_DataRecording_Record_label">
                                      <property name="sizePolicy">
-                                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                                        <horstretch>0</horstretch>
                                        <verstretch>0</verstretch>
                                       </sizepolicy>
@@ -13759,7 +13768,7 @@ background-color: rgb(220, 50, 47);</string>
                                      <property name="frameShadow">
                                       <enum>QFrame::Shadow::Raised</enum>
                                      </property>
-                                     <layout class="QVBoxLayout" name="Emulator_verticalLayout_16"/>
+                                     <layout class="QVBoxLayout" name="Emulator_DataRecording_verticalLayout_16"/>
                                     </widget>
                                    </item>
                                   </layout>
@@ -32145,278 +32154,585 @@ QLineEdit:focus, QComboBox:focus {
                     </item>
                     <item>
                      <widget class="QGroupBox" name="Imaging_DataRecording_box">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>100</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>100</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="title">
-                       <string>Data Recording</string>
-                      </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_415">
-                       <property name="spacing">
-                        <number>0</number>
-                       </property>
-                       <property name="leftMargin">
-                        <number>5</number>
-                       </property>
-                       <property name="topMargin">
-                        <number>5</number>
-                       </property>
-                       <property name="rightMargin">
-                        <number>5</number>
-                       </property>
-                       <property name="bottomMargin">
-                        <number>5</number>
-                       </property>
-                       <item>
-                        <widget class="QFrame" name="Imaging_DataRecording_left_frame">
-                         <property name="frameShape">
-                          <enum>QFrame::Shape::StyledPanel</enum>
-                         </property>
-                         <property name="frameShadow">
-                          <enum>QFrame::Shadow::Raised</enum>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_107">
-                          <property name="spacing">
-                           <number>0</number>
-                          </property>
-                          <property name="leftMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QFrame" name="Imaging_DataRecording_recordingMode_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::Shape::StyledPanel</enum>
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
                             </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Shadow::Raised</enum>
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>100</height>
+                             </size>
                             </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_425">
+                            <property name="maximumSize">
+                             <size>
+                              <width>16777215</width>
+                              <height>100</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true"/>
+                            </property>
+                            <property name="title">
+                             <string>Data Recording</string>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+                            </property>
+                            <layout class="QHBoxLayout" name="Imaging_DataRecording_horizontalLayout_52">
                              <property name="spacing">
                               <number>0</number>
                              </property>
                              <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                            </layout>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QFrame" name="Imaging_DataRecording_right_frame">
-                         <property name="frameShape">
-                          <enum>QFrame::Shape::StyledPanel</enum>
-                         </property>
-                         <property name="frameShadow">
-                          <enum>QFrame::Shadow::Raised</enum>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_108">
-                          <property name="spacing">
-                           <number>0</number>
-                          </property>
-                          <property name="leftMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QFrame" name="Imaging_DataRecording_directory_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::Shape::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Shadow::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_426">
-                             <property name="spacing">
                               <number>10</number>
                              </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
                              <property name="topMargin">
-                              <number>0</number>
+                              <number>10</number>
                              </property>
                              <property name="rightMargin">
-                              <number>0</number>
+                              <number>10</number>
                              </property>
                              <property name="bottomMargin">
-                              <number>0</number>
+                              <number>5</number>
                              </property>
                              <item>
-                              <widget class="QLabel" name="Imaging_DataRecording_SelectRecordFolder_label">
-                               <property name="text">
-                                <string>Data Logging: Filename</string>
+                              <widget class="QFrame" name="Imaging_DataRecording_frame">
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
                                </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLineEdit" name="Imaging_DataRecording_RecordFolder_value">
-                               <property name="enabled">
-                                <bool>false</bool>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
                                </property>
-                               <property name="text">
-                                <string/>
-                               </property>
-                               <property name="placeholderText">
-                                <string>Enter a file name</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QPushButton" name="Imaging_DataRecording_RecordFolderDir_pushButton">
-                               <property name="minimumSize">
-                                <size>
-                                 <width>150</width>
-                                 <height>0</height>
-                                </size>
-                               </property>
-                               <property name="font">
-                                <font>
-                                 <pointsize>10</pointsize>
-                                 <bold>true</bold>
-                                </font>
-                               </property>
-                               <property name="text">
-                                <string>Browse directory</string>
-                               </property>
+                               <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_28">
+                                <property name="spacing">
+                                 <number>5</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QFrame" name="Imaging_DataRecording_Folder_frame">
+                                  <property name="frameShape">
+                                   <enum>QFrame::Shape::StyledPanel</enum>
+                                  </property>
+                                  <property name="frameShadow">
+                                   <enum>QFrame::Shadow::Raised</enum>
+                                  </property>
+                                  <layout class="QHBoxLayout" name="Imaging_DataRecording_horizontalLayout_56">
+                                   <property name="spacing">
+                                    <number>10</number>
+                                   </property>
+                                   <property name="leftMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="topMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="rightMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="bottomMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_Folder_label_frame">
+                                     <property name="minimumSize">
+                                      <size>
+                                       <width>100</width>
+                                       <height>0</height>
+                                      </size>
+                                     </property>
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_27">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QLabel" name="Imaging_DataRecording_Folder_label">
+                                        <property name="minimumSize">
+                                         <size>
+                                          <width>100</width>
+                                          <height>0</height>
+                                         </size>
+                                        </property>
+                                        <property name="maximumSize">
+                                         <size>
+                                          <width>100</width>
+                                          <height>16777215</height>
+                                         </size>
+                                        </property>
+                                        <property name="font">
+                                         <font>
+                                          <pointsize>10</pointsize>
+                                          <bold>false</bold>
+                                         </font>
+                                        </property>
+                                        <property name="text">
+                                         <string>Save to</string>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_Folder_lineEdit_frame">
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_335">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QLineEdit" name="Imaging_DataRecording_Folder_lineEdit">
+                                        <property name="enabled">
+                                         <bool>false</bool>
+                                        </property>
+                                        <property name="text">
+                                         <string/>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_Folder_pushButton_frame">
+                                     <property name="minimumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>0</height>
+                                      </size>
+                                     </property>
+                                     <property name="maximumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>16777215</height>
+                                      </size>
+                                     </property>
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_339">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>10</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QPushButton" name="Imaging_DataRecording_Folder_pushButton">
+                                        <property name="sizePolicy">
+                                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                          <horstretch>0</horstretch>
+                                          <verstretch>0</verstretch>
+                                         </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                         <size>
+                                          <width>0</width>
+                                          <height>0</height>
+                                         </size>
+                                        </property>
+                                        <property name="maximumSize">
+                                         <size>
+                                          <width>16777215</width>
+                                          <height>16777215</height>
+                                         </size>
+                                        </property>
+                                        <property name="font">
+                                         <font>
+                                          <pointsize>11</pointsize>
+                                          <bold>true</bold>
+                                         </font>
+                                        </property>
+                                        <property name="text">
+                                         <string>Browse</string>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                  </layout>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QFrame" name="Imaging_DataRecording_File_frame">
+                                  <property name="frameShape">
+                                   <enum>QFrame::Shape::StyledPanel</enum>
+                                  </property>
+                                  <property name="frameShadow">
+                                   <enum>QFrame::Shadow::Raised</enum>
+                                  </property>
+                                  <layout class="QHBoxLayout" name="Imaging_DataRecording_horizontalLayout_199">
+                                   <property name="spacing">
+                                    <number>10</number>
+                                   </property>
+                                   <property name="leftMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="topMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="rightMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="bottomMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                                    <widget class="QFrame" name="Imaging_DataRecording_File_label_frame">
+                                     <property name="minimumSize">
+                                      <size>
+                                       <width>100</width>
+                                       <height>0</height>
+                                      </size>
+                                     </property>
+                                     <property name="maximumSize">
+                                      <size>
+                                       <width>100</width>
+                                       <height>16777215</height>
+                                      </size>
+                                     </property>
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_315">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QLabel" name="Imaging_DataRecording_File_label">
+                                        <property name="minimumSize">
+                                         <size>
+                                          <width>100</width>
+                                          <height>0</height>
+                                         </size>
+                                        </property>
+                                        <property name="font">
+                                         <font>
+                                          <pointsize>10</pointsize>
+                                         </font>
+                                        </property>
+                                        <property name="text">
+                                         <string>File Name</string>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_File_lineEdit_frame">
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_320">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QLineEdit" name="Imaging_DataRecording_File_lineEdit"/>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_File_csvlabel_frame">
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_330">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QLabel" name="Imaging_DataRecording_File_csvlabel">
+                                        <property name="font">
+                                         <font>
+                                          <pointsize>10</pointsize>
+                                         </font>
+                                        </property>
+                                        <property name="text">
+                                         <string>.csv</string>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_Record_pushButton_frame">
+                                     <property name="minimumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>0</height>
+                                      </size>
+                                     </property>
+                                     <property name="maximumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>16777215</height>
+                                      </size>
+                                     </property>
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_15">
+                                      <property name="spacing">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="leftMargin">
+                                       <number>10</number>
+                                      </property>
+                                      <property name="topMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="rightMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="bottomMargin">
+                                       <number>0</number>
+                                      </property>
+                                      <item>
+                                       <widget class="QPushButton" name="Imaging_DataRecording_Record_pushButton">
+                                        <property name="sizePolicy">
+                                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                          <horstretch>0</horstretch>
+                                          <verstretch>0</verstretch>
+                                         </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                         <size>
+                                          <width>0</width>
+                                          <height>0</height>
+                                         </size>
+                                        </property>
+                                        <property name="maximumSize">
+                                         <size>
+                                          <width>16777215</width>
+                                          <height>16777215</height>
+                                         </size>
+                                        </property>
+                                        <property name="font">
+                                         <font>
+                                          <pointsize>11</pointsize>
+                                          <bold>true</bold>
+                                         </font>
+                                        </property>
+                                        <property name="styleSheet">
+                                         <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(220, 50, 47);</string>
+                                        </property>
+                                        <property name="text">
+                                         <string>Record</string>
+                                        </property>
+                                        <property name="checkable">
+                                         <bool>true</bool>
+                                        </property>
+                                       </widget>
+                                      </item>
+                                     </layout>
+                                    </widget>
+                                   </item>
+                                  </layout>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QFrame" name="Imaging_DataRecording_record_frame">
+                                  <property name="frameShape">
+                                   <enum>QFrame::Shape::StyledPanel</enum>
+                                  </property>
+                                  <property name="frameShadow">
+                                   <enum>QFrame::Shadow::Raised</enum>
+                                  </property>
+                                  <layout class="QHBoxLayout" name="Imaging_DataRecording_horizontalLayout_57" stretch="0,0,0">
+                                   <property name="spacing">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="leftMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="topMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="rightMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <property name="bottomMargin">
+                                    <number>0</number>
+                                   </property>
+                                   <item alignment="Qt::AlignmentFlag::AlignLeft">
+                                    <widget class="QLabel" name="Imaging_DataRecording_Record_label_2">
+                                     <property name="sizePolicy">
+                                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                       <horstretch>0</horstretch>
+                                       <verstretch>0</verstretch>
+                                      </sizepolicy>
+                                     </property>
+                                     <property name="text">
+                                      <string/>
+                                     </property>
+                                    </widget>
+                                   </item>
+                                   <item alignment="Qt::AlignmentFlag::AlignRight">
+                                    <widget class="QLabel" name="Imaging_DataRecording_Record_label">
+                                     <property name="sizePolicy">
+                                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                       <horstretch>0</horstretch>
+                                       <verstretch>0</verstretch>
+                                      </sizepolicy>
+                                     </property>
+                                     <property name="text">
+                                      <string/>
+                                     </property>
+                                     <property name="alignment">
+                                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                                     </property>
+                                    </widget>
+                                   </item>
+                                   <item>
+                                    <widget class="QFrame" name="Imaging_DataRecording_Record_lempty_frame">
+                                     <property name="minimumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>0</height>
+                                      </size>
+                                     </property>
+                                     <property name="maximumSize">
+                                      <size>
+                                       <width>150</width>
+                                       <height>16777215</height>
+                                      </size>
+                                     </property>
+                                     <property name="frameShape">
+                                      <enum>QFrame::Shape::StyledPanel</enum>
+                                     </property>
+                                     <property name="frameShadow">
+                                      <enum>QFrame::Shadow::Raised</enum>
+                                     </property>
+                                     <layout class="QVBoxLayout" name="Imaging_DataRecording_verticalLayout_16"/>
+                                    </widget>
+                                   </item>
+                                  </layout>
+                                 </widget>
+                                </item>
+                               </layout>
                               </widget>
                              </item>
                             </layout>
                            </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="Imaging_DataRecording_record_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::Shape::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Shadow::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_427" stretch="0,0">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="Imaging_SelectedFolderLabel">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
-                               <property name="text">
-                                <string/>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QPushButton" name="Imaging_DataRecording_Record_pushButton">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
-                               <property name="minimumSize">
-                                <size>
-                                 <width>150</width>
-                                 <height>0</height>
-                                </size>
-                               </property>
-                               <property name="font">
-                                <font>
-                                 <pointsize>12</pointsize>
-                                 <bold>true</bold>
-                                </font>
-                               </property>
-                               <property name="styleSheet">
-                                <string notr="true">QPushButton { color: rgb(250, 250, 250); background-color: rgb(185, 46, 42); }
-QPushButton:checked { color: rgb(255, 255, 255); background-color: rgb(28, 110, 65); }
-QPushButton:disabled { color: rgb(190, 205, 205); background-color: rgb(88, 110, 117); }</string>
-                               </property>
-                               <property name="text">
-                                <string>Record</string>
-                               </property>
-                               <property name="checkable">
-                                <bool>true</bool>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QLabel" name="Imaging_RecordingStatus_label">
-                               <property name="wordWrap">
-                                <bool>true</bool>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
                     </item>
                    </layout>
                   </widget>
@@ -56832,6 +57148,2722 @@ Hardware design files use CERN-OHL-S-2.0.</string>
                      </item>
                     </layout>
                    </widget>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+                             <widget class="QWidget" name="page_Imaging_DataAnalysis">
+                <layout class="QVBoxLayout" name="ImagingAnalysis_rootLayout">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>7</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>7</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>7</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>7</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="ImagingAnalysis_headerLabel">
+                   <property name="text">
+                    <string>Imaging Data Analysis</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string>font-size: 13pt; font-weight: 700;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="ImagingAnalysis_navLayout">
+                   <property name="spacing">
+                    <number>3</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navRecording">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Recording</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navProcessing">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Processing</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navAlign">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Align &amp; Average</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navTransients">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Transients</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navInference">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Inference</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_navCompare">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Compare</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="ImagingAnalysis_navSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Policy::Expanding</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QStackedWidget" name="ImagingAnalysis_stack">
+                   <property name="currentIndex">
+                    <number>0</number>
+                   </property>
+                   <widget class="QWidget" name="ImagingAnalysis_recordingPage">
+                    <layout class="QVBoxLayout" name="ImagingAnalysis_recordingLayout">
+                     <property name="spacing">
+                      <number>5</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>1</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>1</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>1</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>1</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="ImagingAnalysis_recordingToolsLayout">
+                       <property name="spacing">
+                        <number>5</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="ImagingAnalysis_recording_loadButton">
+                         <property name="text">
+                          <string>Load imaging recording</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="ImagingAnalysis_recording_fileLabel">
+                         <property name="text">
+                          <string>No recording loaded</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="ImagingAnalysis_recordingToolsSpacer">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Policy::Expanding</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="ImagingAnalysis_recording_neuronLabel">
+                         <property name="text">
+                          <string>Neuron:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="ImagingAnalysis_recording_neuronCombo">
+                         <item>
+                          <property name="text">
+                           <string>Neuron 1</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Neuron 2</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Neuron 3</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="ImagingAnalysis_recording_metadataButton">
+                         <property name="text">
+                          <string>Metadata</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="ImagingAnalysis_recording_exportButton">
+                         <property name="text">
+                          <string>Export plots</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="ImagingAnalysis_recording_summaryLabel">
+                       <property name="text">
+                        <string>Load a recording to inspect the camera-sampled fluorescence.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QStackedWidget" name="ImagingAnalysis_recordingStack">
+                       <property name="currentIndex">
+                        <number>0</number>
+                       </property>
+                       <widget class="QWidget" name="ImagingAnalysis_recordingOverviewPage">
+                        <layout class="QVBoxLayout" name="ImagingAnalysis_recordingOverviewLayout">
+                         <property name="spacing">
+                          <number>4</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <layout class="QHBoxLayout" name="ImagingAnalysis_recordingReferenceLayout">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QCheckBox" name="ImagingAnalysis_recording_referenceCheck">
+                             <property name="text">
+                              <string>Show simulator reference (Vm, Ca and recorded event flags)</string>
+                             </property>
+                             <property name="toolTip">
+                              <string>These channels are not part of a camera fluorescence measurement.</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <spacer name="ImagingAnalysis_recordingReferenceSpacer">
+                             <property name="orientation">
+                              <enum>Qt::Orientation::Horizontal</enum>
+                             </property>
+                             <property name="sizeType">
+                              <enum>QSizePolicy::Policy::Expanding</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>40</width>
+                               <height>20</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
+                           <item>
+                            <widget class="QLabel" name="ImagingAnalysis_recording_clockLabel">
+                             <property name="text">
+                              <string>Fluorescence uses saved camera frames; stimulus uses model samples.</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item>
+                          <widget class="PlotWidget" name="ImagingAnalysis_recording_stimulusPlot">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>77</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="PlotWidget" name="ImagingAnalysis_recording_fluorescencePlot">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>77</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="PlotWidget" name="ImagingAnalysis_recording_dffPlot">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>77</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="PlotWidget" name="ImagingAnalysis_recording_calciumPlot">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>77</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="PlotWidget" name="ImagingAnalysis_recording_voltagePlot">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>77</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                       <widget class="QWidget" name="ImagingAnalysis_recordingMetadataPage">
+                        <layout class="QVBoxLayout" name="ImagingAnalysis_recordingMetadataLayout">
+                         <property name="spacing">
+                          <number>6</number>
+                         </property>
+                         <property name="leftMargin">
+                          <number>3</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>3</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>3</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>3</number>
+                         </property>
+                         <item>
+                          <widget class="QPushButton" name="ImagingAnalysis_recording_backButton">
+                           <property name="text">
+                            <string>Back to traces</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QPlainTextEdit" name="ImagingAnalysis_recording_metadataText">
+                           <property name="readOnly">
+                            <bool>true</bool>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="ImagingAnalysis_processingPage">
+ <layout class="QVBoxLayout" name="ImagingAnalysis_processingLayout">
+  <property name="spacing">
+   <number>5</number>
+  </property>
+  <property name="leftMargin">
+   <number>4</number>
+  </property>
+  <property name="topMargin">
+   <number>4</number>
+  </property>
+  <property name="rightMargin">
+   <number>4</number>
+  </property>
+  <property name="bottomMargin">
+   <number>4</number>
+  </property>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_processing_helpLabel">
+    <property name="text">
+     <string>Process saved camera-frame fluorescence, independently for each one-pixel neuron. Raw recordings stay unchanged. Empirical ΔF/F₀ may differ from the simulator normalisation.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_processing_settingsLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_processing_baselineGroup">
+      <property name="title">
+       <string>Empirical baseline F₀</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_processing_baselineGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_baselineMethodLabel">
+         <property name="text">
+          <string>Method</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_processing_baselineMethodCombo">
+         <item>
+          <property name="text">
+           <string>Global percentile</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rolling percentile</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Fixed time window</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_percentileLabel">
+         <property name="text">
+          <string>Percentile</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_percentileEdit">
+         <property name="text">
+          <string>20</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_baselineWindowLabel">
+         <property name="text">
+          <string>Rolling window (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineWindowEdit">
+         <property name="text">
+          <string>1000</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_baselineStartLabel">
+         <property name="text">
+          <string>Fixed start (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineStartEdit">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_baselineEndLabel">
+         <property name="text">
+          <string>Fixed end (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_baselineEndEdit">
+         <property name="text">
+          <string>1000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_processing_backgroundGroup">
+      <property name="title">
+       <string>Optical background</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_processing_backgroundGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_backgroundMethodLabel">
+         <property name="text">
+          <string>Background</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_processing_backgroundMethodCombo">
+         <item>
+          <property name="text">
+           <string>No subtraction</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Recorded optical offset</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Manual value</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_backgroundValueLabel">
+         <property name="text">
+          <string>Manual (a.u.)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_backgroundValueEdit">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_backgroundNote">
+         <property name="text">
+          <string>Metadata offset is a simulated optical parameter, not a measured neuropil ROI.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_processing_correctionGroup">
+      <property name="title">
+       <string>Optional corrections</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_processing_correctionGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="ImagingAnalysis_processing_bleachCheck">
+         <property name="text">
+          <string>Correct slow optical drift</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_bleachWindowEdit">
+         <property name="text">
+          <string>3000</string>
+         </property>
+         <property name="toolTip">
+          <string>Long rolling low-percentile window (ms) for a simple didactic bleach trend estimate.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_filterMethodLabel">
+         <property name="text">
+          <string>Noise filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_processing_filterMethodCombo">
+         <item>
+          <property name="text">
+           <string>None</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Moving average</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Savitzky–Golay</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_processing_filterWindowLabel">
+         <property name="text">
+          <string>Filter window (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_processing_filterWindowEdit">
+         <property name="text">
+          <string>50</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="ImagingAnalysis_processing_calculateButton">
+         <property name="text">
+          <string>Apply processing</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_processing_actionLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_processing_neuronLabel">
+      <property name="text">
+       <string>Preview neuron</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="ImagingAnalysis_processing_neuronCombo">
+      <item>
+       <property name="text">
+        <string>Neuron 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 3</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_processing_rawCheck">
+      <property name="text">
+       <string>Show raw F</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_processing_baselineCheck">
+      <property name="text">
+       <string>Show empirical F₀</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_processing_storedCheck">
+      <property name="text">
+       <string>Compare recorded ΔF/F₀</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_processing_exportButton">
+      <property name="text">
+       <string>Export processed CSV</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_processing_imageButton">
+      <property name="text">
+       <string>Export graphs</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_processing_statusLabel">
+    <property name="text">
+     <string>Load a recording, select parameters, then apply processing.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_processing_qualityLabel">
+    <property name="text">
+     <string>Quality metrics will appear after processing.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_processing_fluorescencePlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>135</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_processing_dffPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>145</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_processing_noteLabel">
+    <property name="text">
+     <string>ΔF/F₀ = 100 × (processed F − empirical F₀) / empirical F₀. All filtering and baseline estimates respect camera gaps; no model Vm/Ca is used. Rolling bleaching correction is an approximation and can bias slow neural responses.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</widget>
+                                  <widget class="QWidget" name="ImagingAnalysis_alignPage">
+                <layout class="QVBoxLayout" name="ImagingAnalysis_alignLayout" stretch="0,0,0,0,0,1,1">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>4</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>4</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>4</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>4</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="ImagingAnalysis_align_helpLabel">
+                   <property name="text">
+                    <string>Align repeated stimulus cycles to their recorded onset. Grey: individual loops; colour: mean. Fluorescence uses camera-frame timestamps, not model sample rate.</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="ImagingAnalysis_align_parametersLayout">
+                   <property name="spacing">
+                    <number>7</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_sourceLabel">
+                     <property name="text">
+                      <string>Align to</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="ImagingAnalysis_align_sourceCombo">
+                     <item>
+                      <property name="text">
+                       <string>Trigger onsets</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Stimulus rising edges</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_thresholdLabel">
+                     <property name="text">
+                      <string>Stim threshold</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="ImagingAnalysis_align_thresholdEdit">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="toolTip">
+                      <string>Only used for stimulus rising edges; stimulus must rise above this level.</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_periodLabel">
+                     <property name="text">
+                      <string>Period (ms)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="ImagingAnalysis_align_periodEdit">
+                     <property name="text">
+                      <string />
+                     </property>
+                     <property name="toolTip">
+                      <string>Leave blank to infer a repeated interval from observed onsets.</string>
+                     </property>
+                     <property name="placeholderText">
+                      <string>Auto</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_preLabel">
+                     <property name="text">
+                      <string>Pre-trigger (ms)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="ImagingAnalysis_align_preEdit">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="ImagingAnalysis_align_parameterSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Policy::Expanding</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>15</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_align_calculateButton">
+                     <property name="text">
+                      <string>Align &amp; average</string>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="ImagingAnalysis_align_displayLayout">
+                   <property name="spacing">
+                    <number>7</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_neuronLabel">
+                     <property name="text">
+                      <string>Neuron</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="ImagingAnalysis_align_neuronCombo">
+                     <item>
+                      <property name="text">
+                       <string>Neuron 1</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Neuron 2</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Neuron 3</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="ImagingAnalysis_align_signalLabel">
+                     <property name="text">
+                      <string>Signal</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="ImagingAnalysis_align_signalCombo">
+                     <item>
+                      <property name="text">
+                       <string>Recorded ΔF/F₀ (%)</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Raw fluorescence (a.u.)</string>
+                      </property>
+                     </item>
+                    <item><property name="text"><string>Processed ΔF/F₀ (%)</string></property></item><item><property name="text"><string>Processed fluorescence (a.u.)</string></property></item></widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="ImagingAnalysis_align_repetitionsCheck">
+                     <property name="text">
+                      <string>Show individual repetitions</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="ImagingAnalysis_align_displaySpacer">
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Policy::Expanding</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>15</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_align_exportButton">
+                     <property name="text">
+                      <string>Export aligned CSV</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="ImagingAnalysis_align_imageButton">
+                     <property name="text">
+                      <string>Export graphs</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="ImagingAnalysis_align_summaryLabel">
+                   <property name="text">
+                    <string>Load a recording and align repeated cycles.</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="ImagingAnalysis_align_methodLabel">
+                   <property name="text">
+                    <string>Each repetition is interpolated only within continuous recorded camera-frame segments. Missing frames are not reconstructed. Recorded ΔF/F₀ uses the simulator baseline. Export includes mean, SD, SEM and per-bin sample count.</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="PlotWidget" name="ImagingAnalysis_align_stimulusPlot">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>150</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="PlotWidget" name="ImagingAnalysis_align_responsePlot">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>170</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+                   <widget class="QWidget" name="ImagingAnalysis_transientsPage">
+ <layout class="QVBoxLayout" name="ImagingAnalysis_transientsLayout" stretch="0,0,0,0,0,1,2,1,0">
+  <property name="spacing">
+   <number>5</number>
+  </property>
+  <property name="leftMargin">
+   <number>4</number>
+  </property>
+  <property name="topMargin">
+   <number>4</number>
+  </property>
+  <property name="rightMargin">
+   <number>4</number>
+  </property>
+  <property name="bottomMargin">
+   <number>4</number>
+  </property>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_transients_helpLabel">
+    <property name="text">
+     <string>Detect camera-measured calcium fluorescence transients. Measured events are not individual spikes; kinetics depend on indicator response, frame rate and processing choices.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_transients_settingsLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_transients_detectionGroup">
+      <property name="title">
+       <string>Transient detection</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_transients_detectionGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>7</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_prominenceLabel">
+         <property name="text">
+          <string>Min. prominence (%)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_prominenceEdit">
+         <property name="text">
+          <string>5</string>
+         </property>
+         <property name="toolTip">
+          <string>Minimum peak prominence in percentage points of ΔF/F₀.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_amplitudeLabel">
+         <property name="text">
+          <string>Min. amplitude (%)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_amplitudeEdit">
+         <property name="text">
+          <string>5</string>
+         </property>
+         <property name="toolTip">
+          <string>Peak minus 20th-percentile local baseline, in ΔF/F₀ percentage points.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_widthLabel">
+         <property name="text">
+          <string>Min. peak width (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_widthEdit">
+         <property name="text">
+          <string>20</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_separationLabel">
+         <property name="text">
+          <string>Min. separation (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_separationEdit">
+         <property name="text">
+          <string>150</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_baselineWindowLabel">
+         <property name="text">
+          <string>Local baseline (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_baselineWindowEdit">
+         <property name="text">
+          <string>200</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_transients_associationGroup">
+      <property name="title">
+       <string>Stimulus-response association</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_transients_associationGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>7</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_responseSourceLabel">
+         <property name="text">
+          <string>Onset source</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_transients_responseSourceCombo">
+         <item>
+          <property name="text">
+           <string>No association</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Recorded trigger</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Stimulus rising edge</string>
+          </property>
+         </item>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_thresholdLabel">
+         <property name="text">
+          <string>Stimulus threshold</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_thresholdEdit">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_responseWindowLabel">
+         <property name="text">
+          <string>Response window (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_transients_responseWindowEdit">
+         <property name="text">
+          <string>500</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_transients_associationNote">
+         <property name="text">
+          <string>Only complete, gap-free camera response windows count as trials. Temporal association does not establish causation.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_transients_actionsLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_transients_neuronLabel">
+      <property name="text">
+       <string>Neuron</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="ImagingAnalysis_transients_neuronCombo">
+      <item>
+       <property name="text">
+        <string>Neuron 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 3</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_transients_signalLabel">
+      <property name="text">
+       <string>Signal</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="ImagingAnalysis_transients_signalCombo">
+      <item>
+       <property name="text">
+        <string>Recorded ΔF/F₀ (%)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Processed ΔF/F₀ (%)</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_transients_markersCheck">
+      <property name="text">
+       <string>Show event markers</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_transients_stimulusMarkersCheck">
+      <property name="text">
+       <string>Show stimulus onsets</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="ImagingAnalysis_transients_actionSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Policy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_transients_calculateButton">
+      <property name="text">
+       <string>Detect transients</string>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>33</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_transients_exportButton">
+      <property name="text">
+       <string>Export event CSV</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_transients_imageButton">
+      <property name="text">
+       <string>Export graphs</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_transients_summaryLabel">
+    <property name="text">
+     <string>Load a recording, select settings, then detect fluorescence transients.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_transients_qualityLabel">
+    <property name="text">
+     <string>Peak amplitude, half-prominence width, rise/decay and stimulus association will appear here.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_transients_stimulusPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>100</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_transients_signalPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>120</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QTableWidget" name="ImagingAnalysis_transients_eventTable">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>115</height>
+     </size>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>true</bool>
+    </property>
+    <column>
+     <property name="text">
+      <string>Event</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Onset (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Peak (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Amplitude (%)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Width ½ prom. (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Rise 10–90 (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Decay 1/e (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>AUC (%·ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Stimulus latency (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Notes</string>
+     </property>
+    </column>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_transients_noteLabel">
+    <property name="text">
+     <string>Peak width is measured at half prominence; rise is 10–90% of the local amplitude; decay is the observed time to 1/e of amplitude; AUC is baseline-subtracted. Unobserved recovery is shown as unavailable, never extrapolated.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</widget>
+                   <widget class="QWidget" name="ImagingAnalysis_inferencePage">
+ <layout class="QVBoxLayout" name="ImagingAnalysis_inferenceLayout" stretch="0,0,0,0,0,2,1,1,1,1,0">
+  <property name="spacing">
+   <number>5</number>
+  </property>
+  <property name="leftMargin">
+   <number>4</number>
+  </property>
+  <property name="topMargin">
+   <number>4</number>
+  </property>
+  <property name="rightMargin">
+   <number>4</number>
+  </property>
+  <property name="bottomMargin">
+   <number>4</number>
+  </property>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_inference_helpLabel">
+    <property name="text">
+     <string>Infer candidate neural events from single-point camera fluorescence only. Reference events are hidden until you choose to validate. Sparse optical innovations are not verified spikes or calibrated spike counts.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_inference_settingsLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_inference_modelGroup">
+      <property name="title">
+       <string>Fluorescence forward model</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_inference_modelGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>7</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_signalLabel">
+         <property name="text">
+          <string>Optical signal</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_inference_signalCombo">
+         <item>
+          <property name="text">
+           <string>Recorded ΔF/F₀ (%)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Processed ΔF/F₀ (%)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_modelLabel">
+         <property name="text">
+          <string>Kernel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="ImagingAnalysis_inference_modelCombo">
+         <item>
+          <property name="text">
+           <string>AR(1) · exponential decay</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>AR(2)-like · rise and decay</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_decayLabel">
+         <property name="text">
+          <string>Decay τ (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_decayEdit">
+         <property name="text">
+          <string>300</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_riseLabel">
+         <property name="text">
+          <string>Rise τ (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_riseEdit">
+         <property name="text">
+          <string>50</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_baselineLabel">
+         <property name="text">
+          <string>Baseline percentile</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_baselineEdit">
+         <property name="text">
+          <string>20</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="ImagingAnalysis_inference_estimationGroup">
+      <property name="title">
+       <string>Sparse inference</string>
+      </property>
+      <layout class="QGridLayout" name="ImagingAnalysis_inference_estimationGroupGrid">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>7</number>
+       </property>
+       <property name="topMargin">
+        <number>7</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_penaltyLabel">
+         <property name="text">
+          <string>Sparsity penalty (ΔF/F₀ %)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_penaltyEdit">
+         <property name="text">
+          <string>0.5</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_thresholdLabel">
+         <property name="text">
+          <string>Event threshold (ΔF/F₀ %)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_thresholdEdit">
+         <property name="text">
+          <string>0.8</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_separationLabel">
+         <property name="text">
+          <string>Min. separation (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_separationEdit">
+         <property name="text">
+          <string>70</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_intervalLabel">
+         <property name="text">
+          <string>Inference interval (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_intervalEdit">
+         <property name="text">
+          <string>20</string>
+         </property>
+         <property name="toolTip">
+          <string>Fits on observed camera frames separated by approximately this interval; display/reconstruction retain the complete recorded time axis. This is a transparent temporal-resolution trade-off.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ImagingAnalysis_inference_iterationsLabel">
+         <property name="text">
+          <string>Max. solver iterations</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="ImagingAnalysis_inference_iterationsEdit">
+         <property name="text">
+          <string>180</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_inference_actionsLayout">
+    <property name="spacing">
+     <number>5</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_inference_neuronLabel">
+      <property name="text">
+       <string>Preview neuron</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="ImagingAnalysis_inference_neuronCombo">
+      <item>
+       <property name="text">
+        <string>Neuron 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neuron 3</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_inference_reconstructionCheck">
+      <property name="text">
+       <string>Show fitted fluorescence</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImagingAnalysis_inference_markersCheck">
+      <property name="text">
+       <string>Show inferred events</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="ImagingAnalysis_inference_actionSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Policy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_inference_calculateButton">
+      <property name="text">
+       <string>Run inference</string>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_inference_exportButton">
+      <property name="text">
+       <string>Export CSV + metadata</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_inference_imageButton">
+      <property name="text">
+       <string>Export graphs</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <layout class="QHBoxLayout" name="ImagingAnalysis_inference_validationControlsLayout">
+    <property name="spacing">
+     <number>5</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_inference_toleranceLabel">
+      <property name="text">
+       <string>Match tolerance (ms)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="ImagingAnalysis_inference_toleranceEdit">
+      <property name="text">
+       <string>100</string>
+      </property>
+      <property name="toolTip">
+       <string>Maximum absolute timing difference for a one-to-one reference match.</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="ImagingAnalysis_inference_binLabel">
+      <property name="text">
+       <string>Rate bin (ms)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="ImagingAnalysis_inference_binEdit">
+      <property name="text">
+       <string>1000</string>
+      </property>
+      <property name="toolTip">
+       <string>Full optical observation windows used for binned event-rate correlation.</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ImagingAnalysis_inference_validateButton">
+      <property name="text">
+       <string>Reveal reference &amp; validate</string>
+      </property>
+      <property name="toolTip">
+       <string>Reveals emulator/native event flags or board Vm-threshold event estimates only after inference.</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="ImagingAnalysis_inference_validationSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Policy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_inference_summaryLabel">
+    <property name="text">
+     <string>Load fluorescence and run inference before revealing the reference.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_inference_qualityLabel">
+    <property name="text">
+     <string>Fluorescence reconstruction fit and candidate-event metrics appear here.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_inference_signalPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>105</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_inference_innovationPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>90</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="PlotWidget" name="ImagingAnalysis_inference_validationPlot">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>66</height>
+     </size>
+    </property>
+   </widget>
+  </item>
+  <item>
+   <widget class="QTableWidget" name="ImagingAnalysis_inference_eventTable">
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>105</height>
+     </size>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>true</bool>
+    </property>
+    <column>
+     <property name="text">
+      <string>No.</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Inferred time (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Innovation (ΔF/F₀ %)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Reference status</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Reference time (ms)</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Time error (ms)</string>
+     </property>
+    </column>
+   </widget>
+  </item>
+  <item>
+   <widget class="QLabel" name="ImagingAnalysis_inference_validationLabel">
+    <property name="text">
+     <string>Reference withheld until explicit validation. Vm-threshold crossings on hardware recordings are reference estimates, not independently measured spikes.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</widget>
+                   <widget class="QWidget" name="ImagingAnalysis_comparePage">
+ <layout class="QVBoxLayout" name="ImagingAnalysis_compare_rootLayout">
+  <property name="spacing">
+   <number>0</number>
+  </property>
+  <property name="leftMargin">
+   <number>0</number>
+  </property>
+  <property name="topMargin">
+   <number>0</number>
+  </property>
+  <property name="rightMargin">
+   <number>0</number>
+  </property>
+  <property name="bottomMargin">
+   <number>0</number>
+  </property>
+  <item>
+   <widget class="QScrollArea" name="ImagingAnalysis_compare_scrollArea">
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="ImagingAnalysis_compare_scrollContents">
+     <layout class="QVBoxLayout" name="ImagingAnalysis_compare_contentLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="ImagingAnalysis_compare_helpLabel">
+        <property name="text">
+         <string>Compare two separately acquired one-pixel imaging experiments. Optical signals use actual camera frames; cycle averages are calculated independently in each recording. Different indicators, sampling rates or F₀ definitions can confound causal interpretation.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="ImagingAnalysis_compare_filesLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="ImagingAnalysis_compare_refTitle">
+          <property name="text">
+           <string>Reference:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="ImagingAnalysis_compare_referenceLabel">
+          <property name="text">
+           <string>No reference loaded</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="ImagingAnalysis_compare_otherTitle">
+          <property name="text">
+           <string>Comparison:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="ImagingAnalysis_compare_comparisonLabel">
+          <property name="text">
+           <string>No comparison recording loaded</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ImagingAnalysis_compare_loadButton">
+          <property name="text">
+           <string>Load comparison…</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ImagingAnalysis_compare_clearButton">
+          <property name="text">
+           <string>Clear comparison</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="ImagingAnalysis_compare_settingsGroup">
+        <property name="title">
+         <string>Independent acquisition comparison settings</string>
+        </property>
+        <layout class="QGridLayout" name="ImagingAnalysis_compare_settingsGrid">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <property name="leftMargin">
+          <number>7</number>
+         </property>
+         <property name="topMargin">
+          <number>7</number>
+         </property>
+         <property name="rightMargin">
+          <number>7</number>
+         </property>
+         <property name="bottomMargin">
+          <number>7</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="ImagingAnalysis_compare_sourceLabel">
+           <property name="text">
+            <string>Optical signal</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="ImagingAnalysis_compare_sourceCombo">
+           <item>
+            <property name="text">
+             <string>Recorded ΔF/F₀ (model baseline)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Empirical ΔF/F₀ (same percentile recipe)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Processed ΔF/F₀ (same Processing tab recipe)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Raw fluorescence F (a.u.; overlay only)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="ImagingAnalysis_compare_modeLabel">
+           <property name="text">
+            <string>Time alignment</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QComboBox" name="ImagingAnalysis_compare_modeCombo">
+           <item>
+            <property name="text">
+             <string>Independent stimulus-cycle averages</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Time from each recording start</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Time from first observed trigger/stimulus</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="ImagingAnalysis_compare_anchorLabel">
+           <property name="text">
+            <string>Cycle/onset marker</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="ImagingAnalysis_compare_anchorCombo">
+           <item>
+            <property name="text">
+             <string>Recorded trigger markers</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Stimulus rising edges</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="ImagingAnalysis_compare_thresholdLabel">
+           <property name="text">
+            <string>Stimulus threshold</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="ImagingAnalysis_compare_thresholdEdit">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="ImagingAnalysis_compare_periodLabel">
+           <property name="text">
+            <string>Cycle period (ms; blank = auto)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="ImagingAnalysis_compare_periodEdit">
+           <property name="text">
+            <string />
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="ImagingAnalysis_compare_preLabel">
+           <property name="text">
+            <string>Pre-onset window (ms)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLineEdit" name="ImagingAnalysis_compare_preEdit">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="ImagingAnalysis_compare_percentileLabel">
+           <property name="text">
+            <string>Empirical baseline percentile</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="ImagingAnalysis_compare_percentileEdit">
+           <property name="text">
+            <string>20</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="ImagingAnalysis_compare_directionLabel">
+           <property name="text">
+            <string>Difference direction</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QComboBox" name="ImagingAnalysis_compare_differenceDirectionCombo">
+           <item>
+            <property name="text">
+             <string>Reference − Comparison</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Comparison − Reference</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="ImagingAnalysis_compare_recipeLabel">
+           <property name="text">
+            <string>Processed: same Phase 3 settings applied independently to each recording</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="ImagingAnalysis_compare_actionsLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="ImagingAnalysis_compare_neuronLabel">
+          <property name="text">
+           <string>Neuron</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="ImagingAnalysis_compare_neuronCombo">
+          <item>
+           <property name="text">
+            <string>Neuron 1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Neuron 2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Neuron 3</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ImagingAnalysis_compare_stimulusCheck">
+          <property name="text">
+           <string>Show stimulus</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ImagingAnalysis_compare_differenceCheck">
+          <property name="text">
+           <string>Show difference</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ImagingAnalysis_compare_semCheck">
+          <property name="text">
+           <string>Show ±SEM (cycles)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ImagingAnalysis_compare_calculateButton">
+          <property name="text">
+           <string>Compare</string>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>31</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ImagingAnalysis_compare_exportButton">
+          <property name="text">
+           <string>Export data + provenance</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ImagingAnalysis_compare_imageButton">
+          <property name="text">
+           <string>Export graphs</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="ImagingAnalysis_compare_summaryLabel">
+        <property name="text">
+         <string>Select two recordings to compare independent optical acquisitions.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PlotWidget" name="ImagingAnalysis_compare_stimulusPlot">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>110</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PlotWidget" name="ImagingAnalysis_compare_signalPlot">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>140</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PlotWidget" name="ImagingAnalysis_compare_differencePlot">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>110</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ImagingAnalysis_compare_metricsLabel">
+        <property name="text">
+         <string>Metrics compare the measured optical response (not underlying spike counts).</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="ImagingAnalysis_compare_metricsTable">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>145</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ImagingAnalysis_compare_notesLabel">
+        <property name="text">
+         <string>Acquisition differences, provenance and interpretation notices</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPlainTextEdit" name="ImagingAnalysis_compare_detailsText">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </item>
+ </layout>
+</widget>
                   </widget>
                  </item>
                 </layout>

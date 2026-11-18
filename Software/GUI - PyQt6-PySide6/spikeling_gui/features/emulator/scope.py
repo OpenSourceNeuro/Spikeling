@@ -15,6 +15,7 @@ from spikeling_gui.plotting.graph_core import RingBuffer, apply_scope_timebase, 
 from spikeling_gui import speed_model as speed
 from spikeling_gui.stimulus_schedule import NO_STEP, save_step_channels
 from spikeling_gui.recording_metadata import RecordingMetadata, stp_parameters, write_recording
+from spikeling_gui.widgets.recording import style_recording_button
 
 from .models import CURRENT_TO_NA, IntrinsicPharmacology, Synapse, VoltageClamp, izhikevich
 
@@ -506,6 +507,10 @@ def UpdateRecordingState(self):
             "emulator_integration_step", "settings applied at the recorded sample boundary",
         )
         self.recordflag = True
+        self.ui.Emulator_DataRecording_Record_label.setText("Recording")
+        self.ui.Emulator_DataRecording_Record_label_2.setText(
+            f"{self.Emulator_RecordingPath.name} · {'VC' if self._emulator_recording_vc else 'CC'}"
+        )
 
 
 def FinishRecording(self):
@@ -514,6 +519,7 @@ def FinishRecording(self):
     self.recordflag = False
     button.setChecked(False)
     button.setText("Record")
+    style_recording_button(button, False)
     file_editor = self.ui.Emulator_DataRecording_File_lineEdit
     folder_button = self.ui.Emulator_DataRecording_Folder_pushButton
     if not getattr(self, "EmulatorData", None) or not self.EmulatorData[1]:
@@ -549,7 +555,10 @@ def FinishRecording(self):
                            "scheduled step at emulator integration sample")
         write_recording(path, frame, self._emulator_recording_metadata, channels)
     except (OSError, ValueError, TypeError) as error:
-        self.ui.Emulator_DataRecording_Record_label.setText("Recording could not be saved")
+        self.ui.Emulator_DataRecording_Record_label.setText("Save failed · Samples retained")
+        self.ui.Emulator_DataRecording_Record_label_2.setText(str(path.name))
+        file_editor.setEnabled(True)
+        folder_button.setEnabled(True)
         button.setText("Retry save")
         show_popup(self, "Error saving file", f"Could not save emulator recording to {path}.\n{error}")
         return False
@@ -557,6 +566,7 @@ def FinishRecording(self):
     for row in (*self.EmulatorData, *self._emulator_recording_channels):
         row.clear()
     self.ui.Emulator_DataRecording_Record_label.setText(f"Saved {count:,} samples")
+    self.ui.Emulator_DataRecording_Record_label_2.setText(path.name)
     file_editor.setEnabled(True)
     folder_button.setEnabled(True)
     return True
