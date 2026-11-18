@@ -90,6 +90,8 @@ class SpikelingConnectionSupervisor(QObject):
         self._pin_to_serial_number = bool(pin_to_serial_number)
 
         self._state = ConnectionState.IDLE
+        self._selected_port: Optional[SpikelingPort] = None
+        self._attempt_generation = 0  # Invalidate pending delayed opens on stop.
         self._pinned_serial_number = ""
         self._recovering = False
         self._awaiting_reenumeration = False
@@ -99,10 +101,7 @@ class SpikelingConnectionSupervisor(QObject):
         # Port opened but not yet proven to stream.
         self._probationary: Optional[SpikelingPort] = None
 
-        # Round-robin cursor. With handshake validation a bad candidate is
-        # now rejected rather than accepted, so returning candidates[0] on
-        # every tick would retry the same dead port forever.
-        self._candidate_cursor = 0
+        # Failed handshakes are tracked only for user-facing diagnostics.
         self._failed_ports: set[str] = set()
         self._consecutive_failures = 0
         self._hint_emitted = False
@@ -137,21 +136,35 @@ class SpikelingConnectionSupervisor(QObject):
         if callback not in self._state_restorers:
             self._state_restorers.append(callback)
 
-    def start(self) -> None:
-        """Begin searching for a board and keep the link alive from now on."""
-        if self._state is ConnectionState.CONNECTED:
-            return
+    def start(self, port: SpikelingPort) -> bool:
+        """Start a connection session explicitly pinned to the selected board."""
+        if self._state is not ConnectionState.IDLE:
+            return False
+        self._selected_port = port
+        self._pinned_serial_number = port.serial_number
+        self._recovering = False
+        self._awaiting_reenumeration = False
+        self._open_in_flight = False
+        self._failed_ports.clear()
+        self._consecutive_failures = 0
+        self._hint_emitted = False
+        self._attempt_generation += 1
         self._set_state(ConnectionState.SEARCHING)
         self._poll_timer.start()
         self._poll()
+        return True
 
     def stop(self) -> None:
         """Stop supervising and close the port; no reconnection is attempted."""
         self._poll_timer.stop()
         self._handshake_timer.stop()
+        self._attempt_generation += 1
+        self._open_in_flight = False
         self._recovering = False
         self._awaiting_reenumeration = False
         self._probationary = None
+        self._selected_port = None
+        self._pinned_serial_number = ""
         if self._manager.is_open:
             self._manager.close()
         self._set_state(ConnectionState.IDLE)
@@ -170,7 +183,9 @@ class SpikelingConnectionSupervisor(QObject):
         self.state_changed.emit(state)
 
     def _poll(self) -> None:
-        """Polling tick: verify an existing link or try to establish a new one."""
+        """Poll only during an explicitly requested connection session."""
+        if self._state is ConnectionState.IDLE:
+            return
         if self._open_in_flight or self._handshake_timer.isActive():
             return
 
@@ -196,48 +211,25 @@ class SpikelingConnectionSupervisor(QObject):
             return
 
         self._open_in_flight = True
-        QTimer.singleShot(self._settle_delay_ms, lambda: self._attempt_open(target))
+        generation = self._attempt_generation
+        QTimer.singleShot(self._settle_delay_ms,
+                          lambda: self._attempt_open(target, generation))
 
     def _select_target(self, candidates: list[SpikelingPort]) -> Optional[SpikelingPort]:
-        """
-        Pick the next port to probe, honouring the pin and rotating otherwise.
-
-        Parameters
-        ----------
-        candidates : list of SpikelingPort
-            Ports from discovery, best match first.
-
-        Returns
-        -------
-        SpikelingPort or None
-            Port to try, or ``None`` when nothing is eligible.
-
-        Notes
-        -----
-        Ports that failed their handshake are deprioritised but not banned
-        permanently: the set is cleared once every candidate has failed, so a
-        board that was merely slow to bind is retried.
-        """
-        if not candidates:
-            self._candidate_cursor = 0
+        """Never probe a different board from the one the user selected."""
+        if self._selected_port is None:
             return None
-
-        if self._pin_to_serial_number and self._pinned_serial_number:
-            for port in candidates:
-                if port.serial_number == self._pinned_serial_number:
-                    return port
+        if self._pinned_serial_number:
+            return next((p for p in candidates
+                         if p.serial_number == self._pinned_serial_number), None)
+        # Without a USB serial identity we can safely open by port *only* on
+        # the first manual attempt; never reconnect by a recycled COM number.
+        if self._recovering:
             return None
+        return next((p for p in candidates
+                     if p.port_name == self._selected_port.port_name), None)
 
-        viable = [p for p in candidates if p.port_name not in self._failed_ports]
-        if not viable:
-            self._failed_ports.clear()
-            viable = candidates
-
-        port = viable[self._candidate_cursor % len(viable)]
-        self._candidate_cursor += 1
-        return port
-
-    def _attempt_open(self, port: SpikelingPort) -> None:
+    def _attempt_open(self, port: SpikelingPort, generation: int) -> None:
         """
         Open ``port`` and begin probation; success is decided by traffic.
 
@@ -247,8 +239,14 @@ class SpikelingConnectionSupervisor(QObject):
         link leaves the firmware holding defaults while the GUI believes
         otherwise.
         """
+        if (generation != self._attempt_generation
+                or self._state not in (ConnectionState.SEARCHING, ConnectionState.LOST)
+                or not self._open_in_flight):
+            return
         self._open_in_flight = False
-        if self._manager.is_open:
+        # The target may have disappeared or changed COM port during settling.
+        if self._manager.is_open or self._select_target(
+                discover_spikeling_ports(self._pinned_serial_number)) != port:
             return
         if not self._manager.open_port(port):
             # Windows returns PermissionError both for a port held by another
@@ -263,20 +261,24 @@ class SpikelingConnectionSupervisor(QObject):
 
     def _on_device_lost(self, reason: str) -> None:
         """Handle an unexpected loss and arm the reconnection sequence."""
-        if self._state is ConnectionState.LOST:
+        if self._state in (ConnectionState.IDLE, ConnectionState.LOST):
             return
         self._handshake_timer.stop()
         self._probationary = None
         if self._manager.is_open:
             self._manager.close()
 
+        if not self._pinned_serial_number:
+            # COM names are reusable. A board without a unique USB serial ID
+            # must be selected manually again after any unexpected loss.
+            self.stop()
+            self.disconnected.emit(reason)
+            return
+
         self._recovering = True
-        # Require the node to vanish before retrying, otherwise a stale handle
-        # on the same COM name is reopened and fails immediately.
-        self._awaiting_reenumeration = bool(self._pinned_serial_number)
+        self._awaiting_reenumeration = True
         self._set_state(ConnectionState.LOST)
         self.disconnected.emit(reason)
-
         if not self._poll_timer.isActive():
             self._poll_timer.start()
 
@@ -295,8 +297,8 @@ class SpikelingConnectionSupervisor(QObject):
         self._handshake_timer.stop()
 
         self._pinned_serial_number = port.serial_number or self._pinned_serial_number
+        self._selected_port = port  # COM number may have changed since last time.
         self._awaiting_reenumeration = False
-        self._candidate_cursor = 0
         self._consecutive_failures = 0
         self._hint_emitted = False
         self._failed_ports.discard(port.port_name)

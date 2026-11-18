@@ -4,7 +4,6 @@
 
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
-from PySide6.QtSerialPort import QSerialPortInfo
 from PySide6.QtWidgets import QSlider
 
 from spikeling_gui.features.extracellular.tetrode_window import TetrodeGeometryWindow
@@ -30,17 +29,6 @@ from spikeling_gui.features.neuron_interface.short_term_plasticity import Synaps
 from spikeling_gui.features.about.page import ShowPage as show_about_page
 
 from spikeling_gui.hardware.serial_manager import serial_manager
-
-
-########################################################################
-#                          COM Port definitions                        #
-########################################################################
-
-# Setting UART parameters
-portList = []
-ports = QSerialPortInfo().availablePorts()
-for port in ports:
-        portList.append(port.portName())
 
 
 ########################################################################
@@ -164,12 +152,7 @@ def Buttons(self):
     # Display Page_Spikeling_NeuronInterface when spikeling button is clicked
     self.ui.Neuron_pushButton.clicked.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ShowPage(self))
 
-    # Update connected port COM and append them
-    for i in range(len(ports)):
-        self.ui.Spikeling_SelectPortComboBox.addItem("")
-    for i in range(len(ports)):
-        self.ui.Spikeling_SelectPortComboBox.setItemText(i + 1, str(portList[i]))
-    # COM port connections
+    # COM selection never opens a port; the graph supplies the live device list.
     self.ui.Spikeling_SelectPortComboBox.currentIndexChanged.connect(lambda: Page_Spikeling_NeuronInterface.Spikeling.ChangePort(self))
 
     # Modify the microcontroller loop time

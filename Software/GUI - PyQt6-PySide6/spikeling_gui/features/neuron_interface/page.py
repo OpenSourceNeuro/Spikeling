@@ -451,34 +451,13 @@ class Spikeling():
 
     # Serial Port Functions
     def ChangePort(self):
-        """
-        Handle a manual port selection from the combo box.
-
-        Notes
-        -----
-        A no-op whenever the connection supervisor owns the link. The
-        supervisor is reached through ``spikeling_graph``, which constructs
-        it in ``setup_auto_connection``; probing ``self`` directly finds
-        nothing, because ``self`` is the main window here.
-
-        Reopening the port on an index change also cascades:
-        ``configure_port`` emits ``connection_changed(False)``, which
-        ``SpikelingGraph.on_connection_changed`` routes to
-        ``disconnect_device``, which calls ``supervisor.stop()`` and disables
-        reconnection for the rest of the session.
-        """
+        """Remember the selected port; only an explicit Connect click opens it."""
         graph = getattr(self, "spikeling_graph", None)
         supervisor = getattr(graph, "supervisor", None)
         if supervisor is not None and supervisor.state is not ConnectionState.IDLE:
             return
-
-        self.COM = self.ui.Spikeling_SelectPortComboBox.currentText()
-        if not self.COM:
-            return
-        if serial_port.configure_port(self.COM) and serial_port.open():
-            serial_port.write('CON' + '\n')
-            serial_port.write('VCSTRM' + '\n')
-        self.ui.Spikeling_ConnectButton.setChecked(False)
+        port = self.ui.Spikeling_SelectPortComboBox.currentData()
+        self.COM = port.port_name if port is not None else ""
 
     # Modifu microcontroller loop time
     def ChangeSpeed(self):

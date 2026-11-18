@@ -103,8 +103,22 @@ class SpikelingGraph(QObject):
     # Connection Management
     # -------------------------------------------------------------------------
     def connect_device(self):
-        """Called when connect button is checked."""
-        self.supervisor.start()
+        """Connect only to the device explicitly chosen in the COM selector."""
+        selected = self.ui.Spikeling_SelectPortComboBox.currentData()
+        candidates = discover_spikeling_ports()
+        port = next((p for p in candidates if selected is not None
+                     and p.port_name == selected.port_name
+                     and p.serial_number == selected.serial_number), None)
+        if port is None:
+            self.populate_port_combobox()
+            with QSignalBlocker(self.ui.Spikeling_ConnectButton):
+                self.ui.Spikeling_ConnectButton.setChecked(False)
+            self.supervisor.manual_action_required.emit(
+                "Select an available Spikeling COM port before clicking Connect."
+            )
+            return
+        if self.supervisor.start(port):
+            self.ui.Spikeling_SelectPortComboBox.setEnabled(False)
 
     def disconnect_device(self):
         """Called when connect button is unchecked."""
@@ -118,6 +132,12 @@ class SpikelingGraph(QObject):
 
         self.supervisor.stop()
         self.ui.Spikeling_Speed_slider.setEnabled(False)
+        with QSignalBlocker(self.ui.Spikeling_ConnectButton):
+            self.ui.Spikeling_ConnectButton.setChecked(False)
+        self.populate_port_combobox()
+        if self._disconnect_dialog is not None:
+            self._disconnect_dialog.close()
+            self._disconnect_dialog = None
 
         self.cleanup()
         if self.stimulus_plots is not None:
@@ -153,7 +173,8 @@ class SpikelingGraph(QObject):
         """
         button = self.ui.Spikeling_ConnectButton
         was_blocked = button.blockSignals(True)
-        button.setChecked(is_connected)
+        # A lost USB link does not cancel the user-authorised connection session.
+        button.setChecked(self.supervisor.state is not ConnectionState.IDLE)
         button.blockSignals(was_blocked)
 
         if not is_connected:
@@ -164,9 +185,8 @@ class SpikelingGraph(QObject):
             self.parent.SerialFlag = False
 
     def on_error(self, message: str):
-        """Handle serial errors."""
+        """Report errors without cancelling the supervisor's recovery session."""
         print("Serial error:", message)
-        self.disconnect_device()
 
 
 
@@ -274,20 +294,19 @@ class SpikelingGraph(QObject):
     # Automatic connection management
     # -------------------------------------------------------------------------
     def setup_auto_connection(self) -> None:
-        """
-        Install the hot-plug supervisor and its UI feedback.
-
-        Replaces the manual *select COM port then press Connect* flow: the board
-        is opened as soon as it is plugged in, and re-opened by itself after a
-        cable drop without restarting the GUI.
-        """
+        """Install a dormant supervisor; start it only on a manual Connect."""
         self.supervisor = SpikelingConnectionSupervisor(serial_manager, parent=self)
         self.supervisor.register_state_restorer(self.restore_device_state)
         self.supervisor.connected.connect(self.on_device_connected)
         self.supervisor.reconnected.connect(self.on_device_reconnected)
         self.supervisor.disconnected.connect(self.on_device_disconnected)
         self._disconnect_dialog = None
-        self.supervisor.start()
+        # Enumeration is read-only. Never open a serial port at GUI startup.
+        self._port_refresh_timer = QTimer(self)
+        self._port_refresh_timer.setInterval(2000)
+        self._port_refresh_timer.timeout.connect(self.populate_port_combobox)
+        self._port_refresh_timer.start()
+        self.populate_port_combobox()
 
     def restore_device_state(self) -> None:
         """
@@ -354,29 +373,27 @@ class SpikelingGraph(QObject):
 
         Notes
         -----
-        The combo-box update is signal-blocked. ``currentIndexChanged`` is
-        wired to ``Page_Spikeling_NeuronInterface.Spikeling.ChangePort``,
-        which closes and reopens the port; letting it fire here tears down
-        the link the supervisor has just validated. The failure was
-        platform-specific because the reopen went through
-        :meth:`SerialPortManager.open`, and only the Linux tty layer raises
-        DTR implicitly -- without it the ESP32-S3 CDC stack discards every
-        write. It was also once-only, because ``setCurrentText`` emits
-        nothing when the index is already correct, which is why the link
-        survived after a manual board reset.
+        Refresh the displayed COM number without changing the user-selected
+        board identity. A reconnect may re-enumerate under a new COM number.
         """
         self.parent.SerialFlag = True
         self.stim_counter = 0
         self.ui.Spikeling_Speed_slider.setEnabled(True)
 
         combo = self.ui.Spikeling_SelectPortComboBox
-        index = combo.findText(port.port_name)
-        if index < 0:
-            combo.addItem(port.port_name)
-            index = combo.count() - 1
-        was_blocked = combo.blockSignals(True)
-        combo.setCurrentIndex(index)
-        combo.blockSignals(was_blocked)
+        with QSignalBlocker(combo):
+            index = next((i for i in range(combo.count())
+                          if (combo.itemData(i) is not None and
+                              ((port.serial_number and combo.itemData(i).serial_number == port.serial_number)
+                               or combo.itemData(i).port_name == port.port_name))), -1)
+            if index < 0:
+                combo.addItem(port.label, userData=port)
+                index = combo.count() - 1
+            else:
+                combo.setItemText(index, port.label)
+                combo.setItemData(index, port)
+            combo.setCurrentIndex(index)
+        combo.setEnabled(False)
 
         self.set_init_parameters()
         self.set_plot()
@@ -404,7 +421,20 @@ class SpikelingGraph(QObject):
         self.parent.SerialFlag = False
         if self.timer.isActive():
             self.timer.stop()
-        self.ui.Spikeling_ConnectButton.setText("Reconnecting...")
+        recovering = self.supervisor.state is ConnectionState.LOST
+        self.ui.Spikeling_ConnectButton.setText(
+            "Reconnecting..." if recovering else "Connect Spikeling Screen"
+        )
+        if not recovering:
+            with QSignalBlocker(self.ui.Spikeling_ConnectButton):
+                self.ui.Spikeling_ConnectButton.setChecked(False)
+            self.ui.Spikeling_ConnectButton.setStyleSheet(
+                f"color: rgb{tuple(DarkSolarized[14])};\n"
+                f"background-color: rgb{tuple(DarkSolarized[2])};\n"
+                f"border: 1px solid rgb{tuple(DarkSolarized[14])};\n"
+                f"border-radius: 10px;"
+            )
+            self.populate_port_combobox()
 
         if self._disconnect_dialog is None:
             dialog = QMessageBox(self.parent)
@@ -413,8 +443,11 @@ class SpikelingGraph(QObject):
             dialog.setWindowTitle("Spikeling disconnected")
             dialog.setText(
                 f"The Spikeling board was disconnected ({reason}).\n\n"
-                "Plug the USB cable back in: the connection and all current "
-                "settings will be restored automatically."
+                + ("Plug the USB cable back in: the connection and current "
+                   "settings will be restored automatically."
+                   if recovering else
+                   "The board does not expose a unique USB serial number. "
+                   "Select its COM port and click Connect again.")
             )
             dialog.setStandardButtons(QMessageBox.Ok)
             self._style_recording_dialog(dialog)
@@ -423,11 +456,31 @@ class SpikelingGraph(QObject):
             dialog.open()
 
     def populate_port_combobox(self) -> None:
-        """Fill the port selector with detected boards, for manual override only."""
+        """Refresh available devices without triggering a connection or losing selection."""
+        if self.supervisor.state is not ConnectionState.IDLE:
+            return
         combo = self.ui.Spikeling_SelectPortComboBox
-        combo.clear()
-        for port in discover_spikeling_ports(serial_manager.identity):
-            combo.addItem(port.label, userData=port)
+        if combo.view().isVisible():
+            return  # Never rebuild the list while its menu is open.
+
+        ports = discover_spikeling_ports()
+        old_ports = [combo.itemData(i) for i in range(1, combo.count())]
+        if (old_ports == ports and combo.count() == len(ports) + 1
+                and combo.itemText(0) == "Select a COM port..."):
+            combo.setEnabled(True)
+            return
+
+        current = combo.currentData()
+        selected_name = current.port_name if current is not None else ""
+        with QSignalBlocker(combo):
+            combo.clear()
+            combo.addItem("Select a COM port...", userData=None)
+            for port in ports:
+                combo.addItem(port.label, userData=port)
+            index = next((i for i, port in enumerate(ports, 1)
+                          if port.port_name == selected_name), 0)
+            combo.setCurrentIndex(index)
+        combo.setEnabled(True)
 
 
 

@@ -442,8 +442,11 @@ class SerialPortManager(QObject):
         return True
 
     def is_device_still_present(self) -> bool:
-        """Check that the pinned board is still enumerated by the operating system."""
-        return find_port_by_serial_number(self._identity) is not None if self._identity else False
+        """Check the active USB identity, or the COM node if none is exposed."""
+        if self._identity:
+            return find_port_by_serial_number(self._identity) is not None
+        return any(info.portName() == self._port_name
+                   for info in QSerialPortInfo.availablePorts())
 
     def _on_serial_error(self, error) -> None:
         """
