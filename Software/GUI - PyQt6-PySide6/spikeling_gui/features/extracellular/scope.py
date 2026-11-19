@@ -1,6 +1,6 @@
 """
 Real-time extracellular / tetrode simulation for Spikeling.
-Ground-truth Vm(t) + detected spike times -> 4-channel extracellular recording -> display / recording.
+Neuronal Vm(t) + inferred waveform launches -> 4-channel extracellular recording -> display / recording.
 
 Reduced forward model used here
 1) Template mode
@@ -44,7 +44,9 @@ Notes on units:
 - Extracellular traces are displayed / recorded in pedagogical microvolt-like units (µV).
 """
 
+from dataclasses import replace as replace_dataclass
 from pathlib import Path
+from uuid import uuid4
 import csv
 import json
 import os
@@ -65,7 +67,15 @@ from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.appearance.theme_manager import (EXTRACELLULAR_CHANNEL_KEYS, theme_manager)
 from spikeling_gui.hardware.serial_manager import serial_manager
 from spikeling_gui.plotting.graph_core import RingBuffer, configure_scope
-from spikeling_gui.hardware.protocol import parse_spikeling_packet
+from .acquisition import (
+    Acquisition, AcquisitionBlock, BroadbandBlock, Capture, CONTACTS, Discontinuity,
+    Epoch, Event, InputBlock, NEURONS, ProcessedBlock, SampleSpan,
+)
+from .input_adapters import InputAdapter
+
+HOST_STALL_NS = 1_000_000_000
+# Exclude the first 10 ms after a causal state reset from future analysis.
+FILTER_WARMUP_ROWS = 100
 
 
 SAMPLE_INTERVAL = 0.1
@@ -378,6 +388,20 @@ class ExtraCellularGraph(QObject):
         self.recording_stop_reason = ""
         self.recording_path = None
         self.source_generation = 0
+        self._input_adapter = InputAdapter()
+        self.acquisition = None
+        self.last_acquisition_end = None
+        self.capture = None
+        self.latest_block = None
+        self.last_discontinuity = None
+        self._epoch = None
+        self._next_index = 0
+        self._segment = 0
+        self._previous_trigger = None
+        self._group_id = None
+        self._prime_vm = False
+        self._prime_detector = False
+        self._warmup_rows = 0
         self._rec = {
             "t_ms": [],
             "stim": [],
@@ -407,13 +431,14 @@ class ExtraCellularGraph(QObject):
             mode = "spikeling"
         if mode == self.source_mode:
             return
-        self.stop_recording("Source changed")
+        self._end_acquisition("Source changed")
         self.source_generation += 1
         self.source_mode = mode
         self._rx_queue.clear()
         if getattr(self.parent, "ExtraCellularConnectionFlag", False):
             self._initialize_buffers()
             self._reset_filter_state()
+            self._begin_acquisition()
 
     def on_hardware_connection_changed(self, connected):
         if not connected and self.source_mode == "spikeling":
@@ -446,16 +471,16 @@ class ExtraCellularGraph(QObject):
         self._reset_filter_state()
         self._invalidate_geometry_cache()
         self.dropped_packets = 0
-        self._fs_warning_issued = False
 
         self._rx_queue.clear()
+        self._begin_acquisition()
         self._rx_timer.start()
 
         self.parent.ExtraCellularConnectionFlag = True
 
     def disconnect(self, reason="Scope disconnected"):
         """Finalise captured samples before dropping the live pipeline."""
-        self.stop_recording(reason)
+        self._end_acquisition(reason)
         if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
             return
         self.source_generation += 1
@@ -463,6 +488,7 @@ class ExtraCellularGraph(QObject):
         self.cleanup()
         self.ui.ExtraCellular_ConnectButton.setChecked(False)
         self._update_connect_button(False)
+        self._refresh_acquisition_status()
 
     # -------------------------------------------------------------------------
     # Data Entry Points
@@ -475,64 +501,244 @@ class ExtraCellularGraph(QObject):
         if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
             return
 
-        self._rx_queue.append(data)
+        self._input_adapter.enqueue(self._rx_queue, data)
+        self.dropped_packets = self._input_adapter.local_losses
 
     def _process_rx_queue(self):
-        """Drain the hardware packet queue at the GUI refresh cadence."""
-        if self.source_mode != "spikeling" or not getattr(self.parent, "ExtraCellularConnectionFlag", False):
+        """Drain the legacy hardware queue and preserve both local loss counts."""
+        if self.source_mode != "spikeling" or not self.parent.ExtraCellularConnectionFlag:
             self._rx_queue.clear()
             return
+        count = min(len(self._rx_queue), MAX_PACKETS_PER_TICK)
+        packets = [self._rx_queue.popleft() for _ in range(count)]
+        excess = max(0, len(self._rx_queue) - MAX_PACKETS_PER_TICK)
+        self._input_adapter.trimmed += excess
+        for _ in range(excess):
+            self._rx_queue.popleft()
 
-        n = min(len(self._rx_queue), MAX_PACKETS_PER_TICK)
-        if n == 0:
+        for item in self._input_adapter.hardware(packets, stall_ns=HOST_STALL_NS):
+            self._consume_adapted(item)
+        self.dropped_packets = self._input_adapter.local_losses
+        self._refresh_acquisition_status()
+
+    def on_emulator_data(self, data, *, soma_clamped=False, ticks=None, events=None,
+                         aux_enabled=(True, True), pacing=None, source_settings=None):
+        """Handle legacy timestamped rows and optional aligned producer evidence."""
+        if self.source_mode != "emulator" or not self.parent.ExtraCellularConnectionFlag:
             return
+        packets = data
+        if len(data) and not isinstance(data[0], (list, tuple, np.ndarray)):
+            packets = [data]
+        self._consume_packets(packets, soma_clamped=soma_clamped, ticks=ticks,
+                              events=events, aux_enabled=aux_enabled, pacing=pacing,
+                              source_settings=source_settings)
 
-        packets = [self._rx_queue.popleft() for _ in range(n)]
-
-        overflow = len(self._rx_queue) - MAX_PACKETS_PER_TICK
-        if overflow > 0:
-            self.dropped_packets += overflow
-            for _ in range(overflow):
-                self._rx_queue.popleft()
-
-        self._consume_packets(packets)
-
-    def on_emulator_data(self, data: list, *, soma_clamped=False) -> None:
-        """Handle one emulator packet or a batch of packets."""
-        if self.source_mode != "emulator":
+    def _consume_packets(self, packets, *, soma_clamped=False, ticks=None, events=None,
+                         aux_enabled=(True, True), pacing=None, source_settings=None):
+        if not self.parent.ExtraCellularConnectionFlag or self.acquisition is None:
             return
-        if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
-            self._consume_packets(data, soma_clamped=soma_clamped)
+        for item in self._input_adapter.emulator(packets, ticks=ticks, flags=events):
+            self._consume_adapted(item, soma_clamped, aux_enabled, pacing, source_settings)
+        self._refresh_acquisition_status()
+
+    def _begin_acquisition(self):
+        self._input_adapter.reset()
+        self.acquisition = Acquisition(uuid4(), self.source_mode, self.source_generation)
+        self.latest_block = None
+        self.last_discontinuity = None
+        self._epoch = None
+        self._clock = None
+        self._next_index = 0
+        self._segment = 0
+        self._previous_trigger = None
+        self._group_id = None
+        self._prime_vm = self._prime_detector = False
+        self._warmup_rows = FILTER_WARMUP_ROWS
+        self.dropped_packets = 0
+        self._hardware_pacing = self.ui.Spikeling_Speed_slider.value()
+        self._refresh_acquisition_status()
+
+    def _end_acquisition(self, reason):
+        if self.acquisition is not None:
+            adapter = self._input_adapter
+            unprocessed = adapter.ordinal - adapter.last_ordinal - 1
+            self.last_acquisition_end = Discontinuity(
+                reason, self._next_index, unprocessed,
+                previous_receive_ordinal=(adapter.last_ordinal
+                                          if self.source_mode == "spikeling" else None),
+                previous_tick=adapter.last_tick,
+                acquisition=self.acquisition, segment=self._segment,
+            )
+            self._publish_discontinuity(self.last_acquisition_end)
+        self.stop_recording(reason)
+        self.acquisition = None
+        self.latest_block = None
+
+    def _publish_discontinuity(self, evidence):
+        """Deliver a boundary even if no further samples are accepted."""
+        self.last_discontinuity = evidence
+
+    @property
+    def input_stalled(self):
+        seen = self._input_adapter.last_host_ns
+        return (self.source_mode == "spikeling" and seen is not None and
+                self._input_adapter.clock() - seen > HOST_STALL_NS)
+
+    def _refresh_acquisition_status(self):
+        page = getattr(self.parent, "extracellular_page", None)
+        if page is not None:
+            page.refresh_acquisition_status()
+
+    def _boundary(self, evidence):
+        self._publish_discontinuity(replace_dataclass(
+            evidence, acquisition=self.acquisition, segment=self._segment
+        ))
+        self.dropped_packets = self._input_adapter.local_losses
+        self.stop_recording(self.tr(evidence.reason))
+        self._segment += 1
+        # Clear the display so no line or marker bridges the gap. Preserve the
+        # noise RNG and hum phase while resetting the signal-dependent state.
+        self.Time_buffer.fill_with(np.nan)
+        self._reset_model_state(reset_hum=False)
+        self._reset_filter_state()
+        self._prime_vm = self._prime_detector = True
+        self._warmup_rows = FILTER_WARMUP_ROWS
+        self.latest_block = None
+
+    def _drain_before_settings(self):
+        while self.source_mode == "spikeling" and self._rx_queue:
+            self._process_rx_queue()
+
+    def _set_hardware_pacing(self, requested):
+        self._drain_before_settings()
+        self._hardware_pacing = requested
+
+    def _activate_epoch(self, source_state, pacing):
+        settings = {
+            "source": source_state,
+            "synthetic": (self.signal_mode, tuple(map(tuple, self.distance_matrix_um)),
+                          tuple(sorted((key, value) for key, value in self._extracellular_params.items()
+                                       if not key.startswith("bandpass_"))),
+                          self._hum_phase_rad),
+            "processing": (self.car_enabled, self.bandpass_low_hz, self.bandpass_high_hz),
+            "detection": (self.DetectionThreshold_uV, self.DetectRefractory_ms,
+                          EVENT_MERGE_WINDOW_MS, self.SpikeThreshold, self.SpikeRefractory_ms),
+            "pacing": pacing,
+        }
+        previous = dict(self._epoch.settings) if self._epoch is not None else {}
+        changed = tuple(key for key, value in settings.items() if previous.get(key) != value)
+        if self._epoch is not None and not changed and self._epoch.segment == self._segment:
+            return
+        if self._epoch is not None:
+            if "source" in changed or (
+                self.recording_state == "recording" and any(key != "pacing" for key in changed)
+            ):
+                self.stop_recording("Acquisition settings changed")
+            if "source" in changed:
+                self._previous_trigger = None
+                self._prime_vm = True
+                self._t_last_spike_ms[:] = -1e12
+                self._active_templates = [list() for _ in range(N_NEURONS)]
+                self._dvdt_gate_remaining_ms[:] = 0.0
+            if "processing" in changed or "source" in changed:
+                self._reset_filter_state()
+                self._warmup_rows = FILTER_WARMUP_ROWS
+            if any(key in changed for key in ("processing", "detection", "source")):
+                self._prime_detector = True
+                self._t_last_detect_ms[:] = -1e12
+                self._last_event_ms = -1e12
+                self._group_id = None
+        epoch_id = 0 if self._epoch is None else self._epoch.id + 1
+        reason = ("Acquisition start" if self._epoch is None else
+                  "Segment boundary" if self._epoch.segment != self._segment else
+                  "Effective settings changed")
+        self._epoch = Epoch(epoch_id, self._segment, self._next_index,
+                            tuple(settings.items()), changed, reason)
+
+    def _consume_adapted(self, item, soma_clamped=False, aux_enabled=(True, True), pacing=None, source_settings=None):
+        if isinstance(item, Discontinuity):
+            self._boundary(item)
+            return
+        if self._clock is not None and self._clock != item.clock:
+            self._boundary(Discontinuity("Input clock provenance changed", self._next_index))
+        self._clock = item.clock
+        hardware = item.first_ordinal is not None
+        available = ((not soma_clamped, *aux_enabled)
+                     if item.flags is not None else (False, False, False))
+        pacing = ("board_requested", self._hardware_pacing) if hardware else ("emulator", pacing)
+        self._update_detection_threshold(self._extracellular_params)
+        source_state = (None, None, available, None) if hardware else (
+            soma_clamped, tuple(aux_enabled), available, source_settings
+        )
+        self._activate_epoch(source_state, pacing)
+        rows = item.rows if hardware else item.rows[:, 1:]
+        count = len(rows)
+        span = SampleSpan(self.acquisition, self._segment, self._epoch.id,
+                          self._next_index, count, item.first_tick, item.clock,
+                          item.first_ordinal, item.host_ns)
+        inputs = InputBlock(
+            span, rows[:, (0, 3, 5)].copy(order="C"), rows[:, 1].copy(),
+            rows[:, 7].copy(), None if hardware else item.rows[:, 0].copy(),
+            item.flags, available, soma_clamped,
+        )
+        if hardware:
+            # On an intact stream preserve the exact historical float addition
+            # for legacy CSV and detector compatibility.
+            if self._t_last_ms is None:
+                self._t_fallback_ms = (item.first_tick - 1) * SAMPLE_INTERVAL
+            times = np.empty(count)
+            for row in range(count):
+                self._t_fallback_ms += SAMPLE_INTERVAL
+                times[row] = self._t_fallback_ms
         else:
-            self._consume_packets([data], soma_clamped=soma_clamped)
+            times = inputs.source_t_ms
 
-    def _consume_packets(self, packets, *, soma_clamped=False) -> None:
-        """
-        Run the full extracellular pipeline over a block of packets.
-
-        Splitting the pipeline into a per-sample generation stage and a
-        per-block filtering/detection stage is what makes the block bandpass
-        and the vectorised threshold crossing possible. A capture receives the
-        finalised block and its sample-aligned event flags together.
-
-        Parameters
-        ----------
-        packets : sequence
-            Raw 8- or 9-field Spikeling packets in chronological order.
-        """
-        if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
-            return
-        if not self._extracellular_params:
-            return
-
-        staged = self._generate_raw_block(packets, soma_clamped=soma_clamped)
-        if staged is None:
-            return
-
-        self._finalize_block(*staged)
-
+        launches, raw = self._generate_raw_block(inputs, times)
+        broadband = BroadbandBlock(span, raw)
+        referenced = raw - raw.mean(axis=1, keepdims=True) if self.car_enabled else raw
+        events = self._input_events(inputs, launches)
+        filtered, merged = self._finalize_block(
+            times, inputs.stimulus_pct, inputs.trigger, inputs.vm_mV, launches,
+            referenced, span=span, typed_events=events,
+        )
+        warmup = min(count, self._warmup_rows)
+        self._warmup_rows -= warmup
+        processed = ProcessedBlock(span, filtered, self.DetectionThreshold_uV, merged, warmup)
+        self._next_index += count
+        if self.recording_active and self.capture is not None:
+            self.capture = replace_dataclass(self.capture, end_index=self._next_index)
+        block = AcquisitionBlock(inputs, broadband, processed, tuple(sorted(
+            events, key=lambda event: (event.index, event.kind, event.channel or "")
+        )), self._epoch)
+        self._publish_acquisition_block(block)
         if self._plots_ready:
             self._update_plots()
+
+    def _publish_acquisition_block(self, block):
+        """Deliver aligned stages and events synchronously to in-memory consumers."""
+        self.latest_block = block
+
+    def _input_events(self, inputs, launches):
+        span = inputs.span
+        events = []
+        for flags, kind, provenance in (
+            (inputs.native_spikes, "native_model_spike", "emulator_integrator"),
+            (launches, "waveform_launch", "vm_threshold_inferred"),
+        ):
+            if flags is None:
+                continue
+            for row, channel in zip(*np.nonzero(flags)):
+                if kind == "waveform_launch" or inputs.native_available[channel]:
+                    events.append(Event(kind, span, span.first_index + int(row),
+                                        NEURONS[channel], provenance))
+        levels = inputs.trigger != 0
+        previous = levels[0] if self._previous_trigger is None else self._previous_trigger
+        for row in np.flatnonzero(np.concatenate(([previous], levels[:-1])) != levels):
+            kind = "trigger_rise" if levels[row] else "trigger_fall"
+            events.append(Event(kind, span, span.first_index + int(row), None,
+                                "observed_trigger_field"))
+        self._previous_trigger = levels[-1]
+        return events
 
     def _update_shared_y_range(self, fit):
         """Fit the displayed time interval once across all contacts, or reset."""
@@ -560,84 +766,31 @@ class ExtraCellularGraph(QObject):
             plot.setYRange(low, high, padding=0)
         self._update_plots()
 
-    def _generate_raw_block(self, packets, *, soma_clamped=False):
-        """
-        Build the unfiltered tetrode block from a run of incoming packets.
-
-        Pipeline per sample
-        -------------------
-        1. Detect ground-truth spikes on the three intracellular Vm traces.
-        2. Advance the per-source extracellular waveform surrogate
-           (canonical template, or gated Vm derivative).
-        3. Project the sources onto the 4 contacts with the cached geometry.
-
-        Contamination (independent baseline noise, shared noise, 50 Hz hum)
-        and the optional common average reference are then applied to the
-        whole block at once.
-
-        Parameters
-        ----------
-        packets : sequence
-            Raw Spikeling packets.
-
-        Returns
-        -------
-        tuple or None
-            ``(t, stim, trig, vm, ground_truth, raw_uV)`` arrays, or ``None``
-            if no packet decoded.
-        """
+    def _generate_raw_block(self, inputs, t_arr):
+        """Project neuronal waveforms and contaminate the four broadband contacts."""
         p = self._extracellular_params
-        n = len(packets)
-
-        t_arr = np.empty(n, dtype=float)
-        stim_arr = np.empty(n, dtype=float)
-        trig_arr = np.empty(n, dtype=float)
-        vm_arr = np.empty((n, N_NEURONS), dtype=float)
-        gt_arr = np.zeros((n, N_NEURONS), dtype=np.int8)
-        raw = np.empty((n, N_CHANNELS), dtype=float)
-
-        projection = self._projection_matrix(p).T          # (N_CHANNELS, N_NEURONS)
+        count = inputs.span.count
+        gt_arr = np.zeros((count, N_NEURONS), dtype=np.int8)
+        raw = np.empty((count, N_CHANNELS), dtype=float)
+        projection = self._projection_matrix(p).T
         source = np.zeros(N_NEURONS, dtype=float)
-        count = 0
-
-        for packet in packets:
-            sample = parse_spikeling_packet(packet)
-            if sample is None:
-                continue
-
-            if sample.t_ms is None:
-                self._t_fallback_ms = getattr(self, "_t_fallback_ms", 0.0) + SAMPLE_INTERVAL
-                t_ms = self._t_fallback_ms
-            else:
-                t_ms = sample.t_ms
-
-            dt_ms = SAMPLE_INTERVAL if self._t_last_ms is None else (t_ms - self._t_last_ms)
-            if (not np.isfinite(dt_ms)) or (dt_ms <= 0.0) or (dt_ms > 1000.0):
-                dt_ms = SAMPLE_INTERVAL
+        if self._prime_vm:
+            self._vm_prev[:] = inputs.vm_mV[0]
+            self._dvdt_vm_smooth[:] = inputs.vm_mV[0]
+            self._prime_vm = False
+        for row, (t_ms, vms) in enumerate(zip(t_arr, inputs.vm_mV)):
+            dt_ms = SAMPLE_INTERVAL if self._t_last_ms is None else t_ms - self._t_last_ms
             self._t_last_ms = t_ms
-
-            vms = (sample.vm0, sample.vm1, sample.vm2)
             for i in range(N_NEURONS):
-                spike = 0 if i == 0 and soma_clamped else self._detect_spike(vms[i], self._vm_prev[i], t_ms, i)
+                spike = (0 if i == 0 and inputs.soma_clamped else
+                         self._detect_spike(vms[i], self._vm_prev[i], t_ms, i))
                 self._vm_prev[i] = vms[i]
-                gt_arr[count, i] = spike
+                gt_arr[row, i] = spike
                 if self.signal_mode == "dvdt":
                     source[i] = self._dvdt_source_step(i, vms[i], spike, dt_ms)
                 else:
                     source[i] = self._template_source_step(i, spike)
-
-            t_arr[count] = t_ms
-            stim_arr[count] = sample.stim
-            trig_arr[count] = sample.trigger
-            vm_arr[count] = vms
-            raw[count] = projection @ source
-            count += 1
-
-        if count == 0:
-            return None
-
-        t_arr, stim_arr, trig_arr = t_arr[:count], stim_arr[:count], trig_arr[:count]
-        vm_arr, gt_arr, raw = vm_arr[:count], gt_arr[:count], raw[:count]
+            raw[row] = projection @ source
 
         sigma_base = float(p.get("baseline_noise_uV", 5.0))
         sigma_shared = float(p.get("shared_noise_uV", 5.0))
@@ -652,19 +805,9 @@ class ExtraCellularGraph(QObject):
                 2.0 * np.pi * 50.0 * (t_arr / 1000.0) + self._hum_phase_rad
             )[:, None]
 
-        if self.car_enabled:
-            raw -= raw.mean(axis=1, keepdims=True)
+        return gt_arr, raw
 
-        if not self._fs_warning_issued and count > 1:
-            measured_fs = 1000.0 / float(np.median(np.diff(t_arr)))
-            if abs(measured_fs - FS_HZ) / FS_HZ > 0.05:
-                print(f"[ExtraCellular] Stream is {measured_fs:.0f} Hz but the bandpass "
-                      f"is designed for {FS_HZ:.0f} Hz; cutoffs are scaled accordingly.")
-                self._fs_warning_issued = True
-
-        return t_arr, stim_arr, trig_arr, vm_arr, gt_arr, raw
-
-    def _finalize_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, raw):
+    def _finalize_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, raw, *, span=None, typed_events=None):
         """
         Filter, detect and buffer one block of tetrode samples.
 
@@ -678,9 +821,12 @@ class ExtraCellularGraph(QObject):
             Unfiltered tetrode block of shape ``(n, N_CHANNELS)``, in µV.
         """
         self._update_detection_threshold(self._extracellular_params)
-        filtered = self._apply_bandpass_block(raw)
+        filtered = np.ascontiguousarray(self._apply_bandpass_block(raw))
 
-        events = self._detect_block_crossings(t_arr, filtered)
+        if self._prime_detector:
+            self._prev_channel_sample[:] = filtered[0]
+            self._prime_detector = False
+        events = self._detect_block_crossings(t_arr, filtered, span=span, typed_events=typed_events)
 
         # Latest-sample state for downstream readers
         self.VmData[:] = vm_arr[-1]
@@ -703,8 +849,9 @@ class ExtraCellularGraph(QObject):
 
         if self.recording_active:
             self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered, events)
+        return filtered, events
 
-    def _detect_block_crossings(self, t_arr, channels_uV) -> np.ndarray:
+    def _detect_block_crossings(self, t_arr, channels_uV, *, span=None, typed_events=None) -> np.ndarray:
         """
         Locate downward threshold crossings over a whole block.
 
@@ -736,17 +883,27 @@ class ExtraCellularGraph(QObject):
                 self._t_last_detect_ms[k] = t_ms
                 self.ChannelSpikeData[k] = 1
                 self._channel_spike_marks[k].append((t_ms, float(trace[index])))
-                crossings.append((t_ms, index))
+                crossings.append((t_ms, index, k))
 
             self._prev_channel_sample[k] = float(trace[-1])
 
         self.EventData = 0
-        for t_ms, index in sorted(crossings):
+        for t_ms, index, channel in sorted(crossings):
             if (t_ms - self._last_event_ms) >= EVENT_MERGE_WINDOW_MS:
                 self._last_event_ms = t_ms
                 self.EventData = 1
                 self._event_marks.append(t_ms)
                 events[index] = 1
+                if span is not None:
+                    group = Event("grouped_detection", span, span.first_index + int(index),
+                                  None, "anchored_merge_window")
+                    typed_events.append(group)
+                    self._group_id = group.id
+            if span is not None:
+                typed_events.append(Event(
+                    "contact_crossing", span, span.first_index + int(index), CONTACTS[channel],
+                    "processed_threshold_refractory", self._group_id,
+                ))
 
         t_min = float(t_arr[-1]) - float(TIME_WINDOW)
         for k in range(N_CHANNELS):
@@ -795,6 +952,8 @@ class ExtraCellularGraph(QObject):
         if mode == self.signal_mode:
             return
 
+        self._drain_before_settings()
+        self.stop_recording("Signal mode changed")
         self.signal_mode = mode
 
         # --------------------------------------------------------------
@@ -841,7 +1000,10 @@ class ExtraCellularGraph(QObject):
             else:
                 checked = self.ui.ExtraCellular_CAR_toggleButton.isChecked()
 
-        self.car_enabled = bool(checked)
+        if bool(checked) != self.car_enabled:
+            self._drain_before_settings()
+            self.stop_recording("Reference changed")
+            self.car_enabled = bool(checked)
 
     def _build_template_waveform(self) -> None:
         """
@@ -962,6 +1124,7 @@ class ExtraCellularGraph(QObject):
             return False
 
         if not np.array_equal(matrix, self.distance_matrix_um):
+            self._drain_before_settings()
             self.stop_recording("Geometry changed")
         self.distance_matrix_um = matrix
         self.tetrode_geometry = payload
@@ -973,6 +1136,7 @@ class ExtraCellularGraph(QObject):
         """Install a complete explicit geometry or raise before changing state."""
         matrix = self._distances_from_positions(sources_um, contacts_um)
         if not np.array_equal(matrix, self.distance_matrix_um):
+            self._drain_before_settings()
             self.stop_recording("Geometry changed")
         self.distance_matrix_um = matrix
         self.geometry_source = "explicit_positions"
@@ -1141,7 +1305,7 @@ class ExtraCellularGraph(QObject):
 
     def _detect_spike(self, vm_now: float, vm_prev: float, t_ms: float, neuron_index: int) -> int:
         """
-        Detect ground-truth spikes from intracellular Vm with upward threshold crossing.
+        Infer waveform launches from upward crossings of neuronal Vm.
         This is the same architectural role as in Graph_Imaging.py.
         """
         crossed_up = (vm_prev < self.SpikeThreshold) and (vm_now >= self.SpikeThreshold)
@@ -1325,7 +1489,7 @@ class ExtraCellularGraph(QObject):
         for k in range(N_CHANNELS):
             self.Extra_buffers[k].append(float(self.ExtraData[k]))
 
-    def _reset_model_state(self) -> None:
+    def _reset_model_state(self, *, reset_hum=True) -> None:
         """Reset all dynamic state variables used by the forward model."""
         self._t_last_ms = None
         self._t_fallback_ms = 0.0
@@ -1350,7 +1514,10 @@ class ExtraCellularGraph(QObject):
 
         self._channel_spike_marks = [collections.deque() for _ in range(N_CHANNELS)]
         self._event_marks = collections.deque()
-        self._hum_phase_rad = float(self._rng.uniform(0.0, 2.0 * np.pi))
+        self._previous_trigger = None
+        self._group_id = None
+        if reset_hum:
+            self._hum_phase_rad = float(self._rng.uniform(0.0, 2.0 * np.pi))
 
         # of magnitude in amplitude.
 
@@ -1686,6 +1853,7 @@ class ExtraCellularGraph(QObject):
             "event_column": "sample_aligned_merged_detection_v1",
         }
         self.recording_stop_reason = ""
+        self.capture = Capture(uuid4(), self.acquisition, self._next_index)
         self._set_recording_state("armed")
         return True
 
@@ -1698,6 +1866,8 @@ class ExtraCellularGraph(QObject):
             return True
         if self.recording_active:
             self.recording_stop_reason = reason
+            if self.capture is not None:
+                self.capture = replace_dataclass(self.capture, stop_reason=reason)
             self._rec_metadata["stop_reason"] = reason
             self._rec_metadata["dropped_packets"] = self.dropped_packets - self._rec_dropped_at_start
         count = len(self._rec["t_ms"])
@@ -1842,6 +2012,8 @@ class ExtraCellularGraph(QObject):
         p = self._extracellular_params
 
         def update(_=None):
+            self._drain_before_settings()
+            previous = dict(p)
             # Geometry
             p["spatial_falloff"] = float(ui.ExtraCellular_Spread_Slider.value()) / 10.0
             self._invalidate_geometry_cache()
@@ -1882,6 +2054,10 @@ class ExtraCellularGraph(QObject):
                 self._design_bandpass(fl, fh)
 
             self._update_detection_threshold(p)
+            if previous and p != previous:
+                self.stop_recording("Acquisition settings changed")
+
+        ui.Spikeling_Speed_slider.valueChanged.connect(self._set_hardware_pacing)
 
         # Initial cache fill
         update()

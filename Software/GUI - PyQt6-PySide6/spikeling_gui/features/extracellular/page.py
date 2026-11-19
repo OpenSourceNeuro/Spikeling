@@ -159,6 +159,31 @@ class Scope():
             Text=self.parent.tr("Connect the Scope and start the selected hardware or emulator source."),
         )
 
+    def refresh_acquisition_status(self):
+        graph = self.parent.extracellular_graph
+        button = self.ui.ExtraCellular_ConnectButton
+        if graph.acquisition is None:
+            message = self.parent.tr("Extracellular acquisition disconnected")
+        elif graph.acquisition.source == "spikeling":
+            message = self.parent.tr("Nominal model time. Board packet continuity is unknown.")
+            if graph._input_adapter.local_losses:
+                message += " " + self.parent.tr("Local rows lost: %1").replace(
+                    "%1", str(graph._input_adapter.local_losses))
+        else:
+            message = self.parent.tr("Emulator model time, independent of playback speed.")
+        if graph.acquisition is not None:
+            if graph.input_stalled:
+                message += " " + self.parent.tr("Input stalled.")
+            elif graph.latest_block is None:
+                message += " " + self.parent.tr("Waiting for samples.")
+            else:
+                message += " " + self.parent.tr("Receiving samples.")
+            if graph.last_discontinuity is not None:
+                message += " " + self.parent.tr(graph.last_discontinuity.reason)
+        if button.toolTip() != message:
+            button.setToolTip(message)
+            button.setAccessibleDescription(message)
+
     def refresh_recording(self):
         graph = self.parent.extracellular_graph
         state = graph.recording_state
