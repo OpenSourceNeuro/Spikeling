@@ -8,3 +8,5 @@ __pycache__/
 # Build / packaging artifacts (scoped to GUI folder)
 build/
 dist/
+# Local PCB design history and backups
+.history/
