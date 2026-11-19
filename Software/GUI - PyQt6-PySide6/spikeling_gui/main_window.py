@@ -169,6 +169,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         extracellular = getattr(self, "extracellular_graph", None)
+        if extracellular is not None and extracellular.session_recording.defer_close():
+            event.ignore()
+            return
         if extracellular is not None and not extracellular.stop_recording("Window closed"):
             event.ignore()
             themed_message_box(

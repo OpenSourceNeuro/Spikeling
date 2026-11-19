@@ -1847,7 +1847,7 @@ QWidget#page_GitHub QPushButton:disabled {
                        </font>
                       </property>
                       <property name="text">
-                       <string>  Spikes</string>
+                       <string>  Data Analysis</string>
                       </property>
                       <property name="icon">
                        <iconset resource="../../../resources.qrc">
@@ -44237,6 +44237,22 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
+                          <item>
+                           <layout class="QHBoxLayout" name="ExtraCellular_RecordingFormatLayout">
+                            <item>
+                             <widget class="QLabel" name="ExtraCellular_RecordingFormat_label">
+                              <property name="text"><string>Recording format</string></property>
+                              <property name="buddy"><cstring>ExtraCellular_RecordingFormat_comboBox</cstring></property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QComboBox" name="ExtraCellular_RecordingFormat_comboBox">
+                              <item><property name="text"><string>Legacy CSV</string></property></item>
+                              <item><property name="text"><string>Spikeling broadband session</string></property></item>
+                             </widget>
+                            </item>
+                           </layout>
+                          </item>
                           <item>
                            <widget class="QFrame" name="ExtraCellular_DataRecording_Folder_frame">
                             <property name="frameShape">

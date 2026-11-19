@@ -72,6 +72,7 @@ from .acquisition import (
     Epoch, Event, InputBlock, NEURONS, ProcessedBlock, SampleSpan,
 )
 from .input_adapters import InputAdapter
+from .recording_controller import SessionRecordingController
 
 HOST_STALL_NS = 1_000_000_000
 # Exclude the first 10 ms after a causal state reset from future analysis.
@@ -183,7 +184,6 @@ class ExtraCellularGraph(QObject):
         # ------------------------------------------------------------------
         # If absent, the graph falls back to the legacy hidden 2D didactic model.
         self.tetrode_geometry = None
-        self.geometry_source = "default"
         self._init_geometry()
 
         self.tetrode_distance_matrix_um = {}
@@ -286,6 +286,7 @@ class ExtraCellularGraph(QObject):
         self.bandpass_low_hz = 300.0
         self.bandpass_high_hz = 3000.0
         self._filter_sos = None
+        self._filter_recipe = None
         # self._filter_zi = None
 
         # ------------------------------------------------------------------
@@ -383,6 +384,7 @@ class ExtraCellularGraph(QObject):
         # Recording state
         # ------------------------------------------------------------------
         # Same general recording architecture as Graph_Imaging.py.
+        self.session_recording = SessionRecordingController(self)
         self.recording_state = "idle"
         self.recording_detail = ""
         self.recording_stop_reason = ""
@@ -577,6 +579,7 @@ class ExtraCellularGraph(QObject):
     def _publish_discontinuity(self, evidence):
         """Deliver a boundary even if no further samples are accepted."""
         self.last_discontinuity = evidence
+        self.session_recording.offer(evidence)
 
     @property
     def input_stalled(self):
@@ -594,7 +597,9 @@ class ExtraCellularGraph(QObject):
             evidence, acquisition=self.acquisition, segment=self._segment
         ))
         self.dropped_packets = self._input_adapter.local_losses
-        self.stop_recording(self.tr(evidence.reason))
+        if (self.session_recording.writer is None or evidence.reason in
+                ("Input clock provenance changed", "Emulator clock reversed")):
+            self.stop_recording(self.tr(evidence.reason))
         self._segment += 1
         # Clear the display so no line or marker bridges the gap. Preserve the
         # noise RNG and hum phase while resetting the signal-dependent state.
@@ -619,8 +624,9 @@ class ExtraCellularGraph(QObject):
             "synthetic": (self.signal_mode, tuple(map(tuple, self.distance_matrix_um)),
                           tuple(sorted((key, value) for key, value in self._extracellular_params.items()
                                        if not key.startswith("bandpass_"))),
-                          self._hum_phase_rad),
-            "processing": (self.car_enabled, self.bandpass_low_hz, self.bandpass_high_hz),
+                          self._hum_phase_rad, self._geometry_coordinates),
+            "processing": (self.car_enabled, self.bandpass_low_hz, self.bandpass_high_hz,
+                           self._filter_recipe),
             "detection": (self.DetectionThreshold_uV, self.DetectRefractory_ms,
                           EVENT_MERGE_WINDOW_MS, self.SpikeThreshold, self.SpikeRefractory_ms),
             "pacing": pacing,
@@ -630,8 +636,9 @@ class ExtraCellularGraph(QObject):
         if self._epoch is not None and not changed and self._epoch.segment == self._segment:
             return
         if self._epoch is not None:
-            if "source" in changed or (
-                self.recording_state == "recording" and any(key != "pacing" for key in changed)
+            if self.session_recording.writer is None and (
+                "source" in changed or
+                (self.recording_state == "recording" and any(key != "pacing" for key in changed))
             ):
                 self.stop_recording("Acquisition settings changed")
             if "source" in changed:
@@ -705,7 +712,7 @@ class ExtraCellularGraph(QObject):
         self._warmup_rows -= warmup
         processed = ProcessedBlock(span, filtered, self.DetectionThreshold_uV, merged, warmup)
         self._next_index += count
-        if self.recording_active and self.capture is not None:
+        if self.recording_active and self.capture is not None and self.session_recording.writer is None:
             self.capture = replace_dataclass(self.capture, end_index=self._next_index)
         block = AcquisitionBlock(inputs, broadband, processed, tuple(sorted(
             events, key=lambda event: (event.index, event.kind, event.channel or "")
@@ -717,6 +724,7 @@ class ExtraCellularGraph(QObject):
     def _publish_acquisition_block(self, block):
         """Deliver aligned stages and events synchronously to in-memory consumers."""
         self.latest_block = block
+        self.session_recording.offer(block)
 
     def _input_events(self, inputs, launches):
         span = inputs.span
@@ -847,7 +855,7 @@ class ExtraCellularGraph(QObject):
         for k in range(N_CHANNELS):
             self.Extra_buffers[k].extend(filtered[:, k])
 
-        if self.recording_active:
+        if self.recording_active and self.session_recording.writer is None:
             self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered, events)
         return filtered, events
 
@@ -953,7 +961,8 @@ class ExtraCellularGraph(QObject):
             return
 
         self._drain_before_settings()
-        self.stop_recording("Signal mode changed")
+        if self.session_recording.writer is None:
+            self.stop_recording("Signal mode changed")
         self.signal_mode = mode
 
         # --------------------------------------------------------------
@@ -1002,7 +1011,8 @@ class ExtraCellularGraph(QObject):
 
         if bool(checked) != self.car_enabled:
             self._drain_before_settings()
-            self.stop_recording("Reference changed")
+            if self.session_recording.writer is None:
+                self.stop_recording("Reference changed")
             self.car_enabled = bool(checked)
 
     def _build_template_waveform(self) -> None:
@@ -1055,6 +1065,9 @@ class ExtraCellularGraph(QObject):
             DEFAULT_SOURCE_POSITIONS_UM, DEFAULT_CONTACT_POSITIONS_UM
         )
         self.geometry_source = "default"
+        self._geometry_coordinates = (
+            tuple(map(tuple, DEFAULT_SOURCE_POSITIONS_UM)), tuple(map(tuple, DEFAULT_CONTACT_POSITIONS_UM))
+        )
         self._invalidate_geometry_cache()
 
     @staticmethod
@@ -1073,7 +1086,7 @@ class ExtraCellularGraph(QObject):
         return distances
 
     @classmethod
-    def _parse_geometry_payload(cls, payload):
+    def _parse_geometry_payload(cls, payload, *, with_coordinates=False):
         """Read a named matrix and/or a complete layout in micrometres.
 
         The current layout has neurons[main/aux1/aux2] and
@@ -1085,7 +1098,7 @@ class ExtraCellularGraph(QObject):
         if not isinstance(payload, dict):
             raise ValueError("Expected a geometry mapping.")
 
-        matrix = None
+        matrix = coordinates = None
         if "distance_matrix_um" in payload:
             saved = payload["distance_matrix_um"]
             matrix = np.array([
@@ -1106,27 +1119,31 @@ class ExtraCellularGraph(QObject):
                     raise ValueError("Contacts must uniquely identify E1–E4 in channel order.")
                 contacts[name] = entry
             axes = ("x", "y", "z") if legacy else ("x_um", "y_um", "z_um")
-            calculated = cls._distances_from_positions(
-                [[float(neurons[key][axis]) for axis in axes] for key in TETRODE_NEURON_KEYS],
-                [[float(contacts[key][axis]) for axis in axes] for key in TETRODE_CONTACT_KEYS],
+            coordinates = (
+                tuple(tuple(float(neurons[key][axis]) for axis in axes) for key in TETRODE_NEURON_KEYS),
+                tuple(tuple(float(contacts[key][axis]) for axis in axes) for key in TETRODE_CONTACT_KEYS),
             )
+            calculated = cls._distances_from_positions(*coordinates)
             if matrix is None:
-                return calculated
-            if not np.allclose(matrix, calculated, rtol=0, atol=1e-6):
+                matrix = calculated
+            elif not np.allclose(matrix, calculated, rtol=0, atol=1e-6):
                 raise ValueError("Geometry coordinates and distances disagree.")
-        return matrix
+        return (matrix, coordinates) if with_coordinates else matrix
 
     def apply_tetrode_geometry(self, payload: dict) -> bool:
         """Keep the last valid layout if any required geometry data are invalid."""
         try:
-            matrix = self._parse_geometry_payload(payload)
+            matrix, coordinates = self._parse_geometry_payload(payload, with_coordinates=True)
         except (KeyError, TypeError, ValueError, OverflowError):
             return False
 
-        if not np.array_equal(matrix, self.distance_matrix_um):
+        if (not np.array_equal(matrix, self.distance_matrix_um)
+                or coordinates != self._geometry_coordinates):
             self._drain_before_settings()
-            self.stop_recording("Geometry changed")
+            if self.session_recording.writer is None:
+                self.stop_recording("Geometry changed")
         self.distance_matrix_um = matrix
+        self._geometry_coordinates = coordinates
         self.tetrode_geometry = payload
         self.geometry_source = "tetrode_window"
         self._invalidate_geometry_cache()
@@ -1135,10 +1152,15 @@ class ExtraCellularGraph(QObject):
     def set_geometry_from_positions(self, contacts_um, sources_um) -> None:
         """Install a complete explicit geometry or raise before changing state."""
         matrix = self._distances_from_positions(sources_um, contacts_um)
-        if not np.array_equal(matrix, self.distance_matrix_um):
+        coordinates = (tuple(map(tuple, np.asarray(sources_um, dtype=float))),
+                       tuple(map(tuple, np.asarray(contacts_um, dtype=float))))
+        if (not np.array_equal(matrix, self.distance_matrix_um)
+                or coordinates != self._geometry_coordinates):
             self._drain_before_settings()
-            self.stop_recording("Geometry changed")
+            if self.session_recording.writer is None:
+                self.stop_recording("Geometry changed")
         self.distance_matrix_um = matrix
+        self._geometry_coordinates = coordinates
         self.geometry_source = "explicit_positions"
         self._invalidate_geometry_cache()
 
@@ -1343,6 +1365,7 @@ class ExtraCellularGraph(QObject):
             fh = min(max(fl * 1.5, fl + 1.0), 0.95 * NYQUIST_HZ)
 
         self._filter_sos = butter(3, [fl, fh], btype="bandpass", fs=FS_HZ, output="sos")
+        self._filter_recipe = tuple(map(tuple, self._filter_sos))
         self.bandpass_low_hz = fl
         self.bandpass_high_hz = fh
         self._filter_zi_block = None
@@ -1831,7 +1854,7 @@ class ExtraCellularGraph(QObject):
         return tuple(identities)
 
     def start_recording(self, path):
-        if self.recording_state not in ("idle", "saved", "empty") or not self.source_ready():
+        if self.recording_state not in ("idle", "saved", "empty", "session_failed") or not self.source_ready():
             return False
         # Process the pre-click hardware backlog for display/detector continuity
         # while capture is still idle. Only later processed blocks are recorded.
@@ -1857,7 +1880,17 @@ class ExtraCellularGraph(QObject):
         self._set_recording_state("armed")
         return True
 
+    def start_session_recording(self, path):
+        if self.recording_state not in ("idle", "saved", "empty", "session_failed") or not self.source_ready():
+            return False
+        self._drain_before_settings()
+        self.session_recording.start(path)
+        return True
+
     def stop_recording(self, reason="Stopped", *, retry=False, path=None):
+        if self.session_recording.writer is not None:
+            self.session_recording.stop(reason)
+            return True
         if self.recording_state == "saving":
             return False
         if self.recording_state == "error" and not retry:
@@ -2054,7 +2087,7 @@ class ExtraCellularGraph(QObject):
                 self._design_bandpass(fl, fh)
 
             self._update_detection_threshold(p)
-            if previous and p != previous:
+            if previous and p != previous and self.session_recording.writer is None:
                 self.stop_recording("Acquisition settings changed")
 
         ui.Spikeling_Speed_slider.valueChanged.connect(self._set_hardware_pacing)
@@ -2134,6 +2167,7 @@ class ExtraCellularGraph(QObject):
 
         self._reset_model_state()
         self._filter_sos = None
+        self._filter_recipe = None
         self._filter_zi_block = None
         self._projection_matrix_cache = None
 

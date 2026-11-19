@@ -19704,6 +19704,23 @@ class Ui_Spikeling(object):
         self.ExtraCellular_DataRecording_verticalLayout_28.setSpacing(5)
         self.ExtraCellular_DataRecording_verticalLayout_28.setObjectName(u"ExtraCellular_DataRecording_verticalLayout_28")
         self.ExtraCellular_DataRecording_verticalLayout_28.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_RecordingFormatLayout = QHBoxLayout()
+        self.ExtraCellular_RecordingFormatLayout.setObjectName(u"ExtraCellular_RecordingFormatLayout")
+        self.ExtraCellular_RecordingFormat_label = QLabel(self.ExtraCellular_DataRecording_frame)
+        self.ExtraCellular_RecordingFormat_label.setObjectName(u"ExtraCellular_RecordingFormat_label")
+
+        self.ExtraCellular_RecordingFormatLayout.addWidget(self.ExtraCellular_RecordingFormat_label)
+
+        self.ExtraCellular_RecordingFormat_comboBox = QComboBox(self.ExtraCellular_DataRecording_frame)
+        self.ExtraCellular_RecordingFormat_comboBox.addItem("")
+        self.ExtraCellular_RecordingFormat_comboBox.addItem("")
+        self.ExtraCellular_RecordingFormat_comboBox.setObjectName(u"ExtraCellular_RecordingFormat_comboBox")
+
+        self.ExtraCellular_RecordingFormatLayout.addWidget(self.ExtraCellular_RecordingFormat_comboBox)
+
+
+        self.ExtraCellular_DataRecording_verticalLayout_28.addLayout(self.ExtraCellular_RecordingFormatLayout)
+
         self.ExtraCellular_DataRecording_Folder_frame = QFrame(self.ExtraCellular_DataRecording_frame)
         self.ExtraCellular_DataRecording_Folder_frame.setObjectName(u"ExtraCellular_DataRecording_Folder_frame")
         self.ExtraCellular_DataRecording_Folder_frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -27022,6 +27039,7 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Compare_differenceEndLabel.setBuddy(self.DataAnalysis_Compare_differenceEndEdit)
         self.DataAnalysis_Compare_traceStartLabel.setBuddy(self.DataAnalysis_Compare_traceStartEdit)
         self.DataAnalysis_Compare_traceEndLabel.setBuddy(self.DataAnalysis_Compare_traceEndEdit)
+        self.ExtraCellular_RecordingFormat_label.setBuddy(self.ExtraCellular_RecordingFormat_comboBox)
         self.StimInt_label.setBuddy(self.StimInt_value)
         self.NeuronGenerator_protocol_label.setBuddy(self.NeuronGenerator_protocol_combo)
         self.StimulusGenerator_PreDuration_label.setBuddy(self.StimulusGenerator_PreDuration_edit)
@@ -27083,7 +27101,7 @@ class Ui_Spikeling(object):
         self.ImagingDataAnalysis_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Data Analysis", None))
         self.ImagingTutorial_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Tutorial", None))
         self.ExtraCellularScope_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Scope", None))
-        self.ExtraCellularSpikes_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Spikes", None))
+        self.ExtraCellularSpikes_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Data Analysis", None))
         self.ExtraCellularSorting_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Sorting", None))
         self.ExtraCellularTutorial_pushButton.setText(QCoreApplication.translate("Spikeling", u"  Tutorial", None))
         self.mainbody_header_logo.setText("")
@@ -28589,6 +28607,10 @@ class Ui_Spikeling(object):
 #endif // QT_CONFIG(tooltip)
         self.ExtraCellular_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range (all contacts)", None))
         self.ExtraCellular_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
+        self.ExtraCellular_RecordingFormat_label.setText(QCoreApplication.translate("Spikeling", u"Recording format", None))
+        self.ExtraCellular_RecordingFormat_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Legacy CSV", None))
+        self.ExtraCellular_RecordingFormat_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Spikeling broadband session", None))
+
         self.ExtraCellular_DataRecording_Folder_label.setText(QCoreApplication.translate("Spikeling", u"Save to", None))
         self.ExtraCellular_DataRecording_Folder_lineEdit.setText("")
         self.ExtraCellular_DataRecording_RecordFolderDir_pushButton.setText(QCoreApplication.translate("Spikeling", u"Open folder", None))

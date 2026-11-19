@@ -17,6 +17,7 @@ from spikeling_gui.features.imaging import page as Page_Imaging_ImagingSimulatio
 from spikeling_gui.features.extracellular.page import Scope as ExtracellularPage
 from spikeling_gui.features.imaging.scope import ImagingGraph
 from spikeling_gui.features.imaging_data_analysis.page import ImagingDataAnalysisPage
+from spikeling_gui.features.extracellular.recording_page import RecordingPage
 from spikeling_gui.features.extracellular.scope import ExtraCellularGraph
 from spikeling_gui.features.stimulus_generator import page as Page_StimulusGenerator
 from spikeling_gui.features.neuron_generator import page as Page_NeuronGenerator
@@ -337,6 +338,15 @@ def Buttons(self):
 
     # Display page301 when extracellular button is clicked
     self.ui.ExtraCellularScope_pushButton.clicked.connect(self.extracellular_page.ShowPage)
+    self.extracellular_recording_page = None
+
+    def show_extracellular_recording():
+        if self.extracellular_recording_page is None:
+            self.extracellular_recording_page = RecordingPage(self)
+            self.ui.mainbody_stackedWidget.addWidget(self.extracellular_recording_page)
+        self.extracellular_recording_page.show_page()
+
+    self.ui.ExtraCellularSpikes_pushButton.clicked.connect(show_extracellular_recording)
 
     # Bridge tetrode saved geometry -> extracellular scope page/controller
     self.tetrode_window = TetrodeGeometryWindow(self)

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ExtracellularRecording</class>
+ <widget class="QWidget" name="ExtracellularRecording">
+  <layout class="QVBoxLayout" name="rootLayout">
+   <item>
+    <widget class="QTabWidget" name="tabs">
+     <widget class="QWidget" name="recording">
+      <attribute name="title"><string>Recording</string></attribute>
+      <layout class="QVBoxLayout" name="recordingLayout">
+       <item>
+        <layout class="QHBoxLayout" name="openLayout">
+         <item><widget class="QPushButton" name="openButton"><property name="text"><string>Open recording…</string></property></widget></item>
+         <item><widget class="QLabel" name="statusLabel">
+          <property name="text"><string>Open a session manifest or an extracellular CSV.</string></property>
+          <property name="wordWrap"><bool>true</bool></property>
+          <property name="textFormat"><enum>Qt::TextFormat::PlainText</enum></property>
+          <property name="textInteractionFlags"><set>Qt::TextInteractionFlag::TextSelectableByMouse</set></property>
+         </widget></item>
+        </layout>
+       </item>
+       <item><widget class="QPlainTextEdit" name="metadata">
+        <property name="readOnly"><bool>true</bool></property>
+        <property name="maximumHeight"><number>155</number></property>
+        <property name="placeholderText"><string>Recording metadata</string></property>
+       </widget></item>
+       <item>
+        <layout class="QHBoxLayout" name="intervalLayout">
+         <item><widget class="QLabel" name="stageLabel">
+          <property name="text"><string>Signal</string></property>
+          <property name="buddy"><cstring>stageCombo</cstring></property>
+         </widget></item>
+         <item><widget class="QComboBox" name="stageCombo"/></item>
+         <item><widget class="QLabel" name="indexLabel">
+          <property name="text"><string>First accepted index</string></property>
+          <property name="buddy"><cstring>indexEdit</cstring></property>
+         </widget></item>
+         <item><widget class="QLineEdit" name="indexEdit"><property name="text"><string notr="true">0</string></property></widget></item>
+         <item><widget class="QLabel" name="countLabel">
+          <property name="text"><string>Rows</string></property>
+          <property name="buddy"><cstring>countEdit</cstring></property>
+         </widget></item>
+         <item><widget class="QLineEdit" name="countEdit"><property name="text"><string notr="true">10000</string></property></widget></item>
+         <item><widget class="QPushButton" name="previewButton"><property name="text"><string>Preview</string></property></widget></item>
+         <item><widget class="QPushButton" name="exportButton"><property name="text"><string>Export CSV…</string></property></widget></item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="plotHost">
+         <layout class="QVBoxLayout" name="plotLayout">
+          <property name="leftMargin"><number>0</number></property>
+          <property name="rightMargin"><number>0</number></property>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
