@@ -1,6 +1,6 @@
 """Desktop Spikeling oscilloscope and simulation lifecycle."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import copysign
 
 from PySide6.QtCore import QTimer
@@ -41,7 +41,7 @@ VM_MIN_MV, VM_MAX_MV = -90, 30
 CURRENT_MIN, CURRENT_MAX = -100, 100
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class EmulatorUISnapshot:
     """Freeze UI parameters for one oscilloscope update."""
 
@@ -294,7 +294,16 @@ def UpdatePlot(self):
                              and extracellular_graph.source_mode == "emulator")
 
     forward_batch = [] if (imaging_enabled or extracellular_enabled) else None
-    imaging_events = [] if imaging_enabled else None
+    native_events = [] if forward_batch is not None else None
+    first_model_tick = self.Emulator_model_tick + 1
+    source_ranges = []
+    if extracellular_enabled:
+        # Stimulus period takes effect when the pulse counter wraps. Capture
+        # the period actually used below, rather than the requested slider.
+        source_settings = (
+            replace(ui_state, stim_period=0), controls.release_seed,
+            tuple(tuple(controls.stp_settings(i)) for i in range(2)),
+        )
 
     # --- Integration loop -------------------------------------------------
     recording_channels = self._emulator_recording_channels if self.recordflag else None
@@ -309,7 +318,15 @@ def UpdatePlot(self):
                     len(self.EmulatorData[1]), recording_settings(controls, ui_state, period, playing),
                 )
                 previous_stimulus = schedule
-        vec8 = GetData(self, ui_state, noise, recording_channels, imaging_events)
+        if extracellular_enabled:
+            schedule = (
+                ("custom", controls.playback_loops, len(controls.samples),
+                 self.ui.Emulator_CustomStimulus_StimLabel.text())
+                if controls.playback_index is not None else ("square", self.Emulator_StimSteps)
+            )
+            if not source_ranges or schedule != source_ranges[-1][1]:
+                source_ranges.append((len(forward_batch), schedule))
+        vec8 = GetData(self, ui_state, noise, recording_channels, native_events)
         self.ui.Emulator_Data = vec8
 
         for channel in range(N_EMULATOR_CHANNELS):
@@ -334,10 +351,18 @@ def UpdatePlot(self):
     if forward_batch:
         if imaging_enabled:
             imaging_graph.on_emulator_data(
-                forward_batch, soma_clamped=ui_state.voltage_clamp, events=imaging_events
+                forward_batch, soma_clamped=ui_state.voltage_clamp, events=native_events
             )
         if extracellular_enabled:
-            extracellular_graph.on_emulator_data(forward_batch, soma_clamped=ui_state.voltage_clamp)
+            ends = [start for start, _ in source_ranges[1:]] + [len(forward_batch)]
+            for (start, schedule), end in zip(source_ranges, ends):
+                extracellular_graph.on_emulator_data(
+                    forward_batch[start:end], soma_clamped=ui_state.voltage_clamp,
+                    ticks=range(first_model_tick + start, first_model_tick + end),
+                    events=native_events[start:end], aux_enabled=ui_state.syn_enabled,
+                    pacing=setting.emulator_steps_per_tick,
+                    source_settings=(*source_settings, schedule),
+                )
 
 
 def GetData(self, state, noise, recording_channels=None, imaging_events=None):
@@ -449,6 +474,7 @@ def GetData(self, state, noise, recording_channels=None, imaging_events=None):
         imaging_events.append(optical_events)
     self.Emulator_v = voltage
     self.Emulator_sim_time_ms += dt
+    self.Emulator_model_tick += 1
     return [
         displayed_vm, stimulus, measured_current,
         presynaptic_vm[0], currents[0], presynaptic_vm[1], currents[1], float(trigger),
@@ -617,6 +643,7 @@ def SetInitParameters(self):
     self.ui.EmulatorConnectedFlag = True
     self.recordflag = False
     self.Emulator_sim_time_ms = 0.0
+    self.Emulator_model_tick = 0
     self.Emulator_RecordingPath = None
     self.ui.Emulator_Oscilloscope_widget.clear()
     self.ui.Emulator_Connect_pushButton.setText("Stop Spikeling Emulator")
