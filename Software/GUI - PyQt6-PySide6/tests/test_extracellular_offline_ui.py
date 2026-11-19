@@ -131,3 +131,25 @@ def test_display_reduction_keeps_extrema_at_original_rows():
     selected_x, selected_y = analysis_page._peak_points(x, y, 10)
     assert len(selected_x) < len(x)
     assert all(point in dict(zip(selected_x, selected_y)).items() for point in ((25, -100), (29, 200)))
+
+
+def test_five_step_guidance_and_shared_trace_navigation(practical):
+    app, window, reader = practical
+    page = window.extracellular_recording_page
+    open_reader(app, page, reader.directory / "manifest.json")
+    ui, panel = page.ui, page.analysis
+    assert [ui.tabs.tabText(i) for i in range(ui.tabs.count())] == [
+        "1 · Recording", "2 · Processing", "3 · Detection", "4 · Waveforms", "5 · Comparison"]
+    assert "before reference" in ui.metadata.toPlainText()
+    ui.tabs.setCurrentWidget(ui.detectionTab)
+    assert ui.analysisPlotHost.parentWidget() is ui.detectionTab
+    ui.tabs.setCurrentWidget(ui.processingTab)
+    assert ui.analysisPlotHost.parentWidget() is ui.processingTab
+    ui.referenceCombo.setCurrentIndex(1)
+    ui.bandpassCheck.setChecked(False)
+    panel.run()
+    wait_for_analysis(app, panel)
+    assert "exactly zero" in ui.comparisonDetails.toPlainText()
+    assert "B contains 0 contact crossings" in ui.comparisonDetails.toPlainText()
+    assert "{" not in ui.comparisonDetails.toPlainText()
+    assert "not proof" in ui.detectionGuide.text()

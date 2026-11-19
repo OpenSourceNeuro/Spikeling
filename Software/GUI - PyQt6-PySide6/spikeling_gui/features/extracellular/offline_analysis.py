@@ -123,13 +123,11 @@ def compare_source(reader, result, stream, tolerance_ms, cancel=None):
     for key, run in runs.items():
         available_rows[key][:run.warmup + 1] = False
     events = []
-    observed = False
     for event in reader.iter_events(truth=native, start=result.start, stop=result.stop):
         if cancel is not None and cancel.is_set():
             return None
         if event["kind"] != stream:
             continue
-        observed = True
         key = event["segment"], event["epoch"]
         run = runs[key]
         row = event["sample"] - run.first
@@ -138,7 +136,7 @@ def compare_source(reader, result, stream, tolerance_ms, cancel=None):
             events.append(EventAnchor(tuple(event["id"]), event["sample"], run.tick + row,
                                       float(run.time_ms[row]), *key, event["channel"], event["provenance"]))
     eligible_rows = sum(int(np.count_nonzero(mask)) for mask in available_rows.values())
-    if not eligible_rows or (not native and not observed):
+    if not eligible_rows:
         return SourceAgreement(stream, False, eligible_rows, len(result.groups), (), None)
     eligible_groups = tuple(group for group in result.groups
                             if available_rows[group.key][group.sample - runs[group.key].first])

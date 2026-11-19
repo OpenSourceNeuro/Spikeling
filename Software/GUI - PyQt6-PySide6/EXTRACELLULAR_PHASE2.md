@@ -4,6 +4,16 @@
 
 Compare two analyses of the same saved recording. A changing detection count tells you how the measurement and the analysis recipe interact. In this practical the soma, contact geometry and original broadband samples are identical under both recipes.
 
+### Five-step educational workflow
+
+1. **Recording** — inspect saved broadband and live processed signals, then select the sample interval. The summary explains what was acquired and which source evidence was saved.
+2. **Processing** — choose reference and bandpass. CAR can remove shared neuronal signal, including the entire waveform in symmetric geometry.
+3. **Detection** — choose threshold, refractory time, grouping and contacts. Run B using the shared action beneath the tabs. Processing and Detection show the same four-contact traces.
+4. **Waveforms** — choose windows and overlays, then update B. The mean includes all valid selected groups; boundary and warm-up exclusions are explained in Comparison.
+5. **Comparison** — save a completed B as baseline A, change one setting and rerun B. Read the applied recipes and changed settings in plain language. Source evidence and temporal matching remain separate from neuronal identity.
+
+The actions and run status remain visible beneath all five steps. Editing settings leaves the last completed plots visible and marks them as awaiting a new run. No detection is evidence about the chosen signal and threshold; it does not establish that the neuron stopped firing.
+
 ### Generate the verified practical
 
 From the Spikeling GUI directory on Windows, run:
@@ -18,9 +28,9 @@ python .\Main.py
 The fixture uses the existing Spikeling intrinsic model with zero drug block, continuous current injection and the existing extracellular Template generator. One soma is equidistant from the four contacts. The auxiliary sources are inactive and observation noise is zero. The generator deliberately records the verified soma event flags in the optional native companion for instructor use.
 
 1. Open **Extracellular → Data Analysis → Recording**, then select the printed manifest. Inspect the four original broadband traces. The default preview clips to the available 3,200 rows.
-2. Open **Processing & Detection**. Choose **None**, untick **Causal bandpass**, keep all four detection contacts and keep the threshold at −15 µV. Click **Run analysis B**. Then click **Set B as reference A**.
-3. Change the reference to **Common average (CAR)** with all four reference contacts ticked. Keep the filter off and the detector settings fixed. Click **Run analysis B** again.
-4. Compare the dashed A traces with the solid B traces. The raster marks unmatched A/B detections with ×. Open **Waveforms & Comparison** to see A’s mean and B’s valid waveform count. Select **Reveal native emulator events** and return to **Processing & Detection** to reveal the source lane. Check B against the verified simulator flags with the 2 model ms tolerance.
+2. Open **Processing**. Choose **None**, untick **Causal bandpass**, open **Detection**, keep all four detection contacts and keep the threshold at −15 µV. Click **Run B · apply current settings**. Then click **Save completed B as baseline A**.
+3. Change the reference to **Common average (CAR)** with all four reference contacts ticked. Keep the filter off and the detector settings fixed. Click **Run B · apply current settings** again.
+4. Compare the dashed A traces with the solid B traces. The raster marks unmatched A/B detections with ×. Open **Waveforms** to see A’s mean and B’s valid waveform count. Open **Comparison**, then select **Reveal native emulator events** and return to **Detection** to reveal the source lane. Check B against the verified simulator flags with the 2 model ms tolerance.
 5. Export the analysis JSON outside the session folder. Set the reference back to None and rerun. Compare the restored detections with A.
 
 | Verified measurement | A, None | B, four-contact CAR |
@@ -41,8 +51,11 @@ For a second exercise use an ordinary, asymmetrical Emulator session with backgr
 | Tab | Function |
 |---|---|
 | Recording | Phase 1b validation, contact preview, stage selection, metadata and selected CSV export. Set the accepted-index interval here. |
-| Processing & Detection | None or CAR with named reference contacts, optional causal bandpass, negative threshold, refractory time, grouping window and enabled detection contacts. Run B, pin A, then change settings and rerun B. The linked trace plot shows E1–E4 at a common amplitude scale. |
-| Waveforms & Comparison | Choose pre/post duration, a 1-based group range and 0–64 display overlays. Run B again to apply waveform settings. Inspect the mean A/B waveforms and change the source evidence or matching tolerance. Export the applied recipes and measured results as JSON. |
+| Processing | Choose None or CAR, its reference contacts and optional causal bandpass. Inspect E1–E4 on a shared voltage scale. |
+| Detection | Choose negative threshold, refractory time, grouping window and detection contacts. Processing and Detection share the trace and event view. |
+| Waveforms | Choose pre/post duration, a 1-based group range and 0–64 display overlays. Update B to apply waveform settings. Inspect the mean and individual windows. |
+| Comparison | Read the applied A/B recipes, changed settings and waveform exclusions. Choose source evidence and matching tolerance; export derived analysis outside the source session. |
+
 
 The numerical run covers every eligible sample in the selected interval of up to 40,000 accepted rows. Select a new interval to inspect another part of a long session. This clears A and B so comparison remains tied to a single interval. The plots reduce long traces using local extrema at their original sample positions, retain gap breaks and may summarise dense event markers. The individual waveform overlay count is independent of the number contributing to the mean. The recording is read in bounded chunks after validation. Analysis is asynchronous and superseded results are discarded. A recovered session displays its incomplete status and allows analysis of its validated prefix. Historical and interval-export CSVs can be inspected in Recording. Offline analysis requires a validated versioned broadband session.
 
@@ -81,3 +94,11 @@ Phase 2 supports detection and waveform comparison of Spikeling’s synthetic ex
 - `session_reader.py` exposes clipped span metadata and bounded event queries through the existing validated session reader.
 - `recording_page.py`, `analysis_page.py` and the updated `UI_ExtracellularRecording.ui` and generated binding provide the three-tab workflow.
 - `phase2_practical.py` generates and verifies the instructor fixture. The three `test_extracellular_offline_*.py` files cover the numerical, storage and GUI paths.
+
+## Audit corrections and classroom acceptance
+
+Scope now compares crossing and grouping expiry on the nominal integer model grid, matching offline rules at exact 0.6 ms and 0.4 ms boundaries. Auto Range fits all four observed contact voltages with a shared minimum of ±0.1 µV; the threshold no longer forces a large range. It remains a one-off fit: refit after the display window fills with the new condition. Reset restores −40 to +80 µV. A zero signal remains zero at every scale.
+
+A validated silent interval with eligible rows reports zero source events, rather than unavailable evidence. Native evidence still requires the saved native companion and available source rows. Inferred launches remain proxies.
+
+For classroom acceptance, open ectest2.spikeling: the saved broadband contacts coincide, and CAR correctly yields zero. With bandpass and threshold −15 µV, None yields 38 groups from 19 inferred launches; CAR yields zero groups. At the default waveform window, None has 37 valid windows and one end-boundary exclusion. Establish identical A/B settings before changing reference. Review every numbered step at your normal window size and in both themes. Physical-board acquisition, unplug finalisation and the wider application remain Windows acceptance checks before merging.

@@ -1,7 +1,6 @@
 """Recording overview, bounded preview and CSV export."""
 from concurrent.futures import Future
 from itertools import islice
-import json
 from pathlib import Path
 from threading import Thread
 
@@ -80,6 +79,7 @@ class RecordingPage(QWidget):
             if self.axes:
                 axis.setXLink(self.axes[0][0])
             axis.setLabel("bottom", self.tr("Model time"), units="ms")
+            axis.getAxis("bottom").enableAutoSIPrefix(False)
             if row != len(CONTACTS) - 1:
                 axis.showAxis("bottom", False)
             curve = theme_manager.themed_plot(axis, [], [], colour, connect="finite")
@@ -166,7 +166,23 @@ class RecordingPage(QWidget):
 
     def _loaded(self, result):
         self.reader, metadata = result
-        self.ui.metadata.setPlainText(json.dumps(metadata, ensure_ascii=False, indent=2))
+        summary = self.reader.summary
+        rate = (self.reader.manifest["nominal_model_rate_hz"] if isinstance(self.reader, SessionReader)
+                else None)
+        lines = [self.reader.directory.name if isinstance(self.reader, SessionReader) else self.tr("Extracellular CSV"),
+                 self.tr("%1 samples · contacts %2").replace("%1", f"{summary['samples']:,}")
+                 .replace("%2", ", ".join(summary['channels']))]
+        if rate:
+            lines.append(self.tr("Model rate: %1 Hz · sampled duration: %2 ms")
+                         .replace("%1", str(rate)).replace("%2", f"{self.reader.sample_count * 1000 / rate:g}"))
+            lines.append(self.tr("Broadband: before reference and filtering. Live processed: original Scope output."))
+            lines.append(self.tr("Offline recipes create new results from broadband; the acquired recording is preserved."))
+            lines.append(self.tr("Source evidence: native emulator events saved") if self.reader.manifest["native_truth"]
+                         else self.tr("Source evidence: inferred Vm launches only; native events were not saved."))
+        else:
+            lines.append(self.tr("Legacy processed recording: broadband reanalysis is unavailable."))
+        self.ui.metadata.setPlainText("\n".join(lines))
+        self.ui.metadata.setToolTip(self.tr("Acquisition summary. Select the saved signal and sample interval below."))
         self.ui.indexEdit.setText(str(self.reader.first_index))
         self.analysis.set_reader(self.reader)
         self._stage_choices()

@@ -1,7 +1,7 @@
 """Qt controls for bounded, reproducible extracellular analysis."""
 from concurrent.futures import Future
+from collections import Counter
 from dataclasses import asdict
-import json
 from pathlib import Path
 from threading import Event, Thread
 
@@ -157,6 +157,7 @@ class AnalysisPage(QObject):
         self.ui.analysisStatus.clear()
         self.ui.comparisonStatus.clear()
         self.ui.comparisonDetails.clear()
+        self.ui.comparisonStatus.clear()
         self._enable()
         self._draw()
 
@@ -322,7 +323,19 @@ class AnalysisPage(QObject):
                                        len(wave.snippets)), 1):
             message = message.replace(f"%{index}", str(value))
         self.ui.comparisonStatus.setText(message + " · " + self.tr("A mean dashed, B mean and overlays solid"))
-        lines = []
+        crossings = sum(len(group.crossings) for group in current.groups)
+        lines = [self.tr("B contains %1 contact crossings, grouped into %2 candidate events.")
+                 .replace("%1", str(crossings)).replace("%2", str(len(current.groups)))]
+        if not current.groups:
+            lines.append(self.tr("No detections at this threshold. Inspect signal amplitude and reference settings before interpreting neuronal activity."))
+        if current.recipe.processing.reference == "car":
+            values = np.concatenate([run.values_uV for run in current.runs])
+            if not np.any(values):
+                lines.append(self.tr("The analysed CAR signal is exactly zero: identical contact voltages can cancel completely. Inspect saved broadband in Recording."))
+        for reason, count in Counter(reason for _, reason in wave.excluded).items():
+            explanation = (self.tr("window crosses the selected interval, segment or settings boundary")
+                           if reason == "interval_segment_or_epoch_boundary" else self.tr("window overlaps filter warm-up"))
+            lines.append(self.tr("Excluded waveforms: %1 — %2").replace("%1", str(count)).replace("%2", explanation))
         if self.reference is not None:
             a_groups, b_groups = len(self.reference.groups), len(current.groups)
             lines.append(self.tr("Grouped detections: A %1 · B %2").replace("%1", str(a_groups)).replace(
@@ -336,6 +349,8 @@ class AnalysisPage(QObject):
             if not self.source.available:
                 lines.append(self.tr("Source evidence unavailable in the eligible interval."))
             else:
+                if not self.source.events:
+                    lines.append(self.tr("Source evidence covers the eligible interval; no source events were recorded there."))
                 label = (self.tr("Native emulator events") if self.source.stream == "native_model_spike"
                          else self.tr("Inferred Vm launches"))
                 result = self.source.agreement
@@ -346,25 +361,49 @@ class AnalysisPage(QObject):
                     .replace("%5", str(self.source.eligible_rows)).replace("%6", str(self.source.excluded_detections)))
         if self.reference is not None:
             before, after = asdict(self.reference.recipe), asdict(current.recipe)
-            differences = [f"{section}.{key}" for section, settings in before.items()
+            labels = {"reference": self.tr("reference method"), "reference_contacts": self.tr("reference contacts"),
+                      "bandpass": self.tr("bandpass"), "threshold_uV": self.tr("threshold"),
+                      "refractory_ms": self.tr("refractory time"), "grouping_ms": self.tr("grouping window"),
+                      "contacts": self.tr("detection contacts"), "pre_ms": self.tr("pre-event window"),
+                      "post_ms": self.tr("post-event window"), "max_snippets": self.tr("overlay count"),
+                      "first_group": self.tr("first waveform group"), "group_count": self.tr("waveform group count")}
+            differences = [labels.get(key, key) for section, settings in before.items()
                            for key, value in settings.items() if value != after[section][key]]
-            lines.append(self.tr("Changed settings") + " · " + (", ".join(differences) if differences
-                         else self.tr("None")))
-            lines.append("A " + json.dumps(before, ensure_ascii=False))
-        lines.append("B " + json.dumps(asdict(current.recipe), ensure_ascii=False))
+            lines.append(self.tr("Changed settings") + ": " + (", ".join(differences) if differences else self.tr("None — A and B use identical settings")))
+            lines.append(self._recipe_summary("A", self.reference.recipe))
+        else:
+            lines.append(self.tr("To compare: save completed B as baseline A, change one setting, then run B again."))
+        lines.append(self._recipe_summary("B", current.recipe))
         self.ui.comparisonDetails.setPlainText("\n".join(lines))
 
+    def _recipe_summary(self, name, recipe):
+        processing, detector, waveform = recipe.processing, recipe.detector, recipe.waveform
+        reference = (self.tr("CAR using ") + ", ".join(processing.reference_contacts)
+                     if processing.reference == "car" else self.tr("No reference subtraction"))
+        band = (self.tr("bandpass %1–%2 Hz").replace("%1", f"{processing.bandpass[0]:g}").replace("%2", f"{processing.bandpass[1]:g}")
+                if processing.bandpass else self.tr("bandpass off"))
+        return (f"{name}: {reference}; {band}.\n"
+                + self.tr("Threshold %1 µV; refractory %2 ms; grouping %3 ms; contacts %4.")
+                .replace("%1", f"{detector.threshold_uV:g}").replace("%2", f"{detector.refractory_ms:g}")
+                .replace("%3", f"{detector.grouping_ms:g}").replace("%4", ", ".join(detector.contacts))
+                + "\n" + self.tr("Waveform window: %1 ms before / %2 ms after each group anchor.")
+                .replace("%1", f"{waveform.pre_ms:g}").replace("%2", f"{waveform.post_ms:g}"))
+
     def _activate(self, _):
-        if self.ui.tabs.currentWidget() in (self.ui.processingTab, self.ui.comparisonTab):
+        if self.ui.tabs.currentWidget() in (self.ui.processingTab, self.ui.detectionTab, self.ui.comparisonTab):
             if self.plots is None:
                 self.plots = AnalysisPlots(self.ui)
+            if self.ui.tabs.currentWidget() in (self.ui.processingTab, self.ui.detectionTab):
+                layout = (self.ui.detectionTabLayout if self.ui.tabs.currentWidget() is self.ui.detectionTab
+                          else self.ui.processingTabLayout)
+                layout.addWidget(self.ui.analysisPlotHost)
             self._draw()
 
     def _draw(self):
         if self.plots is not None:
             current_tab = self.ui.tabs.currentWidget()
             self.plots.draw(self.reference, self.current, self.source, self.comparison,
-                            traces=current_tab is self.ui.processingTab,
+                            traces=current_tab in (self.ui.processingTab, self.ui.detectionTab),
                             waveforms=current_tab is self.ui.comparisonTab)
 
 
