@@ -55,6 +55,555 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="processingTab">
+      <attribute name="title">
+       <string>Processing &amp; Detection</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="processingTabLayout">
+       <item>
+        <widget class="QLabel" name="analysisSelection">
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::TextFormat::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="analysisStatus">
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::TextFormat::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="referenceRow">
+         <item>
+          <widget class="QLabel" name="referenceLabel">
+           <property name="text">
+            <string>Reference</string>
+           </property>
+           <property name="buddy">
+            <cstring>referenceCombo</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="referenceCombo">
+            <property name="toolTip">
+             <string>The selected contacts contribute to the mean subtracted from all four signals. Shared neuronal evidence can cancel.</string>
+            </property>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Common average (CAR)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="refContactsLabel">
+           <property name="text">
+            <string>Contacts in average</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference1">
+           <property name="text">
+            <string>E1</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference2">
+           <property name="text">
+            <string>E2</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference3">
+           <property name="text">
+            <string>E3</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference4">
+           <property name="text">
+            <string>E4</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="referenceRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="bandpassRow">
+         <item>
+          <widget class="QCheckBox" name="bandpassCheck">
+            <property name="toolTip">
+             <string>Filter a fresh copy of the saved broadband. Warm-up rows after each reset are excluded from detection.</string>
+            </property>
+           <property name="text">
+            <string>Causal bandpass</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lowEditLabel">
+           <property name="text">
+            <string>Low (Hz)</string>
+           </property>
+           <property name="buddy">
+            <cstring>lowEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lowEdit">
+           <property name="text">
+            <string notr="true">300</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="highEditLabel">
+           <property name="text">
+            <string>High (Hz)</string>
+           </property>
+           <property name="buddy">
+            <cstring>highEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="highEdit">
+           <property name="text">
+            <string notr="true">3000</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="bandpassRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="detectorRow">
+         <item>
+          <widget class="QLabel" name="thresholdEditLabel">
+           <property name="text">
+            <string>Negative threshold (µV)</string>
+           </property>
+           <property name="buddy">
+            <cstring>thresholdEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="thresholdEdit">
+           <property name="text">
+            <string notr="true">-15</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="refractoryEditLabel">
+           <property name="text">
+            <string>Refractory (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>refractoryEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="refractoryEdit">
+           <property name="text">
+            <string notr="true">0.6</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="groupingEditLabel">
+           <property name="text">
+            <string>Grouping (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>groupingEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="groupingEdit">
+            <property name="toolTip">
+             <string>The grouping window starts at the first accepted crossing. A crossing at exact expiry starts a new group.</string>
+            </property>
+           <property name="text">
+            <string notr="true">0.4</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="detectorRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="detectionContactsRow">
+         <item>
+          <widget class="QLabel" name="detectionContactsLabel">
+           <property name="text">
+            <string>Detection contacts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector1">
+           <property name="text">
+            <string>E1</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector2">
+           <property name="text">
+            <string>E2</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector3">
+           <property name="text">
+            <string>E3</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector4">
+           <property name="text">
+            <string>E4</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="runButton">
+           <property name="text">
+            <string>Run analysis B</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pinButton">
+           <property name="text">
+            <string>Set B as reference A</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="detectionContactsRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="analysisPlotHost">
+         <layout class="QVBoxLayout" name="analysisPlotLayout" />
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="comparisonTab">
+      <attribute name="title">
+       <string>Waveforms &amp; Comparison</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="comparisonTabLayout">
+       <item>
+        <layout class="QHBoxLayout" name="waveWindowRow">
+         <item>
+          <widget class="QLabel" name="preEditLabel">
+           <property name="text">
+            <string>Pre-event (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>preEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="preEdit">
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="postEditLabel">
+           <property name="text">
+            <string>Post-event (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>postEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="postEdit">
+           <property name="text">
+            <string notr="true">2</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="snippetEditLabel">
+           <property name="text">
+            <string>Overlays</string>
+           </property>
+           <property name="buddy">
+            <cstring>snippetEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="snippetEdit">
+           <property name="text">
+            <string notr="true">16</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="waveWindowRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="waveSelectionRow">
+         <item>
+          <widget class="QLabel" name="firstGroupEditLabel">
+           <property name="text">
+            <string>First group</string>
+           </property>
+           <property name="buddy">
+            <cstring>firstGroupEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="firstGroupEdit">
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="groupCountEditLabel">
+           <property name="text">
+            <string>Group count</string>
+           </property>
+           <property name="buddy">
+            <cstring>groupCountEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="groupCountEdit">
+           <property name="text">
+            <string notr="true" />
+           </property>
+           <property name="placeholderText">
+            <string>All remaining</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="rerunButton">
+           <property name="text">
+            <string>Run analysis B</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="waveSelectionRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="sourceComparisonRow">
+         <item>
+          <widget class="QLabel" name="sourceLabel">
+           <property name="text">
+            <string>Source evidence</string>
+           </property>
+           <property name="buddy">
+            <cstring>sourceCombo</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="sourceCombo" />
+         </item>
+         <item>
+          <widget class="QLabel" name="toleranceEditLabel">
+           <property name="text">
+            <string>Match tolerance (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>toleranceEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="toleranceEdit">
+           <property name="text">
+            <string notr="true">2</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="matchButton">
+           <property name="text">
+            <string>Refresh agreement</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="analysisExportButton">
+           <property name="text">
+            <string>Export analysis…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="sourceComparisonRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="comparisonStatus">
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::TextFormat::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="comparisonDetails">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="maximumHeight">
+          <number>115</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="waveformPlotHost">
+         <layout class="QVBoxLayout" name="waveformPlotLayout" />
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

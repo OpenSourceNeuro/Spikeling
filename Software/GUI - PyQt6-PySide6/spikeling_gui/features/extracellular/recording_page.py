@@ -15,6 +15,7 @@ from spikeling_gui.paths import recordings_directory
 from spikeling_gui.ui.generated.UI_ExtracellularRecording import Ui_ExtracellularRecording
 
 from .acquisition import CONTACTS
+from .analysis_page import AnalysisPage
 from .legacy_import import LegacyRecording
 from .session_reader import SessionReader
 
@@ -83,14 +84,16 @@ class RecordingPage(QWidget):
                 axis.showAxis("bottom", False)
             curve = theme_manager.themed_plot(axis, [], [], colour, connect="finite")
             self.axes.append((axis, curve))
+        self.analysis = AnalysisPage(self)
         self._enable()
 
     def changeEvent(self, event):
         super().changeEvent(event)
-        if event.type() == QEvent.Type.LanguageChange and hasattr(self, "axes"):
+        if event.type() == QEvent.Type.LanguageChange and hasattr(self, "analysis"):
             selected = self.ui.stageCombo.currentData()
             self.ui.retranslateUi(self)
             self._stage_choices(selected)
+            self.analysis.retranslate()
             for axis, _ in self.axes:
                 axis.setLabel("bottom", self.tr("Model time"), units="ms")
 
@@ -157,6 +160,7 @@ class RecordingPage(QWidget):
         if writer is not None and Path(name).parent.resolve() == writer.partial.resolve():
             self.ui.statusLabel.setText(self.tr("Stop the capture before opening this session."))
             return
+        self.analysis.set_reader(None)
         self.ui.statusLabel.setText(self.tr("Validating recording…"))
         self._background(lambda: load_overview(Path(name)), self._loaded)
 
@@ -164,6 +168,7 @@ class RecordingPage(QWidget):
         self.reader, metadata = result
         self.ui.metadata.setPlainText(json.dumps(metadata, ensure_ascii=False, indent=2))
         self.ui.indexEdit.setText(str(self.reader.first_index))
+        self.analysis.set_reader(self.reader)
         self._stage_choices()
         self._enable()
         self.preview()

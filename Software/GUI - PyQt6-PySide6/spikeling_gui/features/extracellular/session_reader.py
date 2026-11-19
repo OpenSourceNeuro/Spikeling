@@ -382,8 +382,9 @@ class SessionReader:
         for sequence in range(lo, self.record_count):
             yield sequence, self._json(record_name(sequence))
 
-    def iter_interval(self, stage, start=None, stop=None, channels=None, *, time_ms=None):
-        """Yield (first accepted index, segment, model milliseconds, values)."""
+    def iter_interval(self, stage, start=None, stop=None, channels=None, *, time_ms=None,
+                      with_spans=False):
+        """Yield (first index, segment, model ms, values), optionally with clipped spans."""
         require(stage in STREAMS, "Signal stage unavailable")
         available = STREAMS[stage]["channels"]
         channels = available if channels is None else channels
@@ -419,7 +420,23 @@ class SessionReader:
             if times.size:
                 matrix = (model_time if stage == "model_time" else
                           self._array(sequence, stage, record["files"][stage]))
-                yield first + lo, record["spans"][0]["segment"], times.copy(), matrix[lo:hi, selection]
+                result = first + lo, record["spans"][0]["segment"], times.copy(), matrix[lo:hi, selection]
+                if with_spans:
+                    spans = []
+                    for span in record["spans"]:
+                        original = span["first_index"]
+                        begin = max(original, first + lo)
+                        end = min(original + span["count"], first + hi)
+                        if begin < end:
+                            skip = begin - original
+                            ordinal = span["receive_ordinal"]
+                            spans.append(dict(span, first_index=begin, count=end - begin,
+                                              first_tick=span["first_tick"] + skip,
+                                              receive_ordinal=None if ordinal is None else ordinal + skip,
+                                              warmup_rows=max(0, min(end - begin, span["warmup_rows"] - skip))))
+                    yield (*result, spans)
+                else:
+                    yield result
 
     def iter_metadata(self):
         """Yield each effective epoch once, with chunk spans and interruptions."""
@@ -435,12 +452,22 @@ class SessionReader:
             else:
                 yield "boundary", record["evidence"]
 
-    def iter_events(self, *, truth=False):
+    def iter_events(self, *, truth=False, start=None, stop=None):
+        """Stream public or explicitly requested truth events within accepted bounds."""
         stage = "truth" if truth else "events"
-        for sequence in range(self.record_count):
-            record = self._json(record_name(sequence))
-            if record["kind"] == "chunk" and stage in record["files"]:
-                yield from self._events(sequence, stage, record["files"][stage])
+        start = self.first_index if start is None else start
+        stop = self.end_index if stop is None else stop
+        integer(start, "event interval start", self.first_index, self.end_index)
+        integer(stop, "event interval stop", start, self.end_index)
+        for sequence, record in self._records(start):
+            if record["kind"] != "chunk":
+                continue
+            if record["first_index"] >= stop:
+                break
+            if stage in record["files"]:
+                for event in self._events(sequence, stage, record["files"][stage]):
+                    if start <= event["sample"] < stop:
+                        yield event
 
     def export_csv(self, destination, stage, start=None, stop=None, channels=CONTACTS):
         require(stage in self.stages, "Select an extracellular signal stage")
