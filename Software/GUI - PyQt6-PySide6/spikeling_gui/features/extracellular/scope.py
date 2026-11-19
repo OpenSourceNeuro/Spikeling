@@ -44,6 +44,13 @@ Notes on units:
 - Extracellular traces are displayed / recorded in pedagogical microvolt-like units (µV).
 """
 
+from pathlib import Path
+import csv
+import json
+import os
+import shutil
+from tempfile import mkdtemp
+
 from PySide6.QtCore import QObject, QTimer, Qt
 from PySide6.QtWidgets import QSizePolicy, QVBoxLayout
 import pyqtgraph as pg
@@ -358,7 +365,11 @@ class ExtraCellularGraph(QObject):
         # Recording state
         # ------------------------------------------------------------------
         # Same general recording architecture as Graph_Imaging.py.
-        self.record_flag = False
+        self.recording_state = "idle"
+        self.recording_detail = ""
+        self.recording_stop_reason = ""
+        self.recording_path = None
+        self.source_generation = 0
         self._rec = {
             "t_ms": [],
             "stim": [],
@@ -376,6 +387,7 @@ class ExtraCellularGraph(QObject):
         # The graph listens continuously, but samples are only consumed when the
         # extracellular page is actually connected.
         serial_manager.data_received.connect(self.on_data_received)
+        serial_manager.connection_changed.connect(self.on_hardware_connection_changed)
 
     # -------------------------------------------------------------------------
     # Source Selection
@@ -385,7 +397,30 @@ class ExtraCellularGraph(QObject):
         """Select driving data source."""
         if mode not in ("spikeling", "emulator", "none"):
             mode = "spikeling"
+        if mode == self.source_mode:
+            return
+        self.stop_recording("Source changed")
+        self.source_generation += 1
         self.source_mode = mode
+        self._rx_queue.clear()
+        if getattr(self.parent, "ExtraCellularConnectionFlag", False):
+            self._initialize_buffers()
+            self._reset_filter_state()
+
+    def on_hardware_connection_changed(self, connected):
+        if not connected and self.source_mode == "spikeling":
+            self.disconnect("Hardware disconnected")
+
+    def on_emulator_stopped(self):
+        if self.source_mode == "emulator":
+            self.disconnect("Emulator stopped")
+
+    def source_ready(self):
+        if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
+            return False
+        if self.source_mode == "spikeling":
+            return serial_manager.is_open
+        return self.source_mode == "emulator" and self.ui.Emulator_Connect_pushButton.isChecked()
 
     # -------------------------------------------------------------------------
     # Connect / Disconnect
@@ -393,6 +428,9 @@ class ExtraCellularGraph(QObject):
 
     def connect(self):
         """Activate the extracellular pipeline."""
+        if getattr(self.parent, "ExtraCellularConnectionFlag", False):
+            return
+        self.source_generation += 1
         self._initialize_buffers()  # calls _reset_model_state internally
         self._initialize_plot()
         self._connect_parameters()
@@ -405,19 +443,18 @@ class ExtraCellularGraph(QObject):
         self._rx_queue.clear()
         self._rx_timer.start()
 
-        if hasattr(self.parent, "extracellular_page"):
-            self.parent.extracellular_page.ExtraCellularConnectionFlag = True
         self.parent.ExtraCellularConnectionFlag = True
-        self._fs_warning_issued = False
 
-    def disconnect(self):
-        """Deactivate extracellular pipeline."""
-        self.cleanup()
-        self._update_connect_button(False)
-
-        if hasattr(self.parent, "extracellular_page"):
-            self.parent.extracellular_page.ExtraCellularConnectionFlag = False
+    def disconnect(self, reason="Scope disconnected"):
+        """Finalise captured samples before dropping the live pipeline."""
+        self.stop_recording(reason)
+        if not getattr(self.parent, "ExtraCellularConnectionFlag", False):
+            return
+        self.source_generation += 1
         self.parent.ExtraCellularConnectionFlag = False
+        self.cleanup()
+        self.ui.ExtraCellular_ConnectButton.setChecked(False)
+        self._update_connect_button(False)
 
     # -------------------------------------------------------------------------
     # Data Entry Points
@@ -454,6 +491,8 @@ class ExtraCellularGraph(QObject):
 
     def on_emulator_data(self, data: list, *, soma_clamped=False) -> None:
         """Handle one emulator packet or a batch of packets."""
+        if self.source_mode != "emulator":
+            return
         if isinstance(data, list) and data and isinstance(data[0], (list, tuple, np.ndarray)):
             self._consume_packets(data, soma_clamped=soma_clamped)
         else:
@@ -465,8 +504,8 @@ class ExtraCellularGraph(QObject):
 
         Splitting the pipeline into a per-sample generation stage and a
         per-block filtering/detection stage is what makes the block bandpass
-        and the vectorised threshold crossing possible; the record state and
-        the redraw are also evaluated once per block instead of once per sample.
+        and the vectorised threshold crossing possible. A capture receives the
+        finalised block and its sample-aligned event flags together.
 
         Parameters
         ----------
@@ -482,7 +521,6 @@ class ExtraCellularGraph(QObject):
         if staged is None:
             return
 
-        self._handle_recording()
         self._finalize_block(*staged)
 
         if self._plots_ready:
@@ -657,7 +695,7 @@ class ExtraCellularGraph(QObject):
         self._update_detection_threshold(self._extracellular_params)
         filtered = self._apply_bandpass_block(raw)
 
-        self._detect_block_crossings(t_arr, filtered)
+        events = self._detect_block_crossings(t_arr, filtered)
 
         # Latest-sample state for downstream readers
         self.VmData[:] = vm_arr[-1]
@@ -678,10 +716,10 @@ class ExtraCellularGraph(QObject):
         for k in range(N_CHANNELS):
             self.Extra_buffers[k].extend(filtered[:, k])
 
-        if self.record_flag:
-            self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered)
+        if self.recording_active:
+            self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered, events)
 
-    def _detect_block_crossings(self, t_arr, channels_uV) -> None:
+    def _detect_block_crossings(self, t_arr, channels_uV) -> np.ndarray:
         """
         Locate downward threshold crossings over a whole block.
 
@@ -697,7 +735,8 @@ class ExtraCellularGraph(QObject):
             Filtered tetrode block of shape ``(n, N_CHANNELS)``.
         """
         threshold = float(self.DetectionThreshold_uV)
-        event_times = []
+        crossings = []
+        events = np.zeros(len(t_arr), dtype=np.uint8)
         self.ChannelSpikeData[:] = 0
 
         for k in range(N_CHANNELS):
@@ -712,16 +751,17 @@ class ExtraCellularGraph(QObject):
                 self._t_last_detect_ms[k] = t_ms
                 self.ChannelSpikeData[k] = 1
                 self._channel_spike_marks[k].append((t_ms, float(trace[index])))
-                event_times.append(t_ms)
+                crossings.append((t_ms, index))
 
             self._prev_channel_sample[k] = float(trace[-1])
 
         self.EventData = 0
-        for t_ms in sorted(event_times):
+        for t_ms, index in sorted(crossings):
             if (t_ms - self._last_event_ms) >= EVENT_MERGE_WINDOW_MS:
                 self._last_event_ms = t_ms
                 self.EventData = 1
                 self._event_marks.append(t_ms)
+                events[index] = 1
 
         t_min = float(t_arr[-1]) - float(TIME_WINDOW)
         for k in range(N_CHANNELS):
@@ -730,6 +770,7 @@ class ExtraCellularGraph(QObject):
                 marks.popleft()
         while self._event_marks and self._event_marks[0] < t_min:
             self._event_marks.popleft()
+        return events
 
     # -------------------------------------------------------------------------
     # Extracellular Model
@@ -949,6 +990,8 @@ class ExtraCellularGraph(QObject):
         if matrix is None:
             return
 
+        if not np.array_equal(matrix, self.distance_matrix_um):
+            self.stop_recording("Geometry changed")
         self.distance_matrix_um = matrix
         self.tetrode_geometry = payload
         self.geometry_source = "tetrode_window"
@@ -1428,6 +1471,7 @@ class ExtraCellularGraph(QObject):
     def _reset_model_state(self) -> None:
         """Reset all dynamic state variables used by the forward model."""
         self._t_last_ms = None
+        self._t_fallback_ms = 0.0
         self._t_last_spike_ms[:] = -1e12
         self._t_last_detect_ms[:] = -1e12
         self._last_event_ms = -1e12
@@ -1662,45 +1706,88 @@ class ExtraCellularGraph(QObject):
     # Recording
     # -------------------------------------------------------------------------
 
-    def _handle_recording(self):
-        """
-        Manage record toggle and export on stop.
-        This keeps the same architecture as Graph_Imaging.py.
-        """
-        checked = bool(self.ui.ExtraCellular_DataRecording_Record_pushButton.isChecked())
+    @property
+    def recording_active(self):
+        return self.recording_state in ("armed", "recording")
 
-        # Start edge: OFF -> ON
-        if checked and (not self.record_flag):
-            self.record_flag = True
-            self._rec_signal_mode = str(self.signal_mode)
-            self._rec_dropped_at_start = int(self.dropped_packets)
+    def _set_recording_state(self, state, detail=""):
+        self.recording_state = state
+        self.recording_detail = detail
+        self.parent.extracellular_page.refresh_recording()
 
-            if not hasattr(self, "_rec") or not isinstance(self._rec, dict):
-                self._rec = {}
+    @staticmethod
+    def _output_paths(path):
+        return path, path.with_name(path.stem + "_meta.json")
 
-            for k in [
-                "t_ms", "stim", "trig",
-                "vm1", "vm2", "vm3",
-                "gt_spike1", "gt_spike2", "gt_spike3",
-                "ch1_uV", "ch2_uV", "ch3_uV", "ch4_uV",
-                "threshold_uV", "event",
-            ]:
-                self._rec.setdefault(k, [])
-                self._rec[k].clear()
-            return
-
-        # Stop edge: ON -> OFF
-        if (not checked) and self.record_flag:
-            self._export_csv()
-            self.record_flag = False
+    @classmethod
+    def _output_identity(cls, path):
+        identities = []
+        for output in cls._output_paths(path):
             try:
-                for k in self._rec:
-                    self._rec[k].clear()
-            except Exception:
-                pass
-            return
+                info = output.stat()
+            except FileNotFoundError:
+                identities.append(None)
+            else:
+                identities.append((info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns))
+        return tuple(identities)
 
-    def _record_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered) -> None:
+    def start_recording(self, path):
+        if self.recording_state not in ("idle", "saved", "empty") or not self.source_ready():
+            return False
+        # Process the pre-click hardware backlog for display/detector continuity
+        # while capture is still idle. Only later processed blocks are recorded.
+        while self.source_mode == "spikeling" and self._rx_queue:
+            self._process_rx_queue()
+        self.recording_path = path
+        self._recording_targets = self._output_identity(path)
+        self._rec_dropped_at_start = self.dropped_packets
+        self._rec_metadata = {
+            "signal_mode": self.signal_mode,
+            "car_enabled": bool(self.car_enabled),
+            "bandpass_low_hz": float(self.bandpass_low_hz),
+            "bandpass_high_hz": float(self.bandpass_high_hz),
+            "sample_rate_hz": float(FS_HZ),
+            "source": self.source_mode,
+            "time_basis": "model_time",
+            "distance_matrix_um": self.distance_matrix_um.tolist(),
+            "params": dict(self._extracellular_params),
+            "event_column": "sample_aligned_merged_detection_v1",
+        }
+        self.recording_stop_reason = ""
+        self._set_recording_state("armed")
+        return True
+
+    def stop_recording(self, reason="Stopped", *, retry=False, path=None):
+        if self.recording_state == "saving":
+            return False
+        if self.recording_state == "error" and not retry:
+            return False
+        if not self.recording_active and self.recording_state != "error":
+            return True
+        if self.recording_active:
+            self.recording_stop_reason = reason
+            self._rec_metadata["stop_reason"] = reason
+            self._rec_metadata["dropped_packets"] = self.dropped_packets - self._rec_dropped_at_start
+        count = len(self._rec["t_ms"])
+        if not count:
+            self._set_recording_state("empty", reason)
+            return True
+
+        self._set_recording_state("saving")
+        try:
+            if path is not None and path != self.recording_path:
+                self._recording_targets = self._output_identity(path)
+                self.recording_path = path
+            self._export_csv()
+        except (OSError, ValueError, csv.Error) as error:
+            self._set_recording_state("error", str(error))
+            return False
+        for values in self._rec.values():
+            values.clear()
+        self._set_recording_state("saved", self.tr("%1 samples").replace("%1", f"{count:,}"))
+        return True
+
+    def _record_block(self, t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered, events) -> None:
         """
         Append a whole block to the recording buffers.
 
@@ -1722,21 +1809,17 @@ class ExtraCellularGraph(QObject):
         self._rec["threshold_uV"].extend(
             [float(self.DetectionThreshold_uV)] * t_arr.size
         )
-        self._rec["event"].extend([0] * t_arr.size)
+        self._rec["event"].extend(events.tolist())
+        if self.recording_state == "armed":
+            self._set_recording_state("recording")
 
     def _export_csv(self):
         """
         Write the recorded extracellular session to CSV plus a metadata sidecar.
 
         """
-        if (not hasattr(self, "_rec")) or (len(self._rec.get("t_ms", [])) == 0):
-            return
-
-        path = getattr(self.ui, "ExtraCellular_recording_path", None)
-        if path is None:
-            return
-
-        pd.DataFrame({
+        path, sidecar = self._output_paths(self.recording_path)
+        frame = pd.DataFrame({
             "Time (ms)": self._rec["t_ms"],
             "Stim": self._rec["stim"],
             "Trigger": self._rec["trig"],
@@ -1752,20 +1835,61 @@ class ExtraCellularGraph(QObject):
             "Ch4 (uV)": self._rec["ch4_uV"],
             "Threshold (uV)": self._rec["threshold_uV"],
             "Event": self._rec["event"],
-        }).to_csv(path, index=False)
+        })
+        metadata = dict(self._rec_metadata, sample_count=len(frame))
+        stage = Path(mkdtemp(prefix=".extracellular-", dir=path.parent))
+        staged_csv, staged_json = stage / "samples.csv", stage / "metadata.json"
+        backup = stage / "previous.csv"
+        preserve_backup = False
+        try:
+            with staged_csv.open("w", encoding="utf-8", newline="") as handle:
+                frame.to_csv(handle, index=False)
+                handle.flush()
+                os.fsync(handle.fileno())
+            with staged_json.open("w", encoding="utf-8") as handle:
+                json.dump(metadata, handle, indent=2, allow_nan=False)
+                handle.flush()
+                os.fsync(handle.fileno())
 
-        import json
-        meta = {
-            "signal_mode": getattr(self, "_rec_signal_mode", self.signal_mode),
-            "car_enabled": bool(self.car_enabled),
-            "bandpass_low_hz": float(self.bandpass_low_hz),
-            "bandpass_high_hz": float(self.bandpass_high_hz),
-            "sample_rate_hz": float(FS_HZ),
-            "dropped_packets": int(self.dropped_packets - getattr(self, "_rec_dropped_at_start", 0)),
-            "params": {k: float(v) for k, v in self._extracellular_params.items()},
-        }
-        with open(str(path.with_suffix("")) + "_meta.json", "w", encoding="utf-8") as handle:
-            json.dump(meta, handle, indent=2)
+            with staged_csv.open(encoding="utf-8", newline="") as handle:
+                rows = csv.reader(handle)
+                header = next(rows, None)
+                sample_count = 0
+                for row in rows:
+                    if len(row) != len(frame.columns):
+                        raise ValueError("Staged CSV contains a malformed sample row.")
+                    sample_count += 1
+            with staged_json.open(encoding="utf-8") as handle:
+                verified_metadata = json.load(handle)
+            if (header != list(frame.columns) or sample_count != len(frame)
+                    or verified_metadata != metadata):
+                raise ValueError("Staged recording failed validation.")
+
+            if self._output_identity(path) != self._recording_targets:
+                raise FileExistsError("Destination changed since confirmation. Use a different filename.")
+            if path.exists():
+                shutil.copy2(path, backup)
+            os.replace(staged_csv, path)
+            try:
+                os.replace(staged_json, sidecar)
+            except OSError:
+                try:
+                    if backup.exists():
+                        os.replace(backup, path)
+                    else:
+                        path.unlink()
+                    self._recording_targets = self._output_identity(path)
+                except OSError as rollback_error:
+                    preserve_backup = True
+                    raise OSError(
+                        f"CSV was published but metadata and rollback failed. "
+                        f"Recovery files are in {stage}. Save to a different filename. "
+                        f"{rollback_error}"
+                    ) from rollback_error
+                raise
+        finally:
+            if not preserve_backup:
+                shutil.rmtree(stage, ignore_errors=True)
 
     # -------------------------------------------------------------------------
     # UI Helpers

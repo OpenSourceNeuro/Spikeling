@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 
-from spikeling_gui.widgets.recording import prepare_recording
+from spikeling_gui.widgets.recording import prepare_recording, style_recording_button
 from spikeling_gui.appearance.dialogs import show_popup
 from spikeling_gui.appearance.palette import DarkSolarized
 
@@ -57,8 +57,6 @@ class Scope():
         self.parent = parent
         self.ui = parent.ui
 
-        # Local state flags (used by RecordButton gating)
-        self.ExtraCellularConnectionFlag = False
 
     # ------------------------------------------------------------------
     # Page selection
@@ -71,13 +69,7 @@ class Scope():
     # Source selection: hardware vs emulator
     # ------------------------------------------------------------------
     def UpdateSource(self) -> None:
-        """
-        Push the source selection down to the graph.
-
-        Only the data source is changed here. Re-running ``connect()`` on a
-        combobox change would rebuild the four channel plots and clear the
-        rolling buffers, discarding an in-flight recording.
-        """
+        """Apply a source change at a recording boundary."""
         extracellular_graph = getattr(self.parent, "extracellular_graph", None)
         if extracellular_graph is None:
             print("UpdateSource: extracellular_graph not found on MainWindow")
@@ -130,25 +122,94 @@ class Scope():
     # Data Recording Functions
     # ------------------------------------------------------------------            self.RecordFolderText()
     def RecordButton(self):
-        button = self.ui.ExtraCellular_DataRecording_Record_pushButton
-        if button.isChecked():
-            if not getattr(self, 'ExtraCellularConnectionFlag', False):
-                button.setChecked(False)
-                show_popup(self.parent, Title="Spikeling not connected", Text="Connect to the hardware or GUI emulator data stream before recording.")
-                return
+        graph = self.parent.extracellular_graph
+        self.refresh_recording()
+        if graph.recording_active:
+            graph.stop_recording()
+            return
 
-            filename = self.ui.ExtraCellular_DataRecording_RecordFolder_value.text()
+        filename = self.ui.ExtraCellular_DataRecording_RecordFolder_value.text()
+        if graph.recording_state == "error":
+            if filename == self._recording_filename:
+                graph.stop_recording(retry=True)
+                return
             path = prepare_recording(self.parent, filename, ("_meta.json",))
-            if path is None:
-                button.setChecked(False)
-                return
+            if path is not None:
+                self._recording_filename = filename
+                graph.stop_recording(retry=True, path=path)
+            return
 
-            self.ui.ExtraCellular_recording_path = path
-            button.setText("Stop Recording")
-            button.setStyleSheet("color: rgb(250, 250, 250); background-color: rgb(50, 220, 47);")
-        else:
-            button.setText("Record")
-            button.setStyleSheet("color: rgb(250, 250, 250); background-color: rgb(220, 50, 47);")
+        generation = graph.source_generation
+        if not graph.source_ready():
+            self._show_source_required()
+            return
+        path = prepare_recording(self.parent, filename, ("_meta.json",))
+        if path is None:
+            return
+        if graph.source_generation != generation or not graph.source_ready():
+            self._show_source_required()
+            return
+        try:
+            if graph.start_recording(path):
+                self._recording_filename = filename
+        except OSError as error:
+            show_popup(self.parent, Title=self.parent.tr("Cannot start recording"), Text=str(error))
+
+    def _show_source_required(self):
+        show_popup(
+            self.parent, Title=self.parent.tr("Extracellular source unavailable"),
+            Text=self.parent.tr("Connect the Scope and start the selected hardware or emulator source."),
+        )
+
+    def refresh_recording(self):
+        graph = self.parent.extracellular_graph
+        state = graph.recording_state
+        locked = graph.recording_active or state == "saving"
+        tr = self.parent.tr
+        button = self.ui.ExtraCellular_DataRecording_Record_pushButton
+        button.setChecked(graph.recording_active)
+        button.setEnabled(state != "saving")
+        label = {"armed": tr("Stop recording"), "recording": tr("Stop recording"),
+                 "saving": tr("Saving…"), "error": tr("Retry save")}.get(state, tr("Record"))
+        button.setText(label)
+        style_recording_button(button, graph.recording_active)
+
+        status = self.ui.ExtraCellular_SelectedFolderLabel
+        status.setText({
+            "armed": tr("Armed · waiting for samples"),
+            "recording": tr("Recording"),
+            "saving": tr("Saving recording…"),
+            "saved": tr("Saved") + " · " + graph.recording_detail,
+            "empty": tr("Stopped · no samples recorded"),
+            "error": tr("Save failed · samples retained"),
+        }.get(state, ""))
+        reason = graph.recording_stop_reason
+        if reason in ("Hardware disconnected", "Emulator stopped"):
+            interruption = {
+                "Hardware disconnected": tr("Hardware disconnected"),
+                "Emulator stopped": tr("Emulator stopped"),
+            }[reason]
+            status.setText(interruption + " · " + status.text())
+        status.setToolTip(graph.recording_detail)
+        button.setToolTip(
+            tr("Correct the destination or enter another filename, then retry saving.")
+            + "\n" + graph.recording_detail if state == "error" else ""
+        )
+
+        for widget in (
+            self.ui.ExtraCellular_DataRecording_RecordFolder_value,
+            self.ui.ExtraCellular_DataRecording_RecordFolderDir_pushButton,
+            self.ui.ExtraCellular_SignalMode_toggleButton,
+            self.ui.ExtraCellular_CAR_toggleButton,
+            self.ui.ExtraCellular_Bandpass_comboBox,
+            self.ui.ExtraCellular_Tetrode_pushButton,
+            self.parent.tetrode_window,
+        ):
+            widget.setEnabled(not locked)
+        for control in EXTRACELLULAR_CONTROLS.values():
+            toggle = getattr(self.ui, control.toggle)
+            toggle.setEnabled(not locked)
+            getattr(self.ui, control.slider).setEnabled(not locked and toggle.isChecked())
 
     def _apply_signal_mode(self, mode: str) -> None:
         """
