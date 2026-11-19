@@ -361,6 +361,9 @@ def Buttons(self):
     self.ui.ExtraCellular_DataRecording_RecordFolder_value.setPlaceholderText("Enter a file name")
     self.ui.ExtraCellular_DataRecording_Record_pushButton.setCheckable(True)
     self.ui.ExtraCellular_DataRecording_Record_pushButton.clicked.connect(lambda: self.extracellular_page.RecordButton())
+    self.extracellular_page.refresh_recording()
+    theme_manager.themeChanged.connect(lambda *_: style_recording_button(
+        self.ui.ExtraCellular_DataRecording_Record_pushButton, self.extracellular_graph.recording_active))
 
     # Open tetrode auxiliary window
     self.ui.ExtraCellular_Tetrode_pushButton.clicked.connect(lambda: openTetrodeWindow(self))

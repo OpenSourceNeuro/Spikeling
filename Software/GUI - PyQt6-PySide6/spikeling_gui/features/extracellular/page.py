@@ -188,7 +188,7 @@ class Scope():
             "saved": tr("Saved") + " · " + graph.recording_detail,
             "empty": tr("Stopped · no samples recorded"),
             "error": tr("Save failed · samples retained"),
-        }.get(state, ""))
+        }.get(state, tr("Ready to record")))
         reason = graph.recording_stop_reason
         if reason in ("Hardware disconnected", "Emulator stopped"):
             interruption = {

@@ -19881,6 +19881,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_SelectedFolderLabel.setObjectName(u"ExtraCellular_SelectedFolderLabel")
         sizePolicy7.setHeightForWidth(self.ExtraCellular_SelectedFolderLabel.sizePolicy().hasHeightForWidth())
         self.ExtraCellular_SelectedFolderLabel.setSizePolicy(sizePolicy7)
+        self.ExtraCellular_SelectedFolderLabel.setStyleSheet(u"color: rgb(220, 50, 47);")
         self.ExtraCellular_SelectedFolderLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.ExtraCellular_DataRecording_horizontalLayout_57.addWidget(self.ExtraCellular_SelectedFolderLabel, 0, Qt.AlignmentFlag.AlignRight)
@@ -28574,7 +28575,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_DataRecording_File_csvlabel.setText(QCoreApplication.translate("Spikeling", u".csv", None))
         self.ExtraCellular_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Record", None))
         self.ExtraCellular_DataRecording_Record_label_2.setText("")
-        self.ExtraCellular_SelectedFolderLabel.setText("")
+        self.ExtraCellular_SelectedFolderLabel.setText(QCoreApplication.translate("Spikeling", u"Ready to record", None))
         self.ExtraCellular_Tetrode_label.setText(QCoreApplication.translate("Spikeling", u"Tetrode Geometry", None))
         self.ExtraCellular_Tetrode_pushButton.setText(QCoreApplication.translate("Spikeling", u"Open Tetrode View", None))
         self.ExtraCellular_SignalMode_label.setText(QCoreApplication.translate("Spikeling", u"Signal Mode", None))

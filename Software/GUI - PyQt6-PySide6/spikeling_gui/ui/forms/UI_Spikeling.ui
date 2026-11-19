@@ -44679,8 +44679,11 @@ background-color: rgb(220, 50, 47);</string>
                                  <verstretch>0</verstretch>
                                 </sizepolicy>
                                </property>
+                               <property name="styleSheet">
+                                <string notr="true">color: rgb(220, 50, 47);</string>
+                               </property>
                                <property name="text">
-                                <string/>
+                                <string>Ready to record</string>
                                </property>
                                <property name="alignment">
                                 <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
