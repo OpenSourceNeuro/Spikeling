@@ -164,6 +164,15 @@ class MainWindow(QMainWindow):
         ).exec()
 
     def closeEvent(self, event):
+        extracellular = getattr(self, "extracellular_graph", None)
+        if extracellular is not None and not extracellular.stop_recording("Window closed"):
+            event.ignore()
+            themed_message_box(
+                self, self.tr("Extracellular recording could not be saved"),
+                self.tr("Open the Extracellular Scope and use Retry save before closing.")
+                + "\n\n" + extracellular.recording_detail,
+            ).exec()
+            return
         imaging = getattr(self, "imaging_graph", None)
         if imaging is not None and not imaging.stop_recording(imaging.tr("Window closed")):
             event.ignore()

@@ -44157,39 +44157,48 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                         <height>100</height>
                        </size>
                       </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>10</pointsize>
+                        <bold>true</bold>
+                       </font>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true"/>
                       </property>
                       <property name="title">
                        <string>Data Recording</string>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_624">
+                      <property name="alignment">
+                       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+                      </property>
+                      <layout class="QHBoxLayout" name="ExtraCellular_DataRecording_horizontalLayout_52">
                        <property name="spacing">
                         <number>0</number>
                        </property>
                        <property name="leftMargin">
-                        <number>5</number>
+                        <number>10</number>
                        </property>
                        <property name="topMargin">
-                        <number>5</number>
+                        <number>10</number>
                        </property>
                        <property name="rightMargin">
-                        <number>5</number>
+                        <number>10</number>
                        </property>
                        <property name="bottomMargin">
                         <number>5</number>
                        </property>
                        <item>
-                        <widget class="QFrame" name="ExtraCellular_DataRecording_left_frame">
+                        <widget class="QFrame" name="ExtraCellular_DataRecording_frame">
                          <property name="frameShape">
                           <enum>QFrame::Shape::StyledPanel</enum>
                          </property>
                          <property name="frameShadow">
                           <enum>QFrame::Shadow::Raised</enum>
                          </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_248">
+                         <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_28">
                           <property name="spacing">
-                           <number>0</number>
+                           <number>5</number>
                           </property>
                           <property name="leftMargin">
                            <number>0</number>
@@ -44204,68 +44213,14 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                            <number>0</number>
                           </property>
                           <item>
-                           <widget class="QFrame" name="ExtraCellular_DataRecording_recordingMode_frame">
+                           <widget class="QFrame" name="ExtraCellular_DataRecording_Folder_frame">
                             <property name="frameShape">
                              <enum>QFrame::Shape::StyledPanel</enum>
                             </property>
                             <property name="frameShadow">
                              <enum>QFrame::Shadow::Raised</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_625">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                            </layout>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QFrame" name="ExtraCellular_DataRecording_right_frame">
-                         <property name="frameShape">
-                          <enum>QFrame::Shape::StyledPanel</enum>
-                         </property>
-                         <property name="frameShadow">
-                          <enum>QFrame::Shadow::Raised</enum>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_249">
-                          <property name="spacing">
-                           <number>0</number>
-                          </property>
-                          <property name="leftMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QFrame" name="ExtraCellular_DataRecording_directory_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::Shape::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Shadow::Raised</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_626">
+                            <layout class="QHBoxLayout" name="ExtraCellular_DataRecording_horizontalLayout_56">
                              <property name="spacing">
                               <number>10</number>
                              </property>
@@ -44282,39 +44237,398 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                               <number>0</number>
                              </property>
                              <item>
-                              <widget class="QLabel" name="ExtraCellular_DataRecording_SelectRecordFolder_label">
-                               <property name="text">
-                                <string>Data Logging: Filename</string>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_Folder_label_frame">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>100</width>
+                                 <height>0</height>
+                                </size>
                                </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_27">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QLabel" name="ExtraCellular_DataRecording_Folder_label">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>0</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                    <bold>false</bold>
+                                   </font>
+                                  </property>
+                                  <property name="text">
+                                   <string>Save to</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
                               </widget>
                              </item>
                              <item>
-                              <widget class="QLineEdit" name="ExtraCellular_DataRecording_RecordFolder_value">
-                               <property name="enabled">
-                                <bool>false</bool>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_Folder_lineEdit_frame">
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
                                </property>
-                               <property name="text">
-                                <string/>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
                                </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_335">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QLineEdit" name="ExtraCellular_DataRecording_Folder_lineEdit">
+                                  <property name="enabled">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
                               </widget>
                              </item>
                              <item>
-                              <widget class="QPushButton" name="ExtraCellular_DataRecording_RecordFolderDir_pushButton">
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_Folder_pushButton_frame">
                                <property name="minimumSize">
                                 <size>
                                  <width>150</width>
                                  <height>0</height>
                                 </size>
                                </property>
-                               <property name="font">
-                                <font>
-                                 <pointsize>10</pointsize>
-                                 <bold>true</bold>
-                                </font>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>150</width>
+                                 <height>16777215</height>
+                                </size>
                                </property>
-                               <property name="text">
-                                <string>Browse directory</string>
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
                                </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_339">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>10</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QPushButton" name="ExtraCellular_DataRecording_RecordFolderDir_pushButton">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>0</width>
+                                    <height>0</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>11</pointsize>
+                                    <bold>true</bold>
+                                   </font>
+                                  </property>
+                                  <property name="text">
+                                   <string>Open folder</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="ExtraCellular_DataRecording_File_frame">
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="ExtraCellular_DataRecording_horizontalLayout_199">
+                             <property name="spacing">
+                              <number>10</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_File_label_frame">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>100</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>100</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_315">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QLabel" name="ExtraCellular_DataRecording_File_label">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>0</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                   </font>
+                                  </property>
+                                  <property name="text">
+                                   <string>File Name</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_File_lineEdit_frame">
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_320">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QLineEdit" name="ExtraCellular_DataRecording_RecordFolder_value"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_File_csvlabel_frame">
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_330">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QLabel" name="ExtraCellular_DataRecording_File_csvlabel">
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                   </font>
+                                  </property>
+                                  <property name="text">
+                                   <string>.csv</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_Record_pushButton_frame">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>150</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>150</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_15">
+                                <property name="spacing">
+                                 <number>0</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>10</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item>
+                                 <widget class="QPushButton" name="ExtraCellular_DataRecording_Record_pushButton">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>0</width>
+                                    <height>0</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>11</pointsize>
+                                    <bold>true</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(220, 50, 47);</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>Record</string>
+                                  </property>
+                                  <property name="checkable">
+                                   <bool>true</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
                               </widget>
                              </item>
                             </layout>
@@ -44328,7 +44642,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                             <property name="frameShadow">
                              <enum>QFrame::Shadow::Raised</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_627" stretch="0,0">
+                            <layout class="QHBoxLayout" name="ExtraCellular_DataRecording_horizontalLayout_57" stretch="0,0,0">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -44344,8 +44658,8 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                              <property name="bottomMargin">
                               <number>0</number>
                              </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_SelectedFolderLabel">
+                             <item alignment="Qt::AlignmentFlag::AlignLeft">
+                              <widget class="QLabel" name="ExtraCellular_DataRecording_Record_label_2">
                                <property name="sizePolicy">
                                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                                  <horstretch>0</horstretch>
@@ -44355,41 +44669,48 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                <property name="text">
                                 <string/>
                                </property>
+                              </widget>
+                             </item>
+                             <item alignment="Qt::AlignmentFlag::AlignRight">
+                              <widget class="QLabel" name="ExtraCellular_SelectedFolderLabel">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">color: rgb(220, 50, 47);</string>
+                               </property>
+                               <property name="text">
+                                <string>Ready to record</string>
+                               </property>
                                <property name="alignment">
                                 <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                                </property>
                               </widget>
                              </item>
                              <item>
-                              <widget class="QPushButton" name="ExtraCellular_DataRecording_Record_pushButton">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
+                              <widget class="QFrame" name="ExtraCellular_DataRecording_Record_lempty_frame">
                                <property name="minimumSize">
                                 <size>
                                  <width>150</width>
                                  <height>0</height>
                                 </size>
                                </property>
-                               <property name="font">
-                                <font>
-                                 <pointsize>12</pointsize>
-                                 <bold>true</bold>
-                                </font>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>150</width>
+                                 <height>16777215</height>
+                                </size>
                                </property>
-                               <property name="styleSheet">
-                                <string notr="true">color: rgb(250, 250, 250);
-background-color: rgb(220, 50, 47);</string>
+                               <property name="frameShape">
+                                <enum>QFrame::Shape::StyledPanel</enum>
                                </property>
-                               <property name="text">
-                                <string>Record</string>
+                               <property name="frameShadow">
+                                <enum>QFrame::Shadow::Raised</enum>
                                </property>
-                               <property name="checkable">
-                                <bool>true</bool>
-                               </property>
+                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_16"/>
                               </widget>
                              </item>
                             </layout>

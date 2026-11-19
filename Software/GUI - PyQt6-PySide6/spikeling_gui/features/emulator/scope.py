@@ -195,6 +195,9 @@ def EmulatorPlot(self):
     if hasattr(self, "Emulator_timer"):
         self.Emulator_timer.stop()
         self.Emulator_timer.deleteLater()
+    extracellular = getattr(self, "extracellular_graph", None)
+    if extracellular is not None:
+        extracellular.on_emulator_stopped()
     FinishRecording(self)
 
     timebase = getattr(self, "Emulator_timebase", None)
