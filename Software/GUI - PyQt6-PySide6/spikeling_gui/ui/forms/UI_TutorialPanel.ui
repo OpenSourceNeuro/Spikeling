@@ -1,0 +1,575 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+  <class>TutorialPanel</class>
+  <widget class="QDialog" name="TutorialPanel">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>520</width>
+        <height>720</height>
+      </rect>
+    </property>
+    <property name="minimumSize">
+      <size>
+        <width>420</width>
+        <height>490</height>
+      </size>
+    </property>
+    <property name="windowTitle">
+      <string>Spikeling tutorial</string>
+    </property>
+    <property name="font">
+      <font>
+        <family>Segoe UI</family>
+        <pointsize>10</pointsize>
+      </font>
+    </property>
+    <property name="styleSheet">
+      <string notr="true">QDialog#TutorialPanel { background-color: rgb(0, 43, 54); color: rgb(190, 205, 205); font-family: "Segoe UI"; font-size: 10pt; }
+QDialog#TutorialPanel QFrame#headerCard, QDialog#TutorialPanel QFrame#footerCard { background-color: rgb(7, 54, 66); border: 1px solid rgb(88, 110, 117); border-radius: 8px; }
+QDialog#TutorialPanel QFrame#reflectionCard, QDialog#TutorialPanel QFrame#statusCard { background-color: rgb(7, 54, 66); border: 1px solid rgb(88, 110, 117); border-radius: 6px; }
+QDialog#TutorialPanel QScrollArea#stepScrollArea, QDialog#TutorialPanel QWidget#stepScrollContent { background-color: transparent; border: none; }
+QDialog#TutorialPanel QLabel { color: rgb(190, 205, 205); background-color: transparent; border: none; padding: 0; }
+QDialog#TutorialPanel QLabel#tutorialTitle { color: rgb(238, 232, 213); font-size: 13pt; font-weight: 700; }
+QDialog#TutorialPanel QLabel#stepCount { color: rgb(190, 205, 205); font-size: 9pt; }
+QDialog#TutorialPanel QLabel#stepTitle { color: rgb(238, 232, 213); font-size: 12pt; font-weight: 700; }
+QDialog#TutorialPanel QLabel#phaseLabel { color: rgb(38, 139, 210); font-size: 10pt; font-weight: 600; }
+QDialog#TutorialPanel QLabel#instructionText, QDialog#TutorialPanel QLabel#reflectionPrompt { font-size: 10pt; }
+QDialog#TutorialPanel QLabel#targetLabel { color: rgb(190, 205, 205); font-size: 9pt; }
+QDialog#TutorialPanel QLabel#hintLabel { color: rgb(238, 232, 213); font-size: 9pt; }
+QDialog#TutorialPanel QLabel#stateLabel { color: rgb(190, 205, 205); font-size: 9pt; }
+QDialog#TutorialPanel QPlainTextEdit#reflectionEdit { background-color: rgb(0, 30, 38); color: rgb(238, 232, 213); border: 1px solid rgb(88, 110, 117); border-radius: 6px; padding: 8px; selection-background-color: rgb(38, 139, 210); font-size: 10pt; }
+QDialog#TutorialPanel QPlainTextEdit#reflectionEdit:focus { border: 1px solid rgb(38, 139, 210); }
+QDialog#TutorialPanel QCheckBox#attestationCheck { background-color: transparent; color: rgb(190, 205, 205); font-size: 10pt; spacing: 8px; }
+QDialog#TutorialPanel QCheckBox#attestationCheck::indicator { width: 15px; height: 15px; border: 1px solid rgb(190, 205, 205); border-radius: 3px; background-color: rgb(0, 30, 38); }
+QDialog#TutorialPanel QCheckBox#attestationCheck::indicator:checked { background-color: rgb(38, 139, 210); border: 1px solid rgb(38, 139, 210); image: none; }
+QDialog#TutorialPanel QPushButton { background-color: rgb(0, 43, 54); color: rgb(238, 232, 213); border: 1px solid rgb(88, 110, 117); border-radius: 6px; padding: 6px 11px; font-size: 10pt; font-weight: 600; min-height: 20px; }
+QDialog#TutorialPanel QPushButton:hover:enabled { background-color: rgb(7, 54, 66); border: 1px solid rgb(38, 139, 210); }
+QDialog#TutorialPanel QPushButton:pressed { background-color: rgb(0, 30, 38); }
+QDialog#TutorialPanel QPushButton:disabled { color: rgb(88, 110, 117); border: 1px solid rgb(88, 110, 117); }
+QDialog#TutorialPanel QPushButton#nextButton { background-color: rgb(38, 139, 210); color: rgb(253, 246, 227); border: 1px solid rgb(38, 139, 210); font-weight: 700; }
+QDialog#TutorialPanel QPushButton#nextButton:hover:enabled { background-color: rgb(42, 161, 152); border-color: rgb(42, 161, 152); }
+QDialog#TutorialPanel QPushButton#nextButton:disabled { background-color: rgb(7, 54, 66); color: rgb(88, 110, 117); border-color: rgb(88, 110, 117); }
+QDialog#TutorialPanel QProgressBar#progressBar { background-color: rgb(0, 30, 38); border: none; border-radius: 4px; min-height: 7px; max-height: 7px; text-align: center; }
+QDialog#TutorialPanel QProgressBar#progressBar::chunk { background-color: rgb(38, 139, 210); border-radius: 4px; }
+QDialog#TutorialPanel QScrollBar:vertical { background-color: rgb(0, 43, 54); width: 9px; margin: 0; }
+QDialog#TutorialPanel QScrollBar::handle:vertical { background-color: rgb(88, 110, 117); min-height: 20px; border-radius: 4px; }
+QDialog#TutorialPanel QScrollBar::add-line:vertical, QDialog#TutorialPanel QScrollBar::sub-line:vertical { height: 0; }
+QDialog#TutorialPanel QScrollBar::add-page:vertical, QDialog#TutorialPanel QScrollBar::sub-page:vertical { background: transparent; }
+
+QDialog#TutorialPanel QPushButton#titleCloseButton { background-color: transparent; color: rgb(190, 205, 205); border: none; border-radius: 5px; padding: 0; font-size: 20pt; font-weight: 700; min-height: 0; }
+QDialog#TutorialPanel QPushButton#titleCloseButton:hover { background-color: rgb(0, 30, 38); color: rgb(238, 232, 213); }
+QDialog#TutorialPanel QWidget#resizeGripHost { background-color: transparent; border: none; }
+</string>
+    </property>
+    <layout class="QVBoxLayout" name="rootLayout">
+      <property name="leftMargin">
+        <number>15</number>
+      </property>
+      <property name="topMargin">
+        <number>15</number>
+      </property>
+      <property name="rightMargin">
+        <number>15</number>
+      </property>
+      <property name="bottomMargin">
+        <number>15</number>
+      </property>
+      <property name="spacing">
+        <number>10</number>
+      </property>
+      <item>
+        <widget class="QFrame" name="headerCard">
+          <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+          </property>
+          <layout class="QVBoxLayout" name="headerLayout">
+            <item><layout class="QHBoxLayout" name="titleLayout"><property name="spacing"><number>8</number></property><item stretch="1">
+              <widget class="QLabel" name="tutorialTitle">
+                <property name="wordWrap">
+                  <bool>true</bool>
+                </property>
+                <property name="font">
+                  <font>
+                    <pointsize>13</pointsize>
+                    <bold>true</bold>
+                  </font>
+                </property>
+              </widget>
+            </item>
+            <item><widget class="QPushButton" name="titleCloseButton"><property name="text"><string>×</string></property><property name="toolTip"><string>Close tutorial</string></property><property name="minimumSize"><size><width>40</width><height>40</height></size></property><property name="maximumSize"><size><width>40</width><height>40</height></size></property></widget></item></layout></item><property name="leftMargin">
+              <number>14</number>
+            </property>
+            <property name="topMargin">
+              <number>12</number>
+            </property>
+            <property name="rightMargin">
+              <number>14</number>
+            </property>
+            <property name="bottomMargin">
+              <number>12</number>
+            </property>
+            <property name="spacing">
+              <number>7</number>
+            </property>
+            <item>
+              <layout class="QHBoxLayout" name="metaLayout">
+                <property name="spacing">
+                  <number>6</number>
+                </property>
+                <item>
+                  <widget class="QLabel" name="stepCount">
+                    <property name="wordWrap">
+                      <bool>true</bool>
+                    </property>
+                    <property name="font">
+                      <font>
+                        <pointsize>9</pointsize>
+                      </font>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <spacer name="metaSpacer">
+                    <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                      <enum>QSizePolicy::Expanding</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>20</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <widget class="QProgressBar" name="progressBar">
+                <property name="minimum">
+                  <number>0</number>
+                </property>
+                <property name="maximum">
+                  <number>100</number>
+                </property>
+                <property name="value">
+                  <number>0</number>
+                </property>
+                <property name="textVisible">
+                  <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                  <size>
+                    <width>0</width>
+                    <height>7</height>
+                  </size>
+                </property>
+                <property name="maximumSize">
+                  <size>
+                    <width>16777215</width>
+                    <height>7</height>
+                  </size>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+      <item>
+        <widget class="QScrollArea" name="stepScrollArea">
+          <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="widgetResizable">
+            <bool>true</bool>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <widget class="QWidget" name="stepScrollContent">
+            <property name="geometry">
+              <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>475</width>
+                <height>360</height>
+              </rect>
+            </property>
+            <layout class="QVBoxLayout" name="contentLayout">
+              <property name="leftMargin">
+                <number>2</number>
+              </property>
+              <property name="topMargin">
+                <number>7</number>
+              </property>
+              <property name="rightMargin">
+                <number>7</number>
+              </property>
+              <property name="bottomMargin">
+                <number>7</number>
+              </property>
+              <property name="spacing">
+                <number>12</number>
+              </property>
+              <item>
+                <widget class="QLabel" name="stepTitle">
+                  <property name="wordWrap">
+                    <bool>true</bool>
+                  </property>
+                  <property name="font">
+                    <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                    </font>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="phaseLabel">
+                  <property name="wordWrap">
+                    <bool>true</bool>
+                  </property>
+                  <property name="font">
+                    <font>
+                      <pointsize>10</pointsize>
+                    </font>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="instructionText">
+                  <property name="wordWrap">
+                    <bool>true</bool>
+                  </property>
+                  <property name="font">
+                    <font>
+                      <pointsize>10</pointsize>
+                    </font>
+                  </property>
+                  <property name="textInteractionFlags">
+                    <set>Qt::TextSelectableByMouse</set>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QFrame" name="reflectionCard">
+                  <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="reflectionLayout">
+                    <property name="leftMargin">
+                      <number>11</number>
+                    </property>
+                    <property name="topMargin">
+                      <number>10</number>
+                    </property>
+                    <property name="rightMargin">
+                      <number>11</number>
+                    </property>
+                    <property name="bottomMargin">
+                      <number>11</number>
+                    </property>
+                    <property name="spacing">
+                      <number>8</number>
+                    </property>
+                    <item>
+                      <widget class="QLabel" name="reflectionPrompt">
+                        <property name="wordWrap">
+                          <bool>true</bool>
+                        </property>
+                        <property name="font">
+                          <font>
+                            <pointsize>10</pointsize>
+                          </font>
+                        </property>
+                      </widget>
+                    </item>
+                    <item>
+                      <widget class="QPlainTextEdit" name="reflectionEdit">
+                        <property name="placeholderText">
+                          <string>Write a short prediction or observation…</string>
+                        </property>
+                        <property name="minimumSize">
+                          <size>
+                            <width>0</width>
+                            <height>85</height>
+                          </size>
+                        </property>
+                        <property name="maximumSize">
+                          <size>
+                            <width>16777215</width>
+                            <height>94</height>
+                          </size>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </widget>
+              </item>
+              <item>
+                <widget class="QFrame" name="confirmationCard">
+                  <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="confirmationLayout">
+                    <property name="leftMargin">
+                      <number>2</number>
+                    </property>
+                    <property name="topMargin">
+                      <number>2</number>
+                    </property>
+                    <property name="rightMargin">
+                      <number>2</number>
+                    </property>
+                    <property name="bottomMargin">
+                      <number>2</number>
+                    </property>
+                    <property name="spacing">
+                      <number>8</number>
+                    </property>
+                    <item>
+                      <widget class="QLabel" name="confirmationDetails">
+                        <property name="wordWrap">
+                          <bool>true</bool>
+                        </property>
+                        <property name="font">
+                          <font>
+                            <pointsize>9</pointsize>
+                          </font>
+                        </property>
+                      </widget>
+                    </item>
+                    <item>
+                      <widget class="QCheckBox" name="attestationCheck">
+                        <property name="text">
+                          <string>I confirm I completed this action</string>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="targetLabel">
+                  <property name="wordWrap">
+                    <bool>true</bool>
+                  </property>
+                  <property name="font">
+                    <font>
+                      <pointsize>9</pointsize>
+                    </font>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QPushButton" name="showControlButton">
+                  <property name="text">
+                    <string>Show relevant controls</string>
+                  </property>
+                  <property name="minimumSize">
+                    <size>
+                      <width>0</width>
+                      <height>32</height>
+                    </size>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="hintLabel">
+                  <property name="wordWrap">
+                    <bool>true</bool>
+                  </property>
+                  <property name="font">
+                    <font>
+                      <pointsize>9</pointsize>
+                    </font>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QPushButton" name="manualObservationButton">
+                  <property name="text">
+                    <string>Confirm visual observation manually</string>
+                  </property>
+                  <property name="minimumSize">
+                    <size>
+                      <width>0</width>
+                      <height>32</height>
+                    </size>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                </item>
+              <item>
+                <spacer name="contentEndSpacer">
+                  <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                    <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                    <size>
+                      <width>20</width>
+                      <height>16</height>
+                    </size>
+                  </property>
+                </spacer>
+              </item>
+            </layout>
+          </widget>
+        </widget>
+      </item>
+      <item>
+        <widget class="QFrame" name="footerCard">
+          <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+          </property>
+          <layout class="QVBoxLayout" name="footerLayout">
+            <item><widget class="QFrame" name="statusCard">
+                  <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="statusLayout">
+                    <property name="leftMargin">
+                      <number>11</number>
+                    </property>
+                    <property name="topMargin">
+                      <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                      <number>11</number>
+                    </property>
+                    <property name="bottomMargin">
+                      <number>9</number>
+                    </property>
+                    <property name="spacing">
+                      <number>5</number>
+                    </property>
+                    <item>
+                      <widget class="QLabel" name="stateLabel">
+                        <property name="wordWrap">
+                          <bool>true</bool>
+                        </property>
+                        <property name="font">
+                          <font>
+                            <pointsize>9</pointsize>
+                          </font>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </widget>
+              </item><property name="leftMargin">
+              <number>12</number>
+            </property>
+            <property name="topMargin">
+              <number>10</number>
+            </property>
+            <property name="rightMargin">
+              <number>12</number>
+            </property>
+            <property name="bottomMargin">
+              <number>10</number>
+            </property>
+            <property name="spacing">
+              <number>8</number>
+            </property>
+            <item>
+              <layout class="QHBoxLayout" name="actionLayout">
+                <property name="spacing">
+                  <number>8</number>
+                </property>
+                <item>
+                  <widget class="QPushButton" name="hintButton">
+                    <property name="text">
+                      <string>Show hint</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>0</width>
+                        <height>32</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="verifyButton">
+                    <property name="text">
+                      <string>Check / mark complete</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>0</width>
+                        <height>32</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <layout class="QHBoxLayout" name="bottomLayout">
+                <property name="spacing">
+                  <number>8</number>
+                </property>
+                <item>
+                  <widget class="QPushButton" name="backButton">
+                    <property name="text">
+                      <string>Back</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>0</width>
+                        <height>32</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="skipButton">
+                    <property name="text">
+                      <string>Skip</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>0</width>
+                        <height>32</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="nextButton">
+                    <property name="text">
+                      <string>Continue</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>0</width>
+                        <height>32</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QWidget" name="resizeGripHost"><property name="minimumSize"><size><width>18</width><height>18</height></size></property><property name="maximumSize"><size><width>20</width><height>20</height></size></property></widget>
+                </item>
+              </layout>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>

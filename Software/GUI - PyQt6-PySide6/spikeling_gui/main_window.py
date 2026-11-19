@@ -19,6 +19,7 @@ from spikeling_gui.updates.page import GitHubPage
 from spikeling_gui.version import __version__
 from spikeling_gui.widgets import sliders as Sliders
 from spikeling_gui.widgets import toggle_buttons as ToggleButtons
+from spikeling_gui.features.tutorials.controller import TutorialController
 
 
 GlobalState = 0
@@ -114,6 +115,9 @@ class MainWindow(QMainWindow):
 
         # Generate Navigation Buttons associated with Spikeling functions
         NavigationButtons.Buttons(self)
+
+        # Shared offline tutorial catalogue and non-modal step guide.
+        self.tutorials = TutorialController(self)
 
         # Theme: register every window so inline style sheets, plot canvases and
         # animated toggles are all re-themed, then expose the Settings controller.

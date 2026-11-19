@@ -10,3 +10,8 @@
 !/Neurons/TonicSpiking_LightOnSustained.csv
 !/Neurons/TonicSpiking_LightOnTransient.csv
 !/Stimuli/steps_10x15_10ms.csv
+
+# Bundled, provenance-labelled tutorial example (not personal recordings).
+!/Tutorials/
+!/Tutorials/README.md
+!/Tutorials/tutorial_CC_spikes.csv
