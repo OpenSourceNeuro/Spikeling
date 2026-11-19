@@ -115,6 +115,7 @@ SOURCE_RELATIVE_GAIN = np.array([1.00, 0.90, 0.80], dtype=float)
 
 # Neuron keys used by Tetrode.py in its saved distance matrix.
 TETRODE_NEURON_KEYS = ("main", "aux1", "aux2")
+TETRODE_CONTACT_KEYS = ("E1", "E2", "E3", "E4")
 
 # --- Shared channel scaling ------------------------------------------------
 # All four contacts share one y-range: the amplitude ratio across contacts is
@@ -122,8 +123,6 @@ TETRODE_NEURON_KEYS = ("main", "aux1", "aux2")
 Y_MIN_UV = -40.0
 Y_MAX_UV = 80.0
 Y_RANGE_HEADROOM = 1.15        # multiplier applied above the observed peak
-Y_RANGE_HYSTERESIS = 0.20      # relative change required before the axis is moved
-Y_RANGE_RELEASE_FRACTION = 0.6 # shrink only once the peak drops below this fraction
 
 # --- Channel plot geometry -------------------------------------------------
 # Every contact must render into an identical pixel rectangle: equal y-ranges
@@ -232,8 +231,6 @@ class ExtraCellularGraph(QObject):
         ], dtype=float)
         self._init_geometry()
 
-        # Shared y half-range across the four contacts, in µV
-        self._shared_y_half_range_uV = 0.0
 
         # Per-source hidden gain factors so the 3 units are not identical.
         self._source_gain = np.array([1.00, 0.90, 0.80], dtype=float)
@@ -329,7 +326,14 @@ class ExtraCellularGraph(QObject):
         self._plots_ready = False
         self.time_axis_widget = None
         self._syncing_x_range = False
-        for checkbox in self._channel_checkboxes():
+        self.source_plots = []
+        self.ui.ExtraCellular_AutoRange_pushButton.toggled.connect(self._update_shared_y_range)
+        theme_manager.themeChanged.connect(self._refresh_overlay_theme)
+        for checkbox in (*self._channel_checkboxes(), self.ui.Extracellular_Tetrode_Vm_checkBox,
+                         self.ui.Extracellular_Tetrode_Stimulus_checkBox,
+                         self.ui.Extracellular_Tetrode_Threshold_checkBox,
+                         self.ui.Extracellular_Tetrode_Spikes_checkBox,
+                         self.ui.Extracellular_Tetrode_Events_checkBox):
             checkbox.toggled.connect(self._update_plots)
 
         # Host/container layout inside ExtraCellular_Oscilloscope_widget
@@ -530,54 +534,31 @@ class ExtraCellularGraph(QObject):
         if self._plots_ready:
             self._update_plots()
 
-    def _update_shared_y_range(self) -> float:
-        """
-        Apply one common y-range to every tetrode channel plot.
+    def _update_shared_y_range(self, fit):
+        """Fit the displayed time interval once across all contacts, or reset."""
+        button = self.ui.ExtraCellular_AutoRange_pushButton
+        button.setText(self.tr("Reset Y range") if fit else self.tr("Auto Range (all contacts)"))
+        if not self._plots_ready:
+            return
 
-        Independent per-channel autoscaling normalises away the inter-contact
-        amplitude ratio, which is the primary cue for assigning a spike to a
-        unit on a tetrode. A single shared range preserves it: the nearest
-        contact visibly dominates and the most distant stays small.
+        low, high = Y_MIN_UV, Y_MAX_UV
+        if fit:
+            view = self.time_axis_widget.getViewBox()
+            start, end = view.viewRange()[0]
+            time = self.Time_buffer.data
+            visible = (time - time[-1] >= start) & (time - time[-1] <= end)
+            peaks = [abs(self.DetectionThreshold_uV)]
+            for buffer in self.Extra_buffers:
+                values = buffer.data[visible]
+                finite = values[np.isfinite(values)]
+                if finite.size:
+                    peaks.append(float(np.max(np.abs(finite))))
+            target = max(abs(Y_MIN_UV), max(peaks) * Y_RANGE_HEADROOM)
+            low, high = -target, target
 
-        The range is symmetric about zero because the displayed traces are
-        bandpass filtered and therefore zero-mean, and it is updated with
-        hysteresis so an isolated large spike cannot make the axis oscillate
-        frame to frame.
-
-        Returns
-        -------
-        float
-            The half-range applied, in microvolts.
-
-        Notes
-        -----
-        The range is written to all four viewboxes, including hidden ones, so
-        that toggling a channel back on never rescales the others.
-
-        References
-        ----------
-        Harris et al., 2000, Journal of Neurophysiology, "Accuracy of Tetrode
-        Spike Separation as Determined by Simultaneous Intracellular and
-        Extracellular Measurements".
-        """
-        peak = 0.0
-        for buffer in self.Extra_buffers:
-            trace = buffer.data
-            if trace.size:
-                peak = max(peak, float(np.max(np.abs(trace))))
-
-        target = max(Y_RANGE_FLOOR_UV, peak * Y_RANGE_HEADROOM)
-        current = self._shared_y_half_range_uV
-
-        grow = target > current * (1.0 + Y_RANGE_HYSTERESIS)
-        shrink = target < current * Y_RANGE_RELEASE_FRACTION
-
-        if current <= 0.0 or grow or shrink:
-            self._shared_y_half_range_uV = target
-            for plot_widget in self.channel_plot_widgets:
-                plot_widget.getViewBox().setYRange(-target, target, padding=0)
-
-        return float(self._shared_y_half_range_uV)
+        for plot in self.channel_plot_widgets:
+            plot.setYRange(low, high, padding=0)
+        self._update_plots()
 
     def _generate_raw_block(self, packets, *, soma_clamped=False):
         """
@@ -842,9 +823,7 @@ class ExtraCellularGraph(QObject):
         if hasattr(self, "Threshold_buffer"):
             self.Threshold_buffer.fill_with(float(self.DetectionThreshold_uV))
 
-        # Force a rescale: dV/dT and template modes differ by roughly an order
         # of magnitude in amplitude.
-        self._shared_y_half_range_uV = 0.0
 
         # Keep time / Vm buffers intact, but redraw the traces immediately
         if self._plots_ready:
@@ -918,81 +897,69 @@ class ExtraCellularGraph(QObject):
 
     @staticmethod
     def _distances_from_positions(sources_um, contacts_um) -> np.ndarray:
-        """
-        Compute Euclidean source-to-contact distances.
+        """Compute the 3 × 4 Euclidean distance matrix in micrometres."""
+        sources = np.asarray(sources_um, dtype=float)
+        contacts = np.asarray(contacts_um, dtype=float)
+        if (sources.ndim != 2 or sources.shape[0] != N_NEURONS
+                or sources.shape[1] not in (2, 3)
+                or contacts.shape != (N_CHANNELS, sources.shape[1])):
+            raise ValueError("Expected three sources and four contacts in the same 2D or 3D space.")
+        with np.errstate(over="ignore", invalid="ignore"):
+            distances = np.linalg.norm(sources[:, None, :] - contacts[None, :, :], axis=2)
+        if not np.isfinite(distances).all():
+            raise ValueError("Source-contact distances must be finite.")
+        return distances
 
-        Parameters
-        ----------
-        sources_um : array_like
-            Source coordinates of shape ``(N_NEURONS, d)`` with ``d`` of 2 or 3.
-        contacts_um : array_like
-            Contact coordinates of shape ``(N_CHANNELS, d)``.
+    @classmethod
+    def _parse_geometry_payload(cls, payload):
+        """Read a named matrix and/or a complete layout in micrometres.
 
-        Returns
-        -------
-        numpy.ndarray
-            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, in micrometres,
-            floored at :data:`MIN_SOURCE_CONTACT_DISTANCE_UM`.
-
-        Raises
-        ------
-        ValueError
-            If the two arrays do not share the same spatial dimensionality.
-        """
-        sources = np.atleast_2d(np.asarray(sources_um, dtype=float))
-        contacts = np.atleast_2d(np.asarray(contacts_um, dtype=float))
-
-        if sources.shape[1] != contacts.shape[1]:
-            raise ValueError(
-                f"Source and contact coordinates must share a dimensionality; "
-                f"got {sources.shape[1]}D sources and {contacts.shape[1]}D contacts."
-            )
-
-        deltas = sources[:, None, :] - contacts[None, :, :]
-        distances = np.linalg.norm(deltas, axis=2)
-        return np.maximum(distances, MIN_SOURCE_CONTACT_DISTANCE_UM)
-
-    def apply_tetrode_geometry(self, payload: dict) -> None:
-        """
-        Install the layout saved by the tetrode window.
-
-        The payload is the authoritative geometry description, so its
-        precomputed 3D ``distance_matrix_um`` is preferred over any 2D
-        coordinate list: the tetrode window already accounts for contact depth,
-        which a planar projection would discard.
-
-        Parameters
-        ----------
-        payload : dict
-            Saved tetrode description. Recognised keys:
-
-            ``distance_matrix_um``
-                ``{neuron_key: {contact_name: distance_um}}``, the preferred
-                route.
-            ``tetrode``
-                ``{"contacts_um": [{"index": int, "name": str,
-                "x": float, "y": float, "z": float}, ...]}``, used both to
-                order the contacts and as a coordinate fallback.
-            ``neurons_um``
-                Optional ``{neuron_key: {"x": .., "y": .., "z": ..}}`` used with
-                the contact coordinates when no distance matrix is present.
-
-        Notes
-        -----
-        Silently ignores a malformed payload and keeps the previous geometry,
-        because losing the electrode layout mid-recording is worse than
-        continuing with a stale one.
+        The current layout has neurons[main/aux1/aux2] and
+        tetrode.contacts_um, each with x_um, y_um and z_um. E1–E4 define
+        channel order irrespective of list order. Each index, if present,
+        must agree with its name. Complete older x/y/z layouts under
+        neurons_um are also accepted.
         """
         if not isinstance(payload, dict):
-            return
+            raise ValueError("Expected a geometry mapping.")
 
-        contact_names = self._contact_names_from_payload(payload)
+        matrix = None
+        if "distance_matrix_um" in payload:
+            saved = payload["distance_matrix_um"]
+            matrix = np.array([
+                [float(saved[source][contact]) for contact in TETRODE_CONTACT_KEYS]
+                for source in TETRODE_NEURON_KEYS
+            ])
+            if not np.isfinite(matrix).all() or (matrix < 0).any():
+                raise ValueError("Source-contact distances must be finite and nonnegative.")
 
-        matrix = self._distance_matrix_from_payload(payload, contact_names)
-        if matrix is None:
-            matrix = self._distance_matrix_from_payload_positions(payload, contact_names)
-        if matrix is None:
-            return
+        if matrix is None or any(key in payload for key in ("neurons", "neurons_um", "tetrode")):
+            legacy = "neurons" not in payload and "neurons_um" in payload
+            neurons = payload["neurons_um" if legacy else "neurons"]
+            contacts = {}
+            for entry in payload["tetrode"]["contacts_um"]:
+                name = entry["name"]
+                if (name not in TETRODE_CONTACT_KEYS or name in contacts
+                        or entry.get("index", int(name[1:])) != int(name[1:])):
+                    raise ValueError("Contacts must uniquely identify E1–E4 in channel order.")
+                contacts[name] = entry
+            axes = ("x", "y", "z") if legacy else ("x_um", "y_um", "z_um")
+            calculated = cls._distances_from_positions(
+                [[float(neurons[key][axis]) for axis in axes] for key in TETRODE_NEURON_KEYS],
+                [[float(contacts[key][axis]) for axis in axes] for key in TETRODE_CONTACT_KEYS],
+            )
+            if matrix is None:
+                return calculated
+            if not np.allclose(matrix, calculated, rtol=0, atol=1e-6):
+                raise ValueError("Geometry coordinates and distances disagree.")
+        return matrix
+
+    def apply_tetrode_geometry(self, payload: dict) -> bool:
+        """Keep the last valid layout if any required geometry data are invalid."""
+        try:
+            matrix = self._parse_geometry_payload(payload)
+        except (KeyError, TypeError, ValueError, OverflowError):
+            return False
 
         if not np.array_equal(matrix, self.distance_matrix_um):
             self.stop_recording("Geometry changed")
@@ -1000,131 +967,16 @@ class ExtraCellularGraph(QObject):
         self.tetrode_geometry = payload
         self.geometry_source = "tetrode_window"
         self._invalidate_geometry_cache()
+        return True
 
     def set_geometry_from_positions(self, contacts_um, sources_um) -> None:
-        """
-        Install a geometry directly from coordinate arrays.
-
-        Convenience entry point for scripted setups and unit tests; the GUI
-        path goes through :meth:`apply_tetrode_geometry`.
-
-        Parameters
-        ----------
-        contacts_um : array_like
-            Contact coordinates of shape ``(N_CHANNELS, d)``.
-        sources_um : array_like
-            Source coordinates of shape ``(N_NEURONS, d)``.
-
-        Raises
-        ------
-        ValueError
-            If either array has the wrong number of rows.
-        """
-        contacts = np.atleast_2d(np.asarray(contacts_um, dtype=float))
-        sources = np.atleast_2d(np.asarray(sources_um, dtype=float))
-
-        if contacts.shape[0] != N_CHANNELS:
-            raise ValueError(f"Expected {N_CHANNELS} contacts, got {contacts.shape[0]}.")
-        if sources.shape[0] != N_NEURONS:
-            raise ValueError(f"Expected {N_NEURONS} sources, got {sources.shape[0]}.")
-
-        self.distance_matrix_um = self._distances_from_positions(sources, contacts)
+        """Install a complete explicit geometry or raise before changing state."""
+        matrix = self._distances_from_positions(sources_um, contacts_um)
+        if not np.array_equal(matrix, self.distance_matrix_um):
+            self.stop_recording("Geometry changed")
+        self.distance_matrix_um = matrix
         self.geometry_source = "explicit_positions"
         self._invalidate_geometry_cache()
-
-    @staticmethod
-    def _contact_names_from_payload(payload: dict) -> list:
-        """
-        Resolve contact names in channel order.
-
-        Parameters
-        ----------
-        payload : dict
-            Saved tetrode description.
-
-        Returns
-        -------
-        list of str
-            Contact names, ordered by their saved index, padded with ``E1..E4``
-            if the payload is incomplete.
-        """
-        contacts = (payload.get("tetrode", {}) or {}).get("contacts_um", []) or []
-        try:
-            contacts = sorted(contacts, key=lambda c: int(c.get("index", 999)))
-        except (TypeError, ValueError):
-            pass
-
-        names = [str(c.get("name", f"E{k + 1}")) for k, c in enumerate(contacts[:N_CHANNELS])]
-        names += [f"E{k + 1}" for k in range(len(names), N_CHANNELS)]
-        return names
-
-    def _distance_matrix_from_payload(self, payload: dict, contact_names) -> np.ndarray:
-        """
-        Read the precomputed 3D distance matrix from a saved payload.
-
-        Parameters
-        ----------
-        payload : dict
-            Saved tetrode description.
-        contact_names : sequence of str
-            Contact names in channel order.
-
-        Returns
-        -------
-        numpy.ndarray or None
-            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, or ``None``
-            if the payload carries no usable matrix.
-        """
-        saved = payload.get("distance_matrix_um") or {}
-        if not saved:
-            return None
-
-        matrix = np.full((N_NEURONS, N_CHANNELS), REFERENCE_DISTANCE_UM, dtype=float)
-        for i, neuron_key in enumerate(TETRODE_NEURON_KEYS[:N_NEURONS]):
-            per_contact = saved.get(neuron_key) or {}
-            for k, contact_name in enumerate(contact_names):
-                try:
-                    matrix[i, k] = float(per_contact[contact_name])
-                except (KeyError, TypeError, ValueError):
-                    continue
-
-        return np.maximum(matrix, MIN_SOURCE_CONTACT_DISTANCE_UM)
-
-    def _distance_matrix_from_payload_positions(self, payload: dict, contact_names) -> np.ndarray:
-        """
-        Derive distances from explicit coordinates when no matrix was saved.
-
-        Parameters
-        ----------
-        payload : dict
-            Saved tetrode description.
-        contact_names : sequence of str
-            Contact names in channel order, used only for diagnostics.
-
-        Returns
-        -------
-        numpy.ndarray or None
-            Distance matrix of shape ``(N_NEURONS, N_CHANNELS)``, or ``None``
-            if coordinates for either side are missing.
-        """
-        contacts = (payload.get("tetrode", {}) or {}).get("contacts_um", []) or []
-        neurons = payload.get("neurons_um") or {}
-        if len(contacts) < N_CHANNELS or not neurons:
-            return None
-
-        def coordinates(entry):
-            return [float(entry.get(axis, 0.0)) for axis in ("x", "y", "z")]
-
-        try:
-            contact_xyz = np.array([coordinates(c) for c in contacts[:N_CHANNELS]], dtype=float)
-            source_xyz = np.array(
-                [coordinates(neurons.get(key, {})) for key in TETRODE_NEURON_KEYS[:N_NEURONS]],
-                dtype=float,
-            )
-        except (TypeError, ValueError):
-            return None
-
-        return self._distances_from_positions(source_xyz, contact_xyz)
 
     def _compute_projection_matrix(self, p: dict) -> np.ndarray:
         """
@@ -1162,7 +1014,8 @@ class ExtraCellularGraph(QObject):
         alpha = max(0.1, float(p.get("spatial_falloff", DEFAULT_SPATIAL_FALLOFF)))
         d_ref = float(p.get("reference_distance_um", REFERENCE_DISTANCE_UM))
 
-        gains = (d_ref / self.distance_matrix_um) ** alpha
+        distances = np.maximum(self.distance_matrix_um, MIN_SOURCE_CONTACT_DISTANCE_UM)
+        gains = (d_ref / distances) ** alpha
         gains *= SOURCE_RELATIVE_GAIN[:N_NEURONS, None]
         return np.clip(gains, 0.0, 6.0)
 
@@ -1448,7 +1301,7 @@ class ExtraCellularGraph(QObject):
         """Create rolling buffers for all plotted variables."""
         self._bufsize = int(TIME_WINDOW / SAMPLE_INTERVAL)
 
-        self.Time_buffer = RingBuffer(self._bufsize)
+        self.Time_buffer = RingBuffer(self._bufsize, fill=np.nan)
         self.ExtraCellularx = (np.arange(self._bufsize) - (self._bufsize - 1)) * SAMPLE_INTERVAL
 
         self.Stim_buffer = RingBuffer(self._bufsize)
@@ -1499,9 +1352,7 @@ class ExtraCellularGraph(QObject):
         self._event_marks = collections.deque()
         self._hum_phase_rad = float(self._rng.uniform(0.0, 2.0 * np.pi))
 
-        # Force a rescale: dV/dT and template modes differ by roughly an order
         # of magnitude in amplitude.
-        self._shared_y_half_range_uV = 0.0
 
     # -------------------------------------------------------------------------
     # Plotting
@@ -1572,6 +1423,7 @@ class ExtraCellularGraph(QObject):
             # steals ~40 px of signal height from that channel alone.
             left_axis = pi.getAxis("left")
             left_axis.setLabel(f"Ch{k + 1}", units="µV")
+            left_axis.enableAutoSIPrefix(False)
             left_axis.setWidth(AXIS_LEFT_WIDTH_PX)
 
             bottom_axis = pi.getAxis("bottom")
@@ -1589,6 +1441,8 @@ class ExtraCellularGraph(QObject):
             vb.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
             vb.setYRange(Y_MIN_UV, Y_MAX_UV, padding=0)
             vb.setMouseEnabled(x=True, y=False)
+            pi.setMenuEnabled(False)
+            pi.hideButtons()
 
             curve = pw.plot(
                 x,
@@ -1599,9 +1453,9 @@ class ExtraCellularGraph(QObject):
             thr_line = pg.InfiniteLine(
                 angle=0,
                 movable=False,
-                pen=pg.mkPen(DarkSolarized[8], width=1, style=pg.QtCore.Qt.DashLine)
+                pen=pg.mkPen(theme_manager.active_colour("text_muted"), width=1, style=Qt.DashLine)
             )
-            pi.addItem(thr_line)
+            pi.addItem(thr_line, ignoreBounds=True)
 
             spike_scatter = pg.ScatterPlotItem(symbol="|", size=9, pxMode=True)
             event_scatter = pg.ScatterPlotItem(size=9, pxMode=True)
@@ -1625,6 +1479,31 @@ class ExtraCellularGraph(QObject):
             )
             self.channel_plot_widgets[k].setMinimumHeight(0)
 
+        # Source signals use separate vertical axes from the µV contacts.
+        self.source_plots = []
+        for checkbox, source, label, units, role in (
+            (self.ui.Extracellular_Tetrode_Vm_checkBox, "Vm",
+             self.tr("Soma Vm"), "mV", "neuron_vm"),
+            (self.ui.Extracellular_Tetrode_Stimulus_checkBox, "Stim",
+             self.tr("Stimulus"), "%", "neuron_stimulus"),
+        ):
+            plot = pg.PlotWidget(host)
+            theme_manager.set_plot_background_role(plot, "window_background")
+            plot.getAxis("left").setWidth(AXIS_LEFT_WIDTH_PX)
+            plot.setLabel("left", label, units=units)
+            plot.getAxis("left").enableAutoSIPrefix(False)
+            plot.getAxis("bottom").setStyle(showValues=False)
+            plot.getAxis("bottom").setHeight(AXIS_BOTTOM_HEIGHT_PX)
+            plot.setMenuEnabled(False)
+            plot.hideButtons()
+            view = plot.getViewBox()
+            view.setMouseEnabled(x=True, y=False)
+            view.setLimits(xMin=-TIME_WINDOW, xMax=0)
+            view.setXRange(-TIME_WINDOW_DISPLAY, 0, padding=0)
+            curve = theme_manager.themed_plot(plot, x, np.zeros_like(x), role)
+            old_layout.addWidget(plot, 1)
+            self.source_plots.append((plot, curve, checkbox, source))
+
         # Give the shared axis its own row with the same horizontal inset.
         # Its ViewBox is only an anchor for the time scale.
         footer = pg.PlotWidget(host)
@@ -1643,7 +1522,7 @@ class ExtraCellularGraph(QObject):
         old_layout.addWidget(footer)
         self.time_axis_widget = footer
 
-        for plot in self.channel_plot_widgets:
+        for plot in (*self.channel_plot_widgets, *(item[0] for item in self.source_plots)):
             plot.getViewBox().sigXRangeChanged.connect(self._sync_x_range)
 
         # Keep old names for compatibility if other methods expect them
@@ -1653,6 +1532,7 @@ class ExtraCellularGraph(QObject):
         self.Ch4curve = self.channel_curves[3]
 
         self._plots_ready = True
+        self.ui.ExtraCellular_AutoRange_pushButton.setEnabled(True)
         self._update_plots()
 
     def _sync_x_range(self, source, bounds):
@@ -1660,7 +1540,8 @@ class ExtraCellularGraph(QObject):
             return
         self._syncing_x_range = True
         try:
-            for plot in (*self.channel_plot_widgets, self.time_axis_widget):
+            for plot in (*self.channel_plot_widgets, *(item[0] for item in self.source_plots),
+                         self.time_axis_widget):
                 view = plot.getViewBox()
                 if view is not source:
                     view.setXRange(*bounds, padding=0)
@@ -1680,16 +1561,23 @@ class ExtraCellularGraph(QObject):
             return
         ui = self.ui
         t_arr = self.Time_buffer.data
-        x = t_arr - t_arr[-1]
+        # Ring-buffer padding is not a sampled zero-voltage or stimulus trace.
+        valid_time = np.isfinite(t_arr)
+        x = t_arr[valid_time] - t_arr[-1]
 
         visible_channels = [k for k, check in enumerate(self._channel_checkboxes()) if check.isChecked()]
-        self.time_axis_widget.setVisible(bool(visible_channels))
+        for plot, curve, checkbox, source in self.source_plots:
+            plot.setVisible(checkbox.isChecked())
+            if checkbox.isChecked():
+                values = self.Vm_buffers[0].data if source == "Vm" else self.Stim_buffer.data
+                curve.setData(x, values[valid_time])
+        self.time_axis_widget.setVisible(
+            bool(visible_channels) or any(item[2].isChecked() for item in self.source_plots)
+        )
 
         show_thr = ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
         show_spikes = ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
         show_events = ui.Extracellular_Tetrode_Events_checkBox.isChecked()
-
-        y_event = Y_MIN_UV + 0.95 * (Y_MAX_UV - Y_MIN_UV)
 
         for k in range(N_CHANNELS):
             pw = self.channel_plot_widgets[k]
@@ -1702,7 +1590,7 @@ class ExtraCellularGraph(QObject):
             spike_scatter = self.channel_spike_scatters[k]
             event_scatter = self.channel_event_scatters[k]
 
-            curve.setData(x, self.Extra_buffers[k].data)
+            curve.setData(x, self.Extra_buffers[k].data[valid_time])
 
             thr_line.setVisible(show_thr)
             thr_line.setPos(float(self.DetectionThreshold_uV))
@@ -1729,10 +1617,13 @@ class ExtraCellularGraph(QObject):
             event_scatter.setVisible(show_events)
             if show_events and self._event_marks:
                 events = np.asarray(self._event_marks, dtype=float) - t_arr[-1]
+                y_min, y_max = pw.getViewBox().viewRange()[1]
+                y_event = y_min + 0.95 * (y_max - y_min)
+                colour = theme_manager.active_colour("text_primary")
                 event_scatter.setData(
                     x=events, y=np.full(events.size, y_event), symbol="t", size=8,
-                    brush=pg.mkBrush(DarkSolarized[10]),
-                    pen=pg.mkPen(DarkSolarized[10]),
+                    brush=pg.mkBrush(colour),
+                    pen=pg.mkPen(colour),
                 )
             else:
                 event_scatter.setData([])
@@ -1740,6 +1631,12 @@ class ExtraCellularGraph(QObject):
     # -------------------------------------------------------------------------
     # Recording
     # -------------------------------------------------------------------------
+
+    def _refresh_overlay_theme(self, *_):
+        colour = theme_manager.active_colour("text_muted")
+        for line in self.channel_threshold_lines:
+            line.setPen(pg.mkPen(colour, width=1, style=Qt.DashLine))
+        self._update_plots()
 
     @property
     def recording_active(self):
@@ -2054,7 +1951,10 @@ class ExtraCellularGraph(QObject):
         self.channel_event_scatters = []
 
         self.time_axis_widget = None
+        self.source_plots = []
         self._plots_ready = False
+        self.ui.ExtraCellular_AutoRange_pushButton.setChecked(False)
+        self.ui.ExtraCellular_AutoRange_pushButton.setEnabled(False)
 
         self._reset_model_state()
         self._filter_sos = None

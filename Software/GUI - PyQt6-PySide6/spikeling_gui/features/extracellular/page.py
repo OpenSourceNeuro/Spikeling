@@ -108,15 +108,13 @@ class Scope():
             extracellular_graph.disconnect()
 
     def apply_tetrode_geometry(self, payload: dict) -> None:
-        self.tetrode_geometry = payload
-
         eg = getattr(self.parent, "extracellular_graph", None) or getattr(self.parent, "ExtracellularGraph", None)
         if eg is None:
             print("apply_tetrode_geometry: extracellular_graph not found on MainWindow")
             return
 
-        if hasattr(eg, "apply_tetrode_geometry"):
-            eg.apply_tetrode_geometry(payload)
+        if eg.apply_tetrode_geometry(payload):
+            self.tetrode_geometry = payload
 
     # ------------------------------------------------------------------
     # Data Recording Functions

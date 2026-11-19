@@ -4,12 +4,12 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from spikeling_gui.appearance.theme_manager import theme_manager
+from spikeling_gui.appearance.theme_manager import EXTRACELLULAR_CHANNEL_KEYS, theme_manager
 from spikeling_gui.ui.generated.UI_Tetrode import Ui_Tetrode
 from spikeling_gui.paths import load_pixmap
 
 from PySide6.QtCore import QObject, QPoint, QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QPainterPath, QPixmap
+from PySide6.QtGui import QBrush, QColor, QFont, QFontMetrics, QPainter, QPen, QPainterPath, QPixmap
 from PySide6.QtWidgets import QApplication, QWidget, QGraphicsDropShadowEffect, QFrame, QGraphicsItem, QGraphicsObject, QGraphicsScene, QGraphicsView, QLabel, QMainWindow, QVBoxLayout
 
 
@@ -27,6 +27,13 @@ GRID_MAJOR = QColor(190, 205, 205, 110)
 DISTANCE = QColor(38, 139, 210, 170)
 
 SCENE_UNITS_PER_UM = 10.0
+def position_readout(*coords):
+    return "  ".join(
+        f"{axis}={value / SCENE_UNITS_PER_UM:.1f} µm"
+        for axis, value in zip("XYZ", coords)
+    )
+
+
 # ---------------------------------------------------------------------
 # Defaults
 # ---------------------------------------------------------------------
@@ -47,13 +54,19 @@ class GeometryScene(QGraphicsScene):
         self.major_every = 5
 
     def set_grid_size(self, grid_size: float) -> None:
-        self.grid_size = max(1.0, float(grid_size))
+        self.grid_size = max(0.0, float(grid_size))
         self.invalidate(self.sceneRect(), QGraphicsScene.BackgroundLayer)
 
     def drawBackground(self, painter: QPainter, rect: QRectF) -> None:  # noqa: N802
         super().drawBackground(painter, rect)
 
-        grid = max(1.0, self.grid_size)
+        if not self.grid_size:
+            return
+        grid = self.grid_size
+        # Suppress subpixel subdivisions at distant zoom levels.
+        scene_per_pixel = 1 / painter.worldTransform().m11()
+        if grid < 4 * scene_per_pixel:
+            grid *= self.major_every ** math.ceil(math.log(4 * scene_per_pixel / grid, self.major_every))
         left = math.floor(rect.left() / grid) * grid
         top = math.floor(rect.top() / grid) * grid
 
@@ -120,8 +133,7 @@ class NeuronItem(QGraphicsObject):
         self.name = name
         self.depth_z = 0.0
         self.show_label = True
-        self.snap_to_grid = False
-        self.grid_size = 1.0
+        self.constrain_position = None
 
         self.png_path = png_path
         self.image_size = image_size
@@ -198,7 +210,7 @@ class NeuronItem(QGraphicsObject):
                 painter.drawEllipse(QPointF(0.0, 0.0), 60, 60)
 
             if self.show_label:
-                painter.setPen(QPen(BASE1, 1))
+                painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), 1))
                 font = QFont()
                 font.setPointSize(12)
                 font.setBold(True)
@@ -220,7 +232,7 @@ class NeuronItem(QGraphicsObject):
 
     def set_depth(self, z_value: float) -> None:
         self.depth_z = float(z_value)
-        self.setToolTip(f"{self.name}\nX={self.x():.1f}, Y={self.y():.1f}, Z={self.depth_z:.1f}")
+        self.setToolTip(f"{self.name}\n{position_readout(self.x(), self.y(), self.depth_z)}")
         self.update()
 
     def set_show_label(self, state: bool) -> None:
@@ -228,14 +240,11 @@ class NeuronItem(QGraphicsObject):
         self.update()
 
     def itemChange(self, change, value):  # noqa: N802, ANN001
-        if change == QGraphicsItem.ItemPositionChange and self.snap_to_grid and self.grid_size > 0:
-            pos = value
-            snapped_x = round(pos.x() / self.grid_size) * self.grid_size
-            snapped_y = round(pos.y() / self.grid_size) * self.grid_size
-            return QPointF(snapped_x, snapped_y)
+        if change == QGraphicsItem.ItemPositionChange and self.constrain_position:
+            return self.constrain_position(value)
 
         if change == QGraphicsItem.ItemPositionHasChanged:
-            self.setToolTip(f"{self.name}\nX={self.x():.1f}, Y={self.y():.1f}, Z={self.depth_z:.1f}")
+            self.setToolTip(f"{self.name}\n{position_readout(self.x(), self.y(), self.depth_z)}")
             self.positionChanged.emit(self.x(), self.y())
 
         return super().itemChange(change, value)
@@ -250,7 +259,7 @@ class NeuronItem(QGraphicsObject):
 # ---------------------------------------------------------------------
 import math
 from PySide6.QtCore import QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen
+from PySide6.QtGui import QBrush, QColor, QFont, QFontMetrics, QPainter, QPen
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsObject
 
 
@@ -264,8 +273,7 @@ class TetrodeItem(QGraphicsObject):
         self.site_radius = 10.0                          # visual radius of each contact
         self.depth_z = 0.0
         self.show_label = True
-        self.snap_to_grid = False
-        self.grid_size = 20.0
+        self.constrain_position = None
         self.rot_x_deg = 0.0
         self.rot_y_deg = 0.0
         self.contact_colors = [
@@ -377,21 +385,19 @@ class TetrodeItem(QGraphicsObject):
     def set_contact_spacing(self, spacing_um: float) -> None:
         self.prepareGeometryChange()
         self.contact_spacing = max(1.0, float(spacing_um))
-        self.setToolTip(
-            f"Tetrode\n"
-            f"X={self.x():.1f}, Y={self.y():.1f}, Z={self.depth_z:.1f}\n"
-            f"Contact spacing={self.contact_spacing:.1f} µm"
-        )
+        self._update_tooltip()
         self.update()
 
     def set_depth(self, z_value: float) -> None:
         self.depth_z = float(z_value)
-        self.setToolTip(
-            f"Tetrode\n"
-            f"X={self.x():.1f}, Y={self.y():.1f}, Z={self.depth_z:.1f}\n"
-            f"Contact spacing={self.contact_spacing:.1f} µm"
-        )
+        self._update_tooltip()
         self.update()
+
+    def _update_tooltip(self) -> None:
+        self.setToolTip(
+            f"Tetrode\n{position_readout(self.x(), self.y(), self.depth_z)}\n"
+            f"Contact spacing={self.contact_spacing / SCENE_UNITS_PER_UM:.1f} µm"
+        )
 
     def set_show_label(self, state: bool) -> None:
         self.show_label = bool(state)
@@ -406,7 +412,7 @@ class TetrodeItem(QGraphicsObject):
         ex2d, ey2d = self._projected_basis_xy()
 
         # Projected crosshair
-        painter.setPen(QPen(QColor(238, 232, 213), 2))
+        painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), 2))
         cross = max(10.0, r * 0.5)
         painter.drawLine(
             QPointF(-cross * ex2d[0], -cross * ex2d[1]),
@@ -429,7 +435,7 @@ class TetrodeItem(QGraphicsObject):
             painter.setBrush(QBrush(color))
             painter.drawEllipse(QPointF(px, py), self.site_radius, self.site_radius)
 
-        painter.setPen(QPen(PROBE, 1.5))
+        painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), 1.5))
 
         # Selection halo
         if self.isSelected():
@@ -439,7 +445,7 @@ class TetrodeItem(QGraphicsObject):
 
         # Label
         if self.show_label:
-            painter.setPen(QPen(QColor(190, 205, 205), 1))
+            painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), 1))
             font = QFont()
             font.setPointSize(12)
             font.setBold(True)
@@ -449,13 +455,11 @@ class TetrodeItem(QGraphicsObject):
         painter.restore()
 
     def itemChange(self, change, value):  # noqa: N802, ANN001
-        if change == QGraphicsItem.ItemPositionChange and self.snap_to_grid and self.grid_size > 0:
-            pos = value
-            snapped_x = round(pos.x() / self.grid_size) * self.grid_size
-            snapped_y = round(pos.y() / self.grid_size) * self.grid_size
-            return QPointF(snapped_x, snapped_y)
+        if change == QGraphicsItem.ItemPositionChange and self.constrain_position:
+            return self.constrain_position(value)
 
         if change == QGraphicsItem.ItemPositionHasChanged:
+            self._update_tooltip()
             self.positionChanged.emit(self.x(), self.y())
 
         return super().itemChange(change, value)
@@ -481,9 +485,6 @@ class ScaleBarOverlay(QWidget):
         self.bar_pen_width = 2
         self.text_gap = 6
 
-        self.min_bar_length_px = 30
-        self.max_bar_length_px = 260
-
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
 
@@ -494,7 +495,7 @@ class ScaleBarOverlay(QWidget):
         font.setBold(True)
         font.setPointSize(10)
 
-        fm = self.fontMetrics()
+        fm = QFontMetrics(font)
         text_width = fm.horizontalAdvance(self.label_text)
         text_height = fm.height()
 
@@ -511,7 +512,7 @@ class ScaleBarOverlay(QWidget):
         self.resize(width, height)
 
     def set_scale(self, bar_length_px: int, label_text: str) -> None:
-        self.bar_length_px = max(self.min_bar_length_px, min(int(bar_length_px), self.max_bar_length_px))
+        self.bar_length_px = max(1, int(round(bar_length_px)))
         self.label_text = label_text
         self._update_widget_size()
         self.update()
@@ -527,7 +528,7 @@ class ScaleBarOverlay(QWidget):
 
         tick_half = self.tick_height / 2
 
-        painter.setPen(QPen(QColor(190, 205, 205), self.bar_pen_width))
+        painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), self.bar_pen_width))
         painter.drawLine(QPointF(bar_left, bar_y), QPointF(bar_right, bar_y))
         painter.drawLine(QPointF(bar_left, bar_y - tick_half), QPointF(bar_left, bar_y + tick_half))
         painter.drawLine(QPointF(bar_right, bar_y - tick_half), QPointF(bar_right, bar_y + tick_half))
@@ -536,7 +537,7 @@ class ScaleBarOverlay(QWidget):
         font.setBold(True)
         font.setPointSize(10)
         painter.setFont(font)
-        painter.setPen(QPen(QColor(190, 205, 205), 1))
+        painter.setPen(QPen(QColor(theme_manager.active_colour("text_primary")), 1))
 
         text_y = self.top_margin + self.tick_height + self.text_gap
         text_rect = QRectF(
@@ -578,6 +579,8 @@ class TetrodeGeometryWindow(QMainWindow):
         self._build_scale_bar_overlay()
         self._connect_signals()
         self.reset_geometry()
+        theme_manager.themeChanged.connect(self._refresh_geometry_theme)
+        self._refresh_geometry_theme()
 
         # Move window
         def moveWindow(event):
@@ -618,19 +621,11 @@ class TetrodeGeometryWindow(QMainWindow):
 
         view = self.ui.Tetrode_graphicsView
 
-        # Fixed physical scale bar: always 10 µm
-        bar_length_um = 10.0
-
-        # Your scene uses a 10:1 geometry scale:
-        # 1 scene unit = 0.1 µm  ->  1 µm = 10 scene units
-        um_per_scene_unit = 0.1
-        bar_length_scene = bar_length_um / um_per_scene_unit  # 10 µm -> 100 scene units
-
-        p0 = view.mapFromScene(QPointF(0.0, 0.0))
-        p1 = view.mapFromScene(QPointF(bar_length_scene, 0.0))
-        bar_length_px = abs(p1.x() - p0.x())
-
-        self.scale_bar_overlay.set_scale(max(1, int(round(bar_length_px))), "10 µm")
+        pixels_per_um = view.transform().m11() * SCENE_UNITS_PER_UM
+        target_um = min(100, max(1, view.viewport().width()) / 3) / pixels_per_um
+        decade_um = 10 ** math.floor(math.log10(target_um))
+        length_um = max(step * decade_um for step in (0.5, 1, 2, 5) if step * decade_um <= target_um)
+        self.scale_bar_overlay.set_scale(length_um * pixels_per_um, f"{length_um:g} µm")
         self._position_scale_bar_overlay()
 
     # -------------------------------------------------------------
@@ -806,7 +801,8 @@ class TetrodeGeometryWindow(QMainWindow):
 
     def _update_grid_scale_overlay(self) -> None:
         grid_um = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value()
-        self.grid_scale_label.setText(f"Grid: {grid_um:.0f} µm/div")
+        label = self.tr("Snap grid: %1 µm").replace("%1", f"{grid_um:g}") if grid_um else self.tr("Grid off")
+        self.grid_scale_label.setText(label)
         self.grid_scale_label.adjustSize()
 
     # -------------------------------------------------------------
@@ -817,40 +813,22 @@ class TetrodeGeometryWindow(QMainWindow):
         view.mouseScenePositionChanged.connect(self._update_cursor_readout)
         view.zoomChanged.connect(self._update_zoom_readout)
 
-        self.neuron_main.positionChanged.connect(
-            lambda x, y: self._sync_item_to_spinboxes(
-                self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox,
-                self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox,
-                x,
-                y,
+        self._position_controls = [
+            (item, getattr(self.ui, f"Tetrode_Parameters_{prefix}_x_doubleSpinBox"),
+             getattr(self.ui, f"Tetrode_Parameters_{prefix}_y_doubleSpinBox"))
+            for item, prefix in (
+                (self.neuron_main, "Spikeling1"), (self.neuron_aux1, "Spikeling2"),
+                (self.neuron_aux2, "Spikeling3"), (self.tetrode_item, "Electrode"),
             )
-        )
-        self.neuron_aux1.positionChanged.connect(
-            lambda x, y: self._sync_item_to_spinboxes(
-                self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox,
-                self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox,
-                x,
-                y,
+        ]
+        for item, spin_x, spin_y in self._position_controls:
+            item.constrain_position = lambda pos, x=spin_x, y=spin_y: QPointF(
+                self._bounded_scene_coordinate(pos.x(), x),
+                self._bounded_scene_coordinate(pos.y(), y),
             )
-        )
-        self.neuron_aux2.positionChanged.connect(
-            lambda x, y: self._sync_item_to_spinboxes(
-                self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox,
-                self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox,
-                x,
-                y,
+            item.positionChanged.connect(
+                lambda x, y, sx=spin_x, sy=spin_y: self._sync_item_to_spinboxes(sx, sy, x, y)
             )
-        )
-        self.tetrode_item.positionChanged.connect(
-            lambda x, y: self._sync_item_to_spinboxes(
-                self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox,
-                self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox,
-                x,
-                y,
-            )
-        )
-
-        for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
             item.clicked.connect(self._update_selected_readout)
 
         # Controls -> scene
@@ -892,21 +870,21 @@ class TetrodeGeometryWindow(QMainWindow):
     def reset_geometry(self) -> None:
         self._syncing_controls = True
         try:
-            self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].x/10)
-            self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].y/10)
-            self.ui.Tetrode_Parameters_Spikeling1_z_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].z/10)
+            self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].x / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].y / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling1_z_doubleSpinBox.setValue(self.neuron_defaults["Main Neuron"].z / SCENE_UNITS_PER_UM)
 
-            self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].x/10)
-            self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].y/10)
-            self.ui.Tetrode_Parameters_Spikeling2_z_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].z/10)
+            self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].x / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].y / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling2_z_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 1"].z / SCENE_UNITS_PER_UM)
 
-            self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].x/10)
-            self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].y/10)
-            self.ui.Tetrode_Parameters_Spikeling3_z_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].z/10)
+            self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].x / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].y / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Spikeling3_z_doubleSpinBox.setValue(self.neuron_defaults["Aux Neuron 2"].z / SCENE_UNITS_PER_UM)
 
-            self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].x/10)
-            self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].y/10)
-            self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].z/10)
+            self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].x / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].y / SCENE_UNITS_PER_UM)
+            self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.setValue(self.neuron_defaults["Tetrode"].z / SCENE_UNITS_PER_UM)
 
             self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.setValue(20.0)
             self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.setValue(0)
@@ -937,38 +915,30 @@ class TetrodeGeometryWindow(QMainWindow):
         self._syncing_controls = True
         try:
             self.neuron_main.setPos(
-                self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox.value()*10,
-                self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox.value()*10,
+                self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
+                self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
             )
-            self.neuron_main.set_depth(self.ui.Tetrode_Parameters_Spikeling1_z_doubleSpinBox.value()*10)
+            self.neuron_main.set_depth(self.ui.Tetrode_Parameters_Spikeling1_z_doubleSpinBox.value() * SCENE_UNITS_PER_UM)
 
             self.neuron_aux1.setPos(
-                self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox.value()*10,
-                self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox.value()*10,
+                self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
+                self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
             )
-            self.neuron_aux1.set_depth(self.ui.Tetrode_Parameters_Spikeling2_z_doubleSpinBox.value()*10)
+            self.neuron_aux1.set_depth(self.ui.Tetrode_Parameters_Spikeling2_z_doubleSpinBox.value() * SCENE_UNITS_PER_UM)
 
             self.neuron_aux2.setPos(
-                self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox.value()*10,
-                self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox.value()*10,
+                self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
+                self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
             )
-            self.neuron_aux2.set_depth(self.ui.Tetrode_Parameters_Spikeling3_z_doubleSpinBox.value()*10)
+            self.neuron_aux2.set_depth(self.ui.Tetrode_Parameters_Spikeling3_z_doubleSpinBox.value() * SCENE_UNITS_PER_UM)
 
             self.tetrode_item.setPos(
-                self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox.value()*10,
-                self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.value()*10,
+                self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
+                self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox.value() * SCENE_UNITS_PER_UM,
             )
-            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value() * 10)
+            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value() * SCENE_UNITS_PER_UM)
             self.tetrode_item.set_contact_spacing(
-                self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value() * 10)
-            self.tetrode_item.set_tilt_angles(
-                self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.value(),
-                self.ui.Tetrode_Parameters_Electrode_Roty_spinBox.value(),
-            )
-
-            self.tetrode_item.set_depth(self.ui.Tetrode_Parameters_Electrode_z_doubleSpinBox.value() * 10)
-            self.tetrode_item.set_contact_spacing(
-                self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value() * 10)
+                self.ui.Tetrode_Parameters_Electrode_Spacing_doubleSpinBox.value() * SCENE_UNITS_PER_UM)
             self.tetrode_item.set_tilt_angles(
                 self.ui.Tetrode_Parameters_Electrode_Rotx_spinBox.value(),
                 self.ui.Tetrode_Parameters_Electrode_Roty_spinBox.value(),
@@ -979,37 +949,19 @@ class TetrodeGeometryWindow(QMainWindow):
         finally:
             self._syncing_controls = False
 
-        self._refresh_distance_lines()
-        self._update_distance_readout()
-        self._emit_geometry_changed()
+        self._publish_geometry()
 
     # -------------------------------------------------------------
     # View options
     # -------------------------------------------------------------
-    def _snap_value_to_grid(self, value: float, grid_size: float) -> float:
-        if grid_size <= 0:
-            return value
-        return round(value / grid_size) * grid_size
-
-    def _snap_item_now(self, item) -> None:
-        grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * 10.0
-        if grid_size <= 0:
-            return
-
-        x = self._snap_value_to_grid(item.x(), grid_size)
-        y = self._snap_value_to_grid(item.y(), grid_size)
-        item.setPos(x, y)
-
     def _apply_view_options(self) -> None:
-        grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * 10
+        grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * SCENE_UNITS_PER_UM
         show_labels = self.ui.Tetrode_Parameters_View_ShowLabels_checkBox.isChecked()
         show_distance = self.ui.Tetrode_Parameters_View_ShowDistance_checkBox.isChecked()
 
         self.scene.set_grid_size(grid_size)
 
         for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
-            item.grid_size = grid_size
-            item.snap_to_grid = False
             item.set_show_label(show_labels)
 
         self._refresh_distance_lines(force_show=show_distance)
@@ -1017,52 +969,29 @@ class TetrodeGeometryWindow(QMainWindow):
         self._update_grid_scale_overlay()
         self._update_scale_bar_overlay()
 
-    def _snap_value_to_grid(self, value: float, grid_size: float) -> float:
-        if grid_size <= 0:
-            return value
-        return round(value / grid_size) * grid_size
-
-    def _snap_item_now(self, item) -> None:
-        grid_size = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value() * 10.0
-        if grid_size <= 0:
-            return
-
-        x = self._snap_value_to_grid(item.x(), grid_size)
-        y = self._snap_value_to_grid(item.y(), grid_size)
-        item.setPos(x, y)
+    @staticmethod
+    def _bounded_scene_coordinate(scene_value, control):
+        """Quantise dragged items to the corresponding spin box resolution."""
+        value_um = round(scene_value / SCENE_UNITS_PER_UM, control.decimals())
+        return min(control.maximum(), max(control.minimum(), value_um)) * SCENE_UNITS_PER_UM
 
     def _snap_all_to_grid(self) -> None:
-        for item in (self.neuron_main, self.neuron_aux1, self.neuron_aux2, self.tetrode_item):
-            self._snap_item_now(item)
+        grid_um = self.ui.Tetrode_Parameters_View_GridSize_doubleSpinBox.value()
+        if grid_um <= 0:
+            return
 
-        self._sync_item_to_spinboxes(
-            self.ui.Tetrode_Parameters_Spikeling1_x_doubleSpinBox,
-            self.ui.Tetrode_Parameters_Spikeling1_y_doubleSpinBox,
-            self.neuron_main.x() / 10.0,
-            self.neuron_main.y() / 10.0,
-        )
-        self._sync_item_to_spinboxes(
-            self.ui.Tetrode_Parameters_Spikeling2_x_doubleSpinBox,
-            self.ui.Tetrode_Parameters_Spikeling2_y_doubleSpinBox,
-            self.neuron_aux1.x() / 10.0,
-            self.neuron_aux1.y() / 10.0,
-        )
-        self._sync_item_to_spinboxes(
-            self.ui.Tetrode_Parameters_Spikeling3_x_doubleSpinBox,
-            self.ui.Tetrode_Parameters_Spikeling3_y_doubleSpinBox,
-            self.neuron_aux2.x() / 10.0,
-            self.neuron_aux2.y() / 10.0,
-        )
-        self._sync_item_to_spinboxes(
-            self.ui.Tetrode_Parameters_Electrode_x_doubleSpinBox,
-            self.ui.Tetrode_Parameters_Electrode_y_doubleSpinBox,
-            self.tetrode_item.x() / 10.0,
-            self.tetrode_item.y() / 10.0,
-        )
-
-        self._refresh_distance_lines()
-        self._update_distance_readout()
-        self._emit_geometry_changed()
+        self._syncing_controls = True
+        try:
+            for _, spin_x, spin_y in self._position_controls:
+                for control in (spin_x, spin_y):
+                    # Snap to a valid grid point even when the bound is off-grid.
+                    index = round(control.value() / grid_um)
+                    index = min(math.floor(control.maximum() / grid_um),
+                                max(math.ceil(control.minimum() / grid_um), index))
+                    control.setValue(index * grid_um)
+        finally:
+            self._syncing_controls = False
+        self._apply_controls_to_scene()
 
     def _refresh_distance_lines(self, force_show: bool | None = None) -> None:
         """
@@ -1106,11 +1035,22 @@ class TetrodeGeometryWindow(QMainWindow):
 
         self._syncing_controls = True
         try:
-            spin_x.setValue(x_value / 10.0)
-            spin_y.setValue(y_value / 10.0)
+            spin_x.setValue(x_value / SCENE_UNITS_PER_UM)
+            spin_y.setValue(y_value / SCENE_UNITS_PER_UM)
         finally:
             self._syncing_controls = False
 
+        self._publish_geometry()
+
+    def _publish_geometry(self):
+        view = self.ui.Tetrode_graphicsView
+        expanded = view.sceneRect()
+        for item, _, _ in self._position_controls:
+            if not expanded.contains(item.scenePos()):
+                expanded = expanded.united(item.sceneBoundingRect().adjusted(-100, -100, 100, 100))
+        if expanded != view.sceneRect():
+            self.scene.setSceneRect(self.scene.sceneRect().united(expanded))
+            view.setSceneRect(expanded)
         self._refresh_distance_lines()
         self._update_distance_readout()
         self._emit_geometry_changed()
@@ -1119,7 +1059,7 @@ class TetrodeGeometryWindow(QMainWindow):
     # Readout updates
     # -------------------------------------------------------------
     def _update_cursor_readout(self, x_value: float, y_value: float) -> None:
-        self.readout_cursor.setText(f"Cursor: X={x_value/10:.1f} µm  Y={y_value/10:.1f} µm")
+        self.readout_cursor.setText(position_readout(x_value, y_value))
 
     def _update_zoom_readout(self, zoom_value: float) -> None:
         self.readout_zoom.setText(f"Zoom: {zoom_value * 100:.0f}%")
@@ -1129,14 +1069,26 @@ class TetrodeGeometryWindow(QMainWindow):
     def _update_selected_readout(self, name: str) -> None:
         self.readout_selected.setText(f"Selected: {name}")
 
+    def _refresh_geometry_theme(self, *_):
+        self.tetrode_item.contact_colors = [
+            QColor(theme_manager.active_colour(key)) for key in EXTRACELLULAR_CHANNEL_KEYS
+        ]
+        self.tetrode_item.update()
+        for neuron in (self.neuron_main, self.neuron_aux1, self.neuron_aux2):
+            neuron.update()
+        for i, line in enumerate(self._distance_lines):
+            pen = line.pen()
+            pen.setColor(self.tetrode_item.contact_colors[i // 3])
+            line.setPen(pen)
+        self._update_distance_readout()
+        self.scale_bar_overlay.update()
+
     def _update_distance_readout(self) -> None:
         matrix = self.get_distance_matrix_um()
 
         colors = {
-            "E1": "#268BD2",
-            "E2": "#2AA198",
-            "E3": "#859900",
-            "E4": "#6C71C4",
+            f"E{i}": theme_manager.active_colour(key)
+            for i, key in enumerate(EXTRACELLULAR_CHANNEL_KEYS, start=1)
         }
 
         def fmt_block(title: str, neuron_key: str) -> str:
@@ -1267,6 +1219,7 @@ class TetrodeGeometryWindow(QMainWindow):
         return matrix
 
     def get_geometry_payload(self) -> dict:
+        """Emit three sources, indexed E1–E4 contacts and their distances in µm."""
         return {
             "neurons": self._get_neuron_positions_um(),
             "tetrode": {

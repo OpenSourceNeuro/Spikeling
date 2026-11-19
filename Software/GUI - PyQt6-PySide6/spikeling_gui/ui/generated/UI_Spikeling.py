@@ -505,7 +505,8 @@ class Ui_Spikeling(object):
 "	background-color: rgb(7, 54, 66);\n"
 "}\n"
 "\n"
-"#ExtraCellular_Oscilloscope_widget QPushButton{\n"
+"#ExtraCellular_Oscilloscope_widget QPushButton,\n"
+"#ExtraCellular_AutoRange_pushButton{\n"
 "	padding: 5px 5px;\n"
 "	border-radius:10px;\n"
 "	background-color: rgb(7, 54, 66);\n"
@@ -518,10 +519,10 @@ class Ui_Spikeling(object):
 "\n"
 "/*  -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --\n"
 "     Page 302 - ExtraCellular_Spikes\n"
-" -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  */\n"
+" -- -- -- -- -- -- -- -- -- -- -- "
+                        "-- -- -- -- -- -- -- -- -- --  */\n"
 "\n"
-""
-                        "#ExtraCellular_Spikes_RightContainer{\n"
+"#ExtraCellular_Spikes_RightContainer{\n"
 "	background-color: rgb(7,54,66);\n"
 "    border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
@@ -551,9 +552,9 @@ class Ui_Spikeling(object):
 "	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "}\n"
-"#NeuronGenerator_subframe2 QPushButton{\n"
 ""
-                        "	background-color: rgb(7, 54, 66);\n"
+                        "#NeuronGenerator_subframe2 QPushButton{\n"
+"	background-color: rgb(7, 54, 66);\n"
 "	border: 2px solid rgb(190, 205, 205);\n"
 "	border-radius: 10px;\n"
 "	padding: 5px 5px;\n"
@@ -585,10 +586,10 @@ class Ui_Spikeling(object):
 "\n"
 "#page_501 QPushButton{\n"
 "	background-color: rgb(7,54,66);\n"
-"	border: 2px solid rgb(190, 205, 205);\n"
+"	border: 2px solid rgb(190, 205, 205)"
+                        ";\n"
 "	border-radius: 10px;\n"
-"	padding: 2p"
-                        "x;\n"
+"	padding: 2px;\n"
 "}\n"
 "#StimulusGenerator_Container QComboBox{\n"
 "	background-color: rgb(7, 54, 66);\n"
@@ -624,8 +625,8 @@ class Ui_Spikeling(object):
 "}\n"
 "\n"
 "QWidget#page_GitHub QPushButton#GitHub_Check_pushButton:hover:enabled,\n"
-"QWidget#page_GitHub QPushButton#GitHub_Check_pushB"
-                        "utton:focus:enabled {\n"
+"QWidge"
+                        "t#page_GitHub QPushButton#GitHub_Check_pushButton:focus:enabled {\n"
 "    border: 2px solid palette(highlight);\n"
 "    padding: 4px 11px;\n"
 "}\n"
@@ -19658,7 +19659,13 @@ class Ui_Spikeling(object):
         self.verticalLayout_18.setSpacing(0)
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
         self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_AutoRange_frame = QFrame(self.ExtraCellular_Oscilloscope_widget)
+
+        self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_widget)
+
+
+        self.verticalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_frame)
+
+        self.ExtraCellular_AutoRange_frame = QFrame(self.ExtraCellular_Scope_widget)
         self.ExtraCellular_AutoRange_frame.setObjectName(u"ExtraCellular_AutoRange_frame")
         self.ExtraCellular_AutoRange_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.ExtraCellular_AutoRange_frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -19668,17 +19675,13 @@ class Ui_Spikeling(object):
         self.verticalLayout_60.setContentsMargins(10, 0, 0, 0)
         self.ExtraCellular_AutoRange_pushButton = QPushButton(self.ExtraCellular_AutoRange_frame)
         self.ExtraCellular_AutoRange_pushButton.setObjectName(u"ExtraCellular_AutoRange_pushButton")
+        self.ExtraCellular_AutoRange_pushButton.setEnabled(False)
+        self.ExtraCellular_AutoRange_pushButton.setCheckable(True)
 
         self.verticalLayout_60.addWidget(self.ExtraCellular_AutoRange_pushButton)
 
 
-        self.verticalLayout_18.addWidget(self.ExtraCellular_AutoRange_frame, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
-
-
-        self.verticalLayout_143.addWidget(self.ExtraCellular_Oscilloscope_widget)
-
-
-        self.verticalLayout_120.addWidget(self.ExtraCellular_Oscilloscope_frame)
+        self.verticalLayout_120.addWidget(self.ExtraCellular_AutoRange_frame, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
 
         self.ExtraCellular_DataRecording_box = QGroupBox(self.ExtraCellular_Scope_widget)
         self.ExtraCellular_DataRecording_box.setObjectName(u"ExtraCellular_DataRecording_box")
@@ -28561,12 +28564,30 @@ class Ui_Spikeling(object):
         self.Extracellular_Tetrode_Ch2_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch2", None))
         self.Extracellular_Tetrode_Ch3_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch3", None))
         self.Extracellular_Tetrode_Ch4_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch4", None))
+#if QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Threshold_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Dashed line showing the extracellular detector threshold in \u00b5V.", None))
+#endif // QT_CONFIG(tooltip)
         self.Extracellular_Tetrode_Threshold_checkBox.setText(QCoreApplication.translate("Spikeling", u"Threshold", None))
-        self.Extracellular_Tetrode_Spikes_checkBox.setText(QCoreApplication.translate("Spikeling", u"Spikes", None))
-        self.Extracellular_Tetrode_Events_checkBox.setText(QCoreApplication.translate("Spikeling", u"Events", None))
-        self.Extracellular_Tetrode_Stimulus_checkBox.setText(QCoreApplication.translate("Spikeling", u"Stimulus", None))
-        self.Extracellular_Tetrode_Vm_checkBox.setText(QCoreApplication.translate("Spikeling", u"Vm", None))
-        self.ExtraCellular_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range Y axis", None))
+#if QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Spikes_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Ticks mark accepted threshold crossings on each contact.", None))
+#endif // QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Spikes_checkBox.setText(QCoreApplication.translate("Spikeling", u"Contact crossings", None))
+#if QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Events_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Triangles mark detections merged across extracellular contacts. Multiple detections can come from one source spike.", None))
+#endif // QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Events_checkBox.setText(QCoreApplication.translate("Spikeling", u"Merged detections", None))
+#if QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Stimulus_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Shows the source stimulus command percentage on its own axis. Trigger flags are stored separately in the recording.", None))
+#endif // QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Stimulus_checkBox.setText(QCoreApplication.translate("Spikeling", u"Stimulus (%)", None))
+#if QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Vm_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Shows source soma membrane potential on its own axis. Contact signals use \u00b5V.", None))
+#endif // QT_CONFIG(tooltip)
+        self.Extracellular_Tetrode_Vm_checkBox.setText(QCoreApplication.translate("Spikeling", u"Soma Vm (mV)", None))
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_AutoRange_pushButton.setToolTip(QCoreApplication.translate("Spikeling", u"Fit one voltage range to all four contacts in the current time window, including hidden contacts. Click again to restore \u221240 to +80 \u00b5V.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ExtraCellular_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range (all contacts)", None))
         self.ExtraCellular_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
         self.ExtraCellular_DataRecording_Folder_label.setText(QCoreApplication.translate("Spikeling", u"Save to", None))
         self.ExtraCellular_DataRecording_Folder_lineEdit.setText("")

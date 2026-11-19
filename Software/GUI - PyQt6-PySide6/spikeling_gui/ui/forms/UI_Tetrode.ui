@@ -1172,6 +1172,9 @@ QPushButton{
                       </item>
                       <item>
                        <widget class="QSpinBox" name="Tetrode_Parameters_Electrode_Rotx_spinBox">
+                        <property name="toolTip">
+                         <string>Rotation changes contact positions and can change their distance-dependent amplitudes.</string>
+                        </property>
                         <property name="suffix">
                          <string> °</string>
                         </property>
@@ -1192,6 +1195,9 @@ QPushButton{
                       </item>
                       <item>
                        <widget class="QSpinBox" name="Tetrode_Parameters_Electrode_Roty_spinBox">
+                        <property name="toolTip">
+                         <string>Rotation changes contact positions and can change their distance-dependent amplitudes.</string>
+                        </property>
                         <property name="suffix">
                          <string> °</string>
                         </property>
@@ -1212,6 +1218,9 @@ QPushButton{
                       </item>
                       <item>
                        <widget class="QSpinBox" name="Tetrode_Parameters_Electrode_Rotz_spinBox">
+                        <property name="toolTip">
+                         <string>Rotation changes contact positions and can change their distance-dependent amplitudes.</string>
+                        </property>
                         <property name="suffix">
                          <string> °</string>
                         </property>
@@ -1336,6 +1345,9 @@ QPushButton{
                    </item>
                    <item>
                     <widget class="QDoubleSpinBox" name="Tetrode_Parameters_View_GridSize_doubleSpinBox">
+                     <property name="toolTip">
+                      <string>Grid spacing in micrometres. Zero turns the grid and snapping off.</string>
+                     </property>
                      <property name="suffix">
                       <string> µm</string>
                      </property>

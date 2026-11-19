@@ -479,7 +479,8 @@ centerMenuSubContainer_menu_stackedwidget{
 	background-color: rgb(7, 54, 66);
 }
 
-#ExtraCellular_Oscilloscope_widget QPushButton{
+#ExtraCellular_Oscilloscope_widget QPushButton,
+#ExtraCellular_AutoRange_pushButton{
 	padding: 5px 5px;
 	border-radius:10px;
 	background-color: rgb(7, 54, 66);
@@ -43862,6 +43863,9 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                 </property>
                                 <item alignment="Qt::AlignmentFlag::AlignRight">
                                  <widget class="QCheckBox" name="Extracellular_Tetrode_Threshold_checkBox">
+                                  <property name="toolTip">
+                                   <string>Dashed line showing the extracellular detector threshold in µV.</string>
+                                  </property>
                                   <property name="styleSheet">
                                    <string notr="true"/>
                                   </property>
@@ -43899,11 +43903,14 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                 </property>
                                 <item alignment="Qt::AlignmentFlag::AlignRight">
                                  <widget class="QCheckBox" name="Extracellular_Tetrode_Spikes_checkBox">
+                                  <property name="toolTip">
+                                   <string>Ticks mark accepted threshold crossings on each contact.</string>
+                                  </property>
                                   <property name="styleSheet">
                                    <string notr="true"/>
                                   </property>
                                   <property name="text">
-                                   <string>Spikes</string>
+                                   <string>Contact crossings</string>
                                   </property>
                                  </widget>
                                 </item>
@@ -43936,11 +43943,14 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                 </property>
                                 <item>
                                  <widget class="QCheckBox" name="Extracellular_Tetrode_Events_checkBox">
+                                  <property name="toolTip">
+                                   <string>Triangles mark detections merged across extracellular contacts. Multiple detections can come from one source spike.</string>
+                                  </property>
                                   <property name="styleSheet">
                                    <string notr="true"/>
                                   </property>
                                   <property name="text">
-                                   <string>Events</string>
+                                   <string>Merged detections</string>
                                   </property>
                                  </widget>
                                 </item>
@@ -44013,11 +44023,14 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                 </property>
                                 <item>
                                  <widget class="QCheckBox" name="Extracellular_Tetrode_Stimulus_checkBox">
+                                  <property name="toolTip">
+                                   <string>Shows the source stimulus command percentage on its own axis. Trigger flags are stored separately in the recording.</string>
+                                  </property>
                                   <property name="styleSheet">
                                    <string notr="true">color: rgb(38, 139, 210);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Stimulus</string>
+                                   <string>Stimulus (%)</string>
                                   </property>
                                  </widget>
                                 </item>
@@ -44050,11 +44063,14 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                 </property>
                                 <item>
                                  <widget class="QCheckBox" name="Extracellular_Tetrode_Vm_checkBox">
+                                  <property name="toolTip">
+                                   <string>Shows source soma membrane potential on its own axis. Contact signals use µV.</string>
+                                  </property>
                                   <property name="styleSheet">
                                    <string notr="true">color: rgb(220, 50, 47);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Vm</string>
+                                   <string>Soma Vm (mV)</string>
                                   </property>
                                  </widget>
                                 </item>
@@ -44097,41 +44113,50 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
-                          <item alignment="Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop">
-                           <widget class="QFrame" name="ExtraCellular_AutoRange_frame">
-                            <property name="frameShape">
-                             <enum>QFrame::Shape::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Shadow::Raised</enum>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_60">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>10</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QPushButton" name="ExtraCellular_AutoRange_pushButton">
-                               <property name="text">
-                                <string>Auto Range Y axis</string>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
                          </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item alignment="Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop">
+                     <widget class="QFrame" name="ExtraCellular_AutoRange_frame">
+                      <property name="frameShape">
+                       <enum>QFrame::Shape::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Shadow::Raised</enum>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_60">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>10</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="ExtraCellular_AutoRange_pushButton">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="checkable">
+                          <bool>true</bool>
+                         </property>
+                         <property name="toolTip">
+                          <string>Fit one voltage range to all four contacts in the current time window, including hidden contacts. Click again to restore −40 to +80 µV.</string>
+                         </property>
+                         <property name="text">
+                          <string>Auto Range (all contacts)</string>
+                         </property>
                         </widget>
                        </item>
                       </layout>
