@@ -354,7 +354,7 @@ def Buttons(self):
 
     # Data Recording
     configure_recording_folder(
-        self, self.ui.ExtraCellular_DataRecording_SelectRecordFolder_label,
+        self, self.ui.ExtraCellular_DataRecording_Folder_lineEdit,
         self.ui.ExtraCellular_DataRecording_RecordFolderDir_pushButton,
     )
     self.ui.ExtraCellular_DataRecording_RecordFolder_value.setEnabled(True)

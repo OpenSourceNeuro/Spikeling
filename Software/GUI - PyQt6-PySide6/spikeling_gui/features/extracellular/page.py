@@ -174,6 +174,12 @@ class Scope():
         button.setText(label)
         style_recording_button(button, graph.recording_active)
 
+        filename = self.ui.ExtraCellular_DataRecording_Record_label_2
+        path = graph.recording_path
+        show_filename = path is not None and state not in ("idle", "empty")
+        filename.setText(path.name if show_filename else "")
+        filename.setToolTip(str(path) if show_filename else "")
+
         status = self.ui.ExtraCellular_SelectedFolderLabel
         status.setText({
             "armed": tr("Armed · waiting for samples"),

@@ -130,7 +130,7 @@ Y_RANGE_RELEASE_FRACTION = 0.6 # shrink only once the peak drops below this frac
 # are useless if the data areas differ in height, because the apparent
 # amplitude is microvolts per pixel, not microvolts.
 AXIS_LEFT_WIDTH_PX = 64     # fixed so tick-label width cannot shift the plots
-AXIS_BOTTOM_HEIGHT_PX = 10  # reserved on all four, populated only on the last
+AXIS_BOTTOM_HEIGHT_PX = 10  # identical tick-only axis on all contacts
 
 # =============================================================================
 # ExtraCellularGraph
@@ -327,6 +327,10 @@ class ExtraCellularGraph(QObject):
         # The old version used one PlotWidget / one PlotItem / one threshold line.
         # The new version uses 4 stacked PlotWidgets, one per tetrode contact.
         self._plots_ready = False
+        self.time_axis_widget = None
+        self._syncing_x_range = False
+        for checkbox in self._channel_checkboxes():
+            checkbox.toggled.connect(self._update_plots)
 
         # Host/container layout inside ExtraCellular_Oscilloscope_widget
         self._plot_host_layout = None
@@ -1555,7 +1559,7 @@ class ExtraCellularGraph(QObject):
 
         for k in range(N_CHANNELS):
             pw = pg.PlotWidget(host)
-            pw.setBackground(DarkSolarized[0])
+            theme_manager.set_plot_background_role(pw, "window_background")
             pw.setAntialiasing(True)
             pw.showGrid(x=True, y=True)
 
@@ -1573,13 +1577,8 @@ class ExtraCellularGraph(QObject):
             bottom_axis = pi.getAxis("bottom")
             bottom_axis.enableAutoSIPrefix(False)
 
-            if k == N_CHANNELS - 1:
-                bottom_axis.setStyle(showValues=True)
-                bottom_axis.setLabel("Time", units="ms")
-                bottom_axis.setHeight(None)  # Let pyqtgraph size the ticks and label.
-            else:
-                bottom_axis.setStyle(showValues=False)
-                bottom_axis.setHeight(AXIS_BOTTOM_HEIGHT_PX)  # Keep this at 10.
+            bottom_axis.setStyle(showValues=False)
+            bottom_axis.setHeight(AXIS_BOTTOM_HEIGHT_PX)
 
             # --- Ranges ------------------------------------------------
             vb.enableAutoRange(axis=pg.ViewBox.XAxis, enable=False)
@@ -1590,9 +1589,6 @@ class ExtraCellularGraph(QObject):
             vb.enableAutoRange(axis=pg.ViewBox.YAxis, enable=False)
             vb.setYRange(Y_MIN_UV, Y_MAX_UV, padding=0)
             vb.setMouseEnabled(x=True, y=False)
-
-            if k > 0:
-                pw.setXLink(self.channel_plot_widgets[0])
 
             curve = pw.plot(
                 x,
@@ -1629,6 +1625,27 @@ class ExtraCellularGraph(QObject):
             )
             self.channel_plot_widgets[k].setMinimumHeight(0)
 
+        # Give the shared axis its own row with the same horizontal inset.
+        # Its ViewBox is only an anchor for the time scale.
+        footer = pg.PlotWidget(host)
+        theme_manager.set_plot_background_role(footer, "window_background")
+        footer.setMenuEnabled(False)
+        footer.hideButtons()
+        footer.getAxis("left").setWidth(AXIS_LEFT_WIDTH_PX)
+        footer.getAxis("left").setOpacity(0)
+        axis = footer.getAxis("bottom")
+        axis.enableAutoSIPrefix(False)
+        axis.setLabel(self.tr("Time"), units="ms")
+        footer.setFixedHeight(2 * footer.fontMetrics().height() + 14)
+        view = footer.getViewBox()
+        view.setMouseEnabled(x=False, y=False)
+        view.setXRange(-TIME_WINDOW_DISPLAY, 0, padding=0)
+        old_layout.addWidget(footer)
+        self.time_axis_widget = footer
+
+        for plot in self.channel_plot_widgets:
+            plot.getViewBox().sigXRangeChanged.connect(self._sync_x_range)
+
         # Keep old names for compatibility if other methods expect them
         self.Ch1curve = self.channel_curves[0]
         self.Ch2curve = self.channel_curves[1]
@@ -1636,19 +1653,37 @@ class ExtraCellularGraph(QObject):
         self.Ch4curve = self.channel_curves[3]
 
         self._plots_ready = True
+        self._update_plots()
+
+    def _sync_x_range(self, source, bounds):
+        if not self._plots_ready or self._syncing_x_range:
+            return
+        self._syncing_x_range = True
+        try:
+            for plot in (*self.channel_plot_widgets, self.time_axis_widget):
+                view = plot.getViewBox()
+                if view is not source:
+                    view.setXRange(*bounds, padding=0)
+        finally:
+            self._syncing_x_range = False
+
+    def _channel_checkboxes(self):
+        return (
+            self.ui.Extracellular_Tetrode_Ch1_checkBox,
+            self.ui.Extracellular_Tetrode_Ch2_checkBox,
+            self.ui.Extracellular_Tetrode_Ch3_checkBox,
+            self.ui.Extracellular_Tetrode_Ch4_checkBox,
+        )
 
     def _update_plots(self):
+        if not self._plots_ready:
+            return
         ui = self.ui
         t_arr = self.Time_buffer.data
         x = t_arr - t_arr[-1]
 
-        checks = [
-            ui.Extracellular_Tetrode_Ch1_checkBox,
-            ui.Extracellular_Tetrode_Ch2_checkBox,
-            ui.Extracellular_Tetrode_Ch3_checkBox,
-            ui.Extracellular_Tetrode_Ch4_checkBox,
-        ]
-        visible_channels = [k for k in range(N_CHANNELS) if checks[k].isChecked()]
+        visible_channels = [k for k, check in enumerate(self._channel_checkboxes()) if check.isChecked()]
+        self.time_axis_widget.setVisible(bool(visible_channels))
 
         show_thr = ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
         show_spikes = ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
@@ -2018,6 +2053,7 @@ class ExtraCellularGraph(QObject):
         self.channel_spike_scatters = []
         self.channel_event_scatters = []
 
+        self.time_axis_widget = None
         self._plots_ready = False
 
         self._reset_model_state()
