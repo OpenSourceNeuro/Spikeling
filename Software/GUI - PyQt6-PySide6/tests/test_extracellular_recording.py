@@ -42,6 +42,7 @@ class ExtracellularRecordingTests(unittest.TestCase):
         self.path = Path(folder) / "capture.csv"
         self.sidecar = self.path.with_name("capture_meta.json")
         self.ui = self.window.ui
+        self.ui.ExtraCellular_RecordingFormat_comboBox.setCurrentIndex(0)
         self.ui.ExtraCellular_Source_comboBox.setCurrentIndex(1)
         self.ui.Emulator_Connect_pushButton.setChecked(True)
         self.ui.ExtraCellular_ConnectButton.setChecked(True)

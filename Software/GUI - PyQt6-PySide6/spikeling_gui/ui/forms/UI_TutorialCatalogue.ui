@@ -16,22 +16,7 @@
     <height>440</height>
    </size>
   </property>
-  <layout class="QVBoxLayout" name="rootLayout">
-   <property name="leftMargin">
-    <number>20</number>
-   </property>
-   <property name="topMargin">
-    <number>18</number>
-   </property>
-   <property name="rightMargin">
-    <number>20</number>
-   </property>
-   <property name="bottomMargin">
-    <number>18</number>
-   </property>
-   <property name="spacing">
-    <number>12</number>
-   </property>
+  <layout class="QVBoxLayout" name="rootLayout" stretch="0,0,1,0">
    <item>
     <widget class="QLabel" name="titleLabel">
      <property name="text">
@@ -46,51 +31,218 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="introLabel">
-     <property name="text">
-      <string>Explore controls, carry out experiments and learn to interpret results.</string>
+    <layout class="QHBoxLayout" name="categoryLayout">
+     <property name="leftMargin">
+      <number>0</number>
      </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+     <property name="topMargin">
+      <number>0</number>
      </property>
-    </widget>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="allTutorialsTab">
+       <property name="text">
+        <string>All tutorials</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="minimumHeight">
+        <number>34</number>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="tutorialTab" stdset="0">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">categoryButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="neuronInterfaceTab">
+       <property name="text">
+        <string>Neuron Interface</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="minimumHeight">
+        <number>34</number>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="tutorialModule" stdset="0">
+        <string notr="true">Neuron Interface</string>
+       </property>
+       <property name="tutorialTab" stdset="0">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">categoryButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="neuronEmulatorTab">
+       <property name="text">
+        <string>Neuron Emulator</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="minimumHeight">
+        <number>34</number>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="tutorialModule" stdset="0">
+        <string notr="true">Neuron Emulator</string>
+       </property>
+       <property name="tutorialTab" stdset="0">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">categoryButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="neuronAnalysisTab">
+       <property name="text">
+        <string>Neuron Data Analysis</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="minimumHeight">
+        <number>34</number>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="tutorialModule" stdset="0">
+        <string notr="true">Neuron Data Analysis</string>
+       </property>
+       <property name="tutorialTab" stdset="0">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">categoryButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <spacer name="categorySpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="bodyLayout">
-     <property name="spacing">
-      <number>15</number>
-     </property>
-     <item stretch="2">
-      <layout class="QVBoxLayout" name="leftLayout">
-       <item>
-        <widget class="QLineEdit" name="searchEdit">
-         <property name="placeholderText">
-          <string>Search tutorials</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="categoryCombo"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="tutorialList"/>
-       </item>
-      </layout>
-     </item>
-     <item stretch="3">
-      <widget class="QFrame" name="detailsFrame">
-       <layout class="QVBoxLayout" name="detailsLayout">
+    <layout class="QHBoxLayout" name="bodyLayout" stretch="2,3">
+     <item>
+      <widget class="QFrame" name="tutorialListFrame">
+       <property name="tutorialPanel" stdset="0">
+        <bool>true</bool>
+       </property>
+       <layout class="QVBoxLayout" name="leftLayout">
         <property name="leftMargin">
-         <number>10</number>
+         <number>8</number>
         </property>
         <property name="topMargin">
          <number>8</number>
         </property>
         <property name="rightMargin">
-         <number>10</number>
+         <number>8</number>
         </property>
         <property name="bottomMargin">
          <number>8</number>
+        </property>
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="searchEdit">
+          <property name="placeholderText">
+           <string>Search tutorials</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="accessibleName">
+           <string>Search tutorials</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="tutorialList">
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="accessibleName">
+           <string>Available tutorials</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="detailsFrame">
+       <property name="tutorialPanel" stdset="0">
+        <bool>true</bool>
+       </property>
+       <layout class="QVBoxLayout" name="detailsLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <property name="spacing">
+         <number>6</number>
         </property>
         <item>
          <widget class="QLabel" name="nameLabel">
@@ -129,16 +281,22 @@
           </property>
          </widget>
         </item>
-        <item>
+        <item alignment="Qt::AlignRight">
          <widget class="QPushButton" name="startButton">
           <property name="text">
            <string>Start tutorial</string>
+          </property>
+          <property name="enabled">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
      </item>
+     <property name="spacing">
+      <number>6</number>
+     </property>
     </layout>
    </item>
    <item>
@@ -151,7 +309,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
-         <height>20</height>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -165,8 +323,86 @@
      </item>
     </layout>
    </item>
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
   </layout>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+    background: #073642;
+    color: #BECDCD;
+    border: 1px solid #586E75;
+    border-radius: 5px;
+    padding: 5px 9px;
+}
+QPushButton:hover {
+    border-color: #268BD2;
+}
+QPushButton:focus {
+    border: 2px solid #268BD2;
+}
+QPushButton:disabled {
+    color: #586E75;
+    border-color: #073642;
+}
+QLineEdit, QListWidget, QTextBrowser {
+    background: #073642;
+    color: #BECDCD;
+    border: 1px solid #586E75;
+    border-radius: 5px;
+    padding: 4px 7px;
+}
+QLineEdit:focus, QListWidget:focus, QTextBrowser:focus {
+    border: 2px solid #268BD2;
+}
+QPushButton[tutorialTab="true"] {
+    color: #BECDCD;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 5px 10px;
+}
+QPushButton[tutorialTab="true"]:checked {
+    color: #268BD2;
+    border-bottom: 2px solid #268BD2;
+}
+QPushButton[tutorialTab="true"]:hover, QPushButton[tutorialTab="true"]:focus {
+    background: #073642;
+}
+QFrame[tutorialPanel="true"] {
+    background: #002B36;
+    border: 1px solid #073642;
+    border-radius: 8px;
+}
+QListWidget {
+    outline: 0;
+}
+QListWidget::item {
+    padding: 5px;
+}
+QListWidget::item:selected {
+    color: #BECDCD;
+    background: #002B36;
+    border-left: 2px solid #268BD2;
+}
+</string>
+  </property>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="categoryButtons"/>
+ </buttongroups>
 </ui>

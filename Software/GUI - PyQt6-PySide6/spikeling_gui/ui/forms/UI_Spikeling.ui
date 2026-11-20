@@ -2023,7 +2023,7 @@ QWidget#page_GitHub QPushButton:disabled {
                 <string notr="true"/>
                </property>
                <property name="currentIndex">
-                <number>5</number>
+                <number>6</number>
                </property>
                <widget class="QWidget" name="page_Home">
                 <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -43458,7 +43458,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                              </font>
                             </property>
                             <property name="text">
-                             <string>Connect Tetrode recording to Spikeling</string>
+                             <string>Start acquisition</string>
                             </property>
                             <property name="checkable">
                              <bool>true</bool>
@@ -43536,6 +43536,16 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                               <string>  from GUI emulator</string>
                              </property>
                             </item>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="ExtraCellular_AcquisitionStatus_label">
+                            <property name="text">
+                             <string>Acquisition stopped</string>
+                            </property>
+                            <property name="wordWrap">
+                             <bool>true</bool>
+                            </property>
                            </widget>
                           </item>
                          </layout>
@@ -43652,7 +43662,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                    <string notr="true">color: rgb(38, 139, 210);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Ch1</string>
+                                   <string>E1</string>
                                   </property>
                                   <property name="checked">
                                    <bool>true</bool>
@@ -43701,7 +43711,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                    <string notr="true">color: rgb(42, 161, 152);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Ch2</string>
+                                   <string>E2</string>
                                   </property>
                                   <property name="checked">
                                    <bool>true</bool>
@@ -43741,7 +43751,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                    <string notr="true">color: rgb(133, 153, 0);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Ch3</string>
+                                   <string>E3</string>
                                   </property>
                                   <property name="checked">
                                    <bool>true</bool>
@@ -43787,7 +43797,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                                    <string notr="true">color: rgb(108, 113, 196);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Ch4</string>
+                                   <string>E4</string>
                                   </property>
                                   <property name="checked">
                                    <bool>true</bool>
@@ -44127,9 +44137,9 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                       <property name="frameShadow">
                        <enum>QFrame::Shadow::Raised</enum>
                       </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_60">
+                      <layout class="QHBoxLayout" name="verticalLayout_60">
                        <property name="spacing">
-                        <number>0</number>
+                        <number>10</number>
                        </property>
                        <property name="leftMargin">
                         <number>10</number>
@@ -44144,12 +44154,27 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                         <number>0</number>
                        </property>
                        <item>
+                        <spacer name="ExtraCellular_TraceControls_spacer">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>10</width>
+                           <height>1</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
                         <widget class="QPushButton" name="ExtraCellular_AutoRange_pushButton">
                          <property name="enabled">
                           <bool>false</bool>
                          </property>
-                         <property name="checkable">
-                          <bool>true</bool>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
                          </property>
                          <property name="toolTip">
                           <string>Fit one voltage range to all four contacts in the current time window, including hidden contacts. Click again to restore −40 to +80 µV.</string>
@@ -44157,6 +44182,39 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                          <property name="text">
                           <string>Auto Range (all contacts)</string>
                          </property>
+                         <property name="checkable">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="ExtraCellular_TraceStage_comboBox">
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Switch between processed and original broadband traces on the same axes. Crossings are calculated on the processed signal.</string>
+                         </property>
+                         <property name="accessibleName">
+                          <string>Displayed signal stage</string>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Processed trace</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Broadband trace</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Both · dashed broadband</string>
+                          </property>
+                         </item>
                         </widget>
                        </item>
                       </layout>
@@ -44173,13 +44231,13 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
-                        <height>100</height>
+                        <height>128</height>
                        </size>
                       </property>
                       <property name="maximumSize">
                        <size>
                         <width>16777215</width>
-                        <height>100</height>
+                        <height>128</height>
                        </size>
                       </property>
                       <property name="font">
@@ -44192,7 +44250,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                        <string notr="true"/>
                       </property>
                       <property name="title">
-                       <string>Data Recording</string>
+                       <string>Data recording</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
@@ -44205,7 +44263,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                         <number>10</number>
                        </property>
                        <property name="topMargin">
-                        <number>10</number>
+                        <number>5</number>
                        </property>
                        <property name="rightMargin">
                         <number>10</number>
@@ -44239,16 +44297,78 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                           </property>
                           <item>
                            <layout class="QHBoxLayout" name="ExtraCellular_RecordingFormatLayout">
+                            <property name="spacing">
+                             <number>10</number>
+                            </property>
                             <item>
+                             <widget class="QFrame" name="frame">
+                              <property name="minimumSize">
+                               <size>
+                                <width>100</width>
+                                <height>0</height>
+                               </size>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>100</width>
+                                <height>16777215</height>
+                               </size>
+                              </property>
+                              <property name="frameShape">
+                               <enum>QFrame::Shape::StyledPanel</enum>
+                              </property>
+                              <property name="frameShadow">
+                               <enum>QFrame::Shadow::Raised</enum>
+                              </property>
+                             </widget>
+                            </item>
+                            <item alignment="Qt::AlignmentFlag::AlignRight">
                              <widget class="QLabel" name="ExtraCellular_RecordingFormat_label">
-                              <property name="text"><string>Recording format</string></property>
-                              <property name="buddy"><cstring>ExtraCellular_RecordingFormat_comboBox</cstring></property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string>Recording format: </string>
+                              </property>
+                              <property name="buddy">
+                               <cstring>ExtraCellular_RecordingFormat_comboBox</cstring>
+                              </property>
                              </widget>
                             </item>
                             <item>
                              <widget class="QComboBox" name="ExtraCellular_RecordingFormat_comboBox">
-                              <item><property name="text"><string>Legacy CSV</string></property></item>
-                              <item><property name="text"><string>Spikeling broadband session</string></property></item>
+                              <property name="minimumSize">
+                               <size>
+                                <width>200</width>
+                                <height>0</height>
+                               </size>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>200</width>
+                                <height>16777215</height>
+                               </size>
+                              </property>
+                              <property name="font">
+                               <font>
+                                <pointsize>10</pointsize>
+                               </font>
+                              </property>
+                              <property name="currentIndex">
+                               <number>1</number>
+                              </property>
+                              <item>
+                               <property name="text">
+                                <string>Legacy CSV</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Spikeling broadband session</string>
+                               </property>
+                              </item>
                              </widget>
                             </item>
                            </layout>
@@ -44557,45 +44677,6 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
                               </widget>
                              </item>
                              <item>
-                              <widget class="QFrame" name="ExtraCellular_DataRecording_File_csvlabel_frame">
-                               <property name="frameShape">
-                                <enum>QFrame::Shape::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Shadow::Raised</enum>
-                               </property>
-                               <layout class="QVBoxLayout" name="ExtraCellular_DataRecording_verticalLayout_330">
-                                <property name="spacing">
-                                 <number>0</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_DataRecording_File_csvlabel">
-                                  <property name="font">
-                                   <font>
-                                    <pointsize>10</pointsize>
-                                   </font>
-                                  </property>
-                                  <property name="text">
-                                   <string>.csv</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                             <item>
                               <widget class="QFrame" name="ExtraCellular_DataRecording_Record_pushButton_frame">
                                <property name="minimumSize">
                                 <size>
@@ -44662,7 +44743,7 @@ QPushButton[analysisTab=&quot;true&quot;]:focus {
 background-color: rgb(220, 50, 47);</string>
                                   </property>
                                   <property name="text">
-                                   <string>Record</string>
+                                   <string>Save recording</string>
                                   </property>
                                   <property name="checkable">
                                    <bool>true</bool>
@@ -45040,8 +45121,11 @@ background-color: rgb(220, 50, 47);</string>
                                  <pointsize>10</pointsize>
                                 </font>
                                </property>
+                               <property name="toolTip">
+                                <string>Use the negative derivative of smoothed membrane voltage around an inferred spike as a waveform proxy.</string>
+                               </property>
                                <property name="text">
-                                <string>dV / dT</string>
+                                <string>dV/dt</string>
                                </property>
                                <property name="alignment">
                                 <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -45181,7 +45265,7 @@ background-color: rgb(220, 50, 47);</string>
                                    </font>
                                   </property>
                                   <property name="text">
-                                   <string>Bandpass</string>
+                                   <string>Filter</string>
                                   </property>
                                   <property name="alignment">
                                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -45227,20 +45311,131 @@ background-color: rgb(220, 50, 47);</string>
                                </property>
                                <item>
                                 <property name="text">
-                                 <string>300 - 3000 Hz</string>
+                                 <string>Spike detection</string>
                                 </property>
                                </item>
                                <item>
                                 <property name="text">
-                                 <string>100 - 5000 Hz</string>
+                                 <string>Wider spike band</string>
                                 </property>
                                </item>
                                <item>
                                 <property name="text">
-                                 <string>1 - 300 Hz</string>
+                                 <string>Slow components</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Broadband · filter off</string>
+                                </property>
+                               </item>
+                               <item>
+                                <property name="text">
+                                 <string>Custom bandpass</string>
                                 </property>
                                </item>
                               </widget>
+                             </item>
+                             <item>
+                              <widget class="QFrame" name="ExtraCellular_Cutoffs_frame">
+                               <layout class="QGridLayout" name="ExtraCellular_Cutoffs_layout">
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>0</number>
+                                </property>
+                                <item row="0" column="0">
+                                 <widget class="QLabel" name="ExtraCellular_LowCut_label">
+                                  <property name="text">
+                                   <string>Low cut (Hz)</string>
+                                  </property>
+                                  <property name="buddy">
+                                   <cstring>ExtraCellular_LowCut_edit</cstring>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="1">
+                                 <widget class="QLineEdit" name="ExtraCellular_LowCut_edit">
+                                  <property name="toolTip">
+                                   <string>Attenuates frequencies below this cutoff.</string>
+                                  </property>
+                                  <property name="text">
+                                   <string notr="true">300</string>
+                                  </property>
+                                  <property name="readOnly">
+                                   <bool>true</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="1" column="0">
+                                 <widget class="QLabel" name="ExtraCellular_HighCut_label">
+                                  <property name="text">
+                                   <string>High cut (Hz)</string>
+                                  </property>
+                                  <property name="buddy">
+                                   <cstring>ExtraCellular_HighCut_edit</cstring>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="1" column="1">
+                                 <widget class="QLineEdit" name="ExtraCellular_HighCut_edit">
+                                  <property name="toolTip">
+                                   <string>Attenuates frequencies above this cutoff.</string>
+                                  </property>
+                                  <property name="text">
+                                   <string notr="true">3000</string>
+                                  </property>
+                                  <property name="readOnly">
+                                   <bool>true</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="ExtraCellular_FilterStatus_label">
+                               <property name="toolTip">
+                                <string>Slow components show residual spike energy and contamination. The live model has no separate population-field source. Detections are suppressed while the filter settles.</string>
+                               </property>
+                               <property name="text">
+                                <string>Applied: 300–3000 Hz</string>
+                               </property>
+                               <property name="wordWrap">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <layout class="QHBoxLayout" name="ExtraCellular_Threshold_layout">
+                               <item>
+                                <widget class="QLabel" name="ExtraCellular_Threshold_label">
+                                 <property name="text">
+                                  <string>Threshold (µV)</string>
+                                 </property>
+                                 <property name="buddy">
+                                  <cstring>ExtraCellular_Threshold_edit</cstring>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <widget class="QLineEdit" name="ExtraCellular_Threshold_edit">
+                                 <property name="toolTip">
+                                  <string>Enter a fixed negative voltage for detecting crossings on the processed signal.</string>
+                                 </property>
+                                 <property name="text">
+                                  <string notr="true">-15</string>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
                              </item>
                             </layout>
                            </widget>
@@ -45414,10 +45609,20 @@ background-color: rgb(220, 50, 47);</string>
                              <property name="bottomMargin">
                               <number>0</number>
                              </property>
-                             <item>
-                              <widget class="QLabel" name="ExtraCellular_Spread_Readings">
-                               <property name="text">
-                                <string/>
+                             <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                              <widget class="QLineEdit" name="ExtraCellular_Spread_Readings">
+                               <property name="enabled">
+                                <bool>false</bool>
+                               </property>
+                               <property name="accessibleName">
+                                <string>Spatial falloff exponent</string>
+                               </property>
+                               <property name="toolTip">
+                                <string>Turn on the override to edit the value. Press Enter to apply it.</string>
+                               </property>
+                               <property name="styleSheet">
+                                <string notr="true">QLineEdit:enabled { color: rgb(38, 139, 210); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
                                </property>
                                <property name="alignment">
                                 <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -45705,7 +45910,7 @@ background-color: rgb(220, 50, 47);</string>
                                       </font>
                                      </property>
                                      <property name="text">
-                                      <string>Baseline Noise (µV)</string>
+                                      <string>Contact (µV RMS)</string>
                                      </property>
                                      <property name="wordWrap">
                                       <bool>true</bool>
@@ -45742,10 +45947,20 @@ background-color: rgb(220, 50, 47);</string>
                                 <property name="bottomMargin">
                                  <number>0</number>
                                 </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_BaselineNoise_Readings">
-                                  <property name="text">
-                                   <string/>
+                                <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                                 <widget class="QLineEdit" name="ExtraCellular_BaselineNoise_Readings">
+                                  <property name="enabled">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="accessibleName">
+                                   <string>Contact noise in µV RMS</string>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Turn on the override to edit the value. Press Enter to apply it.</string>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
                                   </property>
                                   <property name="alignment">
                                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -45788,7 +46003,7 @@ background-color: rgb(220, 50, 47);</string>
                                    <number>30</number>
                                   </property>
                                   <property name="value">
-                                   <number>5</number>
+                                   <number>2</number>
                                   </property>
                                   <property name="orientation">
                                    <enum>Qt::Orientation::Horizontal</enum>
@@ -45980,7 +46195,7 @@ background-color: rgb(220, 50, 47);</string>
                                       </font>
                                      </property>
                                      <property name="text">
-                                      <string>Shared Noise (µV)</string>
+                                      <string>Shared (µV RMS)</string>
                                      </property>
                                      <property name="wordWrap">
                                       <bool>true</bool>
@@ -46017,10 +46232,20 @@ background-color: rgb(220, 50, 47);</string>
                                 <property name="bottomMargin">
                                  <number>0</number>
                                 </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_SharedNoise_Readings">
-                                  <property name="text">
-                                   <string/>
+                                <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                                 <widget class="QLineEdit" name="ExtraCellular_SharedNoise_Readings">
+                                  <property name="enabled">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="accessibleName">
+                                   <string>Shared noise in µV RMS</string>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Turn on the override to edit the value. Press Enter to apply it.</string>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
                                   </property>
                                   <property name="alignment">
                                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -46063,7 +46288,7 @@ background-color: rgb(220, 50, 47);</string>
                                    <number>30</number>
                                   </property>
                                   <property name="value">
-                                   <number>10</number>
+                                   <number>2</number>
                                   </property>
                                   <property name="orientation">
                                    <enum>Qt::Orientation::Horizontal</enum>
@@ -46255,7 +46480,7 @@ background-color: rgb(220, 50, 47);</string>
                                       </font>
                                      </property>
                                      <property name="text">
-                                      <string>50Hz Hum (µV)</string>
+                                      <string>50 Hz pickup (µV peak)</string>
                                      </property>
                                      <property name="wordWrap">
                                       <bool>true</bool>
@@ -46292,10 +46517,20 @@ background-color: rgb(220, 50, 47);</string>
                                 <property name="bottomMargin">
                                  <number>0</number>
                                 </property>
-                                <item>
-                                 <widget class="QLabel" name="ExtraCellular_HumNoise_Readings">
-                                  <property name="text">
-                                   <string/>
+                                <item alignment="Qt::AlignmentFlag::AlignHCenter">
+                                 <widget class="QLineEdit" name="ExtraCellular_HumNoise_Readings">
+                                  <property name="enabled">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="accessibleName">
+                                   <string>50 Hz pickup in µV peak</string>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Turn on the override to edit the value. Press Enter to apply it.</string>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }
+QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }</string>
                                   </property>
                                   <property name="alignment">
                                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -46409,6 +46644,22 @@ background-color: rgb(220, 50, 47);</string>
                               </widget>
                              </item>
                             </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QComboBox" name="ExtraCellular_HumPickup_comboBox">
+                            <property name="accessibleName">
+                             <string>Mains pickup across contacts</string>
+                            </property>
+                            <property name="toolTip">
+                             <string>Equal pickup uses the same 50 Hz amplitude on every contact. Unequal pickup scales E1–E4 by 100%, 75%, 50% and 25% of the entered peak.</string>
+                            </property>
+                            <item>
+                             <property name="text"><string>Equal pickup</string></property>
+                            </item>
+                            <item>
+                             <property name="text"><string>Unequal pickup</string></property>
+                            </item>
                            </widget>
                           </item>
                           <item>

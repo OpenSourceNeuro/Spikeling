@@ -2,10 +2,12 @@ from dataclasses import replace
 from hashlib import sha256
 import json
 from threading import Event
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
+from spikeling_gui.features.extracellular.analysis_measurements import measure, spectrum
 from spikeling_gui.features.extracellular.analysis_comparison import EventAnchor, match_events
 from spikeling_gui.features.extracellular.offline_analysis import Recipe, analyse, compare, compare_source, export_analysis
 from spikeling_gui.features.extracellular.offline_detection import Detector, detect_run
@@ -133,3 +135,28 @@ def test_crossing_at_file_chunk_start_keeps_previous_sample(tmp_path):
     assert result.groups[0].sample == 15
     assert [c.contact for c in result.groups[0].crossings] == ["E1", "E2"]
     assert not result.waveforms.event_ids and len(result.waveforms.excluded) == 1
+
+
+def test_polarity_records_signed_threshold_and_shares_contact_refractory():
+    data = run([0, -15, 15, 0, 15])
+    both = Detector(15, .2, 0, ("E1",), "both")
+    groups = detect_run(data, both, 10000, "both")
+    assert [(g.sample, g.crossings[0].threshold_uV) for g in groups] == [(21, -15), (24, 15)]
+    assert groups[-1].crossings[0].provenance == "offline_positive_threshold"
+    positive = replace(both, polarity="positive")
+    assert [g.sample for g in detect_run(data, positive, 10000, "pos")] == [22, 24]
+
+
+def test_measurements_and_spectrum_use_common_settled_rows():
+    samples = 10 * np.sin(2 * np.pi * 50 * np.arange(15000) / 10000)
+    waveforms = SimpleNamespace(mean_uV=np.array([[0] * 4, [2] * 4]), event_ids=("a",))
+    a = SimpleNamespace(runs=(run(samples, warmup=0),), rate=10000, waveforms=waveforms)
+    b = SimpleNamespace(runs=(run(samples / 2, warmup=100),), rate=10000, waveforms=waveforms)
+    assert not measure(a, b, (20, 30))["baseline_available"]
+    measurements = measure(a, b, (120, 320))
+    np.testing.assert_allclose(measurements["b"]["baseline_rms_uV"][0], 5 / np.sqrt(2))
+    assert measurements["b"]["mean_waveform_peak_to_peak_uV"] == [2] * 4
+    start, stop, f, power_a, power_b = spectrum(a, b, 0)
+    assert (start, stop) == (120, 15020)
+    assert f[power_b.argmax()] == pytest.approx(50, abs=f[1])
+    np.testing.assert_allclose(power_b, power_a / 4)

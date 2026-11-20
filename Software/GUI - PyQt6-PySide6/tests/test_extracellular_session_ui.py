@@ -49,7 +49,7 @@ def test_scope_recording_button_exact_capture_epochs_gap_and_overview(gui, graph
     target = tmp_path / "capture.spikeling"
     feed(graph, 1, 20)
     zi = graph._filter_zi_block.copy()
-    controls.ExtraCellular_RecordingFormat_comboBox.setCurrentIndex(1)
+    assert controls.ExtraCellular_RecordingFormat_comboBox.currentIndex() == 1
     controls.ExtraCellular_DataRecording_RecordFolder_value.setText("capture")
     button = controls.ExtraCellular_DataRecording_Record_pushButton
     with patch("spikeling_gui.features.extracellular.page.recording_path", return_value=target.with_suffix(".csv")):
@@ -85,10 +85,9 @@ def test_scope_recording_button_exact_capture_epochs_gap_and_overview(gui, graph
         np.concatenate([item[3] for item in result.iter_interval("broadband")]), expected
     )
 
-    controls.ExtraCellularSpikes_pushButton.click()
+    controls.ExtraCellular_OpenLast_pushButton.click()
     page = window.extracellular_recording_page
     assert controls.mainbody_stackedWidget.currentWidget() is page
-    page.open_path(target / "manifest.json")
     deadline = monotonic() + 10
     while page.result is not None and monotonic() < deadline:
         app.processEvents()
@@ -100,7 +99,7 @@ def test_scope_recording_button_exact_capture_epochs_gap_and_overview(gui, graph
     np.testing.assert_array_equal(y[np.isfinite(x)], expected[:, 0])
     assert np.count_nonzero(~np.isfinite(x)) == 1
     graph.CAR(False)
-    controls.ExtraCellular_RecordingFormat_comboBox.setCurrentIndex(0)
+    controls.ExtraCellular_RecordingFormat_comboBox.setCurrentIndex(1)
 
 
 @pytest.mark.parametrize("reason", ["emulator_stop", "source_switch", "board_unplug", "window_close"])
@@ -141,3 +140,29 @@ def test_session_terminates_on_existing_lifecycle_hooks(gui, graph, tmp_path, re
     assert session.manifest["stop_reason"] in {
         "Emulator stopped", "Source changed", "Hardware disconnected", "Window closed"
     }
+
+
+def test_filter_bypass_round_trips_and_live_stage_switches(gui, graph, tmp_path):
+    _, window = gui
+    ui = window.ui
+    selector = ui.ExtraCellular_Bandpass_comboBox
+    selector.setCurrentIndex(3)
+    target = tmp_path / "broadband.spikeling"
+    assert graph.start_session_recording(target)
+    block = feed(graph, 1, 40)
+    raw = block.broadband.contacts_uV
+    np.testing.assert_array_equal(raw, block.processed.contacts_uV)
+    assert block.processed.warmup_rows == 0
+    ui.ExtraCellular_TraceStage_comboBox.setCurrentIndex(1)
+    np.testing.assert_array_equal(graph.channel_curves[0].getData()[1], raw[:, 0])
+    ui.ExtraCellular_TraceStage_comboBox.setCurrentIndex(2)
+    np.testing.assert_array_equal(graph.broadband_curves[0].getData()[1], raw[:, 0])
+    writer = graph.session_recording.writer
+    graph.stop_recording()
+    assert writer.wait(10), writer.error
+    graph.session_recording.poll()
+    reader = SessionReader(target)
+    assert reader.sample_count == 40
+    assert reader.manifest["capture_start_processing"]["filter_sos"] is None
+    ui.ExtraCellular_TraceStage_comboBox.setCurrentIndex(0)
+    selector.setCurrentIndex(0)

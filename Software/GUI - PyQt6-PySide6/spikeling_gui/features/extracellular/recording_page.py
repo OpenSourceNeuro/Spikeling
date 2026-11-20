@@ -7,7 +7,7 @@ from threading import Thread
 import numpy as np
 import pyqtgraph as pg
 from PySide6.QtCore import QEvent, QTimer
-from PySide6.QtWidgets import QFileDialog, QWidget
+from PySide6.QtWidgets import QButtonGroup, QFileDialog, QWidget
 
 from spikeling_gui.appearance.theme_manager import EXTRACELLULAR_CHANNEL_KEYS, theme_manager
 from spikeling_gui.paths import recordings_directory
@@ -58,9 +58,25 @@ class RecordingPage(QWidget):
         super().__init__(parent)
         self.ui = Ui_ExtracellularRecording()
         self.ui.setupUi(self)
+        theme_manager.restyle_widget(self)
         self.host = parent
         self.reader = None
         self.result = None
+        self.navigation = QButtonGroup(self)
+        for button, page in (
+            (self.ui.navRecording, self.ui.recording),
+            (self.ui.navProcessing, self.ui.processingTab),
+            (self.ui.navDetection, self.ui.detectionTab),
+            (self.ui.navWaveforms, self.ui.comparisonTab),
+            (self.ui.navComparison, self.ui.agreementTab),
+            (self.ui.navSpectrum, self.ui.spectrumTab),
+        ):
+            self.navigation.addButton(button, self.ui.pageStack.indexOf(page))
+        self.navigation.idClicked.connect(self.ui.pageStack.setCurrentIndex)
+        self.ui.pageStack.currentChanged.connect(self._sync_navigation)
+        self._sync_navigation(self.ui.pageStack.currentIndex())
+        self.ui.metadataButton.clicked.connect(self.show_metadata)
+        self.ui.metadataBackButton.clicked.connect(self.show_recording_overview)
         self.timer = QTimer(self, interval=40)
         self.timer.timeout.connect(self._poll)
         self.ui.openButton.clicked.connect(self.open_recording)
@@ -100,10 +116,23 @@ class RecordingPage(QWidget):
     def show_page(self):
         self.host.ui.mainbody_stackedWidget.setCurrentWidget(self)
 
+    def _sync_navigation(self, index):
+        self.navigation.button(index).setChecked(True)
+        self.ui.analysisFooter.setVisible(self.ui.pageStack.currentWidget() is not self.ui.recording)
+
+    def show_metadata(self):
+        self.ui.recordingStack.setCurrentWidget(self.ui.recordingMetadata)
+        self.ui.metadataBackButton.setFocus()
+
+    def show_recording_overview(self):
+        self.ui.recordingStack.setCurrentWidget(self.ui.recordingOverview)
+        self.ui.metadataButton.setFocus()
+
     def _enable(self):
         busy = self.result is not None
         ready = self.reader is not None and not busy and self.reader.sample_count > 0
         self.ui.openButton.setEnabled(not busy)
+        self.ui.metadataButton.setEnabled(self.reader is not None and not busy)
         for widget in (self.ui.stageCombo, self.ui.indexEdit, self.ui.countEdit, self.ui.previewButton):
             widget.setEnabled(ready)
         self.ui.exportButton.setEnabled(ready and isinstance(self.reader, SessionReader))
@@ -161,6 +190,8 @@ class RecordingPage(QWidget):
             self.ui.statusLabel.setText(self.tr("Stop the capture before opening this session."))
             return
         self.analysis.set_reader(None)
+        self.ui.pageStack.setCurrentWidget(self.ui.recording)
+        self.ui.recordingStack.setCurrentWidget(self.ui.recordingOverview)
         self.ui.statusLabel.setText(self.tr("Validating recording…"))
         self._background(lambda: load_overview(Path(name)), self._loaded)
 

@@ -3,12 +3,13 @@ from dataclasses import dataclass
 from math import ceil, isfinite, log
 
 import numpy as np
-from scipy.signal import butter, sos2zpk, sosfilt
+from scipy.signal import butter, iirnotch, sos2zpk, sosfilt, tf2sos
 
 from .acquisition import CONTACTS
 from .session_reader import SessionReader
 
-ALGORITHM = "spikeling-extracellular-offline-v1"
+ALGORITHM = "spikeling-extracellular-offline-v2"
+NOTCH_Q = 30.0
 MAX_ANALYSIS_ROWS = 40_000
 WARMUP_MS = 10.0
 POLE_DECAY = 0.01
@@ -25,19 +26,35 @@ class Processing:
     reference_contacts: tuple = CONTACTS
     bandpass: tuple | None = (300.0, 3000.0)
 
-    def design(self, rate):
-        if self.reference not in ("none", "car"):
-            raise ValueError("Choose None or common average reference.")
+    notch_hz: int | None = None
+
+    def validate_reference(self):
+        if self.reference == "single" and not (
+            contacts_valid(self.reference_contacts, 1) and len(self.reference_contacts) == 1
+        ):
+            raise ValueError("Choose one reference contact.")
         if self.reference == "car" and not contacts_valid(self.reference_contacts, 2):
-            raise ValueError("Choose at least two distinct reference contacts in E1–E4 order.")
-        if self.bandpass is None:
+            raise ValueError("CAR requires at least two distinct reference contacts in E1–E4 order.")
+        if self.reference not in ("none", "car", "single"):
+            raise ValueError("Choose a supported reference method.")
+
+    def design(self, rate):
+        self.validate_reference()
+        sections = []
+        if self.notch_hz is not None:
+            if self.notch_hz not in (50, 60) or self.notch_hz >= rate / 2:
+                raise ValueError("Choose 50 Hz or 60 Hz below the Nyquist frequency.")
+            sections.append(tf2sos(*iirnotch(self.notch_hz, NOTCH_Q, fs=rate)))
+        if self.bandpass is not None:
+            low, high = self.bandpass
+            if not (isfinite(low) and isfinite(high) and 0 < low < high < rate / 2):
+                raise ValueError(f"Bandpass limits must satisfy 0 < low < high < {rate / 2:g} Hz.")
+            sections.append(butter(3, self.bandpass, btype="bandpass", fs=rate, output="sos"))
+        if not sections:
             return None
-        low, high = self.bandpass
-        if not (isfinite(low) and isfinite(high) and 0 < low < high < rate / 2):
-            raise ValueError(f"Bandpass limits must satisfy 0 < low < high < {rate / 2:g} Hz.")
-        sos = butter(3, self.bandpass, btype="bandpass", fs=rate, output="sos")
+        sos = np.vstack(sections)
         if not np.isfinite(sos).all() or _pole_radius(sos) >= 1:
-            raise ValueError("The selected bandpass cannot be represented as a stable causal filter.")
+            raise ValueError("The selected filter cannot be represented as a stable causal filter.")
         return sos
 
 
@@ -77,10 +94,9 @@ def apply_reference(values, config):
     values = np.asarray(values, dtype=np.float64)
     if values.ndim != 2 or values.shape[1] != len(CONTACTS) or not np.isfinite(values).all():
         raise ValueError("Expected finite samples in E1–E4 order.")
+    config.validate_reference()
     if config.reference == "none":
         return values.copy()
-    if config.reference != "car" or not contacts_valid(config.reference_contacts, 2):
-        raise ValueError("CAR requires at least two distinct reference contacts in E1–E4 order.")
     indices = [CONTACTS.index(contact) for contact in config.reference_contacts]
     return values - values[:, indices].mean(axis=1, keepdims=True)
 

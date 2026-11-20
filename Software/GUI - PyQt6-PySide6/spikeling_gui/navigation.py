@@ -346,6 +346,13 @@ def Buttons(self):
             self.ui.mainbody_stackedWidget.addWidget(self.extracellular_recording_page)
         self.extracellular_recording_page.show_page()
 
+    def analyse_saved_extracellular():
+        graph = self.extracellular_graph
+        path = graph.recording_path
+        if graph.recording_state == "saved" and path is not None:
+            show_extracellular_recording()
+            self.extracellular_recording_page.open_path(path / "manifest.json" if path.is_dir() else path)
+
     self.ui.ExtraCellularSpikes_pushButton.clicked.connect(show_extracellular_recording)
 
     # Bridge tetrode saved geometry -> extracellular scope page/controller
@@ -381,14 +388,8 @@ def Buttons(self):
     # ExtraCellular Parameters
     self.ui.ExtraCellular_SignalMode_toggleButton.toggled.connect(self.extracellular_page.SignalMode_toggleButton)
 
-    self.ui.ExtraCellular_Spread_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSpatialFalloff())
-    self.ui.ExtraCellular_Spread_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSpatialFalloff())
-    self.ui.ExtraCellular_BaselineNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateBaselineNoise())
-    self.ui.ExtraCellular_BaselineNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetBaselineNoise())
-    self.ui.ExtraCellular_SharedNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateSharedNoise())
-    self.ui.ExtraCellular_SharedNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetSharedNoise())
-    self.ui.ExtraCellular_HumNoise_toggleButton.toggled.connect(lambda: self.extracellular_page.ActivateHumNoise())
-    self.ui.ExtraCellular_HumNoise_Slider.valueChanged.connect(lambda: self.extracellular_page.GetHumNoise())
+    self.extracellular_page.bind_sliders()
+    self.extracellular_graph._connect_parameters()
     self.ui.ExtraCellular_CAR_toggleButton.toggled.connect(lambda: self.extracellular_graph.CAR())
 
 

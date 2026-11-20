@@ -59,24 +59,23 @@ import pyqtgraph as pg
 import numpy as np
 import pandas as pd
 import collections
-from typing import Tuple
 
-from scipy.signal import butter, sosfilt
+from scipy.signal import sosfilt
 
 from spikeling_gui.appearance.palette import DarkSolarized
 from spikeling_gui.appearance.theme_manager import (EXTRACELLULAR_CHANNEL_KEYS, theme_manager)
 from spikeling_gui.hardware.serial_manager import serial_manager
 from spikeling_gui.plotting.graph_core import RingBuffer, configure_scope
+from .page import EXTRACELLULAR_CONTROLS
 from .acquisition import (
     Acquisition, AcquisitionBlock, BroadbandBlock, Capture, CONTACTS, Discontinuity,
     Epoch, Event, InputBlock, NEURONS, ProcessedBlock, SampleSpan,
 )
 from .input_adapters import InputAdapter
+from .offline_processing import Processing, warmup_rows
 from .recording_controller import SessionRecordingController
 
 HOST_STALL_NS = 1_000_000_000
-# Exclude the first 10 ms after a causal state reset from future analysis.
-FILTER_WARMUP_ROWS = 100
 
 
 SAMPLE_INTERVAL = 0.1
@@ -93,8 +92,8 @@ MAX_PACKETS_PER_TICK = 5000
 # Overlay tuning
 EVENT_MERGE_WINDOW_MS = 0.4
 EVENT_MARKER_HEADROOM = 0.08
-DETECTION_SIGMA_MULTIPLIER = 4.5
-DETECTION_THRESHOLD_FLOOR_UV = 15.0
+BANDPASS_PRESETS = ((300.0, 3000.0), (100.0, 4750.0), (1.0, 300.0), None)
+BYPASS_INDEX = BANDPASS_PRESETS.index(None)
 
 CHANNEL_COLORS = [
     (38, 139, 210), (42, 161, 152), (133, 153, 0), (108, 113, 196),
@@ -210,7 +209,7 @@ class ExtraCellularGraph(QObject):
         self._t_last_detect_ms = np.full(N_CHANNELS, -1e12, dtype=float)
         self._last_event_ms = -1e12
         self._prev_channel_sample = np.zeros(N_CHANNELS, dtype=float)
-        self.DetectionThreshold_uV = -25.0
+        self.DetectionThreshold_uV = -15.0
 
         # ------------------------------------------------------------------
         # Signal mode / reference mode
@@ -283,9 +282,10 @@ class ExtraCellularGraph(QObject):
         # ------------------------------------------------------------------
         # The displayed / recorded extracellular channels are filtered according to
         # the selected UI preset (spike band or slower band).
-        self.bandpass_name = "300 - 3000 Hz"
-        self.bandpass_low_hz = 300.0
-        self.bandpass_high_hz = 3000.0
+        self.bandpass_low_hz = None
+        self.bandpass_high_hz = None
+        self._filter_settle_rows = 0
+        self._filter_input_invalid = False
         self._filter_sos = None
         self._filter_recipe = None
         # self._filter_zi = None
@@ -356,6 +356,7 @@ class ExtraCellularGraph(QObject):
         self.channel_plot_items = []
         self.channel_viewboxes = []
         self.channel_curves = []
+        self.broadband_curves = []
         self.channel_threshold_lines = []
         self.channel_spike_scatters = []
         self.channel_event_scatters = []
@@ -555,11 +556,12 @@ class ExtraCellularGraph(QObject):
         self._segment = 0
         self._previous_trigger = None
         self._group_id = None
-        self._prime_vm = self._prime_detector = False
-        self._warmup_rows = FILTER_WARMUP_ROWS
+        self._prime_vm = self._prime_detector = True
+        self._warmup_rows = self._filter_settle_rows
         self.dropped_packets = 0
         self._hardware_pacing = self.ui.Spikeling_Speed_slider.value()
         self._refresh_acquisition_status()
+        self._show_filter_status(self._filter_input_invalid)
 
     def _end_acquisition(self, reason):
         if self.acquisition is not None:
@@ -576,6 +578,8 @@ class ExtraCellularGraph(QObject):
         self.stop_recording(reason)
         self.acquisition = None
         self.latest_block = None
+        self._warmup_rows = 0
+        self._show_filter_status(self._filter_input_invalid)
 
     def _publish_discontinuity(self, evidence):
         """Deliver a boundary even if no further samples are accepted."""
@@ -608,7 +612,7 @@ class ExtraCellularGraph(QObject):
         self._reset_model_state(reset_hum=False)
         self._reset_filter_state()
         self._prime_vm = self._prime_detector = True
-        self._warmup_rows = FILTER_WARMUP_ROWS
+        self._warmup_rows = self._filter_settle_rows
         self.latest_block = None
 
     def _drain_before_settings(self):
@@ -650,12 +654,9 @@ class ExtraCellularGraph(QObject):
                 self._dvdt_gate_remaining_ms[:] = 0.0
             if "processing" in changed or "source" in changed:
                 self._reset_filter_state()
-                self._warmup_rows = FILTER_WARMUP_ROWS
+                self._warmup_rows = self._filter_settle_rows
             if any(key in changed for key in ("processing", "detection", "source")):
-                self._prime_detector = True
-                self._t_last_detect_ms[:] = -1e12
-                self._last_event_ms = -1e12
-                self._group_id = None
+                self._reset_detector_state()
         epoch_id = 0 if self._epoch is None else self._epoch.id + 1
         reason = ("Acquisition start" if self._epoch is None else
                   "Segment boundary" if self._epoch.segment != self._segment else
@@ -674,7 +675,6 @@ class ExtraCellularGraph(QObject):
         available = ((not soma_clamped, *aux_enabled)
                      if item.flags is not None else (False, False, False))
         pacing = ("board_requested", self._hardware_pacing) if hardware else ("emulator", pacing)
-        self._update_detection_threshold(self._extracellular_params)
         source_state = (None, None, available, None) if hardware else (
             soma_clamped, tuple(aux_enabled), available, source_settings
         )
@@ -709,8 +709,12 @@ class ExtraCellularGraph(QObject):
             times, inputs.stimulus_pct, inputs.trigger, inputs.vm_mV, launches,
             referenced, span=span, typed_events=events,
         )
+        for channel, buffer in enumerate(self.Broadband_buffers):
+            buffer.extend(raw[:, channel])
         warmup = min(count, self._warmup_rows)
         self._warmup_rows -= warmup
+        if warmup and not self._filter_input_invalid:
+            self._show_filter_status()
         processed = ProcessedBlock(span, filtered, self.DetectionThreshold_uV, merged, warmup)
         self._next_index += count
         if self.recording_active and self.capture is not None and self.session_recording.writer is None:
@@ -764,7 +768,12 @@ class ExtraCellularGraph(QObject):
             visible = (time - time[-1] >= start) & (time - time[-1] <= end)
             # Fit observed voltages; an off-screen threshold must not hide residuals.
             peaks = [Y_FIT_MIN_UV / Y_RANGE_HEADROOM]
-            for buffer in self.Extra_buffers:
+            stage = getattr(self.ui, "ExtraCellular_TraceStage_comboBox", None)
+            index = stage.currentIndex() if stage is not None else 0
+            buffers = self.Extra_buffers if index != 1 else self.Broadband_buffers
+            if index == 2:
+                buffers = (*self.Extra_buffers, *self.Broadband_buffers)
+            for buffer in buffers:
                 values = buffer.data[visible]
                 finite = values[np.isfinite(values)]
                 if finite.size:
@@ -802,8 +811,8 @@ class ExtraCellularGraph(QObject):
                     source[i] = self._template_source_step(i, spike)
             raw[row] = projection @ source
 
-        sigma_base = float(p.get("baseline_noise_uV", 5.0))
-        sigma_shared = float(p.get("shared_noise_uV", 5.0))
+        sigma_base = float(p.get("baseline_noise_uV", EXTRACELLULAR_CONTROLS["baseline_noise"].reset_value))
+        sigma_shared = float(p.get("shared_noise_uV", EXTRACELLULAR_CONTROLS["shared_noise"].reset_value))
         amplitude_hum = float(p.get("hum_noise_uV", 0.0))
 
         if sigma_base > 0.0:
@@ -811,9 +820,10 @@ class ExtraCellularGraph(QObject):
         if sigma_shared > 0.0:
             raw += self._rng.normal(scale=sigma_shared, size=(count, 1))
         if amplitude_hum != 0.0:
-            raw += amplitude_hum * np.sin(
-                2.0 * np.pi * 50.0 * (t_arr / 1000.0) + self._hum_phase_rad
-            )[:, None]
+            hum = amplitude_hum * np.sin(2.0 * np.pi * 50.0 * (t_arr / 1000.0) + self._hum_phase_rad)
+            # Unequal pickup keeps the entered peak as the E1 amplitude.
+            gains = (1.0, 0.75, 0.5, 0.25) if p.get("unequal_hum", False) else 1.0
+            raw += hum[:, None] * gains
 
         return gt_arr, raw
 
@@ -830,13 +840,20 @@ class ExtraCellularGraph(QObject):
         raw : numpy.ndarray
             Unfiltered tetrode block of shape ``(n, N_CHANNELS)``, in µV.
         """
-        self._update_detection_threshold(self._extracellular_params)
         filtered = np.ascontiguousarray(self._apply_bandpass_block(raw))
 
-        if self._prime_detector:
-            self._prev_channel_sample[:] = filtered[0]
-            self._prime_detector = False
-        events = self._detect_block_crossings(t_arr, filtered, span=span, typed_events=typed_events)
+        first = min(len(t_arr), self._warmup_rows) if span is not None else 0
+        events = np.zeros(len(t_arr), dtype=np.uint8)
+        self.ChannelSpikeData[:] = 0
+        self.EventData = 0
+        if first < len(t_arr):
+            if self._prime_detector:
+                self._prev_channel_sample[:] = filtered[first]
+                self._prime_detector = False
+            events[first:] = self._detect_block_crossings(
+                t_arr[first:], filtered[first:], span=span, typed_events=typed_events,
+                offset=first,
+            )
 
         # Latest-sample state for downstream readers
         self.VmData[:] = vm_arr[-1]
@@ -861,7 +878,7 @@ class ExtraCellularGraph(QObject):
             self._record_block(t_arr, stim_arr, trig_arr, vm_arr, gt_arr, filtered, events)
         return filtered, events
 
-    def _detect_block_crossings(self, t_arr, channels_uV, *, span=None, typed_events=None) -> np.ndarray:
+    def _detect_block_crossings(self, t_arr, channels_uV, *, span=None, typed_events=None, offset=0) -> np.ndarray:
         """
         Locate downward threshold crossings over a whole block.
 
@@ -909,13 +926,13 @@ class ExtraCellularGraph(QObject):
                 self._event_marks.append(t_ms)
                 events[index] = 1
                 if span is not None:
-                    group = Event("grouped_detection", span, span.first_index + int(index),
+                    group = Event("grouped_detection", span, span.first_index + offset + int(index),
                                   None, "anchored_merge_window")
                     typed_events.append(group)
                     self._group_id = group.id
             if span is not None:
                 typed_events.append(Event(
-                    "contact_crossing", span, span.first_index + int(index), CONTACTS[channel],
+                    "contact_crossing", span, span.first_index + offset + int(index), CONTACTS[channel],
                     "processed_threshold_refractory", self._group_id,
                 ))
 
@@ -991,11 +1008,8 @@ class ExtraCellularGraph(QObject):
         # visible immediately instead of waiting for the old buffer to
         # scroll out of the time window.
         # --------------------------------------------------------------
-        if hasattr(self, "Extra_buffers"):
-            for buffer in self.Extra_buffers:
-                buffer.fill_with(0.0)
-        if hasattr(self, "Threshold_buffer"):
-            self.Threshold_buffer.fill_with(float(self.DetectionThreshold_uV))
+        if self.acquisition is not None:
+            self.Time_buffer.fill_with(np.nan)
 
         # of magnitude in amplitude.
 
@@ -1020,6 +1034,11 @@ class ExtraCellularGraph(QObject):
             if self.session_recording.writer is None:
                 self.stop_recording("Reference changed")
             self.car_enabled = bool(checked)
+            self._reset_filter_state()
+            if self.acquisition is not None:
+                self._warmup_rows = self._filter_settle_rows
+                self._reset_detector_state()
+                self._show_filter_status(self._filter_input_invalid)
 
     def _build_template_waveform(self) -> None:
         """
@@ -1346,41 +1365,82 @@ class ExtraCellularGraph(QObject):
         self._t_last_spike_ms[neuron_index] = float(t_ms)
         return 1
 
-    def _bandpass_limits_from_ui(self) -> Tuple[float, float]:
-        """Map UI preset selection to low/high cutoff frequencies in Hz."""
-        idx = int(self.ui.ExtraCellular_Bandpass_comboBox.currentIndex())
-        if idx == 1:
-            return 100.0, 5000.0
-        if idx == 2:
-            return 1.0, 300.0
-        return 300.0, 3000.0
-
-    def _design_bandpass(self, f_low_hz: float, f_high_hz: float) -> None:
-        """
-        Design a stable IIR display filter and allocate streaming states.
-
-        Note:
-        The 100-5000 Hz preset reaches the nominal Nyquist at 10 kHz sampling.
-        We clamp the upper cutoff slightly below Nyquist for filter-design stability,
-        while keeping the pedagogical preset meaning unchanged.
-        """
-        fl = max(0.1, float(f_low_hz))
-        fh = min(float(f_high_hz), 0.95 * NYQUIST_HZ)
-
-        if fh <= fl:
-            fh = min(max(fl * 1.5, fl + 1.0), 0.95 * NYQUIST_HZ)
-
-        self._filter_sos = butter(3, [fl, fh], btype="bandpass", fs=FS_HZ, output="sos")
-        self._filter_recipe = tuple(map(tuple, self._filter_sos))
-        self.bandpass_low_hz = fl
-        self.bandpass_high_hz = fh
-        self._filter_zi_block = None
-
     def _reset_filter_state(self) -> None:
-        """Reset the streaming filter with the current UI preset."""
-        fl, fh = self._bandpass_limits_from_ui()
-        self._design_bandpass(fl, fh)
         self._filter_zi_block = None
+
+    def _reset_detector_state(self) -> None:
+        self._prime_detector = True
+        self._t_last_detect_ms[:] = -1e12
+        self._last_event_ms = -1e12
+        self._group_id = None
+
+    def _apply_filter_controls(self, *_):
+        ui = self.ui
+        index = ui.ExtraCellular_Bandpass_comboBox.currentIndex()
+        if index < 0:
+            return
+        custom = index == len(BANDPASS_PRESETS)
+        ui.ExtraCellular_Cutoffs_frame.setVisible(index != BYPASS_INDEX)
+        if not custom and index != BYPASS_INDEX:
+            low, high = BANDPASS_PRESETS[index]
+            ui.ExtraCellular_LowCut_edit.setText(f"{low:g}")
+            ui.ExtraCellular_HighCut_edit.setText(f"{high:g}")
+        ui.ExtraCellular_LowCut_edit.setReadOnly(not custom)
+        ui.ExtraCellular_HighCut_edit.setReadOnly(not custom)
+        try:
+            band = (float(ui.ExtraCellular_LowCut_edit.text()),
+                    float(ui.ExtraCellular_HighCut_edit.text())) if custom else BANDPASS_PRESETS[index]
+            sos = Processing(bandpass=band).design(FS_HZ)
+        except ValueError:
+            self._show_filter_status(invalid=True)
+            return
+
+        low, high = band if band is not None else (None, None)
+        if (low, high) != (self.bandpass_low_hz, self.bandpass_high_hz):
+            self._drain_before_settings()
+            if self.session_recording.writer is None:
+                self.stop_recording("Filter changed")
+            self.bandpass_low_hz, self.bandpass_high_hz = low, high
+            self._filter_sos = sos
+            self._filter_recipe = None if sos is None else tuple(map(tuple, sos))
+            self._filter_settle_rows = warmup_rows(sos, FS_HZ)
+            self._reset_filter_state()
+            if self.acquisition is not None:
+                self._warmup_rows = self._filter_settle_rows
+                self._reset_detector_state()
+        self._show_filter_status()
+
+    def _show_filter_status(self, invalid=False):
+        self._filter_input_invalid = invalid
+        text = self.tr("Applied filter off") if self.bandpass_low_hz is None else (
+            self.tr("Applied: %1–%2 Hz").replace("%1", f"{self.bandpass_low_hz:g}")
+            .replace("%2", f"{self.bandpass_high_hz:g}")
+        )
+        if invalid:
+            text += "\n" + self.tr("Enter 0 < low < high < %1 Hz.").replace("%1", f"{NYQUIST_HZ:g}")
+        elif self._warmup_rows:
+            text += "\n" + self.tr("Settling: %1 model ms").replace(
+                "%1", f"{self._warmup_rows * SAMPLE_INTERVAL:g}"
+            )
+        self.ui.ExtraCellular_FilterStatus_label.setText(text)
+
+    def _apply_threshold_control(self):
+        edit = self.ui.ExtraCellular_Threshold_edit
+        try:
+            value = float(edit.text())
+            if not np.isfinite(value) or value >= 0:
+                raise ValueError
+        except ValueError:
+            edit.setText(f"{self.DetectionThreshold_uV:g}")
+            return
+        if value != self.DetectionThreshold_uV:
+            self._drain_before_settings()
+            if self.session_recording.writer is None:
+                self.stop_recording("Detection threshold changed")
+            self.DetectionThreshold_uV = value
+            self._reset_detector_state()
+        edit.setText(f"{value:g}")
+        self._update_plots()
 
     def _invalidate_geometry_cache(self) -> None:
         """
@@ -1465,27 +1525,6 @@ class ExtraCellularGraph(QObject):
         )
         return filtered
 
-    def _update_detection_threshold(self, p: dict) -> None:
-        """
-        Update the displayed/detection threshold from the current noise settings.
-
-        This threshold is intentionally simple and pedagogical.
-        It is not meant to be a full robust-noise estimator yet; its role here is to
-        drive the Scope page overlays until the dedicated Spikes page implements richer
-        detection controls.
-        """
-        sigma_base = float(p.get("baseline_noise_uV", 5.0))
-        sigma_shared = float(p.get("shared_noise_uV", 5.0))
-        a_hum = float(p.get("hum_noise_uV", 0.0))
-
-        # Approximate combined contamination magnitude.
-        sigma_eff = np.sqrt(sigma_base ** 2 + sigma_shared ** 2 + (a_hum / np.sqrt(2.0)) ** 2)
-        self.DetectionThreshold_uV = -max(
-            DETECTION_THRESHOLD_FLOOR_UV,
-            DETECTION_SIGMA_MULTIPLIER * float(sigma_eff),
-        )
-
-
     # -------------------------------------------------------------------------
     # Buffers
     # -------------------------------------------------------------------------
@@ -1502,6 +1541,7 @@ class ExtraCellularGraph(QObject):
         self.Threshold_buffer = RingBuffer(self._bufsize, fill=self.DetectionThreshold_uV)
         self.Vm_buffers = [RingBuffer(self._bufsize) for _ in range(N_NEURONS)]
         self.Extra_buffers = [RingBuffer(self._bufsize) for _ in range(N_CHANNELS)]
+        self.Broadband_buffers = [RingBuffer(self._bufsize) for _ in range(N_CHANNELS)]
 
         # Reset detection / source states
         self._reset_model_state()
@@ -1598,6 +1638,7 @@ class ExtraCellularGraph(QObject):
         self.channel_plot_widgets = []
         self.channel_plot_items = []
         self.channel_curves = []
+        self.broadband_curves = []
         self.channel_threshold_lines = []
         self.channel_spike_scatters = []
         self.channel_event_scatters = []
@@ -1618,7 +1659,7 @@ class ExtraCellularGraph(QObject):
             # pixel-identical. Without this the bottom axis on the last plot
             # steals ~40 px of signal height from that channel alone.
             left_axis = pi.getAxis("left")
-            left_axis.setLabel(f"Ch{k + 1}", units="µV")
+            left_axis.setLabel(CONTACTS[k], units="µV")
             left_axis.enableAutoSIPrefix(False)
             left_axis.setWidth(AXIS_LEFT_WIDTH_PX)
 
@@ -1646,6 +1687,9 @@ class ExtraCellularGraph(QObject):
                 pen=theme_manager.pen(EXTRACELLULAR_CHANNEL_KEYS[k]),
             )
 
+            broadband_curve = pw.plot(pen=theme_manager.pen("text_muted", style=Qt.DashLine))
+            broadband_curve.hide()
+
             thr_line = pg.InfiniteLine(
                 angle=0,
                 movable=False,
@@ -1663,6 +1707,7 @@ class ExtraCellularGraph(QObject):
             self.channel_plot_widgets.append(pw)
             self.channel_plot_items.append(pi)
             self.channel_curves.append(curve)
+            self.broadband_curves.append(broadband_curve)
             self.channel_threshold_lines.append(thr_line)
             self.channel_spike_scatters.append(spike_scatter)
             self.channel_event_scatters.append(event_scatter)
@@ -1710,7 +1755,7 @@ class ExtraCellularGraph(QObject):
         footer.getAxis("left").setOpacity(0)
         axis = footer.getAxis("bottom")
         axis.enableAutoSIPrefix(False)
-        axis.setLabel(self.tr("Time"), units="ms")
+        axis.setLabel(self.tr("Model time"), units="ms")
         footer.setFixedHeight(2 * footer.fontMetrics().height() + 14)
         view = footer.getViewBox()
         view.setMouseEnabled(x=False, y=False)
@@ -1752,6 +1797,9 @@ class ExtraCellularGraph(QObject):
             self.ui.Extracellular_Tetrode_Ch4_checkBox,
         )
 
+    def _refresh_trace_stage(self, *_):
+        self._update_plots()
+
     def _update_plots(self):
         if not self._plots_ready:
             return
@@ -1771,9 +1819,12 @@ class ExtraCellularGraph(QObject):
             bool(visible_channels) or any(item[2].isChecked() for item in self.source_plots)
         )
 
-        show_thr = ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
-        show_spikes = ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
-        show_events = ui.Extracellular_Tetrode_Events_checkBox.isChecked()
+        stage = ui.ExtraCellular_TraceStage_comboBox.currentIndex()
+        broadband = stage == 1
+        buffers = self.Broadband_buffers if broadband else self.Extra_buffers
+        show_thr = not broadband and ui.Extracellular_Tetrode_Threshold_checkBox.isChecked()
+        show_spikes = not broadband and ui.Extracellular_Tetrode_Spikes_checkBox.isChecked()
+        show_events = not broadband and ui.Extracellular_Tetrode_Events_checkBox.isChecked()
 
         for k in range(N_CHANNELS):
             pw = self.channel_plot_widgets[k]
@@ -1786,7 +1837,11 @@ class ExtraCellularGraph(QObject):
             spike_scatter = self.channel_spike_scatters[k]
             event_scatter = self.channel_event_scatters[k]
 
-            curve.setData(x, self.Extra_buffers[k].data[valid_time])
+            curve.setData(x, buffers[k].data[valid_time])
+            overlay = self.broadband_curves[k]
+            overlay.setVisible(stage == 2)
+            if stage == 2:
+                overlay.setData(x, self.Broadband_buffers[k].data[valid_time])
 
             thr_line.setVisible(show_thr)
             thr_line.setPos(float(self.DetectionThreshold_uV))
@@ -1830,6 +1885,8 @@ class ExtraCellularGraph(QObject):
 
     def _refresh_overlay_theme(self, *_):
         colour = theme_manager.active_colour("text_muted")
+        for curve in self.broadband_curves:
+            curve.setPen(theme_manager.pen("text_muted", style=Qt.DashLine))
         for line in self.channel_threshold_lines:
             line.setPen(pg.mkPen(colour, width=1, style=Qt.DashLine))
         self._update_plots()
@@ -1872,8 +1929,9 @@ class ExtraCellularGraph(QObject):
         self._rec_metadata = {
             "signal_mode": self.signal_mode,
             "car_enabled": bool(self.car_enabled),
-            "bandpass_low_hz": float(self.bandpass_low_hz),
-            "bandpass_high_hz": float(self.bandpass_high_hz),
+            "bandpass_low_hz": self.bandpass_low_hz,
+            "bandpass_high_hz": self.bandpass_high_hz,
+            "threshold_uV": self.DetectionThreshold_uV,
             "sample_rate_hz": float(FS_HZ),
             "source": self.source_mode,
             "time_basis": "model_time",
@@ -2049,85 +2107,50 @@ class ExtraCellularGraph(QObject):
 
         ui = self.ui
         p = self._extracellular_params
+        bindings = self.parent.extracellular_page.slider_bindings
 
         def update(_=None):
             self._drain_before_settings()
             previous = dict(p)
-            # Geometry
-            p["spatial_falloff"] = float(ui.ExtraCellular_Spread_Slider.value()) / 10.0
-            self._invalidate_geometry_cache()
-
-            # Noise / contamination
-            # A cleared readout label means the parameter is out of play, so the
-            # toggle must actually zero the contribution rather than leave the
-            # slider's reset value active.
-            p["baseline_noise_uV"] = (
-                float(ui.ExtraCellular_BaselineNoise_Slider.value())
-                if ui.ExtraCellular_BaselineNoise_toggleButton.isChecked() else 0.0
-            )
-            p["shared_noise_uV"] = (
-                float(ui.ExtraCellular_SharedNoise_Slider.value())
-                if ui.ExtraCellular_SharedNoise_toggleButton.isChecked() else 0.0
-            )
-            p["hum_noise_uV"] = (
-                float(ui.ExtraCellular_HumNoise_Slider.value())
-                if ui.ExtraCellular_HumNoise_toggleButton.isChecked() else 0.0
-            )
-
-            # Bandpass preset
-            fl, fh = self._bandpass_limits_from_ui()
-            p["bandpass_low_hz"] = fl
-            p["bandpass_high_hz"] = fh
-            self.bandpass_name = str(ui.ExtraCellular_Bandpass_comboBox.currentText()).strip()
-
-            # Toggle-driven states
-            self.set_signal_mode("dvdt" if ui.ExtraCellular_SignalMode_toggleButton.isChecked() else "template")
-            self.CAR(ui.ExtraCellular_CAR_toggleButton.isChecked())
-
-            # Rebuild filter only when the preset changed
-            if (
-                self._filter_sos is None or
-                abs(fl - self.bandpass_low_hz) > 1e-9 or
-                abs(min(fh, 0.95 * NYQUIST_HZ) - self.bandpass_high_hz) > 1e-9
+            for key, parameter in (
+                ("spread", "spatial_falloff"),
+                ("baseline_noise", "baseline_noise_uV"),
+                ("shared_noise", "shared_noise_uV"),
+                ("hum_noise", "hum_noise_uV"),
             ):
-                self._design_bandpass(fl, fh)
+                control = EXTRACELLULAR_CONTROLS[key]
+                binding = bindings[key]
+                value = binding.value if binding.active else control.reset_value
+                p[parameter] = value * control.display_scale
+            p["unequal_hum"] = bool(p["hum_noise_uV"] and ui.ExtraCellular_HumPickup_comboBox.currentIndex() == 1)
+            if p["spatial_falloff"] != previous.get("spatial_falloff"):
+                self._invalidate_geometry_cache()
 
-            self._update_detection_threshold(p)
             if previous and p != previous and self.session_recording.writer is None:
                 self.stop_recording("Acquisition settings changed")
 
         ui.Spikeling_Speed_slider.valueChanged.connect(self._set_hardware_pacing)
 
-        # Initial cache fill
+        ui.ExtraCellular_Bandpass_comboBox.currentIndexChanged.connect(self._apply_filter_controls)
+        ui.ExtraCellular_LowCut_edit.editingFinished.connect(self._apply_filter_controls)
+        ui.ExtraCellular_HighCut_edit.editingFinished.connect(self._apply_filter_controls)
+        ui.ExtraCellular_Threshold_edit.editingFinished.connect(self._apply_threshold_control)
+        ui.ExtraCellular_TraceStage_comboBox.currentIndexChanged.connect(self._refresh_trace_stage)
+        self._apply_filter_controls()
+        self._apply_threshold_control()
+        self.SignalMode(ui.ExtraCellular_SignalMode_toggleButton.isChecked())
+        self.CAR(ui.ExtraCellular_CAR_toggleButton.isChecked())
         update()
 
-        # Slider + combo connections
-        widgets = [
-            ui.ExtraCellular_Spread_Slider,
-            ui.ExtraCellular_BaselineNoise_Slider,
-            ui.ExtraCellular_SharedNoise_Slider,
-            ui.ExtraCellular_HumNoise_Slider,
-            ui.ExtraCellular_Bandpass_comboBox,
-            ui.ExtraCellular_SignalMode_toggleButton,
-            ui.ExtraCellular_CAR_toggleButton,
-            ui.ExtraCellular_BaselineNoise_toggleButton,
-            ui.ExtraCellular_SharedNoise_toggleButton,
-            ui.ExtraCellular_HumNoise_toggleButton,
-            ui.ExtraCellular_Spread_toggleButton,
-        ]
-
-        for w in widgets:
-            if hasattr(w, "valueChanged"):
-                w.valueChanged.connect(update)
-            elif hasattr(w, "currentIndexChanged"):
-                w.currentIndexChanged.connect(update)
-            elif hasattr(w, "toggled"):
-                w.toggled.connect(update)
+        ui.ExtraCellular_HumPickup_comboBox.currentIndexChanged.connect(update)
+        for binding in bindings.values():
+            binding.applyRequested.connect(update)
+            binding.disableRequested.connect(update)
 
     def _update_connect_button(self, connected: bool):
         """Update connect button appearance."""
         if connected:
-            self.ui.ExtraCellular_ConnectButton.setText("Connected")
+            self.ui.ExtraCellular_ConnectButton.setText(self.tr("Stop acquisition"))
             self.ui.ExtraCellular_ConnectButton.setStyleSheet(
                 f"color: rgb{tuple(DarkSolarized[3])};\n"
                 f"background-color: rgb{tuple(DarkSolarized[11])};\n"
@@ -2135,7 +2158,7 @@ class ExtraCellularGraph(QObject):
                 f"border-radius: 10px;"
             )
         else:
-            self.ui.ExtraCellular_ConnectButton.setText("Connect Tetrode recording to Spikeling")
+            self.ui.ExtraCellular_ConnectButton.setText(self.tr("Start acquisition"))
             self.ui.ExtraCellular_ConnectButton.setStyleSheet(
                 f"color: rgb{tuple(DarkSolarized[14])};\n"
                 f"background-color: rgb{tuple(DarkSolarized[2])};\n"
@@ -2161,6 +2184,7 @@ class ExtraCellularGraph(QObject):
         self.channel_plot_widgets = []
         self.channel_plot_items = []
         self.channel_curves = []
+        self.broadband_curves = []
         self.channel_threshold_lines = []
         self.channel_spike_scatters = []
         self.channel_event_scatters = []
@@ -2172,9 +2196,7 @@ class ExtraCellularGraph(QObject):
         self.ui.ExtraCellular_AutoRange_pushButton.setEnabled(False)
 
         self._reset_model_state()
-        self._filter_sos = None
-        self._filter_recipe = None
-        self._filter_zi_block = None
+        self._reset_filter_state()
         self._projection_matrix_cache = None
 
         if hasattr(self, "_rx_timer"):

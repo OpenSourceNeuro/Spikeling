@@ -80,3 +80,14 @@ def test_narrow_filters_extend_warmup(tmp_path):
     reader, _ = make_session(tmp_path)
     result = list(process_interval(reader, 10, 400, Processing(bandpass=(1, 100))))
     assert all(run.warmup == len(run.time_ms) for run in result)
+
+
+def test_single_reference_and_mains_notch():
+    from scipy.signal import sosfreqz
+
+    samples = np.array([[2, 3, 4, 6], [1, 2, 3, 4]], dtype=float)
+    recipe = Processing("single", ("E2",), None, 50)
+    np.testing.assert_array_equal(apply_reference(samples, recipe), samples - samples[:, 1:2])
+    _, response = sosfreqz(recipe.design(10000), worN=[40, 50, 60], fs=10000)
+    assert abs(response[1]) < 1e-8
+    assert abs(response[0]) > .95 and abs(response[2]) > .95

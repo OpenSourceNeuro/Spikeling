@@ -198,8 +198,9 @@ class SessionReader:
             require(np.allclose(calculated, distances, rtol=0, atol=1e-6),
                     "Source and contact coordinates disagree with distances")
         car, low, high, sos = settings["processing"]
-        require(type(car) is bool and type(low) in (float, int) and type(high) in (float, int)
-                and 0 < low < high < 5000, "Invalid reference or bandpass recipe")
+        bypass = low is None and high is None and sos is None
+        bandpass = type(low) in (float, int) and type(high) in (float, int) and 0 < low < high < 5000
+        require(type(car) is bool and (bypass or bandpass), "Invalid reference or bandpass recipe")
         if sos is not None:
             coefficients = np.asarray(sos)
             require(coefficients.ndim == 2 and coefficients.shape[1] == 6

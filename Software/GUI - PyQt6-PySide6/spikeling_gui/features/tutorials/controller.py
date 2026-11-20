@@ -112,11 +112,8 @@ class TutorialController(QObject):
         self.panel_ui.titleCloseButton.clicked.connect(self.panel.reject)
 
         ui = self.catalogue_ui
-        ui.categoryCombo.addItems((
-            "All modules", "Neuron Interface", "Neuron Emulator", "Neuron Data Analysis",
-        ))
         ui.searchEdit.textChanged.connect(self._populate_catalogue)
-        ui.categoryCombo.currentIndexChanged.connect(self._populate_catalogue)
+        ui.categoryButtons.buttonClicked.connect(self._populate_catalogue)
         ui.tutorialList.currentItemChanged.connect(self._selected_tutorial_changed)
         ui.tutorialList.itemDoubleClicked.connect(lambda *_: self.start_selected())
         ui.startButton.clicked.connect(self.start_selected)
@@ -178,11 +175,11 @@ class TutorialController(QObject):
         ui = self.catalogue_ui
         selected = self._selected_id()
         term = ui.searchEdit.text().strip().casefold()
-        category = ui.categoryCombo.currentText()
+        category = ui.categoryButtons.checkedButton().property("tutorialModule")
         ui.tutorialList.blockSignals(True)
         ui.tutorialList.clear()
         for tutorial in TUTORIALS:
-            if category != "All modules" and category != tutorial.module:
+            if category and category != tutorial.module:
                 continue
             if term not in (tutorial.title + " " + tutorial.description + " " + tutorial.id).casefold():
                 continue
@@ -205,10 +202,11 @@ class TutorialController(QObject):
         tutorial = get_tutorial(self._selected_id())
         ui = self.catalogue_ui
         if tutorial is None:
-            ui.nameLabel.setText("No tutorial selected")
+            ui.nameLabel.setText(self.tr("No tutorials match your search"))
             ui.descriptionText.clear()
             ui.metaLabel.clear()
             ui.statusLabel.clear()
+            ui.startButton.setText(self.tr("Start tutorial"))
             ui.startButton.setEnabled(False)
             return
         ui.startButton.setEnabled(True)

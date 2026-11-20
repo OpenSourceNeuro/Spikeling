@@ -8,7 +8,7 @@ import numpy as np
 from .acquisition import CONTACTS, NEURONS
 from .analysis_comparison import Agreement, EventAnchor, match_events, validate_tolerance
 from .offline_detection import Detector, detect_run
-from .offline_processing import ALGORITHM, POLE_DECAY, WARMUP_MS, Processing, process_interval
+from .offline_processing import ALGORITHM, NOTCH_Q, POLE_DECAY, WARMUP_MS, Processing, process_interval
 from .recording_schema import canonical
 from .session_reader import SessionReader
 from .waveform_analysis import Waveforms, WaveformSettings, extract_waveforms
@@ -173,7 +173,7 @@ def _analysis_data(result):
 
 
 def export_analysis(path, source_directory, result, reference=None, tolerance_ms=None,
-                    comparison=None, source=None):
+                    comparison=None, source=None, *, measurements=None):
     """Write a derivative JSON outside the immutable acquisition directory."""
     path = Path(path).resolve()
     if path.is_relative_to(Path(source_directory).resolve()):
@@ -186,6 +186,7 @@ def export_analysis(path, source_directory, result, reference=None, tolerance_ms
         "channels": CONTACTS, "voltage_unit": "µV", "model_rate_hz": result.rate,
         "recorded_live_initial_state": result.live_initial_state,
         "filter": {"family": "Butterworth", "prototype_order": 3, "overall_order": 6,
+                   "notch_q": NOTCH_Q, "order": ["reference", "notch", "bandpass"],
                    "phase": "causal", "initial_state": "zero",
                    "minimum_warmup_ms": WARMUP_MS, "pole_decay_envelope": POLE_DECAY, "reset": "interval, segment, epoch, clock or missing samples"},
         "analysis_b": _analysis_data(result),
@@ -195,6 +196,8 @@ def export_analysis(path, source_directory, result, reference=None, tolerance_ms
         data.update(analysis_a=_analysis_data(reference), matching_tolerance_ms=tolerance_ms,
                     comparison=dict(_agreement_data(agreement), warmup_only_a=excluded_a,
                                     warmup_only_b=excluded_b))
+    if measurements is not None:
+        data["measurements"] = measurements
     if source is not None:
         data["source_comparison"] = {
             "stream": source.stream, "available": source.available, "eligible_rows": source.eligible_rows,

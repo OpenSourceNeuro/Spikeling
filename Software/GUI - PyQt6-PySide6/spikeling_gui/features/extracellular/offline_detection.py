@@ -17,8 +17,12 @@ class Detector:
     polarity: str = "negative"
 
     def validate(self):
-        if self.polarity != "negative" or not isfinite(self.threshold_uV) or self.threshold_uV >= 0:
-            raise ValueError("Enter a finite negative threshold in µV.")
+        if self.polarity not in ("negative", "positive", "both"):
+            raise ValueError("Choose a detection polarity.")
+        if not isfinite(self.threshold_uV) or (
+            self.threshold_uV >= 0 if self.polarity == "negative" else self.threshold_uV <= 0
+        ):
+            raise ValueError("Enter a finite threshold with the sign shown for the selected polarity.")
         if not contacts_valid(self.contacts, 1):
             raise ValueError("Select one or more detection contacts.")
         if not all(isfinite(value) and value >= 0 for value in (self.refractory_ms, self.grouping_ms)):
@@ -68,16 +72,24 @@ def detect_run(run, config, rate, recipe_id):
         return ()
     for contact in config.contacts:
         trace = signal[lo:, CONTACTS.index(contact)]
-        candidates = np.flatnonzero((trace[:-1] > config.threshold_uV)
-                                    & (trace[1:] <= config.threshold_uV)) + lo + 1
+        magnitude = abs(config.threshold_uV)
+        falling = (trace[:-1] > -magnitude) & (trace[1:] <= -magnitude)
+        rising = (trace[:-1] < magnitude) & (trace[1:] >= magnitude)
+        mask = falling if config.polarity == "negative" else rising
+        if config.polarity == "both":
+            mask = falling | rising
+        candidates = np.flatnonzero(mask) + lo + 1
         previous = None
         for row in candidates:
             row = int(row)
             if previous is not None and (row - previous) < config.refractory_ms / ms_per_tick - 1e-9:
                 continue
             previous = row
+            negative = falling[row - lo - 1]
             crossings.append(Crossing(run.first + row, run.tick + row, float(run.time_ms[row]),
-                                      contact, run.segment, run.epoch, config.threshold_uV, recipe_id))
+                                      contact, run.segment, run.epoch, -magnitude if negative else magnitude,
+                                      recipe_id, "offline_negative_threshold" if negative
+                                      else "offline_positive_threshold"))
     groups = []
     members = []
     for contact in sorted(crossings, key=lambda item: (item.sample, item.contact)):

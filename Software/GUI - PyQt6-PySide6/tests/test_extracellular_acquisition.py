@@ -104,6 +104,8 @@ def test_physical_queue_combines_eviction_and_trim(graph):
 
 
 def test_events_and_capture_share_sample_identity(graph, tmp_path):
+    selector = graph.ui.ExtraCellular_Bandpass_comboBox
+    selector.setCurrentIndex(scope.BYPASS_INDEX)
     with patch.object(graph, "_apply_bandpass_block", side_effect=[
         np.array([[0, 0, 0, 0], [-100, 0, 0, 0]], dtype=float),
         np.array([[-100, -100, 0, 0]], dtype=float),
@@ -128,6 +130,7 @@ def test_events_and_capture_share_sample_identity(graph, tmp_path):
     assert graph.capture.end_index == 3
     assert graph.stop_recording()
     assert path.read_text().splitlines()[-1].endswith(",0")
+    selector.setCurrentIndex(0)
 
 
 def test_gap_primes_comparators_and_finishes_legacy_capture(graph, tmp_path):
@@ -159,12 +162,13 @@ def test_car_epoch_drains_old_hardware_rows(graph):
     assert blocks[1].processed.warmup_rows == 1
 
 
-def test_car_does_not_change_published_broadband(graph):
+def test_car_does_not_change_published_broadband(graph, monkeypatch):
     result = []
     rows = [packet(tick, vm=30 if tick == 2 else -65) for tick in range(1, 90)]
     for referenced in (False, True):
         graph.disconnect()
         graph.CAR(referenced)
+        monkeypatch.setattr(graph, "_rng", np.random.default_rng(43))
         graph.connect()
         graph._rx_timer.stop()
         graph.on_emulator_data(rows)
@@ -254,3 +258,113 @@ def test_emulator_midrun_vc_pacing_and_restart(window):
         ui.Emulator_Speed_slider.setValue(old_speed)
         ui.Emulator_PatchClampMode_toggleButton.setChecked(False)
         ui.EmulatorSyn1_Synapse_toggleButton.setChecked(False)
+
+
+def test_noise_controls_apply_broadband_values_and_keep_fixed_threshold(graph, monkeypatch):
+    monkeypatch.setattr(graph, "_rng", np.random.default_rng(43))
+    ui = graph.ui
+    controls = (
+        (ui.ExtraCellular_BaselineNoise_toggleButton, ui.ExtraCellular_BaselineNoise_Slider,
+         ui.ExtraCellular_BaselineNoise_Readings, "baseline_noise_uV"),
+        (ui.ExtraCellular_SharedNoise_toggleButton, ui.ExtraCellular_SharedNoise_Slider,
+         ui.ExtraCellular_SharedNoise_Readings, "shared_noise_uV"),
+        (ui.ExtraCellular_HumNoise_toggleButton, ui.ExtraCellular_HumNoise_Slider,
+         ui.ExtraCellular_HumNoise_Readings, "hum_noise_uV"),
+    )
+    defaults = (2, 2, 0)
+    for (toggle, slider, readout, key), default in zip(controls, defaults):
+        assert not toggle.isChecked() and not slider.isEnabled() and not readout.isEnabled()
+        assert slider.value() == graph._extracellular_params[key] == default
+        assert readout.text() == f"Default {default}"
+
+    spread = ui.ExtraCellular_Spread_Readings
+    spread_toggle = ui.ExtraCellular_Spread_toggleButton
+    assert not spread.isEnabled() and spread.text() == "Default 1.2"
+    spread_toggle.setChecked(True)
+    spread.setText("1,7")
+    spread.editingFinished.emit()
+    assert ui.ExtraCellular_Spread_Slider.value() == 17
+    assert graph._extracellular_params["spatial_falloff"] == pytest.approx(1.7)
+    spread.setText("2.5")
+    spread.editingFinished.emit()
+    assert spread.text() == "1.7"
+    spread_toggle.setChecked(False)
+    assert not spread.isEnabled() and spread.text() == "Default 1.2"
+
+    ticks = list(range(1, 601))
+    graph.on_emulator_data([packet(tick) for tick in ticks], ticks=ticks)
+    rng = np.random.default_rng(43)
+    expected = rng.normal(scale=2, size=(600, 4)) + rng.normal(scale=2, size=(600, 1))
+    np.testing.assert_array_equal(graph.latest_block.broadband.contacts_uV, expected)
+
+    start = 601
+    for toggle, slider, _, _ in controls:
+        toggle.setChecked(True)
+        slider.setValue(0)
+
+    for index, (toggle, slider, readout, key) in enumerate(controls):
+        assert readout.isEnabled()
+        slider.setValue(18)
+        assert readout.text() == "18"
+        readout.setText("22")
+        readout.editingFinished.emit()
+        assert slider.value() == graph._extracellular_params[key] == 22
+        ticks = range(start, start + 600)
+        graph.on_emulator_data([packet(tick) for tick in ticks], ticks=list(ticks))
+        start += 600
+        block = graph.latest_block
+        raw = block.broadband.contacts_uV
+        assert block.processed.threshold_uV == -15
+        if index == 0:
+            assert np.all((raw.std(axis=0) > 18) & (raw.std(axis=0) < 26))
+            assert abs(np.corrcoef(raw[:, 0], raw[:, 1])[0, 1]) < .15
+        else:
+            np.testing.assert_array_equal(raw, np.broadcast_to(raw[:, :1], raw.shape))
+            if index == 1:
+                assert 18 < raw[:, 0].std() < 26
+            else:
+                assert np.max(np.abs(raw[:, 0])) == pytest.approx(22, abs=.01)
+                ui.ExtraCellular_HumPickup_comboBox.setCurrentIndex(1)
+                ticks = list(range(start, start + 600))
+                graph.on_emulator_data([packet(tick) for tick in ticks], ticks=ticks)
+                start += 600
+                unequal = graph.latest_block.broadband.contacts_uV
+                np.testing.assert_allclose(unequal, unequal[:, :1] * [1, .75, .5, .25])
+                assert np.max(np.abs(unequal.mean(axis=1) - unequal[:, 0])) > 5
+                ui.ExtraCellular_HumPickup_comboBox.setCurrentIndex(0)
+        toggle.setChecked(False)
+        default = defaults[index]
+        assert readout.text() == f"Default {default}"
+        assert slider.value() == graph._extracellular_params[key] == default
+        assert not slider.isEnabled() and not readout.isEnabled()
+        toggle.setChecked(True)
+        assert slider.isEnabled() and graph._extracellular_params[key] == default
+        slider.setValue(0)
+
+    for toggle, _, _, _ in controls:
+        toggle.setChecked(False)
+
+
+def test_live_filter_edit_rejects_nyquist_and_excludes_warmup(graph):
+    ui = graph.ui
+    selector = ui.ExtraCellular_Bandpass_comboBox
+    selector.setCurrentIndex(1)
+    assert ui.ExtraCellular_HighCut_edit.text() == "4750"
+    selector.setCurrentIndex(4)
+    ui.ExtraCellular_HighCut_edit.setText("5000")
+    ui.ExtraCellular_HighCut_edit.editingFinished.emit()
+    assert graph.bandpass_high_hz == 4750
+    assert "Enter" in ui.ExtraCellular_FilterStatus_label.text()
+    ui.ExtraCellular_HighCut_edit.setText("1200")
+    ui.ExtraCellular_HighCut_edit.editingFinished.emit()
+    assert graph.bandpass_high_hz == 1200
+
+    selector.setCurrentIndex(2)
+    assert graph._filter_settle_rows > 10_000
+    with patch.object(graph, "_apply_bandpass_block", return_value=np.array([[0.] * 4, [-100.] * 4])):
+        graph.on_emulator_data([packet(1), packet(2)], ticks=[1, 2])
+    block = graph.latest_block
+    assert block.processed.warmup_rows == 2
+    assert not block.processed.merged_flags.any()
+    assert not any(item.kind == "contact_crossing" for item in block.events)
+    selector.setCurrentIndex(0)

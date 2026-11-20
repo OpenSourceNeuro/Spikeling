@@ -19420,6 +19420,12 @@ class Ui_Spikeling(object):
 
         self.verticalLayout_121.addWidget(self.ExtraCellular_Source_comboBox)
 
+        self.ExtraCellular_AcquisitionStatus_label = QLabel(self.ExtraCellular_Source_frame)
+        self.ExtraCellular_AcquisitionStatus_label.setObjectName(u"ExtraCellular_AcquisitionStatus_label")
+        self.ExtraCellular_AcquisitionStatus_label.setWordWrap(True)
+
+        self.verticalLayout_121.addWidget(self.ExtraCellular_AcquisitionStatus_label)
+
 
         self.horizontalLayout_153.addWidget(self.ExtraCellular_Source_frame, 0, Qt.AlignmentFlag.AlignRight)
 
@@ -19669,16 +19675,30 @@ class Ui_Spikeling(object):
         self.ExtraCellular_AutoRange_frame.setObjectName(u"ExtraCellular_AutoRange_frame")
         self.ExtraCellular_AutoRange_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.ExtraCellular_AutoRange_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_60 = QVBoxLayout(self.ExtraCellular_AutoRange_frame)
-        self.verticalLayout_60.setSpacing(0)
+        self.verticalLayout_60 = QHBoxLayout(self.ExtraCellular_AutoRange_frame)
+        self.verticalLayout_60.setSpacing(10)
         self.verticalLayout_60.setObjectName(u"verticalLayout_60")
         self.verticalLayout_60.setContentsMargins(10, 0, 0, 0)
+        self.ExtraCellular_TraceControls_spacer = QSpacerItem(10, 1, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.verticalLayout_60.addItem(self.ExtraCellular_TraceControls_spacer)
+
         self.ExtraCellular_AutoRange_pushButton = QPushButton(self.ExtraCellular_AutoRange_frame)
         self.ExtraCellular_AutoRange_pushButton.setObjectName(u"ExtraCellular_AutoRange_pushButton")
         self.ExtraCellular_AutoRange_pushButton.setEnabled(False)
+        self.ExtraCellular_AutoRange_pushButton.setFont(font6)
         self.ExtraCellular_AutoRange_pushButton.setCheckable(True)
 
         self.verticalLayout_60.addWidget(self.ExtraCellular_AutoRange_pushButton)
+
+        self.ExtraCellular_TraceStage_comboBox = QComboBox(self.ExtraCellular_AutoRange_frame)
+        self.ExtraCellular_TraceStage_comboBox.addItem("")
+        self.ExtraCellular_TraceStage_comboBox.addItem("")
+        self.ExtraCellular_TraceStage_comboBox.addItem("")
+        self.ExtraCellular_TraceStage_comboBox.setObjectName(u"ExtraCellular_TraceStage_comboBox")
+        self.ExtraCellular_TraceStage_comboBox.setFont(font6)
+
+        self.verticalLayout_60.addWidget(self.ExtraCellular_TraceStage_comboBox)
 
 
         self.verticalLayout_120.addWidget(self.ExtraCellular_AutoRange_frame, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
@@ -19687,15 +19707,15 @@ class Ui_Spikeling(object):
         self.ExtraCellular_DataRecording_box.setObjectName(u"ExtraCellular_DataRecording_box")
         sizePolicy5.setHeightForWidth(self.ExtraCellular_DataRecording_box.sizePolicy().hasHeightForWidth())
         self.ExtraCellular_DataRecording_box.setSizePolicy(sizePolicy5)
-        self.ExtraCellular_DataRecording_box.setMinimumSize(QSize(0, 100))
-        self.ExtraCellular_DataRecording_box.setMaximumSize(QSize(16777215, 100))
+        self.ExtraCellular_DataRecording_box.setMinimumSize(QSize(0, 128))
+        self.ExtraCellular_DataRecording_box.setMaximumSize(QSize(16777215, 128))
         self.ExtraCellular_DataRecording_box.setFont(font3)
         self.ExtraCellular_DataRecording_box.setStyleSheet(u"")
         self.ExtraCellular_DataRecording_box.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.ExtraCellular_DataRecording_horizontalLayout_52 = QHBoxLayout(self.ExtraCellular_DataRecording_box)
         self.ExtraCellular_DataRecording_horizontalLayout_52.setSpacing(0)
         self.ExtraCellular_DataRecording_horizontalLayout_52.setObjectName(u"ExtraCellular_DataRecording_horizontalLayout_52")
-        self.ExtraCellular_DataRecording_horizontalLayout_52.setContentsMargins(10, 10, 10, 5)
+        self.ExtraCellular_DataRecording_horizontalLayout_52.setContentsMargins(10, 5, 10, 5)
         self.ExtraCellular_DataRecording_frame = QFrame(self.ExtraCellular_DataRecording_box)
         self.ExtraCellular_DataRecording_frame.setObjectName(u"ExtraCellular_DataRecording_frame")
         self.ExtraCellular_DataRecording_frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -19705,16 +19725,30 @@ class Ui_Spikeling(object):
         self.ExtraCellular_DataRecording_verticalLayout_28.setObjectName(u"ExtraCellular_DataRecording_verticalLayout_28")
         self.ExtraCellular_DataRecording_verticalLayout_28.setContentsMargins(0, 0, 0, 0)
         self.ExtraCellular_RecordingFormatLayout = QHBoxLayout()
+        self.ExtraCellular_RecordingFormatLayout.setSpacing(10)
         self.ExtraCellular_RecordingFormatLayout.setObjectName(u"ExtraCellular_RecordingFormatLayout")
+        self.frame = QFrame(self.ExtraCellular_DataRecording_frame)
+        self.frame.setObjectName(u"frame")
+        self.frame.setMinimumSize(QSize(100, 0))
+        self.frame.setMaximumSize(QSize(100, 16777215))
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.ExtraCellular_RecordingFormatLayout.addWidget(self.frame)
+
         self.ExtraCellular_RecordingFormat_label = QLabel(self.ExtraCellular_DataRecording_frame)
         self.ExtraCellular_RecordingFormat_label.setObjectName(u"ExtraCellular_RecordingFormat_label")
+        self.ExtraCellular_RecordingFormat_label.setFont(font6)
 
-        self.ExtraCellular_RecordingFormatLayout.addWidget(self.ExtraCellular_RecordingFormat_label)
+        self.ExtraCellular_RecordingFormatLayout.addWidget(self.ExtraCellular_RecordingFormat_label, 0, Qt.AlignmentFlag.AlignRight)
 
         self.ExtraCellular_RecordingFormat_comboBox = QComboBox(self.ExtraCellular_DataRecording_frame)
         self.ExtraCellular_RecordingFormat_comboBox.addItem("")
         self.ExtraCellular_RecordingFormat_comboBox.addItem("")
         self.ExtraCellular_RecordingFormat_comboBox.setObjectName(u"ExtraCellular_RecordingFormat_comboBox")
+        self.ExtraCellular_RecordingFormat_comboBox.setMinimumSize(QSize(200, 0))
+        self.ExtraCellular_RecordingFormat_comboBox.setMaximumSize(QSize(200, 16777215))
+        self.ExtraCellular_RecordingFormat_comboBox.setFont(font6)
 
         self.ExtraCellular_RecordingFormatLayout.addWidget(self.ExtraCellular_RecordingFormat_comboBox)
 
@@ -19835,23 +19869,6 @@ class Ui_Spikeling(object):
 
 
         self.ExtraCellular_DataRecording_horizontalLayout_199.addWidget(self.ExtraCellular_DataRecording_File_lineEdit_frame)
-
-        self.ExtraCellular_DataRecording_File_csvlabel_frame = QFrame(self.ExtraCellular_DataRecording_File_frame)
-        self.ExtraCellular_DataRecording_File_csvlabel_frame.setObjectName(u"ExtraCellular_DataRecording_File_csvlabel_frame")
-        self.ExtraCellular_DataRecording_File_csvlabel_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.ExtraCellular_DataRecording_File_csvlabel_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.ExtraCellular_DataRecording_verticalLayout_330 = QVBoxLayout(self.ExtraCellular_DataRecording_File_csvlabel_frame)
-        self.ExtraCellular_DataRecording_verticalLayout_330.setSpacing(0)
-        self.ExtraCellular_DataRecording_verticalLayout_330.setObjectName(u"ExtraCellular_DataRecording_verticalLayout_330")
-        self.ExtraCellular_DataRecording_verticalLayout_330.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_DataRecording_File_csvlabel = QLabel(self.ExtraCellular_DataRecording_File_csvlabel_frame)
-        self.ExtraCellular_DataRecording_File_csvlabel.setObjectName(u"ExtraCellular_DataRecording_File_csvlabel")
-        self.ExtraCellular_DataRecording_File_csvlabel.setFont(font6)
-
-        self.ExtraCellular_DataRecording_verticalLayout_330.addWidget(self.ExtraCellular_DataRecording_File_csvlabel)
-
-
-        self.ExtraCellular_DataRecording_horizontalLayout_199.addWidget(self.ExtraCellular_DataRecording_File_csvlabel_frame)
 
         self.ExtraCellular_DataRecording_Record_pushButton_frame = QFrame(self.ExtraCellular_DataRecording_File_frame)
         self.ExtraCellular_DataRecording_Record_pushButton_frame.setObjectName(u"ExtraCellular_DataRecording_Record_pushButton_frame")
@@ -20121,10 +20138,66 @@ class Ui_Spikeling(object):
         self.ExtraCellular_Bandpass_comboBox.addItem("")
         self.ExtraCellular_Bandpass_comboBox.addItem("")
         self.ExtraCellular_Bandpass_comboBox.addItem("")
+        self.ExtraCellular_Bandpass_comboBox.addItem("")
+        self.ExtraCellular_Bandpass_comboBox.addItem("")
         self.ExtraCellular_Bandpass_comboBox.setObjectName(u"ExtraCellular_Bandpass_comboBox")
         self.ExtraCellular_Bandpass_comboBox.setFont(font6)
 
         self.verticalLayout_118.addWidget(self.ExtraCellular_Bandpass_comboBox)
+
+        self.ExtraCellular_Cutoffs_frame = QFrame(self.ExtraCellular_Bandpass_comboBox_frame)
+        self.ExtraCellular_Cutoffs_frame.setObjectName(u"ExtraCellular_Cutoffs_frame")
+        self.ExtraCellular_Cutoffs_layout = QGridLayout(self.ExtraCellular_Cutoffs_frame)
+        self.ExtraCellular_Cutoffs_layout.setObjectName(u"ExtraCellular_Cutoffs_layout")
+        self.ExtraCellular_Cutoffs_layout.setContentsMargins(0, 0, 0, 0)
+        self.ExtraCellular_LowCut_label = QLabel(self.ExtraCellular_Cutoffs_frame)
+        self.ExtraCellular_LowCut_label.setObjectName(u"ExtraCellular_LowCut_label")
+
+        self.ExtraCellular_Cutoffs_layout.addWidget(self.ExtraCellular_LowCut_label, 0, 0, 1, 1)
+
+        self.ExtraCellular_LowCut_edit = QLineEdit(self.ExtraCellular_Cutoffs_frame)
+        self.ExtraCellular_LowCut_edit.setObjectName(u"ExtraCellular_LowCut_edit")
+        self.ExtraCellular_LowCut_edit.setText(u"300")
+        self.ExtraCellular_LowCut_edit.setReadOnly(True)
+
+        self.ExtraCellular_Cutoffs_layout.addWidget(self.ExtraCellular_LowCut_edit, 0, 1, 1, 1)
+
+        self.ExtraCellular_HighCut_label = QLabel(self.ExtraCellular_Cutoffs_frame)
+        self.ExtraCellular_HighCut_label.setObjectName(u"ExtraCellular_HighCut_label")
+
+        self.ExtraCellular_Cutoffs_layout.addWidget(self.ExtraCellular_HighCut_label, 1, 0, 1, 1)
+
+        self.ExtraCellular_HighCut_edit = QLineEdit(self.ExtraCellular_Cutoffs_frame)
+        self.ExtraCellular_HighCut_edit.setObjectName(u"ExtraCellular_HighCut_edit")
+        self.ExtraCellular_HighCut_edit.setText(u"3000")
+        self.ExtraCellular_HighCut_edit.setReadOnly(True)
+
+        self.ExtraCellular_Cutoffs_layout.addWidget(self.ExtraCellular_HighCut_edit, 1, 1, 1, 1)
+
+
+        self.verticalLayout_118.addWidget(self.ExtraCellular_Cutoffs_frame)
+
+        self.ExtraCellular_FilterStatus_label = QLabel(self.ExtraCellular_Bandpass_comboBox_frame)
+        self.ExtraCellular_FilterStatus_label.setObjectName(u"ExtraCellular_FilterStatus_label")
+        self.ExtraCellular_FilterStatus_label.setWordWrap(True)
+
+        self.verticalLayout_118.addWidget(self.ExtraCellular_FilterStatus_label)
+
+        self.ExtraCellular_Threshold_layout = QHBoxLayout()
+        self.ExtraCellular_Threshold_layout.setObjectName(u"ExtraCellular_Threshold_layout")
+        self.ExtraCellular_Threshold_label = QLabel(self.ExtraCellular_Bandpass_comboBox_frame)
+        self.ExtraCellular_Threshold_label.setObjectName(u"ExtraCellular_Threshold_label")
+
+        self.ExtraCellular_Threshold_layout.addWidget(self.ExtraCellular_Threshold_label)
+
+        self.ExtraCellular_Threshold_edit = QLineEdit(self.ExtraCellular_Bandpass_comboBox_frame)
+        self.ExtraCellular_Threshold_edit.setObjectName(u"ExtraCellular_Threshold_edit")
+        self.ExtraCellular_Threshold_edit.setText(u"-15")
+
+        self.ExtraCellular_Threshold_layout.addWidget(self.ExtraCellular_Threshold_edit)
+
+
+        self.verticalLayout_118.addLayout(self.ExtraCellular_Threshold_layout)
 
 
         self.verticalLayout_117.addWidget(self.ExtraCellular_Bandpass_comboBox_frame)
@@ -20198,11 +20271,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_563.setSpacing(0)
         self.horizontalLayout_563.setObjectName(u"horizontalLayout_563")
         self.horizontalLayout_563.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_Spread_Readings = QLabel(self.ExtraCellular_Spread_Readings_frame)
+        self.ExtraCellular_Spread_Readings = QLineEdit(self.ExtraCellular_Spread_Readings_frame)
         self.ExtraCellular_Spread_Readings.setObjectName(u"ExtraCellular_Spread_Readings")
+        self.ExtraCellular_Spread_Readings.setEnabled(False)
+        self.ExtraCellular_Spread_Readings.setStyleSheet(u"QLineEdit:enabled { color: rgb(38, 139, 210); font: 700 10pt; }\n"
+"QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }")
         self.ExtraCellular_Spread_Readings.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_563.addWidget(self.ExtraCellular_Spread_Readings)
+        self.horizontalLayout_563.addWidget(self.ExtraCellular_Spread_Readings, 0, Qt.AlignmentFlag.AlignHCenter)
 
 
         self.verticalLayout_234.addWidget(self.ExtraCellular_Spread_Readings_frame)
@@ -20342,11 +20418,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_634.setSpacing(0)
         self.horizontalLayout_634.setObjectName(u"horizontalLayout_634")
         self.horizontalLayout_634.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_BaselineNoise_Readings = QLabel(self.ExtraCellular_BaselineNoise_Readings_frame)
+        self.ExtraCellular_BaselineNoise_Readings = QLineEdit(self.ExtraCellular_BaselineNoise_Readings_frame)
         self.ExtraCellular_BaselineNoise_Readings.setObjectName(u"ExtraCellular_BaselineNoise_Readings")
+        self.ExtraCellular_BaselineNoise_Readings.setEnabled(False)
+        self.ExtraCellular_BaselineNoise_Readings.setStyleSheet(u"QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }\n"
+"QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }")
         self.ExtraCellular_BaselineNoise_Readings.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_634.addWidget(self.ExtraCellular_BaselineNoise_Readings)
+        self.horizontalLayout_634.addWidget(self.ExtraCellular_BaselineNoise_Readings, 0, Qt.AlignmentFlag.AlignHCenter)
 
 
         self.verticalLayout_252.addWidget(self.ExtraCellular_BaselineNoise_Readings_frame)
@@ -20363,7 +20442,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_BaselineNoise_Slider.setObjectName(u"ExtraCellular_BaselineNoise_Slider")
         self.ExtraCellular_BaselineNoise_Slider.setEnabled(False)
         self.ExtraCellular_BaselineNoise_Slider.setMaximum(30)
-        self.ExtraCellular_BaselineNoise_Slider.setValue(5)
+        self.ExtraCellular_BaselineNoise_Slider.setValue(2)
         self.ExtraCellular_BaselineNoise_Slider.setOrientation(Qt.Orientation.Horizontal)
         self.ExtraCellular_BaselineNoise_Slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.ExtraCellular_BaselineNoise_Slider.setTickInterval(3)
@@ -20462,11 +20541,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_641.setSpacing(0)
         self.horizontalLayout_641.setObjectName(u"horizontalLayout_641")
         self.horizontalLayout_641.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_SharedNoise_Readings = QLabel(self.ExtraCellular_SharedNoise_Readings_frame)
+        self.ExtraCellular_SharedNoise_Readings = QLineEdit(self.ExtraCellular_SharedNoise_Readings_frame)
         self.ExtraCellular_SharedNoise_Readings.setObjectName(u"ExtraCellular_SharedNoise_Readings")
+        self.ExtraCellular_SharedNoise_Readings.setEnabled(False)
+        self.ExtraCellular_SharedNoise_Readings.setStyleSheet(u"QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }\n"
+"QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }")
         self.ExtraCellular_SharedNoise_Readings.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_641.addWidget(self.ExtraCellular_SharedNoise_Readings)
+        self.horizontalLayout_641.addWidget(self.ExtraCellular_SharedNoise_Readings, 0, Qt.AlignmentFlag.AlignHCenter)
 
 
         self.verticalLayout_253.addWidget(self.ExtraCellular_SharedNoise_Readings_frame)
@@ -20483,7 +20565,7 @@ class Ui_Spikeling(object):
         self.ExtraCellular_SharedNoise_Slider.setObjectName(u"ExtraCellular_SharedNoise_Slider")
         self.ExtraCellular_SharedNoise_Slider.setEnabled(False)
         self.ExtraCellular_SharedNoise_Slider.setMaximum(30)
-        self.ExtraCellular_SharedNoise_Slider.setValue(10)
+        self.ExtraCellular_SharedNoise_Slider.setValue(2)
         self.ExtraCellular_SharedNoise_Slider.setOrientation(Qt.Orientation.Horizontal)
         self.ExtraCellular_SharedNoise_Slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.ExtraCellular_SharedNoise_Slider.setTickInterval(20)
@@ -20582,11 +20664,14 @@ class Ui_Spikeling(object):
         self.horizontalLayout_568.setSpacing(0)
         self.horizontalLayout_568.setObjectName(u"horizontalLayout_568")
         self.horizontalLayout_568.setContentsMargins(0, 0, 0, 0)
-        self.ExtraCellular_HumNoise_Readings = QLabel(self.ExtraCellular_HumNoise_Readings_frame)
+        self.ExtraCellular_HumNoise_Readings = QLineEdit(self.ExtraCellular_HumNoise_Readings_frame)
         self.ExtraCellular_HumNoise_Readings.setObjectName(u"ExtraCellular_HumNoise_Readings")
+        self.ExtraCellular_HumNoise_Readings.setEnabled(False)
+        self.ExtraCellular_HumNoise_Readings.setStyleSheet(u"QLineEdit:enabled { color: rgb(133, 153, 0); font: 700 10pt; }\n"
+"QLineEdit:disabled { color: rgb(88, 110, 117); font-size: 9pt; font-weight: 400; }")
         self.ExtraCellular_HumNoise_Readings.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_568.addWidget(self.ExtraCellular_HumNoise_Readings)
+        self.horizontalLayout_568.addWidget(self.ExtraCellular_HumNoise_Readings, 0, Qt.AlignmentFlag.AlignHCenter)
 
 
         self.verticalLayout_235.addWidget(self.ExtraCellular_HumNoise_Readings_frame)
@@ -20643,6 +20728,13 @@ class Ui_Spikeling(object):
 
 
         self.verticalLayout_141.addWidget(self.ExtraCellular_HumNoise_frame)
+
+        self.ExtraCellular_HumPickup_comboBox = QComboBox(self.ExtraCellular_Noise_frame)
+        self.ExtraCellular_HumPickup_comboBox.addItem("")
+        self.ExtraCellular_HumPickup_comboBox.addItem("")
+        self.ExtraCellular_HumPickup_comboBox.setObjectName(u"ExtraCellular_HumPickup_comboBox")
+
+        self.verticalLayout_141.addWidget(self.ExtraCellular_HumPickup_comboBox)
 
         self.ExtraCellular_CAR_frame = QFrame(self.ExtraCellular_Noise_frame)
         self.ExtraCellular_CAR_frame.setObjectName(u"ExtraCellular_CAR_frame")
@@ -27040,6 +27132,9 @@ class Ui_Spikeling(object):
         self.DataAnalysis_Compare_traceStartLabel.setBuddy(self.DataAnalysis_Compare_traceStartEdit)
         self.DataAnalysis_Compare_traceEndLabel.setBuddy(self.DataAnalysis_Compare_traceEndEdit)
         self.ExtraCellular_RecordingFormat_label.setBuddy(self.ExtraCellular_RecordingFormat_comboBox)
+        self.ExtraCellular_LowCut_label.setBuddy(self.ExtraCellular_LowCut_edit)
+        self.ExtraCellular_HighCut_label.setBuddy(self.ExtraCellular_HighCut_edit)
+        self.ExtraCellular_Threshold_label.setBuddy(self.ExtraCellular_Threshold_edit)
         self.StimInt_label.setBuddy(self.StimInt_value)
         self.NeuronGenerator_protocol_label.setBuddy(self.NeuronGenerator_protocol_combo)
         self.StimulusGenerator_PreDuration_label.setBuddy(self.StimulusGenerator_PreDuration_edit)
@@ -27056,7 +27151,7 @@ class Ui_Spikeling(object):
         self.retranslateUi(Spikeling)
 
         self.centerMenuSubContainer_menu_stackedwidget.setCurrentIndex(0)
-        self.mainbody_stackedWidget.setCurrentIndex(5)
+        self.mainbody_stackedWidget.setCurrentIndex(6)
         self.Spikeling_parameter_stackedwidget.setCurrentIndex(3)
         self.Emulator_parameter_stackedwidget.setCurrentIndex(5)
         self.DataAnalysis_stack.setCurrentIndex(0)
@@ -27067,6 +27162,7 @@ class Ui_Spikeling(object):
         self.ImagingAnalysis_stack.setCurrentIndex(0)
         self.ImagingAnalysis_recordingStack.setCurrentIndex(0)
         self.ImagingAnalysis_transients_responseSourceCombo.setCurrentIndex(1)
+        self.ExtraCellular_RecordingFormat_comboBox.setCurrentIndex(1)
         self.StimulusGenerator_Parameter_stackedWidget.setCurrentIndex(5)
         self.Settings_SignalColours_tabWidget.setCurrentIndex(0)
         self.About_stack.setCurrentIndex(0)
@@ -28571,17 +28667,18 @@ class Ui_Spikeling(object):
         self.ImagingAnalysis_compare_summaryLabel.setText(QCoreApplication.translate("Spikeling", u"Select two recordings to compare independent optical acquisitions.", None))
         self.ImagingAnalysis_compare_metricsLabel.setText(QCoreApplication.translate("Spikeling", u"Metrics compare the measured optical response (not underlying spike counts).", None))
         self.ImagingAnalysis_compare_notesLabel.setText(QCoreApplication.translate("Spikeling", u"Acquisition differences, provenance and interpretation notices", None))
-        self.ExtraCellular_ConnectButton.setText(QCoreApplication.translate("Spikeling", u"Connect Tetrode recording to Spikeling", None))
+        self.ExtraCellular_ConnectButton.setText(QCoreApplication.translate("Spikeling", u"Start acquisition", None))
         self.ExtraCellular_Source_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"  from Spikeling device", None))
         self.ExtraCellular_Source_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"  from GUI emulator", None))
 
-        self.Extracellular_Tetrode_Ch1_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch1", None))
+        self.ExtraCellular_AcquisitionStatus_label.setText(QCoreApplication.translate("Spikeling", u"Acquisition stopped", None))
+        self.Extracellular_Tetrode_Ch1_checkBox.setText(QCoreApplication.translate("Spikeling", u"E1", None))
 #if QT_CONFIG(whatsthis)
         self.Extracellular_Tetrode_Ch2_checkBox.setWhatsThis(QCoreApplication.translate("Spikeling", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(whatsthis)
-        self.Extracellular_Tetrode_Ch2_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch2", None))
-        self.Extracellular_Tetrode_Ch3_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch3", None))
-        self.Extracellular_Tetrode_Ch4_checkBox.setText(QCoreApplication.translate("Spikeling", u"Ch4", None))
+        self.Extracellular_Tetrode_Ch2_checkBox.setText(QCoreApplication.translate("Spikeling", u"E2", None))
+        self.Extracellular_Tetrode_Ch3_checkBox.setText(QCoreApplication.translate("Spikeling", u"E3", None))
+        self.Extracellular_Tetrode_Ch4_checkBox.setText(QCoreApplication.translate("Spikeling", u"E4", None))
 #if QT_CONFIG(tooltip)
         self.Extracellular_Tetrode_Threshold_checkBox.setToolTip(QCoreApplication.translate("Spikeling", u"Dashed line showing the extracellular detector threshold in \u00b5V.", None))
 #endif // QT_CONFIG(tooltip)
@@ -28606,8 +28703,18 @@ class Ui_Spikeling(object):
         self.ExtraCellular_AutoRange_pushButton.setToolTip(QCoreApplication.translate("Spikeling", u"Fit one voltage range to all four contacts in the current time window, including hidden contacts. Click again to restore \u221240 to +80 \u00b5V.", None))
 #endif // QT_CONFIG(tooltip)
         self.ExtraCellular_AutoRange_pushButton.setText(QCoreApplication.translate("Spikeling", u"Auto Range (all contacts)", None))
-        self.ExtraCellular_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data Recording", None))
-        self.ExtraCellular_RecordingFormat_label.setText(QCoreApplication.translate("Spikeling", u"Recording format", None))
+        self.ExtraCellular_TraceStage_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Processed trace", None))
+        self.ExtraCellular_TraceStage_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Broadband trace", None))
+        self.ExtraCellular_TraceStage_comboBox.setItemText(2, QCoreApplication.translate("Spikeling", u"Both \u00b7 dashed broadband", None))
+
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_TraceStage_comboBox.setToolTip(QCoreApplication.translate("Spikeling", u"Switch between processed and original broadband traces on the same axes. Crossings are calculated on the processed signal.", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_TraceStage_comboBox.setAccessibleName(QCoreApplication.translate("Spikeling", u"Displayed signal stage", None))
+#endif // QT_CONFIG(accessibility)
+        self.ExtraCellular_DataRecording_box.setTitle(QCoreApplication.translate("Spikeling", u"Data recording", None))
+        self.ExtraCellular_RecordingFormat_label.setText(QCoreApplication.translate("Spikeling", u"Recording format: ", None))
         self.ExtraCellular_RecordingFormat_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Legacy CSV", None))
         self.ExtraCellular_RecordingFormat_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Spikeling broadband session", None))
 
@@ -28615,41 +28722,90 @@ class Ui_Spikeling(object):
         self.ExtraCellular_DataRecording_Folder_lineEdit.setText("")
         self.ExtraCellular_DataRecording_RecordFolderDir_pushButton.setText(QCoreApplication.translate("Spikeling", u"Open folder", None))
         self.ExtraCellular_DataRecording_File_label.setText(QCoreApplication.translate("Spikeling", u"File Name", None))
-        self.ExtraCellular_DataRecording_File_csvlabel.setText(QCoreApplication.translate("Spikeling", u".csv", None))
-        self.ExtraCellular_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Record", None))
+        self.ExtraCellular_DataRecording_Record_pushButton.setText(QCoreApplication.translate("Spikeling", u"Save recording", None))
         self.ExtraCellular_DataRecording_Record_label_2.setText("")
         self.ExtraCellular_SelectedFolderLabel.setText(QCoreApplication.translate("Spikeling", u"Ready to record", None))
         self.ExtraCellular_Tetrode_label.setText(QCoreApplication.translate("Spikeling", u"Tetrode Geometry", None))
         self.ExtraCellular_Tetrode_pushButton.setText(QCoreApplication.translate("Spikeling", u"Open Tetrode View", None))
         self.ExtraCellular_SignalMode_label.setText(QCoreApplication.translate("Spikeling", u"Signal Mode", None))
         self.ExtraCellular_Mode_Template_label.setText(QCoreApplication.translate("Spikeling", u"Template", None))
-        self.ExtraCellular_Mode_dVdT_label.setText(QCoreApplication.translate("Spikeling", u"dV / dT", None))
-        self.ExtraCellular_Bandpass_Label.setText(QCoreApplication.translate("Spikeling", u"Bandpass", None))
-        self.ExtraCellular_Bandpass_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"300 - 3000 Hz", None))
-        self.ExtraCellular_Bandpass_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"100 - 5000 Hz", None))
-        self.ExtraCellular_Bandpass_comboBox.setItemText(2, QCoreApplication.translate("Spikeling", u"1 - 300 Hz", None))
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_Mode_dVdT_label.setToolTip(QCoreApplication.translate("Spikeling", u"Use the negative derivative of smoothed membrane voltage around an inferred spike as a waveform proxy.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ExtraCellular_Mode_dVdT_label.setText(QCoreApplication.translate("Spikeling", u"dV/dt", None))
+        self.ExtraCellular_Bandpass_Label.setText(QCoreApplication.translate("Spikeling", u"Filter", None))
+        self.ExtraCellular_Bandpass_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Spike detection", None))
+        self.ExtraCellular_Bandpass_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Wider spike band", None))
+        self.ExtraCellular_Bandpass_comboBox.setItemText(2, QCoreApplication.translate("Spikeling", u"Slow components", None))
+        self.ExtraCellular_Bandpass_comboBox.setItemText(3, QCoreApplication.translate("Spikeling", u"Broadband \u00b7 filter off", None))
+        self.ExtraCellular_Bandpass_comboBox.setItemText(4, QCoreApplication.translate("Spikeling", u"Custom bandpass", None))
 
+        self.ExtraCellular_LowCut_label.setText(QCoreApplication.translate("Spikeling", u"Low cut (Hz)", None))
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_LowCut_edit.setToolTip(QCoreApplication.translate("Spikeling", u"Attenuates frequencies below this cutoff.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ExtraCellular_HighCut_label.setText(QCoreApplication.translate("Spikeling", u"High cut (Hz)", None))
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_HighCut_edit.setToolTip(QCoreApplication.translate("Spikeling", u"Attenuates frequencies above this cutoff.", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_FilterStatus_label.setToolTip(QCoreApplication.translate("Spikeling", u"Slow components show residual spike energy and contamination. The live model has no separate population-field source. Detections are suppressed while the filter settles.", None))
+#endif // QT_CONFIG(tooltip)
+        self.ExtraCellular_FilterStatus_label.setText(QCoreApplication.translate("Spikeling", u"Applied: 300\u20133000 Hz", None))
+        self.ExtraCellular_Threshold_label.setText(QCoreApplication.translate("Spikeling", u"Threshold (\u00b5V)", None))
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_Threshold_edit.setToolTip(QCoreApplication.translate("Spikeling", u"Enter a fixed negative voltage for detecting crossings on the processed signal.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_Spread_Label_.setText(QCoreApplication.translate("Spikeling", u"Spatial falloff (\u03b3)", None))
-        self.ExtraCellular_Spread_Readings.setText("")
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_Spread_Readings.setAccessibleName(QCoreApplication.translate("Spikeling", u"Spatial falloff exponent", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_Spread_Readings.setToolTip(QCoreApplication.translate("Spikeling", u"Turn on the override to edit the value. Press Enter to apply it.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_Spread_Value_min.setText(QCoreApplication.translate("Spikeling", u"1", None))
         self.ExtraCellular_Spread_Value_mid.setText(QCoreApplication.translate("Spikeling", u"1.5", None))
         self.ExtraCellular_Spread_Value_max.setText(QCoreApplication.translate("Spikeling", u"2", None))
         self.ExtraCellular_Noise_label.setText(QCoreApplication.translate("Spikeling", u"Noise", None))
-        self.ExtraCellular_BaselineNoise_Label.setText(QCoreApplication.translate("Spikeling", u"Baseline Noise (\u00b5V)", None))
-        self.ExtraCellular_BaselineNoise_Readings.setText("")
+        self.ExtraCellular_BaselineNoise_Label.setText(QCoreApplication.translate("Spikeling", u"Contact (\u00b5V RMS)", None))
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_BaselineNoise_Readings.setAccessibleName(QCoreApplication.translate("Spikeling", u"Contact noise in \u00b5V RMS", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_BaselineNoise_Readings.setToolTip(QCoreApplication.translate("Spikeling", u"Turn on the override to edit the value. Press Enter to apply it.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_BaselineNoise_Value_min.setText(QCoreApplication.translate("Spikeling", u"0", None))
         self.ExtraCellular_BaselineNoise_Value_mid.setText(QCoreApplication.translate("Spikeling", u"15", None))
         self.ExtraCellular_BaselineNoise_Value_max.setText(QCoreApplication.translate("Spikeling", u"30", None))
-        self.ExtraCellular_SharedNoise_Label.setText(QCoreApplication.translate("Spikeling", u"Shared Noise (\u00b5V)", None))
-        self.ExtraCellular_SharedNoise_Readings.setText("")
+        self.ExtraCellular_SharedNoise_Label.setText(QCoreApplication.translate("Spikeling", u"Shared (\u00b5V RMS)", None))
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_SharedNoise_Readings.setAccessibleName(QCoreApplication.translate("Spikeling", u"Shared noise in \u00b5V RMS", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_SharedNoise_Readings.setToolTip(QCoreApplication.translate("Spikeling", u"Turn on the override to edit the value. Press Enter to apply it.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_SharedNoise_Value_min.setText(QCoreApplication.translate("Spikeling", u"0", None))
         self.ExtraCellular_SharedNoise_Value_mid.setText(QCoreApplication.translate("Spikeling", u"15", None))
         self.ExtraCellular_SharedNoise_Value_max.setText(QCoreApplication.translate("Spikeling", u"30", None))
-        self.ExtraCellular_HumNoise_Label.setText(QCoreApplication.translate("Spikeling", u"50Hz Hum (\u00b5V)", None))
-        self.ExtraCellular_HumNoise_Readings.setText("")
+        self.ExtraCellular_HumNoise_Label.setText(QCoreApplication.translate("Spikeling", u"50 Hz pickup (\u00b5V peak)", None))
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_HumNoise_Readings.setAccessibleName(QCoreApplication.translate("Spikeling", u"50 Hz pickup in \u00b5V peak", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_HumNoise_Readings.setToolTip(QCoreApplication.translate("Spikeling", u"Turn on the override to edit the value. Press Enter to apply it.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_HumNoise_Value_min.setText(QCoreApplication.translate("Spikeling", u"0", None))
         self.ExtraCellular_HumNoise_Value_mid.setText(QCoreApplication.translate("Spikeling", u"15", None))
         self.ExtraCellular_HumNoise_Value_max.setText(QCoreApplication.translate("Spikeling", u"30", None))
+        self.ExtraCellular_HumPickup_comboBox.setItemText(0, QCoreApplication.translate("Spikeling", u"Equal pickup", None))
+        self.ExtraCellular_HumPickup_comboBox.setItemText(1, QCoreApplication.translate("Spikeling", u"Unequal pickup", None))
+
+#if QT_CONFIG(accessibility)
+        self.ExtraCellular_HumPickup_comboBox.setAccessibleName(QCoreApplication.translate("Spikeling", u"Mains pickup across contacts", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(tooltip)
+        self.ExtraCellular_HumPickup_comboBox.setToolTip(QCoreApplication.translate("Spikeling", u"Equal pickup uses the same 50 Hz amplitude on every contact. Unequal pickup scales E1\u2013E4 by 100%, 75%, 50% and 25% of the entered peak.", None))
+#endif // QT_CONFIG(tooltip)
         self.ExtraCellular_CAR_Label.setText(QCoreApplication.translate("Spikeling", u"CAR (common average reference)", None))
         self.ExtraCellular_Spikes_DataAnalysis_LoadData_label.setText("")
         self.ExtraCellular_Spikes_DataAnalysis_LoadData_pushButton.setText(QCoreApplication.translate("Spikeling", u"   Load Data   ", None))

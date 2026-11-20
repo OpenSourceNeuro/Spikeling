@@ -47,7 +47,7 @@ def test_practical_exact_measurements_and_visible_workflow(practical):
     ui, panel = page.ui, page.analysis
     assert ui.runButton.isEnabled() and ui.sourceCombo.currentData() == ""
     assert ui.sourceCombo.findData("native_model_spike") >= 0
-    ui.tabs.setCurrentWidget(ui.processingTab)
+    ui.pageStack.setCurrentWidget(ui.processingTab)
     ui.bandpassCheck.setChecked(False)
     ui.referenceCombo.setCurrentIndex(0)
     ui.runButton.click()
@@ -63,12 +63,12 @@ def test_practical_exact_measurements_and_visible_workflow(practical):
     assert len(panel.current.groups) == 0 and len(panel.reference.waveforms.event_ids) == 8
     assert len(panel.comparison[0].left_only) == 8
     assert ui.analysisExportButton.isEnabled()
-    ui.tabs.setCurrentWidget(ui.comparisonTab)
+    ui.pageStack.setCurrentWidget(ui.comparisonTab)
     ui.sourceCombo.setCurrentIndex(ui.sourceCombo.findData("native_model_spike"))
     panel._source_changed()
     wait_for_analysis(app, panel)
     assert len(panel.source.events) == 8
-    ui.tabs.setCurrentWidget(ui.processingTab)
+    ui.pageStack.setCurrentWidget(ui.processingTab)
     assert panel.plots.marks[2].getData()[0].size == 8
     QCoreApplication.sendEvent(page, QEvent(QEvent.Type.LanguageChange))
     assert ui.sourceCombo.currentData() == "native_model_spike"
@@ -133,18 +133,25 @@ def test_display_reduction_keeps_extrema_at_original_rows():
     assert all(point in dict(zip(selected_x, selected_y)).items() for point in ((25, -100), (29, 200)))
 
 
-def test_five_step_guidance_and_shared_trace_navigation(practical):
+def test_analysis_tabs_and_shared_trace_navigation(practical):
     app, window, reader = practical
     page = window.extracellular_recording_page
     open_reader(app, page, reader.directory / "manifest.json")
     ui, panel = page.ui, page.analysis
-    assert [ui.tabs.tabText(i) for i in range(ui.tabs.count())] == [
-        "1 · Recording", "2 · Processing", "3 · Detection", "4 · Waveforms", "5 · Comparison"]
+    assert [page.navigation.button(i).text() for i in range(ui.pageStack.count())] == [
+        "Recording", "Processing", "Detection", "Waveforms", "Comparison", "Spectrum"]
+    assert ui.navRecording.isChecked() and ui.analysisFooter.isHidden()
+    ui.metadataButton.click()
+    assert ui.recordingStack.currentWidget() is ui.recordingMetadata
     assert "before reference" in ui.metadata.toPlainText()
-    ui.tabs.setCurrentWidget(ui.detectionTab)
+    ui.metadataBackButton.click()
+    assert ui.recordingStack.currentWidget() is ui.recordingOverview
+    ui.navDetection.click()
+    assert ui.navDetection.isChecked() and not ui.navRecording.isChecked()
+    assert not ui.analysisFooter.isHidden()
     assert ui.analysisPlotHost.parentWidget() is ui.detectionTab
-    ui.tabs.setCurrentWidget(ui.processingTab)
-    assert ui.analysisPlotHost.parentWidget() is ui.processingTab
+    ui.pageStack.setCurrentWidget(ui.processingTab)
+    assert ui.navProcessing.isChecked() and ui.analysisPlotHost.parentWidget() is ui.processingTab
     ui.referenceCombo.setCurrentIndex(1)
     ui.bandpassCheck.setChecked(False)
     panel.run()
@@ -153,3 +160,32 @@ def test_five_step_guidance_and_shared_trace_navigation(practical):
     assert "B contains 0 contact crossings" in ui.comparisonDetails.toPlainText()
     assert "{" not in ui.comparisonDetails.toPlainText()
     assert "not proof" in ui.detectionGuide.text()
+
+
+def test_analysis_controls_and_measurements(practical):
+    app, window, reader = practical
+    page = window.extracellular_recording_page
+    open_reader(app, page, reader.directory / "manifest.json")
+    ui, panel = page.ui, page.analysis
+    ui.bandpassCheck.setChecked(False)
+    ui.referenceCombo.setCurrentIndex(0)
+    ui.polarityCombo.setCurrentIndex(1)
+    assert float(ui.thresholdEdit.text()) > 0
+    ui.runButton.click()
+    wait_for_analysis(app, panel)
+    assert panel.current.recipe.detector.polarity == "positive"
+    ui.baselineStartEdit.setText(str(panel.current.start))
+    ui.baselineCountEdit.setText("2")
+    assert ui.measurementTable.item(0, 2).text() != "—"
+
+    ui.referenceCombo.setCurrentIndex(2)
+    ui.singleReferenceCombo.setCurrentIndex(3)
+    ui.notchCombo.setCurrentIndex(1)
+    ui.runButton.click()
+    wait_for_analysis(app, panel)
+    assert panel.current.recipe.processing.reference_contacts == ("E4",)
+    assert panel.current.recipe.processing.notch_hz == 50
+    assert all(not run.values_uV[:, 3].any() for run in panel.current.runs)
+    ui.pageStack.setCurrentWidget(ui.spectrumTab)
+    assert panel.spectrum_plot is not None
+    assert "0.5 s" in ui.spectrumStatus.text()

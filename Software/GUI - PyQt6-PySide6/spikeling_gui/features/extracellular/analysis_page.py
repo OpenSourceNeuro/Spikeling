@@ -7,14 +7,15 @@ from threading import Event, Thread
 
 import numpy as np
 import pyqtgraph as pg
-from PySide6.QtCore import QCoreApplication, QObject, Qt, QTimer
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtCore import QCoreApplication, QObject, QSignalBlocker, Qt, QTimer
+from PySide6.QtWidgets import QFileDialog, QHeaderView, QTableWidgetItem
 
 from spikeling_gui.appearance.theme_manager import EXTRACELLULAR_CHANNEL_KEYS, theme_manager
 from spikeling_gui.paths import recordings_directory
 
 from .acquisition import CONTACTS
 from .analysis_comparison import validate_tolerance
+from .analysis_measurements import measure, spectrum
 from .offline_analysis import Recipe, analyse, compare, compare_source, export_analysis
 from .offline_detection import Detector
 from .offline_processing import MAX_ANALYSIS_ROWS, Processing
@@ -36,9 +37,15 @@ class AnalysisPage(QObject):
         self.generation = 0
         self.job = self.pending = None
         self.plots = None
+        self.spectrum_plot = None
+        self.ui.measurementTable.setRowCount(len(CONTACTS))
+        self.ui.measurementTable.verticalHeader().hide()
+        self.ui.measurementTable.verticalHeader().setDefaultSectionSize(20)
+        self.ui.measurementTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.ui.measurementTable.setAlternatingRowColors(True)
         self.timer = QTimer(self, interval=40)
         self.timer.timeout.connect(self._poll)
-        self.ui.tabs.currentChanged.connect(self._activate)
+        self.ui.pageStack.currentChanged.connect(self._activate)
         for button in (self.ui.runButton, self.ui.rerunButton):
             button.clicked.connect(self.run)
         self.ui.pinButton.clicked.connect(self.pin)
@@ -48,7 +55,12 @@ class AnalysisPage(QObject):
         self.ui.countEdit.textChanged.connect(self._selection_changed)
         self.ui.sourceCombo.activated.connect(self._source_changed)
         self.ui.toleranceEdit.textChanged.connect(self._match_edited)
-        self.ui.referenceCombo.currentIndexChanged.connect(self._recipe_edited)
+        for combo in (self.ui.referenceCombo, self.ui.singleReferenceCombo, self.ui.notchCombo):
+            combo.currentIndexChanged.connect(self._recipe_edited)
+        self.ui.polarityCombo.currentIndexChanged.connect(self._polarity_changed)
+        self.ui.spectrumContact.currentIndexChanged.connect(self._draw_spectrum)
+        for edit in (self.ui.baselineStartEdit, self.ui.baselineCountEdit):
+            edit.textChanged.connect(self._show_measurements)
         for control in (self.ui.bandpassCheck, *self._checks("reference"), *self._checks("detector")):
             control.toggled.connect(self._recipe_edited)
         for control in (self.ui.lowEdit, self.ui.highEdit, self.ui.thresholdEdit, self.ui.refractoryEdit,
@@ -67,15 +79,32 @@ class AnalysisPage(QObject):
         ui = self.ui
         band = (float(ui.lowEdit.text()), float(ui.highEdit.text())) if ui.bandpassCheck.isChecked() else None
         count = ui.groupCountEdit.text().strip()
+        reference = ("none", "car", "single")[ui.referenceCombo.currentIndex()]
+        contacts = ((CONTACTS[ui.singleReferenceCombo.currentIndex()],)
+                    if reference == "single" else self._contacts("reference"))
         return Recipe(
-            Processing("car" if ui.referenceCombo.currentIndex() == 1 else "none",
-                       self._contacts("reference"), band),
+            Processing(reference, contacts, band, (None, 50, 60)[ui.notchCombo.currentIndex()]),
             Detector(float(ui.thresholdEdit.text()), float(ui.refractoryEdit.text()),
-                     float(ui.groupingEdit.text()), self._contacts("detector")),
+                     float(ui.groupingEdit.text()), self._contacts("detector"), self._polarity()),
             WaveformSettings(float(ui.preEdit.text()), float(ui.postEdit.text()),
                              int(ui.snippetEdit.text()), int(ui.firstGroupEdit.text()),
                              int(count) if count else None),
         )
+
+    def _polarity(self):
+        return ("negative", "positive", "both")[self.ui.polarityCombo.currentIndex()]
+
+    def _polarity_changed(self, _index):
+        edit = self.ui.thresholdEdit
+        try:
+            value = float(edit.text())
+        except ValueError:
+            pass
+        else:
+            sign = -1 if self._polarity() == "negative" else 1
+            with QSignalBlocker(edit):
+                edit.setText(f"{sign * abs(value):g}")
+        self._recipe_edited()
 
     def set_reader(self, reader):
         self.reader = reader
@@ -129,8 +158,17 @@ class AnalysisPage(QObject):
         band = self.ui.bandpassCheck.isChecked()
         self.ui.lowEdit.setEnabled(band)
         self.ui.highEdit.setEnabled(band)
+        reference_index = self.ui.referenceCombo.currentIndex()
+        self.ui.singleReferenceCombo.setVisible(reference_index == 2)
+        self.ui.refContactsLabel.setVisible(reference_index == 1)
         for box in self._checks("reference"):
-            box.setEnabled(self.ui.referenceCombo.currentIndex() == 1)
+            box.setEnabled(reference_index == 1)
+            box.setVisible(reference_index == 1)
+        self.ui.thresholdEditLabel.setText({
+            "negative": self.tr("Negative threshold (µV)"),
+            "positive": self.tr("Positive threshold (µV)"),
+            "both": self.tr("Threshold magnitude (µV)"),
+        }[self._polarity()])
         if ready:
             start, stop = self._interval()
             status = self.tr("Accepted rows %1–%2 · %3 model Hz · set the interval in Recording")
@@ -157,7 +195,7 @@ class AnalysisPage(QObject):
         self.ui.analysisStatus.clear()
         self.ui.comparisonStatus.clear()
         self.ui.comparisonDetails.clear()
-        self.ui.comparisonStatus.clear()
+        self._show_measurements()
         self._enable()
         self._draw()
 
@@ -303,7 +341,8 @@ class AnalysisPage(QObject):
                 path = path.with_suffix(".json")
             arguments = (path, self.reader.directory, self.current, self.reference,
                          self.tolerance, self.comparison, self.source)
-            self._queue(lambda _: export_analysis(*arguments),
+            measurements, _ = self._measurement_data()
+            self._queue(lambda _: export_analysis(*arguments, measurements=measurements),
                         lambda _: self.ui.comparisonStatus.setText(self.tr("Analysis exported")))
 
     def _describe(self):
@@ -362,7 +401,8 @@ class AnalysisPage(QObject):
         if self.reference is not None:
             before, after = asdict(self.reference.recipe), asdict(current.recipe)
             labels = {"reference": self.tr("reference method"), "reference_contacts": self.tr("reference contacts"),
-                      "bandpass": self.tr("bandpass"), "threshold_uV": self.tr("threshold"),
+                      "bandpass": self.tr("bandpass"), "notch_hz": self.tr("mains notch"),
+                      "polarity": self.tr("detection polarity"), "threshold_uV": self.tr("threshold"),
                       "refractory_ms": self.tr("refractory time"), "grouping_ms": self.tr("grouping window"),
                       "contacts": self.tr("detection contacts"), "pre_ms": self.tr("pre-event window"),
                       "post_ms": self.tr("post-event window"), "max_snippets": self.tr("overlay count"),
@@ -375,33 +415,118 @@ class AnalysisPage(QObject):
             lines.append(self.tr("To compare: save completed B as baseline A, change one setting, then run B again."))
         lines.append(self._recipe_summary("B", current.recipe))
         self.ui.comparisonDetails.setPlainText("\n".join(lines))
+        self._show_measurements()
 
     def _recipe_summary(self, name, recipe):
         processing, detector, waveform = recipe.processing, recipe.detector, recipe.waveform
-        reference = (self.tr("CAR using ") + ", ".join(processing.reference_contacts)
-                     if processing.reference == "car" else self.tr("No reference subtraction"))
+        reference = {
+            "car": self.tr("Common average of %1"),
+            "single": self.tr("Single contact %1"),
+            "none": self.tr("No reference subtraction"),
+        }[processing.reference].replace("%1", ", ".join(processing.reference_contacts))
         band = (self.tr("bandpass %1–%2 Hz").replace("%1", f"{processing.bandpass[0]:g}").replace("%2", f"{processing.bandpass[1]:g}")
                 if processing.bandpass else self.tr("bandpass off"))
-        return (f"{name}: {reference}; {band}.\n"
-                + self.tr("Threshold %1 µV; refractory %2 ms; grouping %3 ms; contacts %4.")
+        notch = (self.tr("notch off") if processing.notch_hz is None else
+                 self.tr("%1 Hz notch").replace("%1", str(processing.notch_hz)))
+        polarity = {"negative": self.tr("negative"), "positive": self.tr("positive"),
+                    "both": self.tr("both polarities")}[detector.polarity]
+        return (f"{name} · {reference} · {band} · {notch}\n"
+                + self.tr("Threshold %1 µV (%5) · refractory %2 ms · grouping %3 ms · contacts %4")
+                .replace("%5", polarity)
                 .replace("%1", f"{detector.threshold_uV:g}").replace("%2", f"{detector.refractory_ms:g}")
                 .replace("%3", f"{detector.grouping_ms:g}").replace("%4", ", ".join(detector.contacts))
                 + "\n" + self.tr("Waveform window: %1 ms before / %2 ms after each group anchor.")
                 .replace("%1", f"{waveform.pre_ms:g}").replace("%2", f"{waveform.post_ms:g}"))
 
+    def _measurement_data(self):
+        if self.current is None:
+            return None, self.tr("Run B to measure the signal.")
+        start = self.ui.baselineStartEdit.text().strip()
+        count = self.ui.baselineCountEdit.text().strip()
+        if not start and not count:
+            return measure(self.reference, self.current), self.tr("Choose a quiet interval for RMS.")
+        try:
+            start, count = int(start), int(count)
+            if count < 2 or not self.current.start <= start < start + count <= self.current.stop:
+                raise ValueError
+        except ValueError:
+            return measure(self.reference, self.current), self.tr("Enter a start index and at least two samples within the analysed interval.")
+        data = measure(self.reference, self.current, (start, start + count))
+        status = (self.tr("Quiet interval uses %1 common settled samples.").replace("%1", str(count))
+                  if data["baseline_available"] else
+                  self.tr("Choose a quiet interval within one common settled block, clear of gaps and warm-up."))
+        return data, status
+
+    def _show_measurements(self):
+        data, status = self._measurement_data()
+        values = {}
+        if data is not None:
+            values = {name: data.get(name, {}) for name in ("a", "b")}
+            counts = "   ".join(f"{name.upper()}: {row['waveform_count']}"
+                                for name, row in values.items() if row)
+            status += " " + self.tr("Waveforms in each mean") + " · " + counts
+        self.ui.measurementStatus.setText(status)
+        columns = (("a", "baseline_rms_uV"), ("b", "baseline_rms_uV"),
+                   ("a", "mean_waveform_peak_to_peak_uV"), ("b", "mean_waveform_peak_to_peak_uV"))
+        for index, contact in enumerate(CONTACTS):
+            self.ui.measurementTable.setItem(index, 0, QTableWidgetItem(contact))
+            for column, (recipe, key) in enumerate(columns, 1):
+                numbers = values.get(recipe, {}).get(key)
+                item = QTableWidgetItem("—" if numbers is None else f"{numbers[index]:.3g}")
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.ui.measurementTable.setItem(index, column, item)
+
+    def _draw_spectrum(self, *_):
+        if self.ui.pageStack.currentWidget() is not self.ui.spectrumTab:
+            return
+        contact = self.ui.spectrumContact.currentIndex()
+        if self.spectrum_plot is None:
+            axis = pg.PlotWidget()
+            axis.showGrid(x=True, y=True, alpha=.2)
+            theme_manager.set_plot_background_role(axis, "panel_background")
+            axis.setXRange(0, 200, padding=0)
+            axis.getViewBox().setLimits(xMin=0, yMin=0)
+            self.ui.spectrumPlotLayout.addWidget(axis)
+            self.spectrum_plot = (
+                axis, AnalysisPlots._curve(axis, "text_muted", dashed=True),
+                AnalysisPlots._curve(axis, EXTRACELLULAR_CHANNEL_KEYS[0]),
+            )
+        axis, baseline, current = self.spectrum_plot
+        axis.setLabel("bottom", self.tr("Frequency"), units="Hz")
+        axis.setLabel("left", self.tr("Power spectral density"), units="µV²/Hz")
+        result = None if self.current is None else spectrum(self.reference, self.current, contact)
+        if result is None:
+            baseline.setData([], [])
+            current.setData([], [])
+            self.ui.spectrumStatus.setText(self.tr("Run B with at least 0.5 s of contiguous settled samples."))
+            return
+        start, stop, frequency, power_a, power_b = result
+        if power_a is None:
+            baseline.setData([], [])
+        else:
+            baseline.setData(frequency, power_a)
+        current.setData(frequency, power_b)
+        current.setPen(theme_manager.pen(EXTRACELLULAR_CHANNEL_KEYS[contact]))
+        theme_manager.tag_item(current, EXTRACELLULAR_CHANNEL_KEYS[contact])
+        self.ui.spectrumStatus.setText(
+            self.tr("Rows %1–%2 · %3 Hz resolution").replace("%1", str(start))
+            .replace("%2", str(stop - 1)).replace("%3", f"{frequency[1]:.3g}")
+        )
+
     def _activate(self, _):
-        if self.ui.tabs.currentWidget() in (self.ui.processingTab, self.ui.detectionTab, self.ui.comparisonTab):
+        if self.ui.pageStack.currentWidget() in (self.ui.processingTab, self.ui.detectionTab, self.ui.comparisonTab):
             if self.plots is None:
                 self.plots = AnalysisPlots(self.ui)
-            if self.ui.tabs.currentWidget() in (self.ui.processingTab, self.ui.detectionTab):
-                layout = (self.ui.detectionTabLayout if self.ui.tabs.currentWidget() is self.ui.detectionTab
+            if self.ui.pageStack.currentWidget() in (self.ui.processingTab, self.ui.detectionTab):
+                layout = (self.ui.detectionTabLayout if self.ui.pageStack.currentWidget() is self.ui.detectionTab
                           else self.ui.processingTabLayout)
-                layout.addWidget(self.ui.analysisPlotHost)
-            self._draw()
+                layout.addWidget(self.ui.analysisPlotHost, 1)
+        self._draw()
 
     def _draw(self):
+        self._draw_spectrum()
         if self.plots is not None:
-            current_tab = self.ui.tabs.currentWidget()
+            current_tab = self.ui.pageStack.currentWidget()
             self.plots.draw(self.reference, self.current, self.source, self.comparison,
                             traces=current_tab in (self.ui.processingTab, self.ui.detectionTab),
                             waveforms=current_tab is self.ui.comparisonTab)
