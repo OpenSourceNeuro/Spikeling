@@ -78,7 +78,7 @@ constexpr int dac_bits   = 12;
 constexpr uint16_t  dac_max    = 4095;
 constexpr uint16_t stim_dac_zero = (dac_max + 1) / 2;        // 2048 = zero-current DAC code
 constexpr uint16_t stim_dac_span = dac_max - stim_dac_zero;  // 2047 usable counts above/below zero
-constexpr uint16_t current_in_rail_margin   = 80;  // ADC values near 0 or 4095 are not accepted as autozero
+constexpr uint16_t current_in_nominal_zero  = (bits12 + 1) / 2; // Midscale of the bipolar Current-In signal
 constexpr uint16_t current_in_stable_delta  = 8;   // Max ADC-count movement considered stable
 constexpr uint16_t current_in_arm_samples   = 50;  // 50 loops × 2 ms = ~100 ms with your current timing
    

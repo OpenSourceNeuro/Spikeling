@@ -562,19 +562,29 @@ inline void update_StimulusStatusLED() {
 /*                                    Stimulus - Applying Analog Values                                  */
  
 
+inline bool isNearNominalCurrentInZero(float counts) {
+  return fabsf(counts - current_in_nominal_zero) < pot.offset;
+}
+
 inline void calibrate_StimulusCurrentInZero() {
 
   const int n = 256;
   uint32_t acc = 0;
 
+  // The stimulus output is still idle here. A disconnected jack or an
+  // external source already driving Current-In must not set its zero.
   for (int i = 0; i < n; i++) {
-    acc += ADC1.read(patch.pin);
+    const uint16_t sample = ADC1.read(patch.pin);
+    if (!isNearNominalCurrentInZero(sample)) return;
+    acc += sample;
     delayMicroseconds(200);
   }
 
   patch.current_in_zero = (float)acc / (float)n;
   patch.input_value_f   = patch.current_in_zero;
   patch.input_value     = (uint16_t)lroundf(patch.current_in_zero);
+  patch.current_in_prev_value = patch.input_value;
+  patch.current_in_ready = true;
 }
 
 inline void neutralise_StimulusCurrentIn() {
@@ -603,20 +613,18 @@ inline void update_StimulusCurrentIn() {
     (input_delta >= -(int32_t)current_in_stable_delta) &&
     (input_delta <=  (int32_t)current_in_stable_delta);
 
-  const bool input_not_near_rails =
-    (patch.input_value > current_in_rail_margin) &&
-    (patch.input_value < (dac_max - current_in_rail_margin));
-
   patch.current_in_prev_value = patch.input_value;
 
   // ------------------------------------------------------------------
   // Autozero / hot-plug arming phase
   // ------------------------------------------------------------------
   // While Current-In is not ready, do not inject any current.
-  // Wait until the input is stable and not rail-like, then learn it as zero.
+  // Wait for a stable baseline near midscale. Check the raw ADC as well so
+  // filter settling after a hot-plug or stimulus edge cannot qualify.
   if (!patch.current_in_ready) {
 
-    if (input_not_near_rails && input_stable) {
+    if (input_stable && isNearNominalCurrentInZero(patch.input_value_raw) &&
+        isNearNominalCurrentInZero(patch.input_value)) {
 
       if (patch.current_in_stable_count == 0) {
         patch.current_in_candidate_zero = (float)patch.input_value;
@@ -651,9 +659,11 @@ inline void update_StimulusCurrentIn() {
 
   patch.pot_centered = float(patch.input_value) - patch.current_in_zero;
 
-  // Only track slow drift when the input is already close to zero.
-  // This prevents real stimulus pulses from being absorbed into the baseline.
-  if (fabsf(patch.pot_centered) < pot.offset) {
+  // Track slow drift only on a settled input near both nominal and learned
+  // zero. A filtered stimulus edge can pass through the dead zone.
+  if (input_stable && isNearNominalCurrentInZero(patch.input_value_raw) &&
+      fabsf(float(patch.input_value_raw) - patch.current_in_zero) < pot.offset &&
+      fabsf(patch.pot_centered) < pot.offset) {
     patch.current_in_zero =
       0.995f * patch.current_in_zero +
       0.005f * float(patch.input_value);
@@ -1018,10 +1028,10 @@ inline void send_SamplePacket() {
     frame_size += sizeof(command_q);                                                         // Send the command with the same sample.
   }
 #if VC_GUARDED_HWCDC
-  if (Serial.availableForWrite() >= int(frame_size)) {                                        // Keep USB backpressure out of the model loop.
-    const size_t accepted = Serial.write(frame, frame_size);                                  // Queue one complete frame.
-    if (accepted != frame_size) vc::usb_tx_fault = true;                                      // Record a short write without retrying fragments.
-  }
+  // HWCDC 3.3.12 re-arms TX from write(), including when the queue is full.
+  // Checking only queue space can prevent that recovery after the host closes.
+  // TX timeout is zero; either queue the small frame or drop it this tick.
+  if (Serial.write(frame, frame_size) != frame_size) vc::usb_tx_fault = true;
 #else
   Serial.write(frame, frame_size);                                                            // Send a complete frame on other transports.
 #endif

@@ -765,6 +765,8 @@ inline void LED_off(){
 
 inline void Connected(){
   if (SCmd.next() != nullptr) return;                  // No-argument command: reject unexpected data without changing state.
+  voltageClamp.diagnostic = false;                   // Desktop handshakes expect binary samples, even after diagnostic capture.
+  vc::diagnosticUsbMode(false);
   stream_voltage_command = false;                    // Begin each desktop handshake in legacy telemetry mode.
   digitalWrite(pins.gpio.led_r,HIGH);delay(5);
   digitalWrite(pins.gpio.led_g,HIGH);digitalWrite(pins.gpio.led_r,LOW);delay(5);

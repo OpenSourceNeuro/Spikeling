@@ -65,6 +65,7 @@
 void setup() {
   HardwareSettings();                                                                           // Initialise all components
   calibrate_PhotodiodeDark();                                                                   // Set dark baseline with stim outputs forced OFF
+  calibrate_StimulusCurrentInZero();                                                             // Sample Current-In while stimulus outputs are still neutral
   SerialFunctions();                                                                            // Initialise Serial commands
   pharmSeed(pharmacology.seed);
   pharmResetIntrinsic(neuron.v);
