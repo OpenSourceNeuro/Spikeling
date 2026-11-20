@@ -1,0 +1,131 @@
+{
+  "calibration": {
+    "approved_poses": [],
+    "revision": "3B-provisional",
+    "start_abs_max_uV": 0.0001639591937419027,
+    "storage_max_abs_error_uV": 1.4539701851390419e-05,
+    "tail_abs_max_uV": 7.816567897796631,
+    "valid_cells": 8410
+  },
+  "conductivity_S_m": 0.3,
+  "files": {
+    "time_ms.npy": {
+      "bytes": 936,
+      "sha256": "6f4fb5237ebd2de7d6623fdc0672295ef86c7d85f139a832f7fc654932e0e64f"
+    },
+    "valid.npy": {
+      "bytes": 13952,
+      "sha256": "3640ef96c9c4de30d12722b216bf3f2a29070a4c960ffc4a2782e0856416a65c"
+    },
+    "voltage_uV.npy": {
+      "bytes": 6312628,
+      "sha256": "0e0ae7777902fe0584fd93660a155122ed661eff5c5085f40ba622c9bf7685a2"
+    },
+    "x_um.npy": {
+      "bytes": 328,
+      "sha256": "068c873dca53e4a81fed751912a9382ffe173018ded37245c9c4c824b10985b2"
+    },
+    "y_um.npy": {
+      "bytes": 328,
+      "sha256": "068c873dca53e4a81fed751912a9382ffe173018ded37245c9c4c824b10985b2"
+    },
+    "z_um.npy": {
+      "bytes": 328,
+      "sha256": "068c873dca53e4a81fed751912a9382ffe173018ded37245c9c4c824b10985b2"
+    }
+  },
+  "format": "spikeling.spatial_eap",
+  "frame": {
+    "axes": "imported right-handed Neurolucida XYZ",
+    "axon": "synthetic 60 \u00b5m stub along local -Y",
+    "origin": "soma(0.5)"
+  },
+  "generator": {
+    "lfpykit_commit": "b729bc650fa060e3e86048e12344cd3fe8524250",
+    "numpy": "2.3.2",
+    "recipe": "hay-linesource-v1",
+    "reference_sha256": "8d8f163fb81db88d1b41f644064d768490b19682636acd18f6b0316eb31a7668",
+    "scipy": "1.16.1"
+  },
+  "id": "hay-5-v1",
+  "landmark_index": 30,
+  "licensing": {
+    "citation": "Hay et al. 2011, ModelDB 139653",
+    "release": false,
+    "status": "unresolved"
+  },
+  "model": {
+    "accession": "ModelDB 139653",
+    "axon_events_ms": [
+      361.1769985215937,
+      371.84871666787893
+    ],
+    "axon_segments": [
+      640,
+      641
+    ],
+    "biophysics": "L5PCbiophys3",
+    "commit": "50a4aab3ce5c295ad16a134c5d9261b7cc3fbe58",
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "dt_ms": 0.0125,
+    "morphology": "cell1.asc",
+    "neuron": "9.0.1",
+    "numpy": "2.3.2",
+    "refined": false,
+    "soma_events_ms": [
+      361.1553701731265,
+      371.8206935015984
+    ],
+    "source_sha256": {
+      "mod/CaDynamics_E2.mod": "fee7fa2ad830cc009dcce02a6247096fb1431e29705819cdec6b2ccd6cabe0d6",
+      "mod/Ca_HVA.mod": "e7ab884cdeca53d9b11d9ba10f2131e7eab84fe6fef7dc9b0e2fb909f47c00a5",
+      "mod/Ca_LVAst.mod": "8d8c82a77088ed35b4d522e71d2a6bb1037410a280e906dbc4fa7aed927d70c3",
+      "mod/Ih.mod": "ac2d9ae69d114f72715732b8b9093a2a805e08006c96400989a1751c474090f4",
+      "mod/Im.mod": "d8d020edd4cf78c1d934e9dcd9be7fdcdc2a55613eb04a03f29856fb23e813e9",
+      "mod/K_Pst.mod": "7a9ca00154704532319b0505509fb012eecca35508733755129a5120a5c74cfa",
+      "mod/K_Tst.mod": "7714a0d25ac0018cd3d214635f8518ac8f95995a61e8405e9801b02c463c48fb",
+      "mod/NaTa_t.mod": "1ec9b5af347897121812aaf9c1cd71608a40aa5e067ff631e3d87d84ded15d4b",
+      "mod/NaTs2_t.mod": "21e3cbbfca94304b55f71b623b3c9aa367707865c2971dcb2ed61d062792c4ec",
+      "mod/Nap_Et2.mod": "f06d7e880ba9a59ae063143f1496f648eaa135446ad48044c7f9f90ea25de272",
+      "mod/SK_E2.mod": "91cb760f159ec7b7d91a0de898749cf3b0b4e36a5f7772b0e4b7090d67ea3ac1",
+      "mod/SKv3_1.mod": "dfc025086dacea4ee7f67cd76cdbda9cec19e185f3e8a178daf6a2f490602f64",
+      "mod/epsp.mod": "b4c610e4498748871c73833c7987ab178f0fefddaa2bdb08360eb80f5c6e74fe",
+      "models/L5PCbiophys3.hoc": "67b528fe8446e4d76461cd339983caabd986efc92bf023eb5ec4515a55d817cc",
+      "models/L5PCtemplate.hoc": "85b57479d246d0122cfc57830d9466151a5dbe7deae4b648fbc1308bbab1643d",
+      "morphologies/cell1.asc": "293d0aa92af8d03dbdcc40a711ba3923522615c3a65df485906538a1de986e23"
+    },
+    "synapse_weight_uS": 0.09,
+    "temperature_C": 34
+  },
+  "rate_hz": 10000,
+  "reference": "infinity",
+  "resampling": {
+    "baseline_ms": [
+      -8,
+      -6
+    ],
+    "crop_ms": [
+      -3.0,
+      7.0
+    ],
+    "lowpass_Hz": 4000,
+    "method": "zero-phase Butterworth SOS, linear sampling on aligned grid",
+    "order": 6
+  },
+  "status": "provisional",
+  "support": {
+    "clearance_um": 5.0,
+    "cube_um": [
+      -60,
+      60
+    ],
+    "grid_spacing_um": 5.0,
+    "rule": "cell-centre clearance from segment chords >= half diagonal plus clearance"
+  },
+  "units": {
+    "space": "\u00b5m",
+    "time": "ms",
+    "voltage": "\u00b5V"
+  },
+  "version": 1
+}
