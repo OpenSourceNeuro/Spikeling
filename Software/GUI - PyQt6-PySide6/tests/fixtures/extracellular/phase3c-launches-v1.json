@@ -1,0 +1,26 @@
+{
+  "description": "Synthetic integers in µV. Each row is [E1,E2,E3,E4]. Kernel start equals launch tick. Landmark is launch+2. Absolute ticks are never rewritten.",
+  "rate_hz": 10000,
+  "landmark_offset_rows": 2,
+  "kernel_by_pose": {
+    "A": [[0, 0, 0, 0], [-2, 1, 3, -1], [-4, 2, 6, -2], [1, -1, 1, 0], [0, 0, 0, 0]],
+    "B": [[0, 0, 0, 0], [4, 2, -1, 0], [8, 4, -2, 0], [-2, 0, 2, 1], [0, 0, 0, 0]]
+  },
+  "pose_changes": [[0, "A"], [4, "B"]],
+  "launches_tick_source": [[2, "main"], [2, "aux1"], [4, "main"], [6, "aux2"]],
+  "segment_boundaries": [0, 7],
+  "block_schedules_rows": [[7, 4], [1, 3, 1, 2, 2, 2], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
+  "expected_rows": [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [-4, 2, 6, -2],
+    [-8, 4, 12, -4],
+    [6, 0, 1, 0],
+    [8, 4, -2, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
+  ]
+}

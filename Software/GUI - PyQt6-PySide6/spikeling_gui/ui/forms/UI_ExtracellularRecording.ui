@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf8'?>
 <ui version="4.0">
  <class>ExtracellularRecording</class>
  <widget class="QWidget" name="ExtracellularRecording">
@@ -6,59 +6,787 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <widget class="QWidget" name="recording">
-      <attribute name="title"><string>Recording</string></attribute>
+      <attribute name="title">
+       <string>1 · Recording</string>
+      </attribute>
       <layout class="QVBoxLayout" name="recordingLayout">
        <item>
+        <widget class="QLabel" name="recordingGuide">
+         <property name="text">
+          <string>Inspect the acquired signals first. E1–E4 are four contacts observing the same preparation. Choose an interval here; every analysis uses its saved broadband samples.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="openLayout">
-         <item><widget class="QPushButton" name="openButton"><property name="text"><string>Open recording…</string></property></widget></item>
-         <item><widget class="QLabel" name="statusLabel">
-          <property name="text"><string>Open a session manifest or an extracellular CSV.</string></property>
-          <property name="wordWrap"><bool>true</bool></property>
-          <property name="textFormat"><enum>Qt::TextFormat::PlainText</enum></property>
-          <property name="textInteractionFlags"><set>Qt::TextInteractionFlag::TextSelectableByMouse</set></property>
-         </widget></item>
+         <item>
+          <widget class="QPushButton" name="openButton">
+           <property name="text">
+            <string>Open recording…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="statusLabel">
+           <property name="text">
+            <string>Open a session manifest or an extracellular CSV.</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::TextFormat::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
-       <item><widget class="QPlainTextEdit" name="metadata">
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="maximumHeight"><number>155</number></property>
-        <property name="placeholderText"><string>Recording metadata</string></property>
-       </widget></item>
+       <item>
+        <widget class="QPlainTextEdit" name="metadata">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="maximumHeight">
+          <number>155</number>
+         </property>
+         <property name="placeholderText">
+          <string>Open a recording to see its acquisition summary.</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <layout class="QHBoxLayout" name="intervalLayout">
-         <item><widget class="QLabel" name="stageLabel">
-          <property name="text"><string>Signal</string></property>
-          <property name="buddy"><cstring>stageCombo</cstring></property>
-         </widget></item>
-         <item><widget class="QComboBox" name="stageCombo"/></item>
-         <item><widget class="QLabel" name="indexLabel">
-          <property name="text"><string>First accepted index</string></property>
-          <property name="buddy"><cstring>indexEdit</cstring></property>
-         </widget></item>
-         <item><widget class="QLineEdit" name="indexEdit"><property name="text"><string notr="true">0</string></property></widget></item>
-         <item><widget class="QLabel" name="countLabel">
-          <property name="text"><string>Rows</string></property>
-          <property name="buddy"><cstring>countEdit</cstring></property>
-         </widget></item>
-         <item><widget class="QLineEdit" name="countEdit"><property name="text"><string notr="true">10000</string></property></widget></item>
-         <item><widget class="QPushButton" name="previewButton"><property name="text"><string>Preview</string></property></widget></item>
-         <item><widget class="QPushButton" name="exportButton"><property name="text"><string>Export CSV…</string></property></widget></item>
+         <item>
+          <widget class="QLabel" name="stageLabel">
+           <property name="buddy">
+            <cstring>stageCombo</cstring>
+           </property>
+           <property name="text">
+            <string>View saved signal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="stageCombo">
+           <property name="toolTip">
+            <string>Broadband is before reference/filtering. Live processed is the saved output of the original Scope settings. Offline analysis always starts from broadband.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="indexLabel">
+           <property name="buddy">
+            <cstring>indexEdit</cstring>
+           </property>
+           <property name="text">
+            <string>Start sample index</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="indexEdit">
+           <property name="text">
+            <string notr="true">0</string>
+           </property>
+           <property name="toolTip">
+            <string>Accepted recording index, which may start above zero. Changing the interval clears A and B.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="sampleIntervalRow">
+         <item>
+          <widget class="QLabel" name="countLabel">
+           <property name="buddy">
+            <cstring>countEdit</cstring>
+           </property>
+           <property name="text">
+            <string>Samples requested</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="countEdit">
+           <property name="text">
+            <string notr="true">10000</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="previewButton">
+           <property name="text">
+            <string>Preview</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="exportButton">
+           <property name="text">
+            <string>Export CSV…</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
         <widget class="QWidget" name="plotHost">
          <layout class="QVBoxLayout" name="plotLayout">
-          <property name="leftMargin"><number>0</number></property>
-          <property name="rightMargin"><number>0</number></property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
          </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="processingTab">
+      <attribute name="title">
+       <string>2 · Processing</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="processingTabLayout">
+       <item>
+        <widget class="QLabel" name="processingGuide">
+         <property name="text">
+          <string>Choose how to transform the saved broadband, then run B. CAR subtracts the selected contacts’ mean from all four contacts. It removes shared neuronal signal as well as shared noise; identical contacts become zero.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="referenceRow">
+         <item>
+          <widget class="QLabel" name="referenceLabel">
+           <property name="text">
+            <string>Reference</string>
+           </property>
+           <property name="buddy">
+            <cstring>referenceCombo</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="referenceCombo">
+           <property name="toolTip">
+            <string>The selected contacts contribute to the mean subtracted from all four signals. Shared neuronal evidence can cancel.</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Common average (CAR)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="refContactsLabel">
+           <property name="text">
+            <string>Contacts in average</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference1">
+           <property name="text">
+            <string>E1</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference2">
+           <property name="text">
+            <string>E2</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference3">
+           <property name="text">
+            <string>E3</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="reference4">
+           <property name="text">
+            <string>E4</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="referenceRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="bandpassRow">
+         <item>
+          <widget class="QCheckBox" name="bandpassCheck">
+           <property name="toolTip">
+            <string>Filter a fresh copy of the saved broadband. Warm-up rows after each reset are excluded from detection.</string>
+           </property>
+           <property name="text">
+            <string>Causal bandpass</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lowEditLabel">
+           <property name="text">
+            <string>Low (Hz)</string>
+           </property>
+           <property name="buddy">
+            <cstring>lowEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lowEdit">
+           <property name="text">
+            <string notr="true">300</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="highEditLabel">
+           <property name="text">
+            <string>High (Hz)</string>
+           </property>
+           <property name="buddy">
+            <cstring>highEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="highEdit">
+           <property name="text">
+            <string notr="true">3000</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="bandpassRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="analysisPlotHost">
+         <layout class="QVBoxLayout" name="analysisPlotLayout" />
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="detectionTab">
+      <attribute name="title">
+       <string>3 · Detection</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="detectionTabLayout">
+       <item>
+        <widget class="QLabel" name="detectionGuide">
+         <property name="text">
+          <string>Identify candidate events in the processed voltage. A downward threshold crossing is an observation, not proof of a neuronal spike. Nearby contact crossings form one group; filtering can produce more than one group per source event.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="detectorRow">
+         <item>
+          <widget class="QLabel" name="thresholdEditLabel">
+           <property name="text">
+            <string>Negative threshold (µV)</string>
+           </property>
+           <property name="buddy">
+            <cstring>thresholdEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="thresholdEdit">
+           <property name="text">
+            <string notr="true">-15</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+           <property name="toolTip">
+            <string>Detect a sample at or below this negative voltage after a sample strictly above it. Units are extracellular µV, not intracellular mV.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="refractoryEditLabel">
+           <property name="text">
+            <string>Refractory (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>refractoryEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="refractoryEdit">
+           <property name="text">
+            <string notr="true">0.6</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+           <property name="toolTip">
+            <string>Minimum time between accepted crossings on one contact. A filter can create multiple crossings from one source waveform.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="groupingEditLabel">
+           <property name="text">
+            <string>Grouping (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>groupingEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="groupingEdit">
+           <property name="toolTip">
+            <string>The grouping window starts at the first accepted crossing. A crossing at exact expiry starts a new group.</string>
+           </property>
+           <property name="text">
+            <string notr="true">0.4</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="detectorRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="detectionContactsRow">
+         <item>
+          <widget class="QLabel" name="detectionContactsLabel">
+           <property name="text">
+            <string>Detection contacts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector1">
+           <property name="text">
+            <string>E1</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector2">
+           <property name="text">
+            <string>E2</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector3">
+           <property name="text">
+            <string>E3</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="detector4">
+           <property name="text">
+            <string>E4</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="detectionContactsRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="comparisonTab">
+      <attribute name="title">
+       <string>4 · Waveforms</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="comparisonTabLayout">
+       <item>
+        <widget class="QLabel" name="waveformGuide">
+         <property name="text">
+          <string>Inspect short windows around grouped detections. Zero marks the first crossing in a group. The mean includes every valid selected window; overlays show a limited sample. These waveforms have not been sorted into neurons.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="waveWindowRow">
+         <item>
+          <widget class="QLabel" name="preEditLabel">
+           <property name="text">
+            <string>Pre-event (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>preEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="preEdit">
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+           <property name="toolTip">
+            <string>Duration before the grouped detection anchor. Windows crossing an interval, segment, epoch or warm-up boundary are excluded.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="postEditLabel">
+           <property name="text">
+            <string>Post-event (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>postEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="postEdit">
+           <property name="text">
+            <string notr="true">2</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="snippetEditLabel">
+           <property name="buddy">
+            <cstring>snippetEdit</cstring>
+           </property>
+           <property name="text">
+            <string>Individual overlays</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="snippetEdit">
+           <property name="text">
+            <string notr="true">16</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+           <property name="toolTip">
+            <string>Display up to this many individual windows. The mean still uses all valid selected groups.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="waveWindowRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="waveSelectionRow">
+         <item>
+          <widget class="QLabel" name="firstGroupEditLabel">
+           <property name="text">
+            <string>First group</string>
+           </property>
+           <property name="buddy">
+            <cstring>firstGroupEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="firstGroupEdit">
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="groupCountEditLabel">
+           <property name="text">
+            <string>Group count</string>
+           </property>
+           <property name="buddy">
+            <cstring>groupCountEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="groupCountEdit">
+           <property name="text">
+            <string notr="true" />
+           </property>
+           <property name="placeholderText">
+            <string>All remaining</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="rerunButton">
+           <property name="text">
+            <string>Update B waveforms</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="waveSelectionRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="comparisonStatus">
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::TextFormat::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="waveformPlotHost">
+         <layout class="QVBoxLayout" name="waveformPlotLayout" />
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="agreementTab">
+      <attribute name="title">
+       <string>5 · Comparison</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="agreementTabLayout">
+       <item>
+        <widget class="QLabel" name="evidenceGuide">
+         <property name="text">
+          <string>Source evidence is optional. Inferred Vm launches are proxies; native emulator events are separate evidence when saved. An unmatched detection can reflect noise, filter lobes, timing or overlapping sources.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="comparisonGuide">
+         <property name="text">
+          <string>A and B are analyses of the same recording. Run B and save it as baseline A, then change one setting and rerun B. Dashed traces show A; solid traces show B. Matching counts describe temporal agreement, not spike identity.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="sourceComparisonRow">
+         <item>
+          <widget class="QLabel" name="sourceLabel">
+           <property name="text">
+            <string>Source evidence</string>
+           </property>
+           <property name="buddy">
+            <cstring>sourceCombo</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="sourceCombo" />
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="matchingSettingsRow">
+         <item>
+          <widget class="QLabel" name="toleranceEditLabel">
+           <property name="text">
+            <string>Match tolerance (ms)</string>
+           </property>
+           <property name="buddy">
+            <cstring>toleranceEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="toleranceEdit">
+           <property name="text">
+            <string notr="true">2</string>
+           </property>
+           <property name="maximumWidth">
+            <number>82</number>
+           </property>
+           <property name="toolTip">
+            <string>Maximum timing difference for one-to-one matching. Larger tolerance can associate unrelated nearby events.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="matchButton">
+           <property name="text">
+            <string>Refresh agreement</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="analysisExportButton">
+           <property name="text">
+            <string>Export analysis…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="sourceComparisonRowSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="comparisonDetails">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
      </widget>
     </widget>
    </item>
+   <item>
+    <layout class="QHBoxLayout" name="analysisActions">
+     <item>
+      <widget class="QPushButton" name="runButton">
+       <property name="text">
+        <string>Run B · apply current settings</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pinButton">
+       <property name="text">
+        <string>Save completed B as baseline A</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="analysisStatus">
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::TextFormat::PlainText</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="analysisSelection">
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::TextFormat::PlainText</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <resources/>
- <connections/>
+ <resources />
+ <connections />
 </ui>

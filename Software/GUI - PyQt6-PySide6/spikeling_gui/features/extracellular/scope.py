@@ -133,6 +133,7 @@ TETRODE_CONTACT_KEYS = ("E1", "E2", "E3", "E4")
 # the sorting cue, so per-channel autoscaling would hide it.
 Y_MIN_UV = -40.0
 Y_MAX_UV = 80.0
+Y_FIT_MIN_UV = 0.1          # finite shared range for zero or tiny CAR residuals
 Y_RANGE_HEADROOM = 1.15        # multiplier applied above the observed peak
 
 # --- Channel plot geometry -------------------------------------------------
@@ -761,13 +762,14 @@ class ExtraCellularGraph(QObject):
             start, end = view.viewRange()[0]
             time = self.Time_buffer.data
             visible = (time - time[-1] >= start) & (time - time[-1] <= end)
-            peaks = [abs(self.DetectionThreshold_uV)]
+            # Fit observed voltages; an off-screen threshold must not hide residuals.
+            peaks = [Y_FIT_MIN_UV / Y_RANGE_HEADROOM]
             for buffer in self.Extra_buffers:
                 values = buffer.data[visible]
                 finite = values[np.isfinite(values)]
                 if finite.size:
                     peaks.append(float(np.max(np.abs(finite))))
-            target = max(abs(Y_MIN_UV), max(peaks) * Y_RANGE_HEADROOM)
+            target = max(peaks) * Y_RANGE_HEADROOM
             low, high = -target, target
 
         for plot in self.channel_plot_widgets:
@@ -886,7 +888,10 @@ class ExtraCellularGraph(QObject):
 
             for index in candidates:
                 t_ms = float(t_arr[index])
-                if (t_ms - self._t_last_detect_ms[k]) < self.DetectRefractory_ms:
+                # Times lie on the nominal model grid. Compare integer ticks so
+                # floating-point subtraction cannot reject exact expiry.
+                elapsed = round(t_ms / SAMPLE_INTERVAL) - round(self._t_last_detect_ms[k] / SAMPLE_INTERVAL)
+                if elapsed < self.DetectRefractory_ms / SAMPLE_INTERVAL - 1e-9:
                     continue
                 self._t_last_detect_ms[k] = t_ms
                 self.ChannelSpikeData[k] = 1
@@ -897,7 +902,8 @@ class ExtraCellularGraph(QObject):
 
         self.EventData = 0
         for t_ms, index, channel in sorted(crossings):
-            if (t_ms - self._last_event_ms) >= EVENT_MERGE_WINDOW_MS:
+            elapsed = round(t_ms / SAMPLE_INTERVAL) - round(self._last_event_ms / SAMPLE_INTERVAL)
+            if elapsed >= EVENT_MERGE_WINDOW_MS / SAMPLE_INTERVAL - 1e-9:
                 self._last_event_ms = t_ms
                 self.EventData = 1
                 self._event_marks.append(t_ms)

@@ -64,6 +64,12 @@ class Scope():
     # Page selection
     # ------------------------------------------------------------------
     def ShowPage(self):
+        self.ui.ExtraCellular_CAR_toggleButton.setToolTip(self.parent.tr(
+            "Subtract the four-contact mean. Shared noise and shared neuronal signal can cancel; identical contacts become zero. The neuron continues to run."))
+        self.ui.ExtraCellular_AutoRange_pushButton.setToolTip(self.parent.tr(
+            "Fit the current visible interval using one voltage scale for all four contacts. Refit after changing CAR. Reset restores the standard range."))
+        self.ui.Extracellular_Tetrode_Threshold_checkBox.setToolTip(self.parent.tr(
+            "Show the negative detection threshold. It is estimated from the noise settings before CAR and filtering, with a 15 µV minimum magnitude. A crossing is a candidate event."))
         self.ui.mainbody_stackedWidget.setCurrentWidget(self.ui.page_ExtraCellular_Scope)
 
 

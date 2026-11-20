@@ -1,0 +1,63 @@
+{
+  "calibration": {
+    "status": "test only"
+  },
+  "conductivity_S_m": 0.3,
+  "files": {
+    "time_ms.npy": {
+      "bytes": 168,
+      "sha256": "39f8763db9a1c4eae19921abb74f194cc37d638b70160366485344553b7fbf7b"
+    },
+    "valid.npy": {
+      "bytes": 136,
+      "sha256": "5166ddc23a8126bff44b75a636a755fae7f7a0c47048d32db0b98188a3eef91b"
+    },
+    "voltage_uV.npy": {
+      "bytes": 668,
+      "sha256": "97f50b33a26a7847b766552147bd7024bb35e5e00d993f6d735bdd8b76bfad3c"
+    },
+    "x_um.npy": {
+      "bytes": 152,
+      "sha256": "35f5a26475b1996e51ba98c6ab893a91d647c739b5b910ffceb67a0f738eb0db"
+    },
+    "y_um.npy": {
+      "bytes": 152,
+      "sha256": "35f5a26475b1996e51ba98c6ab893a91d647c739b5b910ffceb67a0f738eb0db"
+    },
+    "z_um.npy": {
+      "bytes": 152,
+      "sha256": "35f5a26475b1996e51ba98c6ab893a91d647c739b5b910ffceb67a0f738eb0db"
+    }
+  },
+  "format": "spikeling.spatial_eap",
+  "frame": {
+    "axes": "right-handed XYZ",
+    "origin": "arbitrary"
+  },
+  "generator": {
+    "id": "make_fixture.py"
+  },
+  "id": "analytic-regression-v1",
+  "landmark_index": 2,
+  "licensing": {
+    "asset": "original mathematical fixture, repository terms"
+  },
+  "model": {
+    "id": "analytic-trilinear-fixture"
+  },
+  "rate_hz": 10000,
+  "reference": "infinity",
+  "resampling": {
+    "method": "none"
+  },
+  "status": "provisional",
+  "support": {
+    "rule": "one masked cell"
+  },
+  "units": {
+    "space": "\u00b5m",
+    "time": "ms",
+    "voltage": "\u00b5V"
+  },
+  "version": 1
+}
